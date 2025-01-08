@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation.frames.converters;
 
-import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.RotationException;
@@ -26,14 +25,12 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class NEDtoECEFFrameConverterTest {
+class NEDtoECEFFrameConverterTest {
 
     private static final double ABSOLUTE_ERROR = 1e-8;
 
@@ -49,16 +46,15 @@ public class NEDtoECEFFrameConverterTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstants() {
-
-        assertEquals(NEDtoECEFFrameConverter.EARTH_EQUATORIAL_RADIUS_WGS84,
-                Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
+    void testConstants() {
+        assertEquals(NEDtoECEFFrameConverter.EARTH_EQUATORIAL_RADIUS_WGS84, Constants.EARTH_EQUATORIAL_RADIUS_WGS84,
+                0.0);
         assertEquals(NEDtoECEFFrameConverter.EARTH_ECCENTRICITY, Constants.EARTH_ECCENTRICITY, 0.0);
     }
 
     @Test
-    public void testConstructor() {
-        final NEDtoECEFFrameConverter converter = new NEDtoECEFFrameConverter();
+    void testConstructor() {
+        final var converter = new NEDtoECEFFrameConverter();
 
         // check
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, converter.getSourceType());
@@ -66,43 +62,39 @@ public class NEDtoECEFFrameConverterTest {
     }
 
     @Test
-    public void testConvertAndReturnNew() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvertAndReturnNew() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+            final var nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
-            final NEDtoECEFFrameConverter converter1 = new NEDtoECEFFrameConverter();
+            final var converter1 = new NEDtoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame = converter1.convertAndReturnNew(nedFrame1);
+            final var ecefFrame = converter1.convertAndReturnNew(nedFrame1);
 
             // convert back to NED
-            final ECEFtoNEDFrameConverter converter2 = new ECEFtoNEDFrameConverter();
+            final var converter2 = new ECEFtoNEDFrameConverter();
 
-            final NEDFrame nedFrame2 = converter2.convertAndReturnNew(ecefFrame);
+            final var nedFrame2 = converter2.convertAndReturnNew(ecefFrame);
 
             // check
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
@@ -118,10 +110,10 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
                     nedFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             nedFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -135,44 +127,40 @@ public class NEDtoECEFFrameConverterTest {
     }
 
     @Test
-    public void testConvert() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvert() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+            final var nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
-            final NEDtoECEFFrameConverter converter1 = new NEDtoECEFFrameConverter();
+            final var converter1 = new NEDtoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame = new ECEFFrame();
+            final var ecefFrame = new ECEFFrame();
             converter1.convert(nedFrame1, ecefFrame);
 
             // convert back to NED
-            final ECEFtoNEDFrameConverter converter2 = new ECEFtoNEDFrameConverter();
+            final var converter2 = new ECEFtoNEDFrameConverter();
 
-            final NEDFrame nedFrame2 = new NEDFrame();
+            final var nedFrame2 = new NEDFrame();
             converter2.convert(ecefFrame, nedFrame2);
 
             // check
@@ -189,10 +177,10 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
                     nedFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             nedFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -206,39 +194,35 @@ public class NEDtoECEFFrameConverterTest {
     }
 
     @Test
-    public void testConvertNEDtoECEFAndReturnNew() throws InvalidRotationMatrixException,
+    void testConvertNEDtoECEFAndReturnNew() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+            final var nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
-            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
+            final var ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
 
             // convert back to NED
-            final NEDFrame nedFrame2 = ECEFtoNEDFrameConverter.convertECEFtoNEDAndReturnNew(ecefFrame);
+            final var nedFrame2 = ECEFtoNEDFrameConverter.convertECEFtoNEDAndReturnNew(ecefFrame);
 
             // check
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
@@ -254,10 +238,10 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
                     nedFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             nedFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -271,40 +255,36 @@ public class NEDtoECEFFrameConverterTest {
     }
 
     @Test
-    public void testConvertNEDtoECEF() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvertNEDtoECEF() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+            final var nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
-            final ECEFFrame ecefFrame = new ECEFFrame();
+            final var ecefFrame = new ECEFFrame();
             NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame);
 
             // convert back to NED
-            final NEDFrame nedFrame2 = new NEDFrame();
+            final var nedFrame2 = new NEDFrame();
             ECEFtoNEDFrameConverter.convertECEFtoNED(ecefFrame, nedFrame2);
 
             // check
@@ -321,10 +301,10 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
                     nedFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             nedFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 

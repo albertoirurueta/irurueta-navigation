@@ -23,13 +23,11 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolverListener<Point3D> {
+class RANSACRobustLateration3DSolverTest implements RobustLaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 100;
     private static final int MAX_SPHERES = 500;
@@ -55,9 +53,9 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     private int solveProgressChange;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+        var solver = new RANSACRobustLateration3DSolver();
 
         // check correctness
         assertEquals(RANSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
@@ -125,12 +123,12 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // constructor with positions and distances
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         solver = new RANSACRobustLateration3DSolver(positions, distances);
 
         // check correctness
@@ -165,34 +163,19 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        final double[] wrong = new double[5];
-        final Point3D[] shortPositions = new Point3D[1];
-        final double[] shortDistances = new double[1];
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver((Point3D[]) null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        final var wrong = new double[5];
+        final var shortPositions = new Point3D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver((Point3D[]) null,
+                distances));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, wrong));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortPositions,
+                shortDistances));
 
         // constructor with positions, distances and standard deviations
-        final double[] standardDeviations = new double[4];
+        final var standardDeviations = new double[4];
         solver = new RANSACRobustLateration3DSolver(positions, distances, standardDeviations);
 
         // check correctness
@@ -227,39 +210,18 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver(null, distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, distances, (double[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, wrong, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, distances, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortPositions, shortDistances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(null, distances,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, distances,
+                (double[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, wrong,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, distances,
+                wrong));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations));
 
         // constructor with positions, distances, standard deviations and listener
         solver = new RANSACRobustLateration3DSolver(positions, distances, standardDeviations, this);
@@ -296,43 +258,18 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver(null, distances,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, distances,
-                    null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, wrong, standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, distances, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortPositions,
-                    shortDistances, standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(null, distances,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, distances,
+                null, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, wrong,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, distances,
+                wrong, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations, this));
 
         // constructor with positions, distances and listener
         solver = new RANSACRobustLateration3DSolver(positions, distances, this);
@@ -369,31 +306,17 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver((Point3D[]) null, distances, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(positions, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortPositions, shortDistances, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver((Point3D[]) null,
+                distances, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, null,
+                this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(positions, wrong,
+                this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortPositions,
+                shortDistances, this));
 
         // constructor with circles
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -432,20 +355,9 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        final Sphere[] shortCircles = new Sphere[1];
-
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver((Sphere[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortCircles);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        final var shortCircles = new Sphere[1];
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver((Sphere[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortCircles));
 
         // constructor with circles and standard deviations
         solver = new RANSACRobustLateration3DSolver(spheres, standardDeviations);
@@ -482,29 +394,13 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver((Sphere[]) null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(spheres, (double[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortCircles, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(spheres, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver((Sphere[]) null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(spheres,
+                (double[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortCircles,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(spheres, wrong));
 
         // constructor with circles and listener
         solver = new RANSACRobustLateration3DSolver(spheres, this);
@@ -541,18 +437,10 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver(null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortCircles, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(null,
+                this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortCircles,
+                this));
 
         // constructor with circles, standard deviation and listener
         solver = new RANSACRobustLateration3DSolver(spheres, standardDeviations, this);
@@ -589,33 +477,19 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new RANSACRobustLateration3DSolver((Sphere[]) null, standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(spheres, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(shortCircles, standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new RANSACRobustLateration3DSolver(spheres, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver((Sphere[]) null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(spheres,
+                null, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(shortCircles,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new RANSACRobustLateration3DSolver(spheres, wrong,
+                this));
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetThreshold() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertEquals(RANSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
@@ -627,16 +501,12 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertEquals(1.0, solver.getThreshold(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            solver.setThreshold(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setThreshold(0.0));
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertEquals(RANSACRobustLateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
@@ -651,16 +521,15 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertEquals(RANSACRobustLateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
                 solver.isComputeAndKeepResiduals());
 
         // set new value
-        solver.setComputeAndKeepResidualsEnabled(
-                !RANSACRobustLateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        solver.setComputeAndKeepResidualsEnabled(!RANSACRobustLateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
         // check
         assertEquals(!RANSACRobustLateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
@@ -668,31 +537,31 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testGetSetSpheres() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetSpheres() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertNull(solver.getSpheres());
 
         // set new value
-        final Point3D[] positions = new Point3D[4];
-        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[4];
+        final var positions = new Point3D[4];
+        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -700,56 +569,48 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         solver.setSpheres(spheres);
 
         // check
-        final Sphere[] spheres2 = solver.getSpheres();
-        for (int i = 0; i < 3; i++) {
+        final var spheres2 = solver.getSpheres();
+        for (var i = 0; i < 3; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
 
         // force IllegalArgumentException
-        try {
-            solver.setSpheres(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheres(new Sphere[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(new Sphere[1]));
     }
 
     @Test
-    public void testGetSetCirclesAndStandardDeviations() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetCirclesAndStandardDeviations() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertNull(solver.getSpheres());
 
         // set new value
-        final Point3D[] positions = new Point3D[4];
-        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[4];
+        final var positions = new Point3D[4];
+        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
-        final double[] standardDeviations = new double[4];
+        final var standardDeviations = new double[4];
         standardDeviations[0] = randomizer.nextDouble();
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
         standardDeviations[3] = randomizer.nextDouble();
 
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -757,40 +618,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         solver.setSpheresAndStandardDeviations(spheres, standardDeviations);
 
         // check
-        final Sphere[] spheres2 = solver.getSpheres();
-        for (int i = 0; i < 3; i++) {
+        final var spheres2 = solver.getSpheres();
+        for (var i = 0; i < 3; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
 
         // force IllegalArgumentException
-        try {
-            solver.setSpheresAndStandardDeviations(null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(spheres, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(new Sphere[1], standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(spheres, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(spheres,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(new Sphere[1],
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(spheres,
+                new double[1]));
     }
 
     @Test
-    public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetPreliminarySubsetSize() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check initial value
         assertEquals(4, solver.getPreliminarySubsetSize());
@@ -802,16 +650,12 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertEquals(5, solver.getPreliminarySubsetSize());
 
         // force IllegalArgumentException
-        try {
-            solver.setPreliminarySubsetSize(3);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPreliminarySubsetSize(3));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetListener() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getListener());
@@ -824,14 +668,14 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testGetSetInitialPosition() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetInitialPosition() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getInitialPosition());
 
         // set new value
-        final Point3D p = Point3D.create();
+        final var p = Point3D.create();
         solver.setInitialPosition(p);
 
         // check
@@ -839,8 +683,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testIsSetLinearSolverUsed() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetLinearSolverUsed() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertTrue(solver.isLinearSolverUsed());
@@ -853,8 +697,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertFalse(solver.isHomogeneousLinearSolverUsed());
@@ -867,8 +711,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetPreliminarySolutionRefined() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -881,8 +725,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetProgressDelta() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
@@ -894,25 +738,16 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertEquals(0.5f, solver.getProgressDelta(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            solver.setProgressDelta(-1.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setProgressDelta(-1.0f));
+        assertThrows(IllegalArgumentException.class, () -> solver.setProgressDelta(2.0f));
     }
 
     @Test
-    public void testGetSetConfidence() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetConfidence() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE,
-                solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
 
         // set new value
         solver.setConfidence(0.8);
@@ -921,21 +756,13 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertEquals(0.8, solver.getConfidence(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            solver.setConfidence(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setConfidence(2.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setConfidence(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> solver.setConfidence(2.0));
     }
 
     @Test
-    public void testGetSetMaxIterations() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetMaxIterations() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
@@ -947,16 +774,12 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertEquals(10, solver.getMaxIterations());
 
         // force IllegalArgumentException
-        try {
-            solver.setMaxIterations(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setMaxIterations(0));
     }
 
     @Test
-    public void testIsSetResultRefined() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetResultRefined() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
@@ -969,8 +792,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testIsSetCovarianceKept() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testIsSetCovarianceKept() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
@@ -983,8 +806,8 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testGetSetQualityScores() throws LockedException {
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+    void testGetSetQualityScores() throws LockedException {
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getQualityScores());
@@ -997,26 +820,26 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetPositionsAndDistances() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
         // set new values
-        final Point3D[] positions = new Point3D[4];
-        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[4];
+        final var positions = new Point3D[4];
+        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
@@ -1029,55 +852,40 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertSame(distances, solver.getDistances());
 
         // force IllegalArgumentException
-        final double[] wrong = new double[5];
-        final Point3D[] shortPositions = new Point3D[1];
-        final double[] shortDistances = new double[1];
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new double[5];
+        final var shortPositions = new Point3D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, wrong));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(shortPositions,
+                shortDistances));
     }
 
     @Test
-    public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver();
+        final var solver = new RANSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
         // set new values
-        final Point3D[] positions = new Point3D[4];
-        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[4];
+        final var positions = new Point3D[4];
+        positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
-        final double[] standardDeviations = new double[4];
+        final var standardDeviations = new double[4];
         standardDeviations[0] = randomizer.nextDouble();
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
@@ -1091,67 +899,46 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
-        final double[] wrong = new double[5];
-        final Point3D[] shortPositions = new Point3D[1];
-        final double[] shortDistances = new double[1];
-        final double[] shortStandardDeviations = new double[1];
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(null, distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(positions, null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(positions, distances, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(positions, wrong, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(positions, distances, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    shortPositions, shortDistances, shortStandardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new double[5];
+        final var shortPositions = new Point3D[1];
+        final var shortDistances = new double[1];
+        final var shortStandardDeviations = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(
+                null, distances, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(positions,
+                null, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(positions,
+                distances, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(positions,
+                wrong, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(positions,
+                distances, wrong));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsDistancesAndStandardDeviations(
+                shortPositions, shortDistances, shortStandardDeviations));
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndNoResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorNoRefinementNoInlierDataAndNoResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1163,7 +950,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
@@ -1177,7 +964,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1196,12 +983,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1212,29 +994,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndWithResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorNoRefinementNoInlierDataAndWithResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1246,7 +1026,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1260,7 +1040,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1281,12 +1061,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1297,29 +1072,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndNoResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorNoRefinementWithInlierDataAndNoResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1331,7 +1104,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(false);
@@ -1345,7 +1118,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1365,12 +1138,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1381,29 +1149,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndWithResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorNoRefinementWithInlierDataAndWithResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1415,7 +1181,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1429,7 +1195,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1449,12 +1215,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1465,28 +1226,26 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndNoResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorWithRefinementNoInlierDataAndNoResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            double error;
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -1499,7 +1258,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
@@ -1513,7 +1272,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1534,12 +1293,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1550,29 +1304,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndWithResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorWithRefinementNoInlierDataAndWithResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1584,7 +1336,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1598,7 +1350,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1619,12 +1371,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1635,29 +1382,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1669,7 +1414,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1683,7 +1428,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1704,12 +1449,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1720,28 +1460,26 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            double error;
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -1755,7 +1493,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1770,7 +1508,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
@@ -1791,12 +1529,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1807,31 +1540,28 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementWithInlierDataWithResidualsAndStandardDeviations()
-            throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveWithInlierErrorWithRefinementWithInlierDataWithResidualsAndStandardDeviations() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            final double[] standardDeviations = new double[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            final var standardDeviations = new double[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1850,9 +1580,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(
-                    spheres, standardDeviations, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, standardDeviations, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1867,7 +1595,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
@@ -1888,12 +1616,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1904,29 +1627,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoPreliminaryLinearSolver() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoPreliminaryLinearSolver() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -1938,7 +1659,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -1953,7 +1674,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1974,12 +1695,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -1990,29 +1706,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveInhomogeneousPreliminaryLinearSolver() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveInhomogeneousPreliminaryLinearSolver() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2024,7 +1738,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2040,7 +1754,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2061,12 +1775,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2077,29 +1786,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveHomogeneousPreliminaryLinearSolver() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveHomogeneousPreliminaryLinearSolver() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2111,7 +1818,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2127,7 +1834,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2148,12 +1855,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2164,29 +1866,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveRefinePreliminarySolutions() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveRefinePreliminarySolutions() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2198,7 +1898,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2214,7 +1914,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2235,12 +1935,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2251,29 +1946,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolvePreliminarySolutionsNotRefined() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolvePreliminarySolutionsNotRefined() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2285,7 +1978,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2301,7 +1994,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2322,12 +2015,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2338,29 +2026,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2372,7 +2058,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2388,7 +2074,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2409,12 +2095,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2425,29 +2106,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveNoPreliminaryLinearSolverWithInitialPosition() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveNoPreliminaryLinearSolverWithInitialPosition() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2459,7 +2138,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2475,7 +2154,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2496,12 +2175,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2512,29 +2186,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
     }
 
     @Test
-    public void testSolveLargerPreliminarySubsetSize() throws Exception {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
+    void testSolveLargerPreliminarySubsetSize() throws Exception {
+        final var randomizer = new UniformRandomizer();
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_OUTLIER_ERROR);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius, error;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                var radius = center.distanceTo(position);
 
+                double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
@@ -2546,7 +2218,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
                 spheres[i] = new Sphere(center, radius);
             }
 
-            RANSACRobustLateration3DSolver solver = new RANSACRobustLateration3DSolver(spheres, this);
+            var solver = new RANSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
@@ -2561,7 +2233,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            final Point3D estimatedPosition = solver.solve();
+            final var estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2580,12 +2252,7 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
 
             // force NotReadyException
             solver = new RANSACRobustLateration3DSolver();
-
-            try {
-                solver.solve();
-                fail("LockedException expected but not thrown");
-            } catch (final NotReadyException ignore) {
-            }
+            assertThrows(NotReadyException.class, solver::solve);
 
             numValid++;
 
@@ -2623,105 +2290,27 @@ public class RANSACRobustLateration3DSolverTest implements RobustLaterationSolve
         solveStart = solveEnd = solveNextIteration = solveProgressChange = 0;
     }
 
-    private void checkLocked(final RANSACRobustLateration3DSolver solver) {
-        try {
-            solver.setPreliminarySubsetSize(4);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setInitialPosition(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setLinearSolverUsed(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setHomogeneousLinearSolverUsed(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPreliminarySolutionRefined(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setProgressDelta(0.5f);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setConfidence(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setMaxIterations(5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setResultRefined(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setCovarianceKept(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    null, null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-
-        try {
-            solver.setSpheres(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setThreshold(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setComputeAndKeepInliersEnabled(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setComputeAndKeepResidualsEnabled(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.solve();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final RANSACRobustLateration3DSolver solver) {
+        assertThrows(LockedException.class, () -> solver.setPreliminarySubsetSize(4));
+        assertThrows(LockedException.class, () -> solver.setListener(null));
+        assertThrows(LockedException.class, () -> solver.setInitialPosition(null));
+        assertThrows(LockedException.class, () -> solver.setLinearSolverUsed(true));
+        assertThrows(LockedException.class, () -> solver.setHomogeneousLinearSolverUsed(true));
+        assertThrows(LockedException.class, () -> solver.setPreliminarySolutionRefined(true));
+        assertThrows(LockedException.class, () -> solver.setProgressDelta(0.5f));
+        assertThrows(LockedException.class, () -> solver.setConfidence(0.5));
+        assertThrows(LockedException.class, () -> solver.setMaxIterations(5));
+        assertThrows(LockedException.class, () -> solver.setResultRefined(false));
+        assertThrows(LockedException.class, () -> solver.setCovarianceKept(false));
+        assertThrows(LockedException.class, () -> solver.setPositionsAndDistances(null, null));
+        assertThrows(LockedException.class, () -> solver.setPositionsDistancesAndStandardDeviations(null,
+                null, null));
+        assertThrows(LockedException.class, () -> solver.setSpheres(null));
+        assertThrows(LockedException.class, () -> solver.setSpheresAndStandardDeviations(null,
+                null));
+        assertThrows(LockedException.class, () -> solver.setThreshold(0.5));
+        assertThrows(LockedException.class, () -> solver.setComputeAndKeepInliersEnabled(false));
+        assertThrows(LockedException.class, () -> solver.setComputeAndKeepResidualsEnabled(false));
+        assertThrows(LockedException.class, solver::solve);
     }
 }

@@ -15,15 +15,15 @@
  */
 package com.irurueta.navigation.lateration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class LaterationExceptionTest {
+class LaterationExceptionTest {
 
     @Test
-    public void testConstructor() {
-        LaterationException ex = new LaterationException();
+    void testConstructor() {
+        var ex = new LaterationException();
         assertNotNull(ex);
 
         ex = new LaterationException("message");

@@ -49,20 +49,19 @@ public class GNSSKalmanInitializer {
                                   final GNSSKalmanState result) {
         result.setEstimation(estimation);
 
-        final double initPosUnc = config.getInitialPositionUncertainty();
-        final double initVelUnc = config.getInitialVelocityUncertainty();
-        final double initClockOffsetUnc = config.getInitialClockOffsetUncertainty();
-        final double initClockDriftUnc = config.getInitialClockDriftUncertainty();
+        final var initPosUnc = config.getInitialPositionUncertainty();
+        final var initVelUnc = config.getInitialVelocityUncertainty();
+        final var initClockOffsetUnc = config.getInitialClockOffsetUncertainty();
+        final var initClockDriftUnc = config.getInitialClockDriftUncertainty();
 
-        final double initPosUnc2 = initPosUnc * initPosUnc;
-        final double initVelUnc2 = initVelUnc * initVelUnc;
-        final double initClockOffsetUnc2 = initClockOffsetUnc * initClockOffsetUnc;
-        final double initClockDriftUnc2 = initClockDriftUnc * initClockDriftUnc;
+        final var initPosUnc2 = initPosUnc * initPosUnc;
+        final var initVelUnc2 = initVelUnc * initVelUnc;
+        final var initClockOffsetUnc2 = initClockOffsetUnc * initClockOffsetUnc;
+        final var initClockDriftUnc2 = initClockDriftUnc * initClockDriftUnc;
 
         Matrix covariance;
         try {
-            covariance = new Matrix(GNSSEstimation.NUM_PARAMETERS,
-                    GNSSEstimation.NUM_PARAMETERS);
+            covariance = new Matrix(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
 
             covariance.setElementAt(0, 0, initPosUnc2);
             covariance.setElementAt(1, 1, initPosUnc2);
@@ -90,9 +89,8 @@ public class GNSSKalmanInitializer {
      * @param config     Kalman filter configuration.
      * @return initialized Kalman filter state.
      */
-    public static GNSSKalmanState initialize(final GNSSEstimation estimation,
-                                             final GNSSKalmanConfig config) {
-        final GNSSKalmanState result = new GNSSKalmanState();
+    public static GNSSKalmanState initialize(final GNSSEstimation estimation, final GNSSKalmanConfig config) {
+        final var result = new GNSSKalmanState();
         initialize(estimation, config, result);
         return result;
     }

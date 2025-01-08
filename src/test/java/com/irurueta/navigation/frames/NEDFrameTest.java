@@ -28,14 +28,13 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class NEDFrameTest {
+class NEDFrameTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -51,17 +50,16 @@ public class NEDFrameTest {
     private static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
-    public void testConstants() {
-
+    void testConstants() {
         assertEquals(3, NEDFrame.NUM_VELOCITY_COORDINATES);
     }
 
     @Test
-    public void testConstructor() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    void testConstructor() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
         // test empty constructor
-        NEDFrame frame = new NEDFrame();
+        var frame = new NEDFrame();
 
         // check
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -87,17 +85,15 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with coordinate transformation matrix
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c1 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c1 = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         frame = new NEDFrame(c1);
 
@@ -122,21 +118,13 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position coordinates
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
         frame = new NEDFrame(latitude, longitude, height);
 
@@ -166,7 +154,7 @@ public class NEDFrameTest {
 
 
         // test constructor with position coordinates
-        final Distance heightDistance = new Distance(height, DistanceUnit.METER);
+        final var heightDistance = new Distance(height, DistanceUnit.METER);
 
         frame = new NEDFrame(latitude, longitude, heightDistance);
 
@@ -196,8 +184,8 @@ public class NEDFrameTest {
 
 
         // test constructor with position coordinates
-        final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
-        final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
+        final var latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
+        final var longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
 
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height);
 
@@ -224,7 +212,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with position coordinates
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance);
@@ -253,9 +240,8 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with NED position
-        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+        final var nedPosition = new NEDPosition(latitude, longitude, height);
         frame = new NEDFrame(nedPosition);
 
         // check
@@ -282,11 +268,10 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with position and velocity coordinates
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
         frame = new NEDFrame(latitude, longitude, height, vn, ve, vd);
 
@@ -313,7 +298,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with position and velocity coordinate
         frame = new NEDFrame(latitude, longitude, heightDistance, vn, ve, vd);
@@ -342,7 +326,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with position and velocity coordinate
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height, vn, ve, vd);
 
@@ -369,7 +352,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with position and velocity coordinates
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, vn, ve, vd);
@@ -398,11 +380,10 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with position and velocity coordinates
-        final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
+        final var speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
+        final var speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
+        final var speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
 
         frame = new NEDFrame(latitude, longitude, height, speedN, speedE, speedD);
 
@@ -429,7 +410,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with position and velocity coordinates
         frame = new NEDFrame(latitude, longitude, heightDistance, speedN, speedE, speedD);
@@ -458,7 +438,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with position and velocity coordinates
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height, speedN, speedE, speedD);
 
@@ -485,7 +464,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with position and velocity coordinates
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, speedN, speedE, speedD);
@@ -514,9 +492,8 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with NED position and NED velocity
-        final NEDVelocity nedVelocity = new NEDVelocity(vn, ve, vd);
+        final var nedVelocity = new NEDVelocity(vn, ve, vd);
         frame = new NEDFrame(nedPosition, nedVelocity);
 
         // check
@@ -543,7 +520,6 @@ public class NEDFrameTest {
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
-
         // test constructor with position and coordinate transformation matrix
         frame = new NEDFrame(latitude, longitude, height, c1);
 
@@ -568,15 +544,8 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitude, longitude, height,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitude, longitude, height, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position and coordinate transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height, c1);
@@ -602,15 +571,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, height,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, height, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position and coordinate transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, c1);
@@ -636,15 +599,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, heightDistance, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with NED position and coordinate transformation matrix
         frame = new NEDFrame(nedPosition, c1);
@@ -670,15 +627,8 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(nedPosition,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(nedPosition,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position and velocity coordinates, and with coordinate transformation
         // matrix
@@ -705,15 +655,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitude, longitude, height, vn, ve, vd,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitude, longitude, height, vn, ve, vd, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinate transformation matrix
         frame = new NEDFrame(latitude, longitude, heightDistance, vn, ve, vd, c1);
@@ -739,15 +683,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitude, longitude, heightDistance, vn, ve, vd,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitude, longitude, heightDistance, vn, ve, vd, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinate transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height, vn, ve, vd, c1);
@@ -773,15 +711,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, height, vn, ve, vd,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, height, vn, ve, vd, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinates transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, vn, ve, vd, c1);
@@ -807,15 +739,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, vn, ve, vd,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, heightDistance, vn, ve, vd, new CoordinateTransformation(
+                        FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinates transformation matrix
         frame = new NEDFrame(latitude, longitude, height, speedN, speedE, speedD, c1);
@@ -841,15 +767,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitude, longitude, height, speedN, speedE, speedD,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitude, longitude, height, speedN, speedE, speedD, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinates transformation matrix
         frame = new NEDFrame(latitude, longitude, heightDistance, speedN, speedE, speedD, c1);
@@ -875,15 +795,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitude, longitude, heightDistance, speedN, speedE, speedD,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitude, longitude, heightDistance, speedN, speedE, speedD, new CoordinateTransformation(
+                        FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinates transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, height, speedN, speedE, speedD, c1);
@@ -909,15 +823,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, height, speedN, speedE, speedD,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, height, speedN, speedE, speedD, new CoordinateTransformation(
+                        FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates and coordinates transformation matrix
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance, speedN, speedE, speedD, c1);
@@ -943,15 +851,9 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(latitudeAngle, longitudeAngle, height, speedN, speedE, speedD,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(
+                latitudeAngle, longitudeAngle, height, speedN, speedE, speedD, new CoordinateTransformation(
+                        FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with NED position, NED velocity and coordinates transformation matrix
         frame = new NEDFrame(nedPosition, nedVelocity, c1);
@@ -977,19 +879,12 @@ public class NEDFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new NEDFrame(nedPosition, nedVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new NEDFrame(nedPosition, nedVelocity,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with another NED frame
         frame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c1);
-        final NEDFrame frame2 = new NEDFrame(frame);
+        final var frame2 = new NEDFrame(frame);
 
         // check
         assertEquals(frame.getLatitude(), frame2.getLatitude(), 0.0);
@@ -1004,13 +899,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetLatitude() {
+    void testGetSetLatitude() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1023,13 +917,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetLongitude() {
+    void testGetSetLongitude() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getLongitude(), 0.0);
@@ -1042,12 +935,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetHeight() {
+    void testGetSetHeight() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getHeight(), 0.0);
@@ -1060,16 +953,14 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testSetPosition1() {
+    void testSetPosition1() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1086,90 +977,86 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetLatitudeAngle() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
+    void testGetSetLatitudeAngle() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getLatitudeAngle().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Angle latitudeAngle1 = new Angle(latitude, AngleUnit.RADIANS);
+        final var latitudeAngle1 = new Angle(latitude, AngleUnit.RADIANS);
         frame.setLatitudeAngle(latitudeAngle1);
 
         // check
-        final Angle latitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        final var latitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
         frame.getLatitudeAngle(latitudeAngle2);
-        final Angle latitudeAngle3 = frame.getLatitudeAngle();
+        final var latitudeAngle3 = frame.getLatitudeAngle();
 
         assertEquals(latitudeAngle1, latitudeAngle2);
         assertEquals(latitudeAngle1, latitudeAngle3);
     }
 
     @Test
-    public void testGetSetLongitudeAngle() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
+    void testGetSetLongitudeAngle() {
+        final var randomizer = new UniformRandomizer();
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getLongitudeAngle().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Angle longitudeAngle1 = new Angle(longitude, AngleUnit.RADIANS);
+        final var longitudeAngle1 = new Angle(longitude, AngleUnit.RADIANS);
         frame.setLongitudeAngle(longitudeAngle1);
 
         // check
-        final Angle longitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        final var longitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
         frame.getLongitudeAngle(longitudeAngle2);
-        final Angle longitudeAngle3 = frame.getLongitudeAngle();
+        final var longitudeAngle3 = frame.getLongitudeAngle();
 
         assertEquals(longitudeAngle1, longitudeAngle2);
         assertEquals(longitudeAngle1, longitudeAngle3);
     }
 
     @Test
-    public void testGetSetHeightDistance() {
+    void testGetSetHeightDistance() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getHeightDistance().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Distance heightDistance1 = new Distance(height, DistanceUnit.METER);
+        final var heightDistance1 = new Distance(height, DistanceUnit.METER);
         frame.setHeightDistance(heightDistance1);
 
         // check
-        final Distance heightDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var heightDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
         frame.getHeightDistance(heightDistance2);
-        final Distance heightDistance3 = frame.getHeightDistance();
+        final var heightDistance3 = frame.getHeightDistance();
 
         assertEquals(heightDistance1, heightDistance2);
         assertEquals(heightDistance1, heightDistance3);
     }
 
     @Test
-    public void testSetPosition2() {
+    void testSetPosition2() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final Distance heightDistance = new Distance(height, DistanceUnit.METER);
+        final var heightDistance = new Distance(height, DistanceUnit.METER);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1186,19 +1073,17 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testSetPosition3() {
+    void testSetPosition3() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
-        final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
+        final var latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
+        final var longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1215,20 +1100,18 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testSetPosition4() {
+    void testSetPosition4() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
-        final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
-        final Distance heightDistance = new Distance(height, DistanceUnit.METER);
+        final var latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
+        final var longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
+        final var heightDistance = new Distance(height, DistanceUnit.METER);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1245,15 +1128,13 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetNEDPosition() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testGetSetNEDPosition() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getLatitude(), 0.0);
@@ -1261,7 +1142,7 @@ public class NEDFrameTest {
         assertEquals(0.0, frame.getHeight(), 0.0);
 
         // set new values
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+        final var position1 = new NEDPosition(latitude, longitude, height);
         frame.setPosition(position1);
 
         // check
@@ -1269,9 +1150,9 @@ public class NEDFrameTest {
         assertEquals(longitude, frame.getLongitude(), 0.0);
         assertEquals(height, frame.getHeight(), 0.0);
 
-        final NEDPosition position2 = new NEDPosition();
+        final var position2 = new NEDPosition();
         frame.getPosition(position2);
-        final NEDPosition position3 = frame.getPosition();
+        final var position3 = frame.getPosition();
 
         assertEquals(latitude, position2.getLatitude(), 0.0);
         assertEquals(longitude, position2.getLongitude(), 0.0);
@@ -1281,12 +1162,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetVn() {
+    void testGetSetVn() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVn(), 0.0);
@@ -1299,12 +1180,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetVe() {
+    void testGetSetVe() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVe(), 0.0);
@@ -1317,12 +1198,12 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetVd() {
+    void testGetSetVd() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVd(), 0.0);
@@ -1335,14 +1216,14 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testSetVelocityCoordinates() {
+    void testSetVelocityCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getVn(), 0.0);
@@ -1359,22 +1240,22 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetVelocityNorm() {
+    void testGetVelocityNorm() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double norm = Math.sqrt(Math.pow(vn, 2.0) + Math.pow(ve, 2.0) + Math.pow(vd, 2.0));
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var norm = Math.sqrt(Math.pow(vn, 2.0) + Math.pow(ve, 2.0) + Math.pow(vd, 2.0));
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
         frame.setVelocityCoordinates(vn, ve, vd);
 
         assertEquals(norm, frame.getVelocityNorm(), ABSOLUTE_ERROR);
 
-        final Speed normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getVelocityNormAsSpeed(normSpeed1);
-        final Speed normSpeed2 = frame.getVelocityNormAsSpeed();
+        final var normSpeed2 = frame.getVelocityNormAsSpeed();
 
         assertEquals(norm, normSpeed1.getValue().doubleValue(), ABSOLUTE_ERROR);
         assertEquals(SpeedUnit.METERS_PER_SECOND, normSpeed1.getUnit());
@@ -1382,86 +1263,86 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetSpeedN() {
+    void testGetSetSpeedN() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedN().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedN1 = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
+        final var speedN1 = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedN(speedN1);
 
         // check
-        final Speed speedN2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedN2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedN(speedN2);
-        final Speed speedN3 = frame.getSpeedN();
+        final var speedN3 = frame.getSpeedN();
 
         assertEquals(speedN1, speedN2);
         assertEquals(speedN1, speedN3);
     }
 
     @Test
-    public void testGetSetSpeedE() {
+    void testGetSetSpeedE() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedE().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedE1 = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
+        final var speedE1 = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedE(speedE1);
 
         // check
-        final Speed speedE2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedE2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedE(speedE2);
-        final Speed speedE3 = frame.getSpeedE();
+        final var speedE3 = frame.getSpeedE();
 
         assertEquals(speedE1, speedE2);
         assertEquals(speedE1, speedE3);
     }
 
     @Test
-    public void testGetSetSpeedD() {
+    void testGetSetSpeedD() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedD().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedD1 = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
+        final var speedD1 = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedD(speedD1);
 
         // check
-        final Speed speedD2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedD2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedD(speedD2);
-        final Speed speedD3 = frame.getSpeedD();
+        final var speedD3 = frame.getSpeedD();
 
         assertEquals(speedD1, speedD2);
         assertEquals(speedD1, speedD3);
     }
 
     @Test
-    public void testSetSpeedCoordinates() {
+    void testSetSpeedCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getSpeedN().getValue().doubleValue(), 0.0);
@@ -1469,9 +1350,9 @@ public class NEDFrameTest {
         assertEquals(0.0, frame.getSpeedD().getValue().doubleValue(), 0.0);
 
         // set new values
-        final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
+        final var speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
+        final var speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
+        final var speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
 
         frame.setSpeedCoordinates(speedN, speedE, speedD);
 
@@ -1482,20 +1363,20 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetNEDVelocity() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+    void testGetSetNEDVelocity() {
+        final var randomizer = new UniformRandomizer();
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial values
         assertEquals(0.0, frame.getSpeedN().getValue().doubleValue(), 0.0);
         assertEquals(0.0, frame.getSpeedE().getValue().doubleValue(), 0.0);
         assertEquals(0.0, frame.getSpeedD().getValue().doubleValue(), 0.0);
 
-        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final var velocity1 = new NEDVelocity(vn, ve, vd);
         frame.setVelocity(velocity1);
 
         // check
@@ -1503,9 +1384,9 @@ public class NEDFrameTest {
         assertEquals(ve, frame.getVe(), 0.0);
         assertEquals(vd, frame.getVd(), 0.0);
 
-        final NEDVelocity velocity2 = new NEDVelocity();
+        final var velocity2 = new NEDVelocity();
         frame.getVelocity(velocity2);
-        final NEDVelocity velocity3 = frame.getVelocity();
+        final var velocity3 = frame.getVelocity();
 
         assertEquals(vn, velocity2.getVn(), 0.0);
         assertEquals(ve, velocity2.getVe(), 0.0);
@@ -1515,88 +1396,80 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformation() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    void testGetSetCoordinateTransformation() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
-        final NEDFrame frame = new NEDFrame();
+        final var frame = new NEDFrame();
 
         // check initial value
-        CoordinateTransformation c1 = frame.getCoordinateTransformation();
+        var c1 = frame.getCoordinateTransformation();
         assertEquals(FrameType.BODY_FRAME, c1.getSourceType());
         assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), Matrix.identity(3, 3));
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c2 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c2 = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         frame.setCoordinateTransformation(c2);
 
         // check
         assertEquals(frame.getCoordinateTransformation(), c2);
-        final CoordinateTransformation c3 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        final var c3 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         frame.getCoordinateTransformation(c3);
         assertEquals(c2, c3);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        try {
-            frame.setCoordinateTransformation(new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> frame.setCoordinateTransformation(
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    void testGetSetCoordinateTransformationMatrix() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame = new NEDFrame(c);
+        final var frame = new NEDFrame(c);
 
         // check
         assertEquals(frame.getCoordinateTransformationMatrix(), m1);
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(m1, m2);
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix2() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+    void testGetSetCoordinateTransformationMatrix2() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame = new NEDFrame(c);
+        final var frame = new NEDFrame(c);
 
         // check default value
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS),
                 frame.getCoordinateTransformationMatrix());
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS), m2);
 
@@ -1610,24 +1483,23 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix3() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+    void testGetSetCoordinateTransformationMatrix3() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame = new NEDFrame(c);
+        final var frame = new NEDFrame(c);
 
         // check default value
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS),
                 frame.getCoordinateTransformationMatrix());
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS), m2);
 
@@ -1641,22 +1513,21 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationRotation() throws InvalidRotationMatrixException,
+    void testGetSetCoordinateTransformationRotation() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame = new NEDFrame(c);
+        final var frame = new NEDFrame(c);
 
         // check default value
         assertEquals(new Quaternion(), frame.getCoordinateTransformationRotation());
-        final Quaternion q2 = new Quaternion();
+        final var q2 = new Quaternion();
         frame.getCoordinateTransformationRotation(q2);
         assertEquals(new Quaternion(), q2);
 
@@ -1670,13 +1541,10 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testIsValidCoordinateTransformation() {
-        final CoordinateTransformation c1 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final CoordinateTransformation c2 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        final CoordinateTransformation c3 = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+    void testIsValidCoordinateTransformation() {
+        final var c1 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var c2 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        final var c3 = new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         assertTrue(NEDFrame.isValidCoordinateTransformation(c1));
         assertFalse(NEDFrame.isValidCoordinateTransformation(c2));
@@ -1684,32 +1552,28 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testCopyTo() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testCopyTo() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
-                FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame2 = new NEDFrame();
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame2 = new NEDFrame();
         frame1.copyTo(frame2);
 
         // check
@@ -1723,32 +1587,28 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testCopyFrom() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testCopyFrom() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame2 = new NEDFrame();
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame2 = new NEDFrame();
         frame2.copyFrom(frame1);
 
         // check
@@ -1762,66 +1622,58 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testHashCode() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testHashCode() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame3 = new NEDFrame();
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame3 = new NEDFrame();
 
         assertEquals(frame1.hashCode(), frame2.hashCode());
         assertNotEquals(frame1.hashCode(), frame3.hashCode());
     }
 
     @Test
-    public void testEquals() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testEquals() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame3 = new NEDFrame();
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame3 = new NEDFrame();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object) frame1));
@@ -1833,37 +1685,34 @@ public class NEDFrameTest {
         assertFalse(frame1.equals((Object) null));
         assertFalse(frame1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(frame1.equals(new Object()));
+        assertNotEquals(new Object(), frame1);
     }
 
     @Test
-    public void testEqualsWithThreshold() throws InvalidRotationMatrixException,
+    void testEqualsWithThreshold() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-        final NEDFrame frame3 = new NEDFrame();
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame2 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame3 = new NEDFrame();
 
         assertTrue(frame1.equals(frame1, THRESHOLD));
         assertTrue(frame1.equals(frame2, THRESHOLD));
@@ -1872,62 +1721,55 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testClone() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException,
+    void testClone() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
             CloneNotSupportedException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
-        final Object frame2 = frame1.clone();
+        final var frame2 = frame1.clone();
 
         assertEquals(frame1, frame2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws InvalidRotationMatrixException,
+    void testSerializeDeserialize() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toDegrees(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final NEDFrame frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+        final var frame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
         // check
         assertEquals(latitude, frame1.getLatitude(), 0.0);
@@ -1940,8 +1782,8 @@ public class NEDFrameTest {
         assertEquals(c, frame1.getCoordinateTransformation());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(frame1);
-        final NEDFrame frame2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(frame1);
+        final var frame2 = SerializationHelper.<NEDFrame>deserialize(bytes);
 
         // check
         assertNotSame(frame1, frame2);

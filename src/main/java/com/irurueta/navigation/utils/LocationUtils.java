@@ -16,7 +16,6 @@
 package com.irurueta.navigation.utils;
 
 import com.irurueta.navigation.geodesic.Geodesic;
-import com.irurueta.navigation.geodesic.GeodesicData;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 
@@ -72,17 +71,14 @@ public class LocationUtils {
      *                                  FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
      */
     public static String convert(double coordinate, final int outputType) {
-        if (coordinate < -180.0 || coordinate > 180.0 ||
-                Double.isNaN(coordinate)) {
+        if (coordinate < -180.0 || coordinate > 180.0 || Double.isNaN(coordinate)) {
             throw new IllegalArgumentException();
         }
-        if ((outputType != FORMAT_DEGREES) &&
-                (outputType != FORMAT_MINUTES) &&
-                (outputType != FORMAT_SECONDS)) {
+        if ((outputType != FORMAT_DEGREES) && (outputType != FORMAT_MINUTES) && (outputType != FORMAT_SECONDS)) {
             throw new IllegalArgumentException();
         }
 
-        final StringBuilder sb = new StringBuilder();
+        final var sb = new StringBuilder();
 
         // Handle negative values
         if (coordinate < 0) {
@@ -90,15 +86,15 @@ public class LocationUtils {
             coordinate = -coordinate;
         }
 
-        final DecimalFormat df = new DecimalFormat("###.#####");
+        final var df = new DecimalFormat("###.#####");
         if (outputType == FORMAT_MINUTES || outputType == FORMAT_SECONDS) {
-            final int degrees = (int) Math.floor(coordinate);
+            final var degrees = (int) Math.floor(coordinate);
             sb.append(degrees);
             sb.append(':');
             coordinate -= degrees;
             coordinate *= 60.0;
             if (outputType == FORMAT_SECONDS) {
-                final int minutes = (int) Math.floor(coordinate);
+                final var minutes = (int) Math.floor(coordinate);
                 sb.append(minutes);
                 sb.append(':');
                 coordinate -= minutes;
@@ -128,42 +124,41 @@ public class LocationUtils {
             throw new NullPointerException();
         }
 
-        boolean negative = false;
+        var negative = false;
         if (coordinate.charAt(0) == '-') {
             coordinate = coordinate.substring(1);
             negative = true;
         }
 
-        final StringTokenizer st = new StringTokenizer(coordinate, ":");
-        final int tokens = st.countTokens();
+        final var st = new StringTokenizer(coordinate, ":");
+        final var tokens = st.countTokens();
         if (tokens < 1) {
             throw new IllegalArgumentException();
         }
         try {
-            final String degrees = st.nextToken();
+            final var degrees = st.nextToken();
             double val;
             if (tokens == 1) {
                 val = Double.parseDouble(degrees);
                 return negative ? -val : val;
             }
 
-            final String minutes = st.nextToken();
-            final int deg = Integer.parseInt(degrees);
+            final var minutes = st.nextToken();
+            final var deg = Integer.parseInt(degrees);
             double min;
-            double sec = 0.0;
-            boolean secPresent = false;
+            var sec = 0.0;
+            var secPresent = false;
 
             if (st.hasMoreTokens()) {
                 min = Integer.parseInt(minutes);
-                final String seconds = st.nextToken();
+                final var seconds = st.nextToken();
                 sec = Double.parseDouble(seconds);
                 secPresent = true;
             } else {
                 min = Double.parseDouble(minutes);
             }
 
-            final boolean isNegative180 = negative && (deg == 180) &&
-                    (min == 0) && (sec == 0);
+            final var isNegative180 = negative && (deg == 180) && (min == 0) && (sec == 0);
 
             // deg must be in [0, 179] except for the case of -180 degrees
             if ((deg < 0.0) || (deg > 179 && !isNegative180)) {
@@ -199,18 +194,17 @@ public class LocationUtils {
      * @param results        instance containing results.
      */
     public static void distanceAndBearing(
-            final double startLatitude, final double startLongitude,
-            final double endLatitude, final double endLongitude,
-            final BearingDistance results) {
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final BearingDistance results) {
         //noinspection all
-        GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
-        results.mStartLatitude = data.getLat1();
-        results.mStartLongitude = data.getLon1();
-        results.mEndLatitude = data.getLat2();
-        results.mEndLongitude = data.getLon2();
-        results.mDistance = data.getS12();
-        results.mInitialBearing = data.getAzi1();
-        results.mFinalBearing = data.getAzi2();
+        final var data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
+        results.startLatitude = data.getLat1();
+        results.startLongitude = data.getLon1();
+        results.endLatitude = data.getLat2();
+        results.endLongitude = data.getLon2();
+        results.distance = data.getS12();
+        results.initialBearing = data.getAzi1();
+        results.finalBearing = data.getAzi2();
     }
 
     /**
@@ -224,9 +218,9 @@ public class LocationUtils {
      * @return bearing and distance results.
      */
     public static BearingDistance distanceAndBearing(
-            final double startLatitude, final double startLongitude,
-            final double endLatitude, final double endLongitude) {
-        final BearingDistance results = new BearingDistance();
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
+        final var results = new BearingDistance();
         distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);
         return results;
     }
@@ -244,13 +238,13 @@ public class LocationUtils {
      * @throws IllegalArgumentException if results does not have at least 1 element.
      */
     public static void distanceAndBearing(
-            final double startLatitude, final double startLongitude,
-            final double endLatitude, final double endLongitude, final double[] results) {
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final double[] results) {
         if (results.length == 0) {
             throw new IllegalArgumentException();
         }
         //noinspection all
-        final GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
+        final var data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
         results[0] = data.getS12();
         if (results.length > 1) {
             results[1] = data.getAzi1();
@@ -286,8 +280,8 @@ public class LocationUtils {
      * @return distance between two locations.
      */
     public static Distance distanceBetween(
-            final double startLatitude, final double startLongitude,
-            final double endLatitude, final double endLongitude) {
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
         return new Distance(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude),
                 DistanceUnit.METER);
     }
@@ -303,8 +297,8 @@ public class LocationUtils {
      * @return provided result instance.
      */
     public static Distance distanceBetween(
-            final double startLatitude, final double startLongitude,
-            final double endLatitude, final double endLongitude, final Distance result) {
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final Distance result) {
         result.setValue(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude));
         result.setUnit(DistanceUnit.METER);
         return result;
@@ -318,37 +312,37 @@ public class LocationUtils {
         /**
          * Starting latitude (degrees).
          */
-        private double mStartLatitude;
+        private double startLatitude;
 
         /**
          * Starting longitude (degrees).
          */
-        private double mStartLongitude;
+        private double startLongitude;
 
         /**
          * Ending latitude (degrees).
          */
-        private double mEndLatitude;
+        private double endLatitude;
 
         /**
          * Ending longitude (degrees).
          */
-        private double mEndLongitude;
+        private double endLongitude;
 
         /**
          * Distance (meters).
          */
-        private double mDistance = 0.0f;
+        private double distance = 0.0f;
 
         /**
          * Initial bearing (degrees).
          */
-        private double mInitialBearing = 0.0f;
+        private double initialBearing = 0.0f;
 
         /**
          * Final bearing (degrees).
          */
-        private double mFinalBearing = 0.0f;
+        private double finalBearing = 0.0f;
 
         /**
          * Gets starting latitude expressed in degrees.
@@ -356,7 +350,7 @@ public class LocationUtils {
          * @return starting latitude (degrees).
          */
         public double getStartLatitude() {
-            return mStartLatitude;
+            return startLatitude;
         }
 
         /**
@@ -365,7 +359,7 @@ public class LocationUtils {
          * @return starting longitude (degrees).
          */
         public double getStartLongitude() {
-            return mStartLongitude;
+            return startLongitude;
         }
 
         /**
@@ -374,7 +368,7 @@ public class LocationUtils {
          * @return ending latitude (degrees).
          */
         public double getEndLatitude() {
-            return mEndLatitude;
+            return endLatitude;
         }
 
         /**
@@ -383,7 +377,7 @@ public class LocationUtils {
          * @return ending longitude (degrees).
          */
         public double getEndLongitude() {
-            return mEndLongitude;
+            return endLongitude;
         }
 
         /**
@@ -392,7 +386,7 @@ public class LocationUtils {
          * @return distance (meters).
          */
         public double getDistanceMeters() {
-            return mDistance;
+            return distance;
         }
 
         /**
@@ -401,7 +395,7 @@ public class LocationUtils {
          * @return distance.
          */
         public Distance getDistance() {
-            return new Distance(mDistance, DistanceUnit.METER);
+            return new Distance(distance, DistanceUnit.METER);
         }
 
         /**
@@ -411,7 +405,7 @@ public class LocationUtils {
          * @return provided distance instance.
          */
         public Distance getDistance(final Distance result) {
-            result.setValue(mDistance);
+            result.setValue(distance);
             result.setUnit(DistanceUnit.METER);
             return result;
         }
@@ -422,7 +416,7 @@ public class LocationUtils {
          * @return initial bearing/azimuth (degrees).
          */
         public double getInitialBearing() {
-            return mInitialBearing;
+            return initialBearing;
         }
 
         /**
@@ -431,7 +425,7 @@ public class LocationUtils {
          * @return final bearing/azimuth (degrees).
          */
         public double getFinalBearing() {
-            return mFinalBearing;
+            return finalBearing;
         }
     }
 }

@@ -21,14 +21,15 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Random;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements LaterationSolverListener<Point2D> {
+@ExtendWith(MockitoExtension.class)
+class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements LaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 3;
     private static final int MAX_CIRCLES = 10;
@@ -48,10 +49,9 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
     private int solveEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
+        var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
 
         // check correctness
         assertNull(solver.getListener());
@@ -66,11 +66,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions and distances
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        final double[] distances = new double[3];
+        final var distances = new double[3];
         solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances);
 
         // check correctness
@@ -86,32 +86,17 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[4];
-        final Point2D[] shortPositions = new Point2D[1];
-        final double[] shortDistances = new double[1];
-        solver = null;
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        final var wrong = new double[4];
+        final var shortPositions = new Point2D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(null, distances));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, wrong));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances));
 
         // constructor with listener
         // noinspection unchecked
@@ -146,33 +131,17 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(null, distances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, wrong, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(null, distances, listener));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, null, listener));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, wrong, listener));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances, listener));
 
         // constructor with circles
-        final Circle[] circles = new Circle[3];
+        final var circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
@@ -191,21 +160,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final Circle[] shortCircles = new Circle[1];
-
-        solver = null;
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver((Circle[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortCircles);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        final var shortCircles = new Circle[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver((Circle[]) null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(shortCircles));
 
         // constructor with circles and listener
         solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, listener);
@@ -223,41 +182,32 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortCircles, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(null, listener));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InhomogeneousLinearLeastSquaresLateration2DSolver(shortCircles, listener));
     }
 
     @Test
-    public void testGetSetCircles() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetCircles() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
+        final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getCircles());
 
         // set new value
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[3];
+        final var distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Circle[] circles = new Circle[3];
+        final var circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
@@ -265,29 +215,20 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solver.setCircles(circles);
 
         // check
-        final Circle[] circles2 = solver.getCircles();
-        for (int i = 0; i < 3; i++) {
+        final var circles2 = solver.getCircles();
+        for (var i = 0; i < 3; i++) {
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
         }
 
         // force IllegalArgumentException
-        try {
-            solver.setCircles(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setCircles(new Circle[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setCircles(null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setCircles(new Circle[1]));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
+    void testGetSetListener() throws LockedException {
+        final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getListener());
@@ -302,9 +243,8 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() throws LockedException {
-        final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
+    void testGetSetPositionsAndDistances() throws LockedException {
+        final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -312,11 +252,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertFalse(solver.isReady());
 
         // set new values
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        final double[] distances = new double[3];
+        final var distances = new double[3];
 
         solver.setPositionsAndDistances(positions, distances);
 
@@ -326,52 +266,34 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[4]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point2D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[4]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point2D[1],
+                new double[1]));
     }
 
     @Test
-    public void testSolveNoError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius;
-            final Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
+            final var circles = new Circle[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 circles[i] = new Circle(center, radius);
             }
 
-            final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
+            final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -382,7 +304,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -395,58 +317,46 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Circle[] circles = new Circle[3];
-        InhomogeneousPoint2D center;
-        double radius;
-        for (int i = 0; i < 3; i++) {
-            center = new InhomogeneousPoint2D(0.0, 0.0);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Circle[3];
+        for (var i = 0; i < 3; i++) {
+            final var center = new InhomogeneousPoint2D(0.0, 0.0);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Circle(center, radius);
         }
         solver.setCircles(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Test
-    public void testSolveWithError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D point;
-            double distance, error;
-            final Point2D[] positions = new Point2D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint2D(
+            final var positions = new Point2D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances, this);
+            final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances,
+                    this);
 
             reset();
             assertEquals(0, solveStart);
@@ -457,8 +367,8 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
-            distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -471,29 +381,26 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
     }
 
     @Test
-    public void testSolve3CirclesNoError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolve3CirclesNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = MIN_CIRCLES;
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = MIN_CIRCLES;
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius;
-            final Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
+            final var circles = new Circle[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 circles[i] = new Circle(center, radius);
             }
 
-            final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
+            final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -504,7 +411,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -517,29 +424,18 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                new InhomogeneousLinearLeastSquaresLateration2DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Circle[] circles = new Circle[3];
-        InhomogeneousPoint2D center;
-        double radius;
-        for (int i = 0; i < 3; i++) {
-            center = new InhomogeneousPoint2D(0.0, 0.0);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Circle[3];
+        for (var i = 0; i < 3; i++) {
+            final var center = new InhomogeneousPoint2D(0.0, 0.0);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Circle(center, radius);
         }
         solver.setCircles(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Override
@@ -558,28 +454,10 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solveStart = solveEnd = 0;
     }
 
-    private void checkLocked(final InhomogeneousLinearLeastSquaresLateration2DSolver solver) {
-        try {
-            solver.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setCircles(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.solve();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final InhomogeneousLinearLeastSquaresLateration2DSolver solver) {
+        assertThrows(LockedException.class, () -> solver.setListener(null));
+        assertThrows(LockedException.class, () -> solver.setPositionsAndDistances(null, null));
+        assertThrows(LockedException.class, () -> solver.setCircles(null));
+        assertThrows(LockedException.class, solver::solve);
     }
 }

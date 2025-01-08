@@ -15,27 +15,27 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class PolygonAreaTest {
+class PolygonAreaTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
     private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         //test with polyline
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, true);
+        var area = new PolygonArea(Geodesic.WGS84, true);
 
         //check
         assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, area.getMajorRadius(), 0.0);
         assertEquals(Constants.EARTH_FLATTENING_WGS84, area.getFlattening(), 0.0);
 
-        Pair p = area.getCurrentPoint();
+        var p = area.getCurrentPoint();
         assertEquals(Double.NaN, p.getFirst(), 0.0);
         assertEquals(Double.NaN, p.getSecond(), 0.0);
 
@@ -52,8 +52,8 @@ public class PolygonAreaTest {
     }
 
     @Test
-    public void testClear() {
-        final PolygonArea area = new PolygonArea(Geodesic.WGS84, true);
+    void testClear() {
+        final var area = new PolygonArea(Geodesic.WGS84, true);
 
         area.clear();
 
@@ -61,47 +61,47 @@ public class PolygonAreaTest {
         assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, area.getMajorRadius(), 0.0);
         assertEquals(Constants.EARTH_FLATTENING_WGS84, area.getFlattening(), 0.0);
 
-        final Pair p = area.getCurrentPoint();
+        final var p = area.getCurrentPoint();
         assertEquals(Double.NaN, p.getFirst(), 0.0);
         assertEquals(Double.NaN, p.getSecond(), 0.0);
     }
 
     @Test
-    public void testAddPointAndCompute() {
+    void testAddPointAndCompute() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
         //41.382790,2.177210
         //41.382911,2.177009
 
-        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final var polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final var area = new PolygonArea(Geodesic.WGS84, false);
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
 
-        final double lat3 = 41.382790;
-        final double lon3 = 2.177210;
+        final var lat3 = 41.382790;
+        final var lon3 = 2.177210;
         polyArea.addPoint(lat3, lon3);
         area.addPoint(lat3, lon3);
 
-        final double lat4 = 41.382911;
-        final double lon4 = 2.177009;
+        final var lat4 = 41.382911;
+        final var lon4 = 2.177009;
         polyArea.addPoint(lat4, lon4);
         area.addPoint(lat4, lon4);
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
-        PolygonResult polyResult = polyArea.compute();
-        PolygonResult areaResult = area.compute();
+        var polyResult = polyArea.compute();
+        var areaResult = area.compute();
 
         assertEquals(5, polyResult.getNum());
         assertEquals(121.34, polyResult.getPerimeter(), 1.0);
@@ -113,42 +113,41 @@ public class PolygonAreaTest {
     }
 
     @Test
-    public void testAddEdge() {
+    void testAddEdge() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
         //41.382790,2.177210
         //41.382911,2.177009
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
-        final double lat3 = 41.382790;
-        final double lon3 = 2.177210;
+        final var lat3 = 41.382790;
+        final var lon3 = 2.177210;
 
-        final double lat4 = 41.382911;
-        final double lon4 = 2.177009;
+        final var lat4 = 41.382911;
+        final var lon4 = 2.177009;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        GeodesicData data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
-        GeodesicData data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
-        GeodesicData data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
+        var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        var data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
+        var data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
+        var data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
 
-        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final var polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final var area = new PolygonArea(Geodesic.WGS84, false);
 
-        final PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
-        final PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
+        final var polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
+        final var areaEdge = new PolygonArea(Geodesic.WGS84, false);
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
         polyAreaEdge.addPoint(lat1, lon1);
         areaEdge.addPoint(lat1, lon1);
-
 
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
@@ -170,11 +169,11 @@ public class PolygonAreaTest {
         polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
         areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
-        final PolygonResult polyResult = polyArea.compute();
-        final PolygonResult areaResult = area.compute();
+        final var polyResult = polyArea.compute();
+        final var areaResult = area.compute();
 
-        final PolygonResult polyEdgeResult = polyAreaEdge.compute();
-        final PolygonResult areaEdgeResult = areaEdge.compute();
+        final var polyEdgeResult = polyAreaEdge.compute();
+        final var areaEdgeResult = areaEdge.compute();
 
         assertEquals(5, polyResult.getNum());
         assertEquals(121.34, polyResult.getPerimeter(), 1.0);
@@ -183,7 +182,6 @@ public class PolygonAreaTest {
         assertEquals(5, areaResult.getNum());
         assertEquals(121.34, areaResult.getPerimeter(), 1.0);
         assertEquals(815.72, areaResult.getArea(), 1.0);
-
 
         assertEquals(5, polyEdgeResult.getNum());
         assertEquals(121.34, polyEdgeResult.getPerimeter(), 1.0);
@@ -195,17 +193,17 @@ public class PolygonAreaTest {
     }
 
     @Test
-    public void testCompute() {
+    void testCompute() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
         //41.382790,2.177210
         //41.382911,2.177009
 
-        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final var area = new PolygonArea(Geodesic.WGS84, false);
 
-        double lat = 41.382643;
-        double lon = 2.176700;
+        var lat = 41.382643;
+        var lon = 2.176700;
         area.addPoint(lat, lon);
 
         lat = 41.382524;
@@ -221,7 +219,7 @@ public class PolygonAreaTest {
         area.addPoint(lat, lon);
 
         //compute reversed
-        PolygonResult result = area.compute(true, true);
+        var result = area.compute(true, true);
 
         assertEquals(121.34, result.getPerimeter(), 1.0);
         assertEquals(-815.72, result.getArea(), 1.0);
@@ -230,75 +228,74 @@ public class PolygonAreaTest {
         result = area.compute(true, false);
 
         assertNotNull(Geodesic.WGS84);
-        final double earthArea = Geodesic.WGS84.getEllipsoidArea();
+        final var earthArea = Geodesic.WGS84.getEllipsoidArea();
 
         assertEquals(earthArea - 815.72, result.getArea(), 1.0);
     }
 
     @Test
-    public void testTestPoint() {
+    void testTestPoint() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
         //41.382790,2.177210
         //41.382911,2.177009
 
-        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final var polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final var area = new PolygonArea(Geodesic.WGS84, false);
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
 
-        final double lat3 = 41.382790;
-        final double lon3 = 2.177210;
+        final var lat3 = 41.382790;
+        final var lon3 = 2.177210;
         polyArea.addPoint(lat3, lon3);
         area.addPoint(lat3, lon3);
 
-        final double lat4 = 41.382911;
-        final double lon4 = 2.177009;
+        final var lat4 = 41.382911;
+        final var lon4 = 2.177009;
         polyArea.addPoint(lat4, lon4);
         area.addPoint(lat4, lon4);
 
         //test
-        final PolygonResult testPolyResult1 = polyArea.testPoint(lat1, lon1, false, true);
-        final PolygonResult testAreaResult1 = area.testPoint(lat1, lon1, false, true);
+        final var testPolyResult1 = polyArea.testPoint(lat1, lon1, false, true);
+        final var testAreaResult1 = area.testPoint(lat1, lon1, false, true);
 
         //test reversed
-        final PolygonResult testPolyResult2 = polyArea.testPoint(lat1, lon1, true, true);
-        final PolygonResult testAreaResult2 = area.testPoint(lat1, lon1, true, true);
+        final var testPolyResult2 = polyArea.testPoint(lat1, lon1, true, true);
+        final var testAreaResult2 = area.testPoint(lat1, lon1, true, true);
 
         //test remaining earth surface
-        final PolygonResult testPolyResult3 = polyArea.testPoint(lat1, lon1, true, false);
-        final PolygonResult testAreaResult3 = area.testPoint(lat1, lon1, true, false);
+        final var testPolyResult3 = polyArea.testPoint(lat1, lon1, true, false);
+        final var testAreaResult3 = area.testPoint(lat1, lon1, true, false);
 
-        final PolygonResult testPolyResult4 = polyArea.testPoint(lat1, lon1, false, false);
-        final PolygonResult testAreaResult4 = area.testPoint(lat1, lon1, false, false);
-
+        final var testPolyResult4 = polyArea.testPoint(lat1, lon1, false, false);
+        final var testAreaResult4 = area.testPoint(lat1, lon1, false, false);
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
         //test
-        final PolygonResult polyResult1 = polyArea.compute(false, true);
-        final PolygonResult areaResult1 = area.compute(false, true);
+        final var polyResult1 = polyArea.compute(false, true);
+        final var areaResult1 = area.compute(false, true);
 
         //test reversed
-        final PolygonResult polyResult2 = polyArea.compute(true, true);
-        final PolygonResult areaResult2 = area.compute(true, true);
+        final var polyResult2 = polyArea.compute(true, true);
+        final var areaResult2 = area.compute(true, true);
 
         //test remaining earth surface
-        final PolygonResult polyResult3 = polyArea.compute(true, false);
-        final PolygonResult areaResult3 = area.compute(true, false);
+        final var polyResult3 = polyArea.compute(true, false);
+        final var areaResult3 = area.compute(true, false);
 
-        final PolygonResult polyResult4 = polyArea.compute(false, false);
-        final PolygonResult areaResult4 = area.compute(false, false);
+        final var polyResult4 = polyArea.compute(false, false);
+        final var areaResult4 = area.compute(false, false);
 
         assertEquals(polyResult1.getNum(), testPolyResult1.getNum());
         assertEquals(polyResult1.getArea(), testPolyResult1.getArea(), ABSOLUTE_ERROR);
@@ -334,33 +331,33 @@ public class PolygonAreaTest {
     }
 
     @Test
-    public void testTestEdge() {
+    void testTestEdge() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
         //41.382790,2.177210
         //41.382911,2.177009
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
-        final double lat3 = 41.382790;
-        final double lon3 = 2.177210;
+        final var lat3 = 41.382790;
+        final var lon3 = 2.177210;
 
-        final double lat4 = 41.382911;
-        final double lon4 = 2.177009;
+        final var lat4 = 41.382911;
+        final var lon4 = 2.177009;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        final GeodesicData data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
-        final GeodesicData data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
-        final GeodesicData data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
+        final var data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
+        final var data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
 
-        final PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
-        final PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
+        final var polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
+        final var areaEdge = new PolygonArea(Geodesic.WGS84, false);
 
         polyAreaEdge.addPoint(lat1, lon1);
         areaEdge.addPoint(lat1, lon1);
@@ -375,42 +372,37 @@ public class PolygonAreaTest {
         areaEdge.addEdge(data3.getAzi1(), data3.getS12());
 
         //test
-        final PolygonResult testPolyResult1 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
-                true);
-        final PolygonResult testAreaResult1 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
+        final var testPolyResult1 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
+        final var testAreaResult1 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
 
         //test reversed
-        final PolygonResult testPolyResult2 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
-                true);
-        final PolygonResult testAreaResult2 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
+        final var testPolyResult2 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
+        final var testAreaResult2 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
 
         //test remaining earth surface
-        final PolygonResult testPolyResult3 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
-                false);
-        final PolygonResult testAreaResult3 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
+        final var testPolyResult3 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
+        final var testAreaResult3 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
 
-        final PolygonResult testPolyResult4 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
-                false);
-        final PolygonResult testAreaResult4 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
-
+        final var testPolyResult4 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
+        final var testAreaResult4 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
 
         polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
         areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
         //test
-        final PolygonResult polyEdgeResult1 = polyAreaEdge.compute(false, true);
-        final PolygonResult areaEdgeResult1 = areaEdge.compute(false, true);
+        final var polyEdgeResult1 = polyAreaEdge.compute(false, true);
+        final var areaEdgeResult1 = areaEdge.compute(false, true);
 
         //test reversed
-        final PolygonResult polyEdgeResult2 = polyAreaEdge.compute(true, true);
-        final PolygonResult areaEdgeResult2 = areaEdge.compute(true, true);
+        final var polyEdgeResult2 = polyAreaEdge.compute(true, true);
+        final var areaEdgeResult2 = areaEdge.compute(true, true);
 
         //test remaining earth surface
-        final PolygonResult polyEdgeResult3 = polyAreaEdge.compute(true, false);
-        final PolygonResult areaEdgeResult3 = areaEdge.compute(true, false);
+        final var polyEdgeResult3 = polyAreaEdge.compute(true, false);
+        final var areaEdgeResult3 = areaEdge.compute(true, false);
 
-        final PolygonResult polyEdgeResult4 = polyAreaEdge.compute(false, false);
-        final PolygonResult areaEdgeResult4 = areaEdge.compute(false, false);
+        final var polyEdgeResult4 = polyAreaEdge.compute(false, false);
+        final var areaEdgeResult4 = areaEdge.compute(false, false);
 
         assertEquals(polyEdgeResult1.getNum(), testPolyResult1.getNum());
         assertEquals(polyEdgeResult1.getArea(), testPolyResult1.getArea(), ABSOLUTE_ERROR);

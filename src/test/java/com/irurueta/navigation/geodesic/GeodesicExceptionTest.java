@@ -15,15 +15,15 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class GeodesicExceptionTest {
+class GeodesicExceptionTest {
 
     @Test
-    public void testConstructor() {
-        GeodesicException ex = new GeodesicException();
+    void testConstructor() {
+        var ex = new GeodesicException();
         assertNotNull(ex);
 
         ex = new GeodesicException("message");

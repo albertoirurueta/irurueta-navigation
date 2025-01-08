@@ -28,14 +28,13 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GNSSEstimationTest {
+class GNSSEstimationTest {
 
     private static final double MIN_POS_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
     private static final double MAX_POS_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
@@ -52,9 +51,9 @@ public class GNSSEstimationTest {
     private static final double THRESHOLD = 1e-8;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test empty constructor
-        GNSSEstimation estimation = new GNSSEstimation();
+        var estimation = new GNSSEstimation();
 
         // check default values
         assertEquals(0.0, estimation.getX(), 0.0);
@@ -66,19 +65,18 @@ public class GNSSEstimationTest {
         assertEquals(0.0, estimation.getClockOffset(), 0.0);
         assertEquals(0.0, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
@@ -92,21 +90,20 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with measurement values
-        final Distance distanceX = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ = new Distance(z, DistanceUnit.METER);
+        final var distanceX = new Distance(x, DistanceUnit.METER);
+        final var distanceY = new Distance(y, DistanceUnit.METER);
+        final var distanceZ = new Distance(z, DistanceUnit.METER);
 
-        final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        final Distance clockOffsetDistance = new Distance(clockOffset, DistanceUnit.METER);
-        final Speed clockDriftSpeed = new Speed(clockDrift, SpeedUnit.METERS_PER_SECOND);
+        final var clockOffsetDistance = new Distance(clockOffset, DistanceUnit.METER);
+        final var clockDriftSpeed = new Speed(clockDrift, SpeedUnit.METERS_PER_SECOND);
 
-        estimation = new GNSSEstimation(distanceX, distanceY, distanceZ, speedX, speedY, speedZ,
-                clockOffsetDistance, clockDriftSpeed);
+        estimation = new GNSSEstimation(distanceX, distanceY, distanceZ, speedX, speedY, speedZ, clockOffsetDistance,
+                clockDriftSpeed);
 
         // check default values
         assertEquals(x, estimation.getX(), 0.0);
@@ -118,9 +115,8 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with values and position
-        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+        final var position = new InhomogeneousPoint3D(x, y, z);
         estimation = new GNSSEstimation(position, vx, vy, vz, clockOffset, clockDrift);
 
         // check default values
@@ -133,10 +129,8 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with measurement values and position
-        estimation = new GNSSEstimation(position, speedX, speedY, speedZ,
-                clockOffsetDistance, clockDriftSpeed);
+        estimation = new GNSSEstimation(position, speedX, speedY, speedZ, clockOffsetDistance, clockDriftSpeed);
 
         // check default values
         assertEquals(x, estimation.getX(), 0.0);
@@ -148,10 +142,9 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with ECEF position, ECEF velocity and clock offset and drift
-        final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
-        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
+        final var ecefPosition = new ECEFPosition(x, y, z);
+        final var ecefVelocity = new ECEFVelocity(vx, vy, vz);
         estimation = new GNSSEstimation(ecefPosition, ecefVelocity, clockOffset, clockDrift);
 
         // check default values
@@ -163,7 +156,6 @@ public class GNSSEstimationTest {
         assertEquals(vz, estimation.getVz(), 0.0);
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
-
 
         // test constructor with ECEF position, ECEF velocity and clock offset and drift measurements
         estimation = new GNSSEstimation(ecefPosition, ecefVelocity, clockOffsetDistance, clockDriftSpeed);
@@ -178,10 +170,8 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test constructor with ECEF position and velocity, and clock offset and drift
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
+        final var positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
         estimation = new GNSSEstimation(positionAndVelocity, clockOffset, clockDrift);
 
         // check default values
@@ -207,9 +197,8 @@ public class GNSSEstimationTest {
         assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
         // test copy constructor
-        final GNSSEstimation estimation2 = new GNSSEstimation(estimation);
+        final var estimation2 = new GNSSEstimation(estimation);
 
         // check default values
         assertEquals(x, estimation2.getX(), 0.0);
@@ -223,15 +212,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetX() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetX() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getX(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         estimation.setX(x);
 
@@ -240,15 +229,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetY() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetY() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getY(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         estimation.setY(y);
 
@@ -257,15 +246,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetZ() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetZ() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getZ(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         estimation.setZ(z);
 
@@ -274,8 +263,8 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testSetPositionCoordinates() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testSetPositionCoordinates() {
+        final var estimation = new GNSSEstimation();
 
         // check default values
         assertEquals(0.0, estimation.getX(), 0.0);
@@ -283,10 +272,10 @@ public class GNSSEstimationTest {
         assertEquals(0.0, estimation.getZ(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         estimation.setPositionCoordinates(x, y, z);
 
@@ -297,15 +286,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetVx() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetVx() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getVx(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         estimation.setVx(vx);
 
@@ -314,15 +303,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetVy() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetVy() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getVy(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         estimation.setVy(vy);
 
@@ -331,15 +320,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetVz() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetVz() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         estimation.setVz(vz);
 
@@ -348,8 +337,8 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testSetVelocityCoordinates() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testSetVelocityCoordinates() {
+        final var estimation = new GNSSEstimation();
 
         // check default values
         assertEquals(0.0, estimation.getVx(), 0.0);
@@ -357,10 +346,10 @@ public class GNSSEstimationTest {
         assertEquals(0.0, estimation.getVz(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         estimation.setVelocityCoordinates(vx, vy, vz);
 
@@ -371,15 +360,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetClockOffset() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetClockOffset() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getClockOffset(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var randomizer = new UniformRandomizer();
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
 
         estimation.setClockOffset(clockOffset);
 
@@ -388,15 +377,15 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetClockDrift() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetClockDrift() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
         assertEquals(0.0, estimation.getClockDrift(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var randomizer = new UniformRandomizer();
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         estimation.setClockDrift(clockDrift);
 
@@ -405,94 +394,94 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetDistanceX() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetDistanceX() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Distance distanceX1 = estimation.getDistanceX();
+        final var distanceX1 = estimation.getDistanceX();
 
         assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
 
         estimation.setDistanceX(distanceX2);
 
         // check
-        final Distance distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
         estimation.getDistanceX(distanceX3);
-        final Distance distanceX4 = estimation.getDistanceX();
+        final var distanceX4 = estimation.getDistanceX();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceX2, distanceX4);
     }
 
     @Test
-    public void testGetSetDistanceY() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetDistanceY() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Distance distanceY1 = estimation.getDistanceY();
+        final var distanceY1 = estimation.getDistanceY();
 
         assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
 
         estimation.setDistanceY(distanceY2);
 
         // check
-        final Distance distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
         estimation.getDistanceY(distanceY3);
-        final Distance distanceY4 = estimation.getDistanceY();
+        final var distanceY4 = estimation.getDistanceY();
 
         assertEquals(distanceY2, distanceY3);
         assertEquals(distanceY2, distanceY4);
     }
 
     @Test
-    public void testGetSetDistanceZ() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetDistanceZ() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Distance distanceZ1 = estimation.getDistanceZ();
+        final var distanceZ1 = estimation.getDistanceZ();
 
         assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
 
         estimation.setDistanceZ(distanceZ2);
 
         // check
-        final Distance distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
         estimation.getDistanceZ(distanceZ3);
-        final Distance distanceZ4 = estimation.getDistanceZ();
+        final var distanceZ4 = estimation.getDistanceZ();
 
         assertEquals(distanceZ2, distanceZ3);
         assertEquals(distanceZ2, distanceZ4);
     }
 
     @Test
-    public void testSetPositionCoordinatesWithDistances() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testSetPositionCoordinatesWithDistances() {
+        final var estimation = new GNSSEstimation();
 
         // check default values
-        final Distance distanceX1 = estimation.getDistanceX();
-        final Distance distanceY1 = estimation.getDistanceY();
-        final Distance distanceZ1 = estimation.getDistanceZ();
+        final var distanceX1 = estimation.getDistanceX();
+        final var distanceY1 = estimation.getDistanceY();
+        final var distanceZ1 = estimation.getDistanceZ();
 
         assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceX1.getUnit());
@@ -502,21 +491,21 @@ public class GNSSEstimationTest {
         assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
 
         estimation.setPositionCoordinates(distanceX2, distanceY2, distanceZ2);
 
         // check
-        final Distance distanceX3 = estimation.getDistanceX();
-        final Distance distanceY3 = estimation.getDistanceY();
-        final Distance distanceZ3 = estimation.getDistanceZ();
+        final var distanceX3 = estimation.getDistanceX();
+        final var distanceY3 = estimation.getDistanceY();
+        final var distanceZ3 = estimation.getDistanceZ();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceY2, distanceY3);
@@ -524,94 +513,94 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetSpeedX() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetSpeedX() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Speed speedX1 = estimation.getSpeedX();
+        final var speedX1 = estimation.getSpeedX();
 
         assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
 
         estimation.setSpeedX(speedX2);
 
         // check
-        final Speed speedX3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedX3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         estimation.getSpeedX(speedX3);
-        final Speed speedX4 = estimation.getSpeedX();
+        final var speedX4 = estimation.getSpeedX();
 
         assertEquals(speedX2, speedX3);
         assertEquals(speedX2, speedX4);
     }
 
     @Test
-    public void testGetSetSpeedY() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetSpeedY() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Speed speedY1 = estimation.getSpeedY();
+        final var speedY1 = estimation.getSpeedY();
 
         assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
 
         estimation.setSpeedY(speedY2);
 
         // check
-        final Speed speedY3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedY3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         estimation.getSpeedY(speedY3);
-        final Speed speedY4 = estimation.getSpeedY();
+        final var speedY4 = estimation.getSpeedY();
 
         assertEquals(speedY2, speedY3);
         assertEquals(speedY2, speedY4);
     }
 
     @Test
-    public void testGetSetSpeedZ() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetSpeedZ() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Speed speedZ1 = estimation.getSpeedZ();
+        final var speedZ1 = estimation.getSpeedZ();
 
         assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
         estimation.setSpeedZ(speedZ2);
 
         // check
-        final Speed speedZ3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedZ3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         estimation.getSpeedZ(speedZ3);
-        final Speed speedZ4 = estimation.getSpeedZ();
+        final var speedZ4 = estimation.getSpeedZ();
 
         assertEquals(speedZ2, speedZ3);
         assertEquals(speedZ2, speedZ4);
     }
 
     @Test
-    public void testSetVelocityCoordinatesWithSpeed() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testSetVelocityCoordinatesWithSpeed() {
+        final var estimation = new GNSSEstimation();
 
         // check default values
-        final Speed speedX1 = estimation.getSpeedX();
-        final Speed speedY1 = estimation.getSpeedY();
-        final Speed speedZ1 = estimation.getSpeedZ();
+        final var speedX1 = estimation.getSpeedX();
+        final var speedY1 = estimation.getSpeedY();
+        final var speedZ1 = estimation.getSpeedZ();
 
         assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
@@ -621,21 +610,21 @@ public class GNSSEstimationTest {
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
         estimation.setVelocityCoordinates(speedX2, speedY2, speedZ2);
 
         // check
-        final Speed speedX3 = estimation.getSpeedX();
-        final Speed speedY3 = estimation.getSpeedY();
-        final Speed speedZ3 = estimation.getSpeedZ();
+        final var speedX3 = estimation.getSpeedX();
+        final var speedY3 = estimation.getSpeedY();
+        final var speedZ3 = estimation.getSpeedZ();
 
         assertEquals(speedX2, speedX3);
         assertEquals(speedY2, speedY3);
@@ -643,153 +632,151 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testGetSetClockOffsetDistance() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetClockOffsetDistance() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Distance clockOffset1 = estimation.getClockOffsetDistance();
+        final var clockOffset1 = estimation.getClockOffsetDistance();
 
         assertEquals(0.0, clockOffset1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, clockOffset1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
+        final var randomizer = new UniformRandomizer();
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
 
-        final Distance clockOffset2 = new Distance(clockOffset, DistanceUnit.METER);
+        final var clockOffset2 = new Distance(clockOffset, DistanceUnit.METER);
 
         estimation.setClockOffset(clockOffset2);
 
         // check
-        final Distance clockOffset3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var clockOffset3 = new Distance(0.0, DistanceUnit.KILOMETER);
         estimation.getClockOffsetDistance(clockOffset3);
-        final Distance clockOffset4 = estimation.getClockOffsetDistance();
+        final var clockOffset4 = estimation.getClockOffsetDistance();
 
         assertEquals(clockOffset2, clockOffset3);
         assertEquals(clockOffset2, clockOffset4);
     }
 
     @Test
-    public void testGetSetClockDriftSpeed() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetClockDriftSpeed() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Speed clockDrift1 = estimation.getClockDriftSpeed();
+        final var clockDrift1 = estimation.getClockDriftSpeed();
 
         assertEquals(0.0, clockDrift1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, clockDrift1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final var randomizer = new UniformRandomizer();
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final Speed clockDrift2 = new Speed(clockDrift, SpeedUnit.METERS_PER_SECOND);
+        final var clockDrift2 = new Speed(clockDrift, SpeedUnit.METERS_PER_SECOND);
 
         estimation.setClockDrift(clockDrift2);
 
         // check
-        final Speed clockDrift3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var clockDrift3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         estimation.getClockDriftSpeed(clockDrift3);
-        final Speed clockDrift4 = estimation.getClockDriftSpeed();
+        final var clockDrift4 = estimation.getClockDriftSpeed();
 
         assertEquals(clockDrift2, clockDrift3);
         assertEquals(clockDrift2, clockDrift4);
     }
 
     @Test
-    public void testGetSetPosition() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetPosition() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final Point3D position1 = estimation.getPosition();
+        final var position1 = estimation.getPosition();
 
         assertEquals(position1, Point3D.create());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Point3D position2 = new InhomogeneousPoint3D(x, y, z);
+        final var position2 = new InhomogeneousPoint3D(x, y, z);
 
         estimation.setPosition(position2);
 
         // check
-        final Point3D position3 = Point3D.create();
+        final var position3 = Point3D.create();
         estimation.getPosition(position3);
-        final Point3D position4 = estimation.getPosition();
+        final var position4 = estimation.getPosition();
 
         assertEquals(position2, position3);
         assertEquals(position2, position4);
     }
 
     @Test
-    public void testGetSetEcefPosition() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetEcefPosition() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final ECEFPosition position1 = estimation.getEcefPosition();
+        final var position1 = estimation.getEcefPosition();
 
         assertEquals(0.0, position1.getX(), 0.0);
         assertEquals(0.0, position1.getY(), 0.0);
         assertEquals(0.0, position1.getZ(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
         estimation.setEcefPosition(position2);
 
         // check
-        final ECEFPosition position3 = new ECEFPosition();
+        final var position3 = new ECEFPosition();
         estimation.getEcefPosition(position3);
-        final ECEFPosition position4 = estimation.getEcefPosition();
+        final var position4 = estimation.getEcefPosition();
 
         assertEquals(position2, position3);
         assertEquals(position2, position4);
     }
 
     @Test
-    public void testGetSetEcefVelocity() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetEcefVelocity() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final ECEFVelocity velocity1 = estimation.getEcefVelocity();
+        final var velocity1 = estimation.getEcefVelocity();
 
         assertEquals(0.0, velocity1.getVx(), 0.0);
         assertEquals(0.0, velocity1.getVy(), 0.0);
         assertEquals(0.0, velocity1.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final var velocity2 = new ECEFVelocity(vx, vy, vz);
         estimation.setEcefVelocity(velocity2);
 
         // check
-        final ECEFVelocity velocity3 = new ECEFVelocity();
+        final var velocity3 = new ECEFVelocity();
         estimation.getEcefVelocity(velocity3);
-        final ECEFVelocity velocity4 = estimation.getEcefVelocity();
+        final var velocity4 = estimation.getEcefVelocity();
 
         assertEquals(velocity2, velocity3);
         assertEquals(velocity2, velocity4);
     }
 
     @Test
-    public void testGetSetPositionAndVelocity() {
-        final GNSSEstimation estimation = new GNSSEstimation();
+    void testGetSetPositionAndVelocity() {
+        final var estimation = new GNSSEstimation();
 
         // check default value
-        final ECEFPositionAndVelocity positionAndVelocity1 = estimation.getPositionAndVelocity();
+        final var positionAndVelocity1 = estimation.getPositionAndVelocity();
 
         assertEquals(0.0, positionAndVelocity1.getX(), 0.0);
         assertEquals(0.0, positionAndVelocity1.getY(), 0.0);
@@ -799,44 +786,44 @@ public class GNSSEstimationTest {
         assertEquals(0.0, positionAndVelocity1.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         estimation.setPositionAndVelocity(positionAndVelocity2);
 
         // check
-        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
+        final var positionAndVelocity3 = new ECEFPositionAndVelocity();
         estimation.getPositionAndVelocity(positionAndVelocity3);
-        final ECEFPositionAndVelocity positionAndVelocity4 = estimation.getPositionAndVelocity();
+        final var positionAndVelocity4 = estimation.getPositionAndVelocity();
 
         assertEquals(positionAndVelocity2, positionAndVelocity3);
         assertEquals(positionAndVelocity2, positionAndVelocity4);
     }
 
     @Test
-    public void testAsArray() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testAsArray() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final double[] result1 = new double[GNSSEstimation.NUM_PARAMETERS];
+        final var result1 = new double[GNSSEstimation.NUM_PARAMETERS];
         estimation.asArray(result1);
-        final double[] result2 = estimation.asArray();
+        final var result2 = estimation.asArray();
 
         // check
         assertEquals(x, result1[0], 0.0);
@@ -850,30 +837,26 @@ public class GNSSEstimationTest {
         assertArrayEquals(result1, result2, 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimation.asArray(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimation.asArray(new double[1]));
     }
 
     @Test
-    public void testFromArray() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testFromArray() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
+        final var array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
 
-        final GNSSEstimation estimation = new GNSSEstimation();
+        final var estimation = new GNSSEstimation();
         estimation.fromArray(array);
 
         // check
@@ -887,33 +870,30 @@ public class GNSSEstimationTest {
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimation.fromArray(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        assertThrows(IllegalArgumentException.class, () -> estimation.fromArray(new double[1]));
     }
 
     @Test
-    public void testAsMatrix() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testAsMatrix() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final Matrix result1 = new Matrix(GNSSEstimation.NUM_PARAMETERS, 1);
+        final var result1 = new Matrix(GNSSEstimation.NUM_PARAMETERS, 1);
         estimation.asMatrix(result1);
-        final Matrix result2 = new Matrix(1, 1);
+        final var result2 = new Matrix(1, 1);
         estimation.asMatrix(result2);
-        final Matrix result3 = estimation.asMatrix();
+        final var result3 = estimation.asMatrix();
 
         // check
         assertEquals(GNSSEstimation.NUM_PARAMETERS, result1.getRows());
@@ -931,23 +911,23 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testFromMatrix() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testFromMatrix() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
-        final Matrix matrix = Matrix.newFromArray(array);
+        final var array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
+        final var matrix = Matrix.newFromArray(array);
 
-        final GNSSEstimation estimation = new GNSSEstimation();
+        final var estimation = new GNSSEstimation();
         estimation.fromMatrix(matrix);
 
         // check
@@ -961,29 +941,27 @@ public class GNSSEstimationTest {
         assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimation.fromMatrix(new Matrix(1, GNSSEstimation.NUM_PARAMETERS));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        assertThrows(IllegalArgumentException.class,
+                () -> estimation.fromMatrix(new Matrix(1, GNSSEstimation.NUM_PARAMETERS)));
     }
 
     @Test
-    public void testCopyTo() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testCopyTo() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final GNSSEstimation estimation2 = new GNSSEstimation();
+        final var estimation2 = new GNSSEstimation();
         estimation1.copyTo(estimation2);
 
         // check
@@ -998,22 +976,22 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testCopyFrom() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testCopyFrom() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final GNSSEstimation estimation2 = new GNSSEstimation();
+        final var estimation2 = new GNSSEstimation();
         estimation2.copyFrom(estimation1);
 
         // check
@@ -1028,44 +1006,44 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testHashCode() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testHashCode() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation3 = new GNSSEstimation();
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation3 = new GNSSEstimation();
 
         assertEquals(estimation1.hashCode(), estimation2.hashCode());
         assertNotEquals(estimation1.hashCode(), estimation3.hashCode());
     }
 
     @Test
-    public void testEquals() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testEquals() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation3 = new GNSSEstimation();
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation3 = new GNSSEstimation();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(estimation1.equals((Object) estimation1));
@@ -1077,26 +1055,26 @@ public class GNSSEstimationTest {
         assertFalse(estimation1.equals((Object) null));
         assertFalse(estimation1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(estimation1.equals(new Object()));
+        assertNotEquals(new Object(), estimation1);
     }
 
     @Test
-    public void testEqualsWithThreshold() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testEqualsWithThreshold() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
-        final GNSSEstimation estimation3 = new GNSSEstimation();
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation3 = new GNSSEstimation();
 
         assertTrue(estimation1.equals(estimation1, THRESHOLD));
         assertTrue(estimation1.equals(estimation2, THRESHOLD));
@@ -1105,47 +1083,45 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testClone() throws CloneNotSupportedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testClone() throws CloneNotSupportedException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final Object estimation2 = estimation1.clone();
+        final var estimation2 = estimation1.clone();
 
         assertEquals(estimation1, estimation2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final var clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final var clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(estimation1);
-        final GNSSEstimation estimation2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(estimation1);
+        final var estimation2 = SerializationHelper.<GNSSEstimation>deserialize(bytes);
 
         // check
         assertEquals(estimation1, estimation2);

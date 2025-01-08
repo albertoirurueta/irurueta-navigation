@@ -21,7 +21,6 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
-import java.util.BitSet;
 import java.util.List;
 
 /**
@@ -37,33 +36,33 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     /**
      * Inhomogeneous linear lateration solver internally used by a robust algorithm.
      */
-    protected InhomogeneousLinearLeastSquaresLateration3DSolver mInhomogeneousLinearSolver;
+    protected InhomogeneousLinearLeastSquaresLateration3DSolver inhomogeneousLinearSolver;
 
     /**
      * Homogeneous linear lateration solver internally used by a robust algorithm.
      */
-    protected HomogeneousLinearLeastSquaresLateration3DSolver mHomogeneousLinearSolver;
+    protected HomogeneousLinearLeastSquaresLateration3DSolver homogeneousLinearSolver;
 
     /**
      * Non-linear lateration solver internally used to refine solution
      * found by robust algorithm.
      */
-    protected NonLinearLeastSquaresLateration3DSolver mNonLinearSolver;
+    protected NonLinearLeastSquaresLateration3DSolver nonLinearSolver;
 
     /**
      * Positions for linear inner solver used during robust estimation.
      */
-    protected Point3D[] mInnerPositions;
+    protected Point3D[] innerPositions;
 
     /**
      * Distances for linear inner solver used during robust estimation.
      */
-    protected double[] mInnerDistances;
+    protected double[] innerDistances;
 
     /**
      * Standard deviations for non-linear inner solver used during robust estimation.
      */
-    protected double[] mInnerDistanceStandardDeviations;
+    protected double[] innerDistanceStandardDeviations;
 
     /**
      * Constructor.
@@ -78,8 +77,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    protected RobustLateration3DSolver(
-            final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -170,11 +168,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
      *                                  than required (4 points) or don't have the same length.
      */
-    protected RobustLateration3DSolver(final Sphere[] spheres,
-                                       final double[] distanceStandardDeviations) {
+    protected RobustLateration3DSolver(final Sphere[] spheres, final double[] distanceStandardDeviations) {
         this();
-        internalSetSpheresAndStandardDeviations(spheres,
-                distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -186,8 +182,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      *                                  is less than required (4 points).
      */
-    protected RobustLateration3DSolver(final Sphere[] spheres,
-                                       final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheres(spheres);
     }
@@ -202,12 +197,10 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
      *                                  than required (4 points) or don't have the same length.
      */
-    protected RobustLateration3DSolver(final Sphere[] spheres,
-                                       final double[] distanceStandardDeviations,
+    protected RobustLateration3DSolver(final Sphere[] spheres, final double[] distanceStandardDeviations,
                                        final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
-        internalSetSpheresAndStandardDeviations(spheres,
-                distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -240,13 +233,12 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredPositionsAndDistances()}.
      */
     @Override
-    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
-            throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize) throws LockedException {
         super.setPreliminarySubsetSize(preliminarySubsetSize);
 
-        mInnerPositions = new Point3D[preliminarySubsetSize];
-        mInnerDistances = new double[preliminarySubsetSize];
-        mInnerDistanceStandardDeviations = new double[preliminarySubsetSize];
+        innerPositions = new Point3D[preliminarySubsetSize];
+        innerDistances = new double[preliminarySubsetSize];
+        innerDistanceStandardDeviations = new double[preliminarySubsetSize];
     }
 
     /**
@@ -255,14 +247,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Sphere[] result = new Sphere[mPositions.length];
+        final var result = new Sphere[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Sphere(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Sphere(positions[i], distances[i]);
         }
         return result;
     }
@@ -293,8 +285,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setSpheresAndStandardDeviations(
-            final Sphere[] spheres, final double[] radiusStandardDeviations)
-            throws LockedException {
+            final Sphere[] spheres, final double[] radiusStandardDeviations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -308,19 +299,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @return a new robust 3D lateration solver.
      */
     public static RobustLateration3DSolver create(final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver();
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver();
-            case MSAC:
-                return new MSACRobustLateration3DSolver();
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver();
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver();
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver();
+            case LMEDS -> new LMedSRobustLateration3DSolver();
+            case MSAC -> new MSACRobustLateration3DSolver();
+            case PROSAC -> new PROSACRobustLateration3DSolver();
+            default -> new PROMedSRobustLateration3DSolver();
+        };
     }
 
     /**
@@ -332,21 +317,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @return a new robust 3D lateration solver.
      */
     public static RobustLateration3DSolver create(
-            final RobustLaterationSolverListener<Point3D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(listener);
-        }
+            final RobustLaterationSolverListener<Point3D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(listener);
+            case MSAC -> new MSACRobustLateration3DSolver(listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(listener);
+            default -> new PROMedSRobustLateration3DSolver(listener);
+        };
     }
 
     /**
@@ -361,21 +339,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(positions, distances);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(positions, distances);
-        }
+            final Point3D[] positions, final double[] distances, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances);
+            case PROSAC -> new PROSACRobustLateration3DSolver(positions, distances);
+            default -> new PROMedSRobustLateration3DSolver(positions, distances);
+        };
     }
 
     /**
@@ -394,26 +365,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-        }
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -430,27 +390,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final RobustLaterationSolverListener<Point3D> listener,
+            final Point3D[] positions, final double[] distances, final RobustLaterationSolverListener<Point3D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(positions, distances,
-                        listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(positions, distances,
-                        listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(positions, distances, listener);
+            default -> new PROMedSRobustLateration3DSolver(positions, distances, listener);
+        };
     }
 
     /**
@@ -470,28 +418,17 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-        }
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            default -> new PROMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -503,21 +440,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null, length of spheres array
      *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(
-            final Sphere[] spheres, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(spheres);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(spheres);
-        }
+    public static RobustLateration3DSolver create(final Sphere[] spheres, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres);
+            case PROSAC -> new PROSACRobustLateration3DSolver(spheres);
+            default -> new PROMedSRobustLateration3DSolver(spheres);
+        };
     }
 
     /**
@@ -532,26 +462,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (4 points) or don't have the same length.
      */
     public static RobustLateration3DSolver create(
-            final Sphere[] spheres, final double[] distanceStandardDeviations,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-        }
+            final Sphere[] spheres, final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration3DSolver(spheres, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -568,19 +486,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     public static RobustLateration3DSolver create(
             final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres, listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres, listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres, listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(spheres, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(spheres, listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres, listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(spheres, listener);
+            default -> new PROMedSRobustLateration3DSolver(spheres, listener);
+        };
     }
 
     /**
@@ -598,26 +510,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration3DSolver create(
             final Sphere[] spheres, final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-        }
+            final RobustLaterationSolverListener<Point3D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            default -> new PROMedSRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -631,21 +531,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if quality scores is null, length of
      *                                  quality scores is less than required minimum (4 samples).
      */
-    public static RobustLateration3DSolver create(
-            final double[] qualityScores, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver();
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver();
-            case MSAC:
-                return new MSACRobustLateration3DSolver();
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores);
-        }
+    public static RobustLateration3DSolver create(final double[] qualityScores, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver();
+            case LMEDS -> new LMedSRobustLateration3DSolver();
+            case MSAC -> new MSACRobustLateration3DSolver();
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores);
+        };
     }
 
     /**
@@ -662,24 +555,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  quality scores is less than required minimum (4 samples).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point3D> listener,
+            final double[] qualityScores, final RobustLaterationSolverListener<Point3D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(listener);
+            case MSAC -> new MSACRobustLateration3DSolver(listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, listener);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, listener);
+        };
     }
 
     /**
@@ -698,23 +582,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        positions, distances);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        positions, distances);
-        }
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, positions, distances);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, positions, distances);
+        };
     }
 
     /**
@@ -737,24 +613,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     public static RobustLateration3DSolver create(
             final double[] qualityScores, final Point3D[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations);
+        };
     }
 
     /**
@@ -777,27 +644,18 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration3DSolver create(
             final double[] qualityScores, final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener,
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point3D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations, listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations, listener);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -818,26 +676,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration3DSolver create(
             final double[] qualityScores, final Point3D[] positions, final double[] distances,
-            final RobustLaterationSolverListener<Point3D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(positions, distances,
-                        listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(positions, distances,
-                        listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(positions, distances,
-                        listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        positions, distances, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        positions, distances, listener);
-        }
+            final RobustLaterationSolverListener<Point3D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(positions, distances, listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(positions, distances, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(positions, distances, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, positions, distances, listener);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, positions, distances, listener);
+        };
     }
 
     /**
@@ -854,23 +700,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        spheres);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        spheres);
-        }
+            final double[] qualityScores, final Sphere[] spheres, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, spheres);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, spheres);
+        };
     }
 
     /**
@@ -889,26 +726,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        spheres, distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        spheres, distanceStandardDeviations);
-        }
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, spheres, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, spheres, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -929,28 +755,17 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration3DSolver(spheres,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration3DSolver(qualityScores,
-                        spheres, distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration3DSolver(qualityScores,
-                        spheres, distanceStandardDeviations, listener);
-        }
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case LMEDS -> new LMedSRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration3DSolver(spheres, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration3DSolver(qualityScores, spheres, distanceStandardDeviations,
+                    listener);
+            default -> new PROMedSRobustLateration3DSolver(qualityScores, spheres, distanceStandardDeviations,
+                    listener);
+        };
     }
 
     /**
@@ -969,8 +784,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      */
-    public static RobustLateration3DSolver create(
-            final RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(final RobustLaterationSolverListener<Point3D> listener) {
         return create(listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -985,8 +799,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  don't have the same length or their length is smaller than required
      *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances) {
+    public static RobustLateration3DSolver create(final Point3D[] positions, final double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1005,10 +818,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
-        return create(positions, distances, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
+        return create(positions, distances, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1046,11 +857,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
-        return create(positions, distances, distanceStandardDeviations,
-                listener, DEFAULT_ROBUST_METHOD);
+        return create(positions, distances, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1077,8 +886,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration3DSolver create(
             final Sphere[] spheres, final double[] distanceStandardDeviations) {
-        return create(spheres, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+        return create(spheres, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1111,8 +919,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     public static RobustLateration3DSolver create(
             final Sphere[] spheres, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
-        return create(spheres, distanceStandardDeviations, listener,
-                DEFAULT_ROBUST_METHOD);
+        return create(spheres, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1142,8 +949,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  quality scores is less than required minimum (4 samples).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point3D> listener) {
+            final double[] qualityScores, final RobustLaterationSolverListener<Point3D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1162,8 +968,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances) {
+            final double[] qualityScores, final Point3D[] positions, final double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1184,10 +989,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  length is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final double[] distanceStandardDeviations) {
-        return create(qualityScores, positions, distances,
-                distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
+        return create(qualityScores, positions, distances, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1208,11 +1012,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener) {
-        return create(qualityScores, positions, distances, distanceStandardDeviations,
-                listener, DEFAULT_ROBUST_METHOD);
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point3D> listener) {
+        return create(qualityScores, positions, distances, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1231,11 +1033,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  length is smaller than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances,
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
             final RobustLaterationSolverListener<Point3D> listener) {
-        return create(qualityScores, positions, distances, listener,
-                DEFAULT_ROBUST_METHOD);
+        return create(qualityScores, positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1250,8 +1050,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  null, don't have the same length or their length is less than required
      *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres) {
+    public static RobustLateration3DSolver create(final double[] qualityScores, final Sphere[] spheres) {
         return create(qualityScores, spheres, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1270,10 +1069,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations) {
-        return create(qualityScores, spheres, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations) {
+        return create(qualityScores, spheres, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1293,11 +1090,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (4 points).
      */
     public static RobustLateration3DSolver create(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations,
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
-        return create(qualityScores, spheres, distanceStandardDeviations,
-                listener, DEFAULT_ROBUST_METHOD);
+        return create(qualityScores, spheres, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1312,59 +1107,58 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * estimated position if not requested or refinement failed.
      */
     protected Point3D attemptRefine(final Point3D position) {
-        if (mRefineResult && mInliersData != null) {
-            final BitSet inliers = mInliersData.getInliers();
-            final int nSamples = mDistances.length;
-            final int nInliers = mInliersData.getNumInliers();
-            final Point3D[] inlierPositions = new Point3D[nInliers];
-            final double[] inlierDistances = new double[nInliers];
+        if (refineResult && inliersData != null) {
+            final var inliers = inliersData.getInliers();
+            final var nSamples = distances.length;
+            final var nInliers = inliersData.getNumInliers();
+            final var inlierPositions = new Point3D[nInliers];
+            final var inlierDistances = new double[nInliers];
             double[] inlierStandardDeviations = null;
-            if (mDistanceStandardDeviations != null) {
+            if (distanceStandardDeviations != null) {
                 inlierStandardDeviations = new double[nInliers];
             }
-            int pos = 0;
-            for (int i = 0; i < nSamples; i++) {
+            var pos = 0;
+            for (var i = 0; i < nSamples; i++) {
                 if (inliers.get(i)) {
                     // sample is inlier
-                    inlierPositions[pos] = mPositions[i];
-                    inlierDistances[pos] = mDistances[i];
+                    inlierPositions[pos] = positions[i];
+                    inlierDistances[pos] = distances[i];
                     if (inlierStandardDeviations != null) {
-                        inlierStandardDeviations[pos] = mDistanceStandardDeviations[i];
+                        inlierStandardDeviations[pos] = distanceStandardDeviations[i];
                     }
                     pos++;
                 }
             }
 
             try {
-                mNonLinearSolver.setInitialPosition(position);
+                nonLinearSolver.setInitialPosition(position);
                 if (inlierStandardDeviations != null) {
-                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(
+                    nonLinearSolver.setPositionsDistancesAndStandardDeviations(
                             inlierPositions, inlierDistances, inlierStandardDeviations);
                 } else {
-                    mNonLinearSolver.setPositionsAndDistances(
-                            inlierPositions, inlierDistances);
+                    nonLinearSolver.setPositionsAndDistances(inlierPositions, inlierDistances);
                 }
-                mNonLinearSolver.solve();
+                nonLinearSolver.solve();
 
-                if (mKeepCovariance) {
+                if (keepCovariance) {
                     // keep covariance
-                    mCovariance = mNonLinearSolver.getCovariance();
+                    covariance = nonLinearSolver.getCovariance();
                 } else {
-                    mCovariance = null;
+                    covariance = null;
                 }
 
-                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
+                estimatedPosition = nonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
                 // refinement failed, so we return input value
-                mCovariance = null;
-                mEstimatedPosition = position;
+                covariance = null;
+                estimatedPosition = position;
             }
         } else {
-            mCovariance = null;
-            mEstimatedPosition = position;
+            covariance = null;
+            estimatedPosition = position;
         }
 
-        return mEstimatedPosition;
+        return estimatedPosition;
     }
 
     /**
@@ -1373,43 +1167,42 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void solvePreliminarySolutions(
-            final int[] samplesIndices, final List<Point3D> solutions) {
+    protected void solvePreliminarySolutions(final int[] samplesIndices, final List<Point3D> solutions) {
         try {
-            final int length = samplesIndices.length;
+            final var length = samplesIndices.length;
             int index;
-            for (int i = 0; i < length; i++) {
+            for (var i = 0; i < length; i++) {
                 index = samplesIndices[i];
-                mInnerPositions[i] = mPositions[index];
-                mInnerDistances[i] = mDistances[index];
-                mInnerDistanceStandardDeviations[i] = mDistanceStandardDeviations != null ?
-                        mDistanceStandardDeviations[index] :
-                        NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+                innerPositions[i] = positions[index];
+                innerDistances[i] = distances[index];
+                innerDistanceStandardDeviations[i] = distanceStandardDeviations != null
+                        ? distanceStandardDeviations[index]
+                        : NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            Point3D estimatedPosition = mInitialPosition;
-            if (mUseLinearSolver) {
-                if (mUseHomogeneousLinearSolver) {
-                    mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-                    mHomogeneousLinearSolver.solve();
-                    estimatedPosition = mHomogeneousLinearSolver.getEstimatedPosition();
+            Point3D estimatedPosition = initialPosition;
+            if (useLinearSolver) {
+                if (useHomogeneousLinearSolver) {
+                    homogeneousLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
+                    homogeneousLinearSolver.solve();
+                    estimatedPosition = homogeneousLinearSolver.getEstimatedPosition();
                 } else {
-                    mInhomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-                    mInhomogeneousLinearSolver.solve();
-                    estimatedPosition = mInhomogeneousLinearSolver.getEstimatedPosition();
+                    inhomogeneousLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
+                    inhomogeneousLinearSolver.solve();
+                    estimatedPosition = inhomogeneousLinearSolver.getEstimatedPosition();
                 }
             }
 
-            if (mRefinePreliminarySolutions || estimatedPosition == null) {
-                mNonLinearSolver.setInitialPosition(estimatedPosition);
-                if (mDistanceStandardDeviations != null) {
-                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(mInnerPositions,
-                            mInnerDistances, mInnerDistanceStandardDeviations);
+            if (refinePreliminarySolutions || estimatedPosition == null) {
+                nonLinearSolver.setInitialPosition(estimatedPosition);
+                if (distanceStandardDeviations != null) {
+                    nonLinearSolver.setPositionsDistancesAndStandardDeviations(innerPositions, innerDistances,
+                            innerDistanceStandardDeviations);
                 } else {
-                    mNonLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    nonLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
                 }
-                mNonLinearSolver.solve();
-                estimatedPosition = mNonLinearSolver.getEstimatedPosition();
+                nonLinearSolver.solve();
+                estimatedPosition = nonLinearSolver.getEstimatedPosition();
             }
 
             solutions.add(estimatedPosition);
@@ -1430,10 +1223,10 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        final Point3D[] positions = new Point3D[spheres.length];
-        final double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            final Sphere sphere = spheres[i];
+        final var positions = new Point3D[spheres.length];
+        final var distances = new double[spheres.length];
+        for (var i = 0; i < spheres.length; i++) {
+            final var sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
@@ -1464,16 +1257,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        final Point3D[] positions = new Point3D[spheres.length];
-        final double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            final Sphere sphere = spheres[i];
+        final var positions = new Point3D[spheres.length];
+        final var distances = new double[spheres.length];
+        for (var i = 0; i < spheres.length; i++) {
+            final var sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
 
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, radiusStandardDeviations);
     }
 
     /**
@@ -1481,13 +1273,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      */
     private void init() {
         final int points = getMinRequiredPositionsAndDistances();
-        mPreliminarySubsetSize = points;
-        mInnerPositions = new Point3D[points];
-        mInnerDistances = new double[points];
-        mInnerDistanceStandardDeviations = new double[points];
+        preliminarySubsetSize = points;
+        innerPositions = new Point3D[points];
+        innerDistances = new double[points];
+        innerDistanceStandardDeviations = new double[points];
 
-        mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresLateration3DSolver();
-        mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresLateration3DSolver();
-        mNonLinearSolver = new NonLinearLeastSquaresLateration3DSolver();
+        inhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresLateration3DSolver();
+        homogeneousLinearSolver = new HomogeneousLinearLeastSquaresLateration3DSolver();
+        nonLinearSolver = new NonLinearLeastSquaresLateration3DSolver();
     }
 }

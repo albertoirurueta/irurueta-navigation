@@ -21,7 +21,6 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
-import java.util.BitSet;
 import java.util.List;
 
 /**
@@ -37,33 +36,33 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     /**
      * Linear lateration solver internally used by a robust algorithm.
      */
-    protected InhomogeneousLinearLeastSquaresLateration2DSolver mInhomogeneousLinearSolver;
+    protected InhomogeneousLinearLeastSquaresLateration2DSolver inhomogeneousLinearSolver;
 
     /**
      * Homogeneous linear lateration solver internally used by a robust algorithm.
      */
-    protected HomogeneousLinearLeastSquaresLateration2DSolver mHomogeneousLinearSolver;
+    protected HomogeneousLinearLeastSquaresLateration2DSolver homogeneousLinearSolver;
 
     /**
      * Non-linear lateration solver internally used to refine solution
      * found by robust algorithm.
      */
-    protected NonLinearLeastSquaresLateration2DSolver mNonLinearSolver;
+    protected NonLinearLeastSquaresLateration2DSolver nonLinearSolver;
 
     /**
      * Positions for linear inner solver used during robust estimation.
      */
-    protected Point2D[] mInnerPositions;
+    protected Point2D[] innerPositions;
 
     /**
      * Distances for linear inner solver used during robust estimation.
      */
-    protected double[] mInnerDistances;
+    protected double[] innerDistances;
 
     /**
      * Standard deviations for non-linear inner solver used during robust estimation.
      */
-    protected double[] mInnerDistanceStandardDeviations;
+    protected double[] innerDistanceStandardDeviations;
 
     /**
      * Constructor.
@@ -78,8 +77,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    protected RobustLateration2DSolver(
-            final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -169,11 +167,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      *                                  than required (3 points) or don't have the same length.
      */
-    protected RobustLateration2DSolver(final Circle[] circles,
-                                       final double[] distanceStandardDeviations) {
+    protected RobustLateration2DSolver(final Circle[] circles, final double[] distanceStandardDeviations) {
         this();
-        internalSetCirclesAndStandardDeviations(circles,
-                distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -185,8 +181,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null or if length of circles array
      *                                  is less than required (3 points).
      */
-    protected RobustLateration2DSolver(final Circle[] circles,
-                                       final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final Circle[] circles, final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCircles(circles);
     }
@@ -205,8 +200,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
                                        final double[] distanceStandardDeviations,
                                        final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
-        internalSetCirclesAndStandardDeviations(circles,
-                distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -242,9 +236,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     public void setPreliminarySubsetSize(final int preliminarySubsetSize) throws LockedException {
         super.setPreliminarySubsetSize(preliminarySubsetSize);
 
-        mInnerPositions = new Point2D[preliminarySubsetSize];
-        mInnerDistances = new double[preliminarySubsetSize];
-        mInnerDistanceStandardDeviations = new double[preliminarySubsetSize];
+        innerPositions = new Point2D[preliminarySubsetSize];
+        innerDistances = new double[preliminarySubsetSize];
+        innerDistanceStandardDeviations = new double[preliminarySubsetSize];
     }
 
     /**
@@ -253,14 +247,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Circle[] result = new Circle[mPositions.length];
+        final var result = new Circle[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Circle(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Circle(positions[i], distances[i]);
         }
         return result;
     }
@@ -291,8 +285,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setCirclesAndStandardDeviations(
-            final Circle[] circles, final double[] radiusStandardDeviations)
-            throws LockedException {
+            final Circle[] circles, final double[] radiusStandardDeviations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -306,19 +299,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @return a new robust 2D lateration solver.
      */
     public static RobustLateration2DSolver create(final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver();
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver();
-            case MSAC:
-                return new MSACRobustLateration2DSolver();
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver();
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver();
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver();
+            case LMEDS -> new LMedSRobustLateration2DSolver();
+            case MSAC -> new MSACRobustLateration2DSolver();
+            case PROSAC -> new PROSACRobustLateration2DSolver();
+            default -> new PROMedSRobustLateration2DSolver();
+        };
     }
 
     /**
@@ -330,21 +317,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @return a new robust 2D lateration solver.
      */
     public static RobustLateration2DSolver create(
-            final RobustLaterationSolverListener<Point2D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(listener);
-        }
+            final RobustLaterationSolverListener<Point2D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(listener);
+            case MSAC -> new MSACRobustLateration2DSolver(listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(listener);
+            default -> new PROMedSRobustLateration2DSolver(listener);
+        };
     }
 
     /**
@@ -360,21 +340,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions,
-            final double[] distances, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(positions, distances);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(positions, distances);
-        }
+            final Point2D[] positions, final double[] distances, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances);
+            case PROSAC -> new PROSACRobustLateration2DSolver(positions, distances);
+            default -> new PROMedSRobustLateration2DSolver(positions, distances);
+        };
     }
 
     /**
@@ -393,26 +366,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-        }
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -429,27 +391,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  don't have the same length or their length is smaller than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances,
-            final RobustLaterationSolverListener<Point2D> listener,
+            final Point2D[] positions, final double[] distances, final RobustLaterationSolverListener<Point2D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(positions, distances,
-                        listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(positions, distances,
-                        listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(positions, distances, listener);
+            default -> new PROMedSRobustLateration2DSolver(positions, distances, listener);
+        };
     }
 
     /**
@@ -469,28 +419,17 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is smaller than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-        }
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            default -> new PROMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -502,21 +441,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null, length of circles array
      *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(
-            final Circle[] circles, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(circles);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(circles);
-        }
+    public static RobustLateration2DSolver create(final Circle[] circles, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles);
+            case MSAC -> new MSACRobustLateration2DSolver(circles);
+            case PROSAC -> new PROSACRobustLateration2DSolver(circles);
+            default -> new PROMedSRobustLateration2DSolver(circles);
+        };
     }
 
     /**
@@ -531,26 +463,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (3 points) or don't have the same length.
      */
     public static RobustLateration2DSolver create(
-            final Circle[] circles, final double[] distanceStandardDeviations,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-        }
+            final Circle[] circles, final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration2DSolver(circles, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration2DSolver(circles, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -567,19 +487,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     public static RobustLateration2DSolver create(
             final Circle[] circles, final RobustLaterationSolverListener<Point2D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles, listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles, listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles, listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(circles, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(circles, listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles, listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(circles, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(circles, listener);
+            default -> new PROMedSRobustLateration2DSolver(circles, listener);
+        };
     }
 
     /**
@@ -597,26 +511,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration2DSolver create(
             final Circle[] circles, final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-        }
+            final RobustLaterationSolverListener<Point2D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            default -> new PROMedSRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -630,21 +532,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if quality scores is null, length of
      *                                  quality scores is less than required minimum (3 samples).
      */
-    public static RobustLateration2DSolver create(
-            final double[] qualityScores, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver();
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver();
-            case MSAC:
-                return new MSACRobustLateration2DSolver();
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores);
-        }
+    public static RobustLateration2DSolver create(final double[] qualityScores, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver();
+            case LMEDS -> new LMedSRobustLateration2DSolver();
+            case MSAC -> new MSACRobustLateration2DSolver();
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores);
+        };
     }
 
     /**
@@ -661,24 +556,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  quality scores is less than required minimum (3 samples).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point2D> listener,
+            final double[] qualityScores, final RobustLaterationSolverListener<Point2D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(listener);
+            case MSAC -> new MSACRobustLateration2DSolver(listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, listener);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, listener);
+        };
     }
 
     /**
@@ -697,23 +583,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Point2D[] positions,
-            final double[] distances, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        positions, distances);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        positions, distances);
-        }
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, positions, distances);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, positions, distances);
+        };
     }
 
     /**
@@ -736,24 +614,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     public static RobustLateration2DSolver create(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations);
+        };
     }
 
     /**
@@ -776,27 +645,18 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration2DSolver create(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener,
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point2D> listener,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        positions, distances, distanceStandardDeviations, listener);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations,
+                    listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations, listener);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, positions, distances,
+                    distanceStandardDeviations, listener);
+        };
     }
 
     /**
@@ -817,26 +677,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration2DSolver create(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
-            final RobustLaterationSolverListener<Point2D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(positions, distances,
-                        listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(positions, distances,
-                        listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(positions, distances,
-                        listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        positions, distances, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        positions, distances, listener);
-        }
+            final RobustLaterationSolverListener<Point2D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(positions, distances, listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(positions, distances, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(positions, distances, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, positions, distances, listener);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, positions, distances, listener);
+        };
     }
 
     /**
@@ -853,23 +701,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Circle[] circles,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        circles);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        circles);
-        }
+            final double[] qualityScores, final Circle[] circles, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles);
+            case MSAC -> new MSACRobustLateration2DSolver(circles);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, circles);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, circles);
+        };
     }
 
     /**
@@ -888,26 +727,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        circles, distanceStandardDeviations);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        circles, distanceStandardDeviations);
-        }
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case MSAC -> new MSACRobustLateration2DSolver(circles, distanceStandardDeviations);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, circles, distanceStandardDeviations);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, circles, distanceStandardDeviations);
+        };
     }
 
     /**
@@ -928,28 +756,17 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case LMEDS:
-                return new LMedSRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case MSAC:
-                return new MSACRobustLateration2DSolver(circles,
-                        distanceStandardDeviations, listener);
-            case PROSAC:
-                return new PROSACRobustLateration2DSolver(qualityScores,
-                        circles, distanceStandardDeviations, listener);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustLateration2DSolver(qualityScores,
-                        circles, distanceStandardDeviations, listener);
-        }
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case LMEDS -> new LMedSRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case MSAC -> new MSACRobustLateration2DSolver(circles, distanceStandardDeviations, listener);
+            case PROSAC -> new PROSACRobustLateration2DSolver(qualityScores, circles, distanceStandardDeviations,
+                    listener);
+            default -> new PROMedSRobustLateration2DSolver(qualityScores, circles, distanceStandardDeviations,
+                    listener);
+        };
     }
 
     /**
@@ -968,8 +785,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      */
-    public static RobustLateration2DSolver create(
-            final RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(final RobustLaterationSolverListener<Point2D> listener) {
         return create(listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -984,8 +800,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  don't have the same length or their length is smaller than required
      *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances) {
+    public static RobustLateration2DSolver create(final Point2D[] positions, final double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1004,10 +819,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
-        return create(positions, distances, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
+        return create(positions, distances, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1045,11 +858,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is smaller than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point2D> listener) {
-        return create(positions, distances, distanceStandardDeviations,
-                listener, DEFAULT_ROBUST_METHOD);
+        return create(positions, distances, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1076,8 +887,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration2DSolver create(
             final Circle[] circles, final double[] distanceStandardDeviations) {
-        return create(circles, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+        return create(circles, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1110,8 +920,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     public static RobustLateration2DSolver create(
             final Circle[] circles, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point2D> listener) {
-        return create(circles, distanceStandardDeviations, listener,
-                DEFAULT_ROBUST_METHOD);
+        return create(circles, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1141,8 +950,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  quality scores is less than required minimum (3 samples).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point2D> listener) {
+            final double[] qualityScores, final RobustLaterationSolverListener<Point2D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1161,8 +969,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Point2D[] positions,
-            final double[] distances) {
+            final double[] qualityScores, final Point2D[] positions, final double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1183,10 +990,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  length is smaller than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Point2D[] positions,
-            final double[] distances, final double[] distanceStandardDeviations) {
-        return create(qualityScores, positions, distances,
-                distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
+        return create(qualityScores, positions, distances, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1208,10 +1014,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public static RobustLateration2DSolver create(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener) {
-        return create(qualityScores, positions, distances,
-                distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point2D> listener) {
+        return create(qualityScores, positions, distances, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1232,8 +1036,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     public static RobustLateration2DSolver create(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
             final RobustLaterationSolverListener<Point2D> listener) {
-        return create(qualityScores, positions, distances, listener,
-                DEFAULT_ROBUST_METHOD);
+        return create(qualityScores, positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1248,8 +1051,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  null, don't have the same length or their length is less than required
      *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(final double[] qualityScores,
-                                                  final Circle[] circles) {
+    public static RobustLateration2DSolver create(final double[] qualityScores, final Circle[] circles) {
         return create(qualityScores, circles, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1268,10 +1070,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations) {
-        return create(qualityScores, circles, distanceStandardDeviations,
-                DEFAULT_ROBUST_METHOD);
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations) {
+        return create(qualityScores, circles, distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1291,11 +1091,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  is less than required (3 points).
      */
     public static RobustLateration2DSolver create(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations,
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point2D> listener) {
-        return create(qualityScores, circles, distanceStandardDeviations,
-                listener, DEFAULT_ROBUST_METHOD);
+        return create(qualityScores, circles, distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1310,59 +1108,58 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * estimated position if not requested or refinement failed.
      */
     protected Point2D attemptRefine(final Point2D position) {
-        if (mRefineResult && mInliersData != null) {
-            final BitSet inliers = mInliersData.getInliers();
-            final int nSamples = mDistances.length;
-            final int nInliers = mInliersData.getNumInliers();
-            final Point2D[] inlierPositions = new Point2D[nInliers];
-            final double[] inlierDistances = new double[nInliers];
+        if (refineResult && inliersData != null) {
+            final var inliers = inliersData.getInliers();
+            final var nSamples = distances.length;
+            final var nInliers = inliersData.getNumInliers();
+            final var inlierPositions = new Point2D[nInliers];
+            final var inlierDistances = new double[nInliers];
             double[] inlierStandardDeviations = null;
-            if (mDistanceStandardDeviations != null) {
+            if (distanceStandardDeviations != null) {
                 inlierStandardDeviations = new double[nInliers];
             }
-            int pos = 0;
-            for (int i = 0; i < nSamples; i++) {
+            var pos = 0;
+            for (var i = 0; i < nSamples; i++) {
                 if (inliers.get(i)) {
                     // sample is inlier
-                    inlierPositions[pos] = mPositions[i];
-                    inlierDistances[pos] = mDistances[i];
+                    inlierPositions[pos] = positions[i];
+                    inlierDistances[pos] = distances[i];
                     if (inlierStandardDeviations != null) {
-                        inlierStandardDeviations[pos] = mDistanceStandardDeviations[i];
+                        inlierStandardDeviations[pos] = distanceStandardDeviations[i];
                     }
                     pos++;
                 }
             }
 
             try {
-                mNonLinearSolver.setInitialPosition(position);
+                nonLinearSolver.setInitialPosition(position);
                 if (inlierStandardDeviations != null) {
-                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(
-                            inlierPositions, inlierDistances, inlierStandardDeviations);
+                    nonLinearSolver.setPositionsDistancesAndStandardDeviations(inlierPositions, inlierDistances,
+                            inlierStandardDeviations);
                 } else {
-                    mNonLinearSolver.setPositionsAndDistances(
-                            inlierPositions, inlierDistances);
+                    nonLinearSolver.setPositionsAndDistances(inlierPositions, inlierDistances);
                 }
-                mNonLinearSolver.solve();
+                nonLinearSolver.solve();
 
-                if (mKeepCovariance) {
+                if (keepCovariance) {
                     // keep covariance
-                    mCovariance = mNonLinearSolver.getCovariance();
+                    covariance = nonLinearSolver.getCovariance();
                 } else {
-                    mCovariance = null;
+                    covariance = null;
                 }
 
-                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
+                estimatedPosition = nonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
                 // refinement failed, so we return input value
-                mCovariance = null;
-                mEstimatedPosition = position;
+                covariance = null;
+                estimatedPosition = position;
             }
         } else {
-            mCovariance = null;
-            mEstimatedPosition = position;
+            covariance = null;
+            estimatedPosition = position;
         }
 
-        return mEstimatedPosition;
+        return estimatedPosition;
     }
 
     /**
@@ -1371,43 +1168,41 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void solvePreliminarySolutions(
-            final int[] samplesIndices, final List<Point2D> solutions) {
+    protected void solvePreliminarySolutions(final int[] samplesIndices, final List<Point2D> solutions) {
         try {
-            final int length = samplesIndices.length;
-            int index;
-            for (int i = 0; i < length; i++) {
-                index = samplesIndices[i];
-                mInnerPositions[i] = mPositions[index];
-                mInnerDistances[i] = mDistances[index];
-                mInnerDistanceStandardDeviations[i] = mDistanceStandardDeviations != null ?
-                        mDistanceStandardDeviations[index] :
-                        NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+            final var length = samplesIndices.length;
+            for (var i = 0; i < length; i++) {
+                final var index = samplesIndices[i];
+                innerPositions[i] = positions[index];
+                innerDistances[i] = distances[index];
+                innerDistanceStandardDeviations[i] = distanceStandardDeviations != null
+                        ? distanceStandardDeviations[index]
+                        : NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            Point2D estimatedPosition = mInitialPosition;
-            if (mUseLinearSolver) {
-                if (mUseHomogeneousLinearSolver) {
-                    mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-                    mHomogeneousLinearSolver.solve();
-                    estimatedPosition = mHomogeneousLinearSolver.getEstimatedPosition();
+            var estimatedPosition = initialPosition;
+            if (useLinearSolver) {
+                if (useHomogeneousLinearSolver) {
+                    homogeneousLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
+                    homogeneousLinearSolver.solve();
+                    estimatedPosition = homogeneousLinearSolver.getEstimatedPosition();
                 } else {
-                    mInhomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-                    mInhomogeneousLinearSolver.solve();
-                    estimatedPosition = mInhomogeneousLinearSolver.getEstimatedPosition();
+                    inhomogeneousLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
+                    inhomogeneousLinearSolver.solve();
+                    estimatedPosition = inhomogeneousLinearSolver.getEstimatedPosition();
                 }
             }
 
-            if (mRefinePreliminarySolutions || estimatedPosition == null) {
-                mNonLinearSolver.setInitialPosition(estimatedPosition);
-                if (mDistanceStandardDeviations != null) {
-                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(mInnerPositions,
-                            mInnerDistances, mInnerDistanceStandardDeviations);
+            if (refinePreliminarySolutions || estimatedPosition == null) {
+                nonLinearSolver.setInitialPosition(estimatedPosition);
+                if (distanceStandardDeviations != null) {
+                    nonLinearSolver.setPositionsDistancesAndStandardDeviations(innerPositions,
+                            innerDistances, innerDistanceStandardDeviations);
                 } else {
-                    mNonLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    nonLinearSolver.setPositionsAndDistances(innerPositions, innerDistances);
                 }
-                mNonLinearSolver.solve();
-                estimatedPosition = mNonLinearSolver.getEstimatedPosition();
+                nonLinearSolver.solve();
+                estimatedPosition = nonLinearSolver.getEstimatedPosition();
             }
 
             solutions.add(estimatedPosition);
@@ -1428,10 +1223,10 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        final Point2D[] positions = new Point2D[circles.length];
-        final double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            final Circle circle = circles[i];
+        final var positions = new Point2D[circles.length];
+        final var distances = new double[circles.length];
+        for (var i = 0; i < circles.length; i++) {
+            final var circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
@@ -1462,30 +1257,29 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        final Point2D[] positions = new Point2D[circles.length];
-        final double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            final Circle circle = circles[i];
+        final var positions = new Point2D[circles.length];
+        final var distances = new double[circles.length];
+        for (var i = 0; i < circles.length; i++) {
+            final var circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
 
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, radiusStandardDeviations);
     }
 
     /**
      * Setup inner positions and distances.
      */
     private void init() {
-        final int points = getMinRequiredPositionsAndDistances();
-        mPreliminarySubsetSize = points;
-        mInnerPositions = new Point2D[points];
-        mInnerDistances = new double[points];
-        mInnerDistanceStandardDeviations = new double[points];
+        final var points = getMinRequiredPositionsAndDistances();
+        preliminarySubsetSize = points;
+        innerPositions = new Point2D[points];
+        innerDistances = new double[points];
+        innerDistanceStandardDeviations = new double[points];
 
-        mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
-        mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresLateration2DSolver();
-        mNonLinearSolver = new NonLinearLeastSquaresLateration2DSolver();
+        inhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
+        homogeneousLinearSolver = new HomogeneousLinearLeastSquaresLateration2DSolver();
+        nonLinearSolver = new NonLinearLeastSquaresLateration2DSolver();
     }
 }

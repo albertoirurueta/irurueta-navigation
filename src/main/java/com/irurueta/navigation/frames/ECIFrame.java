@@ -33,7 +33,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      */
     public ECIFrame() {
         super(ECIFrame.class);
-        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
     }
 
     /**
@@ -78,8 +78,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param positionY cartesian y coordinate of body position to be set resolved along ECI-frame axes.
      * @param positionZ cartesian z coordinate of body position to be set resolved along ECI-frame axes.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ) {
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ) {
         this();
         setPositionCoordinates(positionX, positionY, positionZ);
     }
@@ -114,8 +113,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
      *                 ECI-frame axes.
      */
-    public ECIFrame(final Point3D position,
-                    final double vx, final double vy, final double vz) {
+    public ECIFrame(final Point3D position, final double vx, final double vy, final double vz) {
         this(position);
         setVelocityCoordinates(vx, vy, vz);
     }
@@ -128,8 +126,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param speedY   y coordinate of velocity to be set resolved along ECI-frame axes.
      * @param speedZ   z coordinate of velocity to be set resolved along ECI-frame axes.
      */
-    public ECIFrame(final Point3D position,
-                    final Speed speedX, final Speed speedY, final Speed speedZ) {
+    public ECIFrame(final Point3D position, final Speed speedX, final Speed speedY, final Speed speedZ) {
         this(position);
         setSpeedCoordinates(speedX, speedY, speedZ);
     }
@@ -166,9 +163,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
      *                  ECI-frame axes.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ, final double vx,
-                    final double vy, final double vz) {
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final double vx, final double vy, final double vz) {
         this(positionX, positionY, positionZ);
         setVelocityCoordinates(vx, vy, vz);
     }
@@ -183,9 +179,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param speedY    y coordinate of velocity to be set, resolved along ECI-frame axes.
      * @param speedZ    z coordinate of velocity to be set, resolved along ECI-frame axes.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ, final Speed speedX,
-                    final Speed speedY, final Speed speedZ) {
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final Speed speedX, final Speed speedY, final Speed speedZ) {
         this(positionX, positionY, positionZ);
         setSpeedCoordinates(speedX, speedY, speedZ);
     }
@@ -215,8 +210,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param c        Body to ECI coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-    public ECIFrame(final Point3D position,
-                    final CoordinateTransformation c)
+    public ECIFrame(final Point3D position, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
 
         this(position);
@@ -232,10 +226,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param c         Body to ECI coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ,
-                    final CoordinateTransformation c)
-            throws InvalidSourceAndDestinationFrameTypeException {
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
 
         this(positionX, positionY, positionZ);
         setCoordinateTransformation(c);
@@ -260,8 +252,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECIFrame(final double x, final double y, final double z,
-                    final double vx, final double vy, final double vz,
-                    final CoordinateTransformation c)
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(x, y, z, vx, vy, vz);
         setCoordinateTransformation(c);
@@ -281,8 +272,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECIFrame(final Point3D position,
-                    final double vx, final double vy, final double vz,
-                    final CoordinateTransformation c)
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, vx, vy, vz);
         setCoordinateTransformation(c);
@@ -299,8 +289,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECIFrame(final Point3D position,
-                    final Speed speedX, final Speed speedY, final Speed speedZ,
-                    final CoordinateTransformation c)
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, speedX, speedY, speedZ);
         setCoordinateTransformation(c);
@@ -322,8 +311,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECIFrame(final double x, final double y, final double z,
-                    final Speed speedX, final Speed speedY, final Speed speedZ,
-                    final CoordinateTransformation c)
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(x, y, z, speedX, speedY, speedZ);
         setCoordinateTransformation(c);
@@ -344,10 +332,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param c         Body to ECI coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ, final double vx,
-                    final double vy, final double vz,
-                    final CoordinateTransformation c)
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(positionX, positionY, positionZ, vx, vy, vz);
         setCoordinateTransformation(c);
@@ -365,10 +351,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @param c         Body to ECI coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-    public ECIFrame(final Distance positionX, final Distance positionY,
-                    final Distance positionZ, final Speed speedX,
-                    final Speed speedY, final Speed speedZ,
-                    final CoordinateTransformation c)
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(positionX, positionY, positionZ, speedX, speedY, speedZ);
         setCoordinateTransformation(c);
@@ -391,8 +375,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        final var result = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         getCoordinateTransformation(result);
         return result;
     }
@@ -404,7 +387,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      */
     @Override
     public void getCoordinateTransformation(final CoordinateTransformation result) {
-        mC.copyTo(result);
+        c.copyTo(result);
     }
 
     /**
@@ -421,7 +404,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
             throw new InvalidSourceAndDestinationFrameTypeException();
         }
 
-        mC = c;
+        this.c = c;
     }
 
     /**
@@ -432,8 +415,8 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * @return true if provided value is valid, false otherwise.
      */
     public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
-        return c.getSourceType() == FrameType.BODY_FRAME &&
-                c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;
+        return c.getSourceType() == FrameType.BODY_FRAME
+                && c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;
     }
 
     /**
@@ -444,9 +427,9 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECIFrame result = (ECIFrame)super.clone();
+        final var result = (ECIFrame)super.clone();
         copyTo(result);
-        mClass = ECIFrame.class;
+        clazz = ECIFrame.class;
         return result;
     }
 }

@@ -62,25 +62,25 @@ package com.irurueta.navigation.geodesic;
 @SuppressWarnings("DuplicatedCode")
 public class PolygonArea {
 
-    private final Geodesic mEarth;
+    private final Geodesic earth;
 
     // full ellipsoid area
-    private final double mArea0;
+    private final double area0;
 
     // assume polyline (don't close and skip area)
-    private final boolean mPolyline;
+    private final boolean polyline;
 
-    private final int mMask;
-    private int mNum;
-    private int mCrossings;
+    private final int mask;
+    private int num;
+    private int crossings;
 
-    private Accumulator mAreasum;
-    private final Accumulator mPerimetersum;
+    private Accumulator areasum;
+    private final Accumulator perimetersum;
 
-    private double mLat0;
-    private double mLon0;
-    private double mLat1;
-    private double mLon1;
+    private double lat0;
+    private double lon0;
+    private double lat1;
+    private double lon1;
 
     /**
      * Constructor for PolygonArea.
@@ -89,16 +89,14 @@ public class PolygonArea {
      * @param polyline if true that treat the points as defining a polyline instead of a polygon.
      */
     public PolygonArea(final Geodesic earth, final boolean polyline) {
-        mEarth = earth;
-        mArea0 = mEarth.getEllipsoidArea();
-        mPolyline = polyline;
-        mMask = GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                GeodesicMask.DISTANCE |
-                (mPolyline ? GeodesicMask.NONE :
-                        GeodesicMask.AREA | GeodesicMask.LONG_UNROLL);
-        mPerimetersum = new Accumulator(0);
-        if (!mPolyline) {
-            mAreasum = new Accumulator(0);
+        this.earth = earth;
+        area0 = this.earth.getEllipsoidArea();
+        this.polyline = polyline;
+        mask = GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE | GeodesicMask.DISTANCE |
+                (this.polyline ? GeodesicMask.NONE : GeodesicMask.AREA | GeodesicMask.LONG_UNROLL);
+        perimetersum = new Accumulator(0);
+        if (!this.polyline) {
+            areasum = new Accumulator(0);
         }
         clear();
     }
@@ -107,13 +105,13 @@ public class PolygonArea {
      * Clear PolygonArea, allowing a new polygon to be started.
      */
     public void clear() {
-        mNum = 0;
-        mCrossings = 0;
-        mPerimetersum.set(0);
-        if (!mPolyline) {
-            mAreasum.set(0);
+        num = 0;
+        crossings = 0;
+        perimetersum.set(0);
+        if (!polyline) {
+            areasum.set(0);
         }
-        mLat0 = mLon0 = mLat1 = mLon1 = Double.NaN;
+        lat0 = lon0 = lat1 = lon1 = Double.NaN;
     }
 
     /**
@@ -125,20 +123,20 @@ public class PolygonArea {
      */
     public void addPoint(final double lat, double lon) {
         lon = GeoMath.angNormalize(lon);
-        if (mNum == 0) {
-            mLat0 = mLat1 = lat;
-            mLon0 = mLon1 = lon;
+        if (num == 0) {
+            lat0 = lat1 = lat;
+            lon0 = lon1 = lon;
         } else {
-            final GeodesicData g = mEarth.inverse(mLat1, mLon1, lat, lon, mMask);
-            mPerimetersum.add(g.getS12());
-            if (!mPolyline) {
-                mAreasum.add(g.getAreaS12());
-                mCrossings += transit(mLon1, lon);
+            final var g = earth.inverse(lat1, lon1, lat, lon, mask);
+            perimetersum.add(g.getS12());
+            if (!polyline) {
+                areasum.add(g.getAreaS12());
+                crossings += transit(lon1, lon);
             }
-            mLat1 = lat;
-            mLon1 = lon;
+            lat1 = lat;
+            lon1 = lon;
         }
-        ++mNum;
+        ++num;
     }
 
     /**
@@ -151,16 +149,16 @@ public class PolygonArea {
      */
     public void addEdge(final double azi, final double s) {
         // do nothing if mNum is zero
-        if (mNum > 0) {
-            final GeodesicData g = mEarth.direct(mLat1, mLon1, azi, s, mMask);
-            mPerimetersum.add(g.getS12());
-            if (!mPolyline) {
-                mAreasum.add(g.getAreaS12());
-                mCrossings += transitDirect(mLon1, g.getLon2());
+        if (num > 0) {
+            final var g = earth.direct(lat1, lon1, azi, s, mask);
+            perimetersum.add(g.getS12());
+            if (!polyline) {
+                areasum.add(g.getAreaS12());
+                crossings += transitDirect(lon1, g.getLon2());
             }
-            mLat1 = g.getLat2();
-            mLon1 = g.getLon2();
-            ++mNum;
+            lat1 = g.getLat2();
+            lon1 = g.getLon2();
+            ++num;
         }
     }
 
@@ -193,19 +191,19 @@ public class PolygonArea {
      * (meters<sup>2</sup>) or Double.NaN of <i>polyline</i> is true in the constructor.
      */
     public PolygonResult compute(final boolean reverse, final boolean sign) {
-        if (mNum < 2) {
-            return new PolygonResult(mNum, 0, mPolyline ? Double.NaN : 0);
+        if (num < 2) {
+            return new PolygonResult(num, 0, polyline ? Double.NaN : 0);
         }
-        if (mPolyline) {
-            return new PolygonResult(mNum, mPerimetersum.getSum(), Double.NaN);
+        if (polyline) {
+            return new PolygonResult(num, perimetersum.getSum(), Double.NaN);
         }
 
-        final GeodesicData g = mEarth.inverse(mLat1, mLon1, mLat0, mLon0, mMask);
-        final Accumulator tempsum = new Accumulator(mAreasum);
+        final var g = earth.inverse(lat1, lon1, lat0, lon0, mask);
+        final var tempsum = new Accumulator(areasum);
         tempsum.add(g.getAreaS12());
-        final int crossings = mCrossings + transit(mLon1, mLon0);
-        if ((crossings & 1) != 0) {
-            tempsum.add((tempsum.getSum() < 0 ? 1 : -1) * mArea0 / 2);
+        final var tcrossings = this.crossings + transit(lon1, lon0);
+        if ((tcrossings & 1) != 0) {
+            tempsum.add((tempsum.getSum() < 0 ? 1 : -1) * area0 / 2);
         }
 
         // area is with the clockwise sense. If !reverse convert to counter-clockwise convention
@@ -215,19 +213,19 @@ public class PolygonArea {
 
         // if sign put area in (-rea0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum.getSum() > mArea0 / 2) {
-                tempsum.add(-mArea0);
-            } else if (tempsum.getSum() <= -mArea0 / 2) {
-                tempsum.add(+mArea0);
+            if (tempsum.getSum() > area0 / 2) {
+                tempsum.add(-area0);
+            } else if (tempsum.getSum() <= -area0 / 2) {
+                tempsum.add(+area0);
             }
         } else {
-            if (tempsum.getSum() >= mArea0) {
-                tempsum.add(-mArea0);
+            if (tempsum.getSum() >= area0) {
+                tempsum.add(-area0);
             } else if (tempsum.getSum() < 0) {
-                tempsum.add(+mArea0);
+                tempsum.add(+area0);
             }
         }
-        return new PolygonResult(mNum, mPerimetersum.sum(g.getS12()), 0 + tempsum.getSum());
+        return new PolygonResult(num, perimetersum.sum(g.getS12()), 0 + tempsum.getSum());
     }
 
     /**
@@ -250,34 +248,31 @@ public class PolygonArea {
      * of the polyline (meters), and <i>area</i> is the area of the polygon (meters<sup>2</sup>)
      * or Double.NaN of <i>polyline</i> is true in the constructor.
      */
-    public PolygonResult testPoint(
-            final double lat, final double lon, final boolean reverse, final boolean sign) {
-        if (mNum == 0) {
-            return new PolygonResult(1, 0, mPolyline ? Double.NaN : 0);
+    public PolygonResult testPoint(final double lat, final double lon, final boolean reverse, final boolean sign) {
+        if (num == 0) {
+            return new PolygonResult(1, 0, polyline ? Double.NaN : 0);
         }
 
-        double perimeter = mPerimetersum.getSum();
-        double tempsum = mPolyline ? 0 : mAreasum.getSum();
-        int crossings = mCrossings;
-        final int num = mNum + 1;
-        for (int i = 0; i < (mPolyline ? 1 : 2); ++i) {
-            final GeodesicData g = mEarth.inverse(i == 0 ? mLat1 : lat,
-                    i == 0 ? mLon1 : lon,
-                    i != 0 ? mLat0 : lat,
-                    i != 0 ? mLon0 : lon, mMask);
+        var perimeter = perimetersum.getSum();
+        var tempsum = polyline ? 0 : areasum.getSum();
+        var tcrossings = this.crossings;
+        final var tnum = this.num + 1;
+        for (var i = 0; i < (polyline ? 1 : 2); ++i) {
+            final var g = earth.inverse(i == 0 ? lat1 : lat, i == 0 ? lon1 : lon, i != 0 ? lat0 : lat,
+                    i != 0 ? lon0 : lon, mask);
             perimeter += g.getS12();
-            if (!mPolyline) {
+            if (!polyline) {
                 tempsum += g.getAreaS12();
-                crossings += transit(i == 0 ? mLon1 : lon, i != 0 ? mLon0 : lon);
+                tcrossings += transit(i == 0 ? lon1 : lon, i != 0 ? lon0 : lon);
             }
         }
 
-        if (mPolyline) {
-            return new PolygonResult(num, perimeter, Double.NaN);
+        if (polyline) {
+            return new PolygonResult(tnum, perimeter, Double.NaN);
         }
 
-        if ((crossings & 1) != 0) {
-            tempsum += (tempsum < 0 ? 1 : -1) * mArea0 / 2;
+        if ((tcrossings & 1) != 0) {
+            tempsum += (tempsum < 0 ? 1 : -1) * area0 / 2;
         }
 
         // area is with the clockwise sense. If !reverse convert to counter-clockwise convention
@@ -287,19 +282,19 @@ public class PolygonArea {
 
         // if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum > mArea0 / 2) {
-                tempsum -= mArea0;
-            } else if (tempsum <= -mArea0 / 2) {
-                tempsum += mArea0;
+            if (tempsum > area0 / 2) {
+                tempsum -= area0;
+            } else if (tempsum <= -area0 / 2) {
+                tempsum += area0;
             }
         } else {
-            if (tempsum >= mArea0) {
-                tempsum -= mArea0;
+            if (tempsum >= area0) {
+                tempsum -= area0;
             } else if (tempsum < 0) {
-                tempsum += mArea0;
+                tempsum += area0;
             }
         }
-        return new PolygonResult(num, perimeter, 0 + tempsum);
+        return new PolygonResult(tnum, perimeter, 0 + tempsum);
     }
 
     /**
@@ -323,29 +318,29 @@ public class PolygonArea {
     public PolygonResult testEdge(
             final double azi, final double s, final boolean reverse, final boolean sign) {
         // we don't have a starting point!
-        if (mNum == 0) {
+        if (num == 0) {
             return new PolygonResult(0, Double.NaN, Double.NaN);
         }
 
-        final int num = mNum + 1;
-        double perimeter = mPerimetersum.getSum() + s;
-        if (mPolyline) {
-            return new PolygonResult(num, perimeter, Double.NaN);
+        final var tnum = this.num + 1;
+        var perimeter = perimetersum.getSum() + s;
+        if (polyline) {
+            return new PolygonResult(tnum, perimeter, Double.NaN);
         }
 
-        double tempsum = mAreasum.getSum();
-        int crossings = mCrossings;
+        var tempsum = areasum.getSum();
+        var tcrossings = this.crossings;
 
-        GeodesicData g = mEarth.direct(mLat1, mLon1, azi, false, s, mMask);
+        var g = earth.direct(lat1, lon1, azi, false, s, mask);
         tempsum += g.getAreaS12();
-        crossings += transitDirect(mLon1, g.getLon2());
-        g = mEarth.inverse(g.getLat2(), g.getLon2(), mLat0, mLon0, mMask);
+        tcrossings += transitDirect(lon1, g.getLon2());
+        g = earth.inverse(g.getLat2(), g.getLon2(), lat0, lon0, mask);
         perimeter += g.getS12();
         tempsum += g.getAreaS12();
-        crossings += transit(g.getLon2(), mLon0);
+        tcrossings += transit(g.getLon2(), lon0);
 
-        if ((crossings & 1) != 0) {
-            tempsum += (tempsum < 0 ? 1 : -1) * mArea0 / 2;
+        if ((tcrossings & 1) != 0) {
+            tempsum += (tempsum < 0 ? 1 : -1) * area0 / 2;
         }
 
         // area is with the clockwise sense. If !reverse convert to counter-clockwise convention.
@@ -355,20 +350,20 @@ public class PolygonArea {
 
         // if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum > mArea0 / 2) {
-                tempsum -= mArea0;
-            } else if (tempsum <= -mArea0 / 2) {
-                tempsum += mArea0;
+            if (tempsum > area0 / 2) {
+                tempsum -= area0;
+            } else if (tempsum <= -area0 / 2) {
+                tempsum += area0;
             }
         } else {
-            if (tempsum >= mArea0) {
-                tempsum -= mArea0;
+            if (tempsum >= area0) {
+                tempsum -= area0;
             } else if (tempsum < 0) {
-                tempsum += mArea0;
+                tempsum += area0;
             }
         }
 
-        return new PolygonResult(num, perimeter, 0 + tempsum);
+        return new PolygonResult(tnum, perimeter, 0 + tempsum);
     }
 
     /**
@@ -378,7 +373,7 @@ public class PolygonArea {
      * from the Geodesic object used in the constructor.
      */
     public double getMajorRadius() {
-        return mEarth.getMajorRadius();
+        return earth.getMajorRadius();
     }
 
     /**
@@ -388,7 +383,7 @@ public class PolygonArea {
      * object used in the constructor.
      */
     public double getFlattening() {
-        return mEarth.getFlattening();
+        return earth.getFlattening();
     }
 
     /**
@@ -399,7 +394,7 @@ public class PolygonArea {
      * @return Pair(<i>lat</i>, <i>lon</i>), the current latitude and longitude.
      */
     public Pair getCurrentPoint() {
-        return new Pair(mLat1, mLon1);
+        return new Pair(lat1, lon1);
     }
 
     private static int transit(double lon1, double lon2) {
@@ -409,7 +404,7 @@ public class PolygonArea {
         lon1 = GeoMath.angNormalize(lon1);
         lon2 = GeoMath.angNormalize(lon2);
 
-        final double lon12 = GeoMath.angDiff(lon1, lon2).getFirst();
+        final var lon12 = GeoMath.angDiff(lon1, lon2).getFirst();
         if (lon1 <= 0 && lon2 > 0 && lon12 > 0) {
             return 1;
         } else {

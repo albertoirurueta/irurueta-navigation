@@ -33,17 +33,17 @@ public class NEDPosition implements Serializable, Cloneable {
     /**
      * Latitude expressed in radians (rad).
      */
-    private double mLatitude;
+    private double latitude;
 
     /**
      * Longitude expressed in radians (rad).
      */
-    private double mLongitude;
+    private double longitude;
 
     /**
      * Height expressed in meters (m).
      */
-    private double mHeight;
+    private double height;
 
     /**
      * Constructor.
@@ -88,7 +88,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return latitude expressed in radians.
      */
     public double getLatitude() {
-        return mLatitude;
+        return latitude;
     }
 
     /**
@@ -97,7 +97,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param latitude latitude expressed in radians to be set.
      */
     public void setLatitude(final double latitude) {
-        mLatitude = latitude;
+        this.latitude = latitude;
     }
 
     /**
@@ -106,7 +106,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return longitude expressed in radians.
      */
     public double getLongitude() {
-        return mLongitude;
+        return longitude;
     }
 
     /**
@@ -115,7 +115,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param longitude longitude expressed in radians to be set.
      */
     public void setLongitude(final double longitude) {
-        mLongitude = longitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -124,7 +124,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return height expressed in meters.
      */
     public double getHeight() {
-        return mHeight;
+        return height;
     }
 
     /**
@@ -133,7 +133,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param height height expressed in meters to be set.
      */
     public void setHeight(final double height) {
-        mHeight = height;
+        this.height = height;
     }
 
     /**
@@ -143,11 +143,10 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param longitude longitude expressed in radians (rad) to be set.
      * @param height    height expressed in meters (m) to be set.
      */
-    public void setCoordinates(
-            final double latitude, final double longitude, final double height) {
-        mLatitude = latitude;
-        mLongitude = longitude;
-        mHeight = height;
+    public void setCoordinates(final double latitude, final double longitude, final double height) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.height = height;
     }
 
     /**
@@ -156,7 +155,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getLatitudeAngle(final Angle result) {
-        result.setValue(mLatitude);
+        result.setValue(latitude);
         result.setUnit(AngleUnit.RADIANS);
     }
 
@@ -166,7 +165,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return latitude angle.
      */
     public Angle getLatitudeAngle() {
-        return new Angle(mLatitude, AngleUnit.RADIANS);
+        return new Angle(latitude, AngleUnit.RADIANS);
     }
 
     /**
@@ -175,8 +174,8 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param latitude latitude angle to be set.
      */
     public void setLatitudeAngle(final Angle latitude) {
-        mLatitude = AngleConverter.convert(latitude.getValue().doubleValue(),
-                latitude.getUnit(), AngleUnit.RADIANS);
+        this.latitude = AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(),
+                AngleUnit.RADIANS);
     }
 
     /**
@@ -185,7 +184,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getLongitudeAngle(final Angle result) {
-        result.setValue(mLongitude);
+        result.setValue(longitude);
         result.setUnit(AngleUnit.RADIANS);
     }
 
@@ -195,7 +194,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return longitude angle.
      */
     public Angle getLongitudeAngle() {
-        return new Angle(mLongitude, AngleUnit.RADIANS);
+        return new Angle(longitude, AngleUnit.RADIANS);
     }
 
     /**
@@ -204,8 +203,8 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param longitude longitude angle to be set.
      */
     public void setLongitudeAngle(final Angle longitude) {
-        mLongitude = AngleConverter.convert(longitude.getValue().doubleValue(),
-                longitude.getUnit(), AngleUnit.RADIANS);
+        this.longitude = AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(),
+                AngleUnit.RADIANS);
     }
 
     /**
@@ -214,7 +213,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getHeightDistance(final Distance result) {
-        result.setValue(mHeight);
+        result.setValue(height);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -224,7 +223,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return height distance.
      */
     public Distance getHeightDistance() {
-        return new Distance(mHeight, DistanceUnit.METER);
+        return new Distance(height, DistanceUnit.METER);
     }
 
     /**
@@ -233,8 +232,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param height height distance to be set.
      */
     public void setHeightDistance(final Distance height) {
-        mHeight = DistanceConverter.convert(height.getValue().doubleValue(),
-                height.getUnit(), DistanceUnit.METER);
+        this.height = DistanceConverter.convert(height.getValue().doubleValue(), height.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -257,9 +255,9 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final NEDPosition output) {
-        output.mLatitude = mLatitude;
-        output.mLongitude = mLongitude;
-        output.mHeight = mHeight;
+        output.latitude = latitude;
+        output.longitude = longitude;
+        output.height = height;
     }
 
     /**
@@ -268,9 +266,9 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final NEDPosition input) {
-        mLatitude = input.mLatitude;
-        mLongitude = input.mLongitude;
-        mHeight = input.mHeight;
+        latitude = input.latitude;
+        longitude = input.longitude;
+        height = input.height;
     }
 
     /**
@@ -281,7 +279,7 @@ public class NEDPosition implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mLatitude, mLongitude, mHeight);
+        return Objects.hash(latitude, longitude, height);
     }
 
     /**
@@ -299,11 +297,10 @@ public class NEDPosition implements Serializable, Cloneable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof NEDPosition)) {
+        if (!(obj instanceof NEDPosition other)) {
             return false;
         }
 
-        final NEDPosition other = (NEDPosition) obj;
         return equals(other);
     }
 
@@ -331,9 +328,9 @@ public class NEDPosition implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mLatitude - other.mLatitude) <= threshold
-                && Math.abs(mLongitude - other.mLongitude) <= threshold
-                && Math.abs(mHeight - other.mHeight) <= threshold;
+        return Math.abs(latitude - other.latitude) <= threshold
+                && Math.abs(longitude - other.longitude) <= threshold
+                && Math.abs(height - other.height) <= threshold;
     }
 
     /**
@@ -344,7 +341,7 @@ public class NEDPosition implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final NEDPosition result = (NEDPosition) super.clone();
+        final var result = (NEDPosition) super.clone();
         copyTo(result);
         return result;
     }

@@ -15,18 +15,18 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GnomonicDataTest {
+class GnomonicDataTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         //empty constructor
-        GnomonicData data = new GnomonicData();
+        var data = new GnomonicData();
 
         //check getters
         assertEquals(Double.NaN, data.getLat0(), 0.0);
@@ -37,7 +37,6 @@ public class GnomonicDataTest {
         assertEquals(Double.NaN, data.getY(), 0.0);
         assertEquals(Double.NaN, data.getAzi(), 0.0);
         assertEquals(Double.NaN, data.getRk(), 0.0);
-
 
         //constructor with values
         data = new GnomonicData(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0);
@@ -54,14 +53,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetLat0() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetLat0() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getLat0(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setLat0(value);
 
         //check
@@ -69,14 +68,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetLon0() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetLon0() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getLon0(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setLon0(value);
 
         //check
@@ -84,14 +83,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetLat() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetLat() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getLat(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setLat(value);
 
         //check
@@ -99,14 +98,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetLon() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetLon() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getLon(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setLon(value);
 
         //check
@@ -114,14 +113,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetX() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetX() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getX(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setX(value);
 
         //check
@@ -129,14 +128,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetY() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetY() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getY(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setY(value);
 
         //check
@@ -144,14 +143,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetAzi() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetAzi() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getAzi(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setAzi(value);
 
         //check
@@ -159,14 +158,14 @@ public class GnomonicDataTest {
     }
 
     @Test
-    public void testGetSetRk() {
-        final GnomonicData data = new GnomonicData();
+    void testGetSetRk() {
+        final var data = new GnomonicData();
 
         //check default value
         assertEquals(Double.NaN, data.getRk(), 0.0);
 
         //set new value
-        final double value = new Random().nextDouble();
+        final var value = new Random().nextDouble();
         data.setRk(value);
 
         //check

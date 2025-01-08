@@ -15,14 +15,14 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConstantsTest {
+class ConstantsTest {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(6378137, Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
         assertEquals(6356752.31425, Constants.EARTH_POLAR_RADIUS_WGS84, 0.0);
         assertEquals(1 / 298.257223563, Constants.EARTH_FLATTENING_WGS84, 0.0);

@@ -15,15 +15,15 @@
  */
 package com.irurueta.navigation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class LockedExceptionTest {
+class LockedExceptionTest {
 
     @Test
-    public void testConstructor() {
-        LockedException ex = new LockedException();
+    void testConstructor() {
+        var ex = new LockedException();
         assertNotNull(ex);
 
         ex = new LockedException("message");

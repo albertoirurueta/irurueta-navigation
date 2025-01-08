@@ -17,44 +17,42 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.Assert.assertEquals;
-
-public class GNSSKalmanInitializerTest {
+class GNSSKalmanInitializerTest {
 
     private static final double MIN_VALUE = 1e-4;
     private static final double MAX_VALUE = 1e-3;
 
     @Test
-    public void testInitialize() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double z = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+    void testInitialize() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var z = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final var estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Matrix covariance = Matrix.diagonal(new double[]{
+        final var covariance = Matrix.diagonal(new double[]{
                 initialPositionUncertainty * initialPositionUncertainty,
                 initialPositionUncertainty * initialPositionUncertainty,
                 initialPositionUncertainty * initialPositionUncertainty,
@@ -65,17 +63,16 @@ public class GNSSKalmanInitializerTest {
                 initialClockDriftUncertainty * initialClockDriftUncertainty
         });
 
-        final GNSSKalmanState expected = new GNSSKalmanState(estimation, covariance);
+        final var expected = new GNSSKalmanState(estimation, covariance);
 
-        final GNSSKalmanConfig config = new GNSSKalmanConfig(initialPositionUncertainty,
-                initialVelocityUncertainty, initialClockOffsetUncertainty,
-                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
+        final var config = new GNSSKalmanConfig(initialPositionUncertainty, initialVelocityUncertainty,
+                initialClockOffsetUncertainty, initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
                 clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
-        final GNSSKalmanState result1 = new GNSSKalmanState();
+        final var result1 = new GNSSKalmanState();
         GNSSKalmanInitializer.initialize(estimation, config, result1);
 
-        final GNSSKalmanState result2 = GNSSKalmanInitializer.initialize(estimation, config);
+        final var result2 = GNSSKalmanInitializer.initialize(estimation, config);
 
         assertEquals(expected, result1);
         assertEquals(expected, result2);

@@ -30,7 +30,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * Constructor.
      */
     public Accuracy2D() {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D();
+        internalAccuracy = new com.irurueta.geometry.Accuracy2D();
     }
 
     /**
@@ -43,9 +43,8 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
      *                                                     symmetric and positive definite.
      */
-    public Accuracy2D(final Matrix covarianceMatrix)
-            throws NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);
+    public Accuracy2D(final Matrix covarianceMatrix) throws NonSymmetricPositiveDefiniteMatrixException {
+        internalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);
     }
 
     /**
@@ -55,7 +54,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public Accuracy2D(final double confidence) {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);
+        internalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);
     }
 
     /**
@@ -72,7 +71,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      */
     public Accuracy2D(final Matrix covarianceMatrix, final double confidence)
             throws NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);
+        internalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);
     }
 
     /**
@@ -94,6 +93,6 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
     public Ellipse toEllipse() throws InvalidRotationMatrixException {
-        return mInternalAccuracy.toEllipse();
+        return internalAccuracy.toEllipse();
     }
 }

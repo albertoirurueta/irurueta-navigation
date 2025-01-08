@@ -50,53 +50,53 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * Cartesian x coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
      * the corresponding frame axes.
      */
-    double mX;
+    double x;
 
     /**
      * Cartesian y coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
      * the corresponding frame axes.
      */
-    double mY;
+    double y;
 
     /**
      * Cartesian z coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
      * the corresponding frame axes.
      */
-    double mZ;
+    double z;
 
     /**
      * X coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
      * resolved along the corresponding frame axes.
      */
-    double mVx;
+    double vx;
 
     /**
      * Y coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
      * resolved along the corresponding frame axes.
      */
-    double mVy;
+    double vy;
 
     /**
      * Z coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
      * resolved along the corresponding frame axes.
      */
-    double mVz;
+    double vz;
 
     /**
      * Body to ECI frame coordinate transformation matrix.
      */
-    CoordinateTransformation mC;
+    CoordinateTransformation c;
 
     /**
      * Actual type class
      */
-    transient Class<T> mClass;
+    transient Class<T> clazz;
 
     /**
      * Constructor.
      */
     ECIorECEFFrame(final Class<T> c) {
-        mClass = c;
+        clazz = c;
     }
 
     /**
@@ -115,7 +115,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return cartesian x coordinate of body position.
      */
     public double getX() {
-        return mX;
+        return x;
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param x cartesian x coordinate of body position.
      */
     public void setX(final double x) {
-        mX = x;
+        this.x = x;
     }
 
     /**
@@ -133,7 +133,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return cartesian y coordinate of body position.
      */
     public double getY() {
-        return mY;
+        return y;
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param y cartesian y coordinate of body position.
      */
     public void setY(final double y) {
-        mY = y;
+        this.y = y;
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return cartesian z coordinate of body position.
      */
     public double getZ() {
-        return mZ;
+        return z;
     }
 
     /**
@@ -160,7 +160,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param z cartesian z coordinate of body position.
      */
     public void setZ(final double z) {
-        mZ = z;
+        this.z = z;
     }
 
     /**
@@ -171,9 +171,9 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param z cartesian z coordinate of body position, resolved along ECI or ECEF-frame axes.
      */
     public void setCoordinates(final double x, final double y, final double z) {
-        mX = x;
-        mY = y;
-        mZ = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -182,7 +182,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return body position.
      */
     public Point3D getPosition() {
-        return new InhomogeneousPoint3D(mX, mY, mZ);
+        return new InhomogeneousPoint3D(x, y, z);
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where position data is copied to.
      */
     public void getPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mX, mY, mZ);
+        result.setInhomogeneousCoordinates(x, y, z);
     }
 
     /**
@@ -200,9 +200,9 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param point body position to be set.
      */
     public void setPosition(final Point3D point) {
-        mX = point.getInhomX();
-        mY = point.getInhomY();
-        mZ = point.getInhomZ();
+        x = point.getInhomX();
+        y = point.getInhomY();
+        z = point.getInhomZ();
     }
 
     /**
@@ -211,7 +211,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where cartesian x coordinate of body position will be stored.
      */
     public void getPositionX(final Distance result) {
-        result.setValue(mX);
+        result.setValue(x);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -221,7 +221,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return x coordinate of body position resolved along ECI or ECEF-frame axes.
      */
     public Distance getPositionX() {
-        return new Distance(mX, DistanceUnit.METER);
+        return new Distance(x, DistanceUnit.METER);
     }
 
     /**
@@ -230,8 +230,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param positionX cartesian x coordinate of body position to be set.
      */
     public void setPositionX(final Distance positionX) {
-        mX = DistanceConverter.convert(positionX.getValue().doubleValue(),
-                positionX.getUnit(), DistanceUnit.METER);
+        x = DistanceConverter.convert(positionX.getValue().doubleValue(), positionX.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -240,7 +239,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where cartesian y coordinate of body position will be stored.
      */
     public void getPositionY(final Distance result) {
-        result.setValue(mY);
+        result.setValue(y);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -250,7 +249,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return y coordinate of body position resolved along ECI or ECEF-frame axes.
      */
     public Distance getPositionY() {
-        return new Distance(mY, DistanceUnit.METER);
+        return new Distance(y, DistanceUnit.METER);
     }
 
     /**
@@ -259,8 +258,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param positionY cartesian y coordinate of body position to be set.
      */
     public void setPositionY(final Distance positionY) {
-        mY = DistanceConverter.convert(positionY.getValue().doubleValue(),
-                positionY.getUnit(), DistanceUnit.METER);
+        y = DistanceConverter.convert(positionY.getValue().doubleValue(), positionY.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -269,7 +267,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where cartesian z coordinate of body position will be stored.
      */
     public void getPositionZ(final Distance result) {
-        result.setValue(mZ);
+        result.setValue(z);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -279,7 +277,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return z coordinate of body position resolved along ECI or ECEF-frame axes.
      */
     public Distance getPositionZ() {
-        return new Distance(mZ, DistanceUnit.METER);
+        return new Distance(z, DistanceUnit.METER);
     }
 
     /**
@@ -288,8 +286,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param positionZ cartesian z coordinate of body position to be set.
      */
     public void setPositionZ(final Distance positionZ) {
-        mZ = DistanceConverter.convert(positionZ.getValue().doubleValue(),
-                positionZ.getUnit(), DistanceUnit.METER);
+        z = DistanceConverter.convert(positionZ.getValue().doubleValue(), positionZ.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -299,9 +296,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param positionY cartesian y coordinate of body position to be set, resolved along ECI or ECEF-frame axes.
      * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI or ECEF-frame axes.
      */
-    public void setPositionCoordinates(final Distance positionX,
-                                       final Distance positionY,
-                                       final Distance positionZ) {
+    public void setPositionCoordinates(final Distance positionX, final Distance positionY, final Distance positionZ) {
         setPositionX(positionX);
         setPositionY(positionY);
         setPositionZ(positionZ);
@@ -314,7 +309,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return position norm expressed in meters (m).
      */
     public double getPositionNorm() {
-        return Math.sqrt(mX * mX + mY * mY + mZ * mZ);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -343,7 +338,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return x coordinate of velocity.
      */
     public double getVx() {
-        return mVx;
+        return vx;
     }
 
     /**
@@ -353,7 +348,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param vx x coordinate of velocity.
      */
     public void setVx(final double vx) {
-        mVx = vx;
+        this.vx = vx;
     }
 
     /**
@@ -363,7 +358,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return y coordinate of velocity.
      */
     public double getVy() {
-        return mVy;
+        return vy;
     }
 
     /**
@@ -373,7 +368,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param vy y coordinate of velocity.
      */
     public void setVy(final double vy) {
-        mVy = vy;
+        this.vy = vy;
     }
 
     /**
@@ -383,7 +378,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return z coordinate of velocity.
      */
     public double getVz() {
-        return mVz;
+        return vz;
     }
 
     /**
@@ -393,7 +388,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param vz z coordinate of velocity.
      */
     public void setVz(final double vz) {
-        mVz = vz;
+        this.vz = vz;
     }
 
     /**
@@ -405,9 +400,9 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param vz z coordinate of velocity.
      */
     public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-        mVx = vx;
-        mVy = vy;
-        mVz = vz;
+        this.vx = vx;
+        this.vy = vy;
+        this.vz = vz;
     }
 
     /**
@@ -417,7 +412,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getVelocityNorm() {
-        return Math.sqrt(mVx * mVx + mVy * mVy + mVz * mVz);
+        return Math.sqrt(vx * vx + vy * vy + vz * vz);
     }
 
     /**
@@ -445,7 +440,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where x coordinate of velocity will be stored.
      */
     public void getSpeedX(final Speed result) {
-        result.setValue(mVx);
+        result.setValue(vx);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -455,7 +450,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return x coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
      */
     public Speed getSpeedX() {
-        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -465,8 +460,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      *               axes to be set.
      */
     public void setSpeedX(final Speed speedX) {
-        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(),
-                speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -475,7 +469,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where y coordinate of velocity will be stored.
      */
     public void getSpeedY(final Speed result) {
-        result.setValue(mVy);
+        result.setValue(vy);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -485,7 +479,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return y coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
      */
     public Speed getSpeedY() {
-        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -495,8 +489,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      *               axes to be set.
      */
     public void setSpeedY(final Speed speedY) {
-        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(),
-                speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -505,7 +498,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param result instance where z coordinate of velocity will be stored.
      */
     public void getSpeedZ(final Speed result) {
-        result.setValue(mVz);
+        result.setValue(vz);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -515,7 +508,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @return z coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
      */
     public Speed getSpeedZ() {
-        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -525,8 +518,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      *               axes to be set.
      */
     public void setSpeedZ(final Speed speedZ) {
-        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(),
-                speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -536,9 +528,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param speedY y coordinate of velocity to be set.
      * @param speedZ z coordinate of velocity to be set.
      */
-    public void setSpeedCoordinates(final Speed speedX,
-                                    final Speed speedY,
-                                    final Speed speedZ) {
+    public void setSpeedCoordinates(final Speed speedX, final Speed speedY, final Speed speedZ) {
         setSpeedX(speedX);
         setSpeedY(speedY);
         setSpeedZ(speedZ);
@@ -571,7 +561,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public void getCoordinateTransformationMatrix(final Matrix result) {
-        mC.mMatrix.copyTo(result);
+        c.matrix.copyTo(result);
     }
 
     /**
@@ -588,7 +578,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
     @Override
     public void setCoordinateTransformationMatrix(final Matrix matrix, final double threshold)
             throws InvalidRotationMatrixException {
-        mC.setMatrix(matrix,threshold);
+        c.setMatrix(matrix,threshold);
     }
 
     /**
@@ -602,7 +592,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public void setCoordinateTransformationMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
-        mC.setMatrix(matrix);
+        c.setMatrix(matrix);
     }
 
     /**
@@ -614,7 +604,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public Rotation3D getCoordinateTransformationRotation() throws InvalidRotationMatrixException {
-        return mC.asRotation();
+        return c.asRotation();
     }
 
     /**
@@ -626,7 +616,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public void getCoordinateTransformationRotation(final Rotation3D result) throws InvalidRotationMatrixException {
-        mC.asRotation(result);
+        c.asRotation(result);
     }
 
     /**
@@ -639,7 +629,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public void setCoordinateTransformationRotation(final Rotation3D rotation) {
-        mC.fromRotation(rotation);
+        c.fromRotation(rotation);
     }
 
     /**
@@ -648,15 +638,15 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final T output) {
-        output.mX = mX;
-        output.mY = mY;
-        output.mZ = mZ;
+        output.x = x;
+        output.y = y;
+        output.z = z;
 
-        output.mVx = mVx;
-        output.mVy = mVy;
-        output.mVz = mVz;
+        output.vx = vx;
+        output.vy = vy;
+        output.vz = vz;
 
-        mC.copyTo(output.mC);
+        c.copyTo(output.c);
     }
 
     /**
@@ -665,15 +655,15 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      * @param input instance to copy data from.
      */
     public void copyFrom(final T input) {
-        mX = input.mX;
-        mY = input.mY;
-        mZ = input.mZ;
+        x = input.x;
+        y = input.y;
+        z = input.z;
 
-        mVx = input.mVx;
-        mVy = input.mVy;
-        mVz = input.mVz;
+        vx = input.vx;
+        vy = input.vy;
+        vz = input.vz;
 
-        mC.copyFrom(input.mC);
+        c.copyFrom(input.c);
     }
 
     /**
@@ -684,7 +674,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mC);
+        return Objects.hash(x, y, z, vx, vy, vz, c);
     }
 
     /**
@@ -701,7 +691,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
         if (obj == this) {
             return true;
         }
-        if (!mClass.isInstance(obj)) {
+        if (!clazz.isInstance(obj)) {
             return false;
         }
 
@@ -723,12 +713,12 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
             return false;
         }
 
-        return Math.abs(mX - other.mX) <= threshold
-                && Math.abs(mY - other.mY) <= threshold
-                && Math.abs(mZ - other.mZ) <= threshold
-                && Math.abs(mVx - other.mVx) <= threshold
-                && Math.abs(mVy - other.mVy) <= threshold
-                && Math.abs(mVz - other.mVz) <= threshold
-                && mC.equals(other.mC, threshold);
+        return Math.abs(x - other.x) <= threshold
+                && Math.abs(y - other.y) <= threshold
+                && Math.abs(z - other.z) <= threshold
+                && Math.abs(vx - other.vx) <= threshold
+                && Math.abs(vy - other.vy) <= threshold
+                && Math.abs(vz - other.vz) <= threshold
+                && c.equals(other.c, threshold);
     }
 }

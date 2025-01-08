@@ -15,22 +15,22 @@
  */
 package com.irurueta.navigation.frames;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FrameExceptionTest {
+class FrameExceptionTest {
 
     @Test
-    public void testConstructor() {
-        FrameException ex = new FrameException();
+    void testConstructor() {
+        var ex = new FrameException();
         assertNotNull(ex);
 
         ex = new FrameException("message");
         assertNotNull(ex);
         assertEquals("message", ex.getMessage());
 
-        final Exception cause = new Exception();
+        final var cause = new Exception();
         ex = new FrameException(cause);
         assertNotNull(ex);
         assertSame(ex.getCause(), cause);

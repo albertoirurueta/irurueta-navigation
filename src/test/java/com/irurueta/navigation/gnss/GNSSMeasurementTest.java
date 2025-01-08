@@ -26,14 +26,13 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GNSSMeasurementTest {
+class GNSSMeasurementTest {
 
     private static final double MIN_POS_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
     private static final double MAX_POS_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
@@ -44,9 +43,9 @@ public class GNSSMeasurementTest {
     private static final double THRESHOLD = 1e-6;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test empty constructor
-        GNSSMeasurement measurement = new GNSSMeasurement();
+        var measurement = new GNSSMeasurement();
 
         // check default values
         assertEquals(0.0, measurement.getPseudoRange(), 0.0);
@@ -59,17 +58,17 @@ public class GNSSMeasurementTest {
         assertEquals(0.0, measurement.getVz(), 0.0);
 
         // test constructor with values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         measurement = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
@@ -85,17 +84,17 @@ public class GNSSMeasurementTest {
 
 
         // test constructor with measurement values
-        final Distance pseudoRangeDistance = new Distance(pseudoRange, DistanceUnit.METER);
-        final Speed pseudoRateSpeed = new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);
-        final Distance distanceX = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ = new Distance(z, DistanceUnit.METER);
-        final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var pseudoRangeDistance = new Distance(pseudoRange, DistanceUnit.METER);
+        final var pseudoRateSpeed = new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);
+        final var distanceX = new Distance(x, DistanceUnit.METER);
+        final var distanceY = new Distance(y, DistanceUnit.METER);
+        final var distanceZ = new Distance(z, DistanceUnit.METER);
+        final var speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
-                distanceX, distanceY, distanceZ, speedX, speedY, speedZ);
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, distanceX, distanceY, distanceZ,
+                speedX, speedY, speedZ);
 
         // check default values
         assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
@@ -107,9 +106,8 @@ public class GNSSMeasurementTest {
         assertEquals(vy, measurement.getVy(), 0.0);
         assertEquals(vz, measurement.getVz(), 0.0);
 
-
         // test constructor with measurement values and position
-        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+        final var position = new InhomogeneousPoint3D(x, y, z);
 
         measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, position, speedX, speedY, speedZ);
 
@@ -124,8 +122,8 @@ public class GNSSMeasurementTest {
         assertEquals(vz, measurement.getVz(), 0.0);
 
         // test constructor with ECEF position and velocity
-        final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
-        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
+        final var ecefPosition = new ECEFPosition(x, y, z);
+        final var ecefVelocity = new ECEFVelocity(vx, vy, vz);
         measurement = new GNSSMeasurement(pseudoRange, pseudoRate, ecefPosition, ecefVelocity);
 
         // check default values
@@ -139,8 +137,7 @@ public class GNSSMeasurementTest {
         assertEquals(vz, measurement.getVz(), 0.0);
 
 
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
+        final var positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
         measurement = new GNSSMeasurement(pseudoRange, pseudoRate, positionAndVelocity);
 
         // check default values
@@ -153,7 +150,6 @@ public class GNSSMeasurementTest {
         assertEquals(vy, measurement.getVy(), 0.0);
         assertEquals(vz, measurement.getVz(), 0.0);
 
-
         measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, ecefPosition, ecefVelocity);
 
         // check default values
@@ -165,7 +161,6 @@ public class GNSSMeasurementTest {
         assertEquals(vx, measurement.getVx(), 0.0);
         assertEquals(vy, measurement.getVy(), 0.0);
         assertEquals(vz, measurement.getVz(), 0.0);
-
 
         measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, positionAndVelocity);
 
@@ -180,7 +175,7 @@ public class GNSSMeasurementTest {
         assertEquals(vz, measurement.getVz(), 0.0);
 
         // test copy constructor
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(measurement);
+        final var measurement2 = new GNSSMeasurement(measurement);
 
         // check default values
         assertEquals(measurement.getPseudoRange(), measurement2.getPseudoRange(), 0.0);
@@ -194,15 +189,15 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetPseudoRange() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPseudoRange() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getPseudoRange(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         measurement.setPseudoRange(pseudoRange);
 
@@ -211,41 +206,41 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetPseudoRangeDistance() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPseudoRangeDistance() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Distance distance1 = measurement.getPseudoRangeDistance();
+        final var distance1 = measurement.getPseudoRangeDistance();
 
         assertEquals(0.0, distance1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distance1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distance2 = new Distance(pseudoRange, DistanceUnit.METER);
+        final var distance2 = new Distance(pseudoRange, DistanceUnit.METER);
         measurement.setPseudoRangeDistance(distance2);
 
         // check
-        final Distance distance3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distance3 = new Distance(0.0, DistanceUnit.KILOMETER);
         measurement.getPseudoRangeDistance(distance3);
-        final Distance distance4 = measurement.getPseudoRangeDistance();
+        final var distance4 = measurement.getPseudoRangeDistance();
 
         assertEquals(distance2, distance3);
         assertEquals(distance2, distance4);
     }
 
     @Test
-    public void testGetSetPseudoRate() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPseudoRate() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getPseudoRate(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         measurement.setPseudoRate(pseudoRate);
 
@@ -254,41 +249,41 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetPseudoRateSpeed() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPseudoRateSpeed() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Speed speed1 = measurement.getPseudoRateSpeed();
+        final var speed1 = measurement.getPseudoRateSpeed();
 
         assertEquals(0.0, speed1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speed1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speed2 = new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);
+        final var speed2 = new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);
         measurement.setPseudoRateSpeed(speed2);
 
         // check
-        final Speed speed3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speed3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         measurement.getPseudoRateSpeed(speed3);
-        final Speed speed4 = measurement.getPseudoRateSpeed();
+        final var speed4 = measurement.getPseudoRateSpeed();
 
         assertEquals(speed2, speed3);
         assertEquals(speed2, speed4);
     }
 
     @Test
-    public void testGetSetX() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetX() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getX(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         measurement.setX(x);
 
         // check
@@ -296,41 +291,41 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetDistanceX() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetDistanceX() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Distance distanceX1 = measurement.getDistanceX();
+        final var distanceX1 = measurement.getDistanceX();
 
         assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
         measurement.setDistanceX(distanceX2);
 
         // check
-        final Distance distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
         measurement.getDistanceX(distanceX3);
-        final Distance distanceX4 = measurement.getDistanceX();
+        final var distanceX4 = measurement.getDistanceX();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceX2, distanceX4);
     }
 
     @Test
-    public void testGetSetY() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetY() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getY(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         measurement.setY(y);
 
         // check
@@ -338,41 +333,41 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetDistanceY() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetDistanceY() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Distance distanceY1 = measurement.getDistanceY();
+        final var distanceY1 = measurement.getDistanceY();
 
         assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
         measurement.setDistanceY(distanceY2);
 
         // check
-        final Distance distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
         measurement.getDistanceY(distanceY3);
-        final Distance distanceY4 = measurement.getDistanceY();
+        final var distanceY4 = measurement.getDistanceY();
 
         assertEquals(distanceY2, distanceY3);
         assertEquals(distanceY2, distanceY4);
     }
 
     @Test
-    public void testGetSetZ() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetZ() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getZ(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         measurement.setZ(z);
 
         // check
@@ -380,34 +375,34 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetDistanceZ() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetDistanceZ() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Distance distanceZ1 = measurement.getDistanceZ();
+        final var distanceZ1 = measurement.getDistanceZ();
 
         assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
         measurement.setDistanceZ(distanceZ2);
 
         // check
-        final Distance distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
         measurement.getDistanceZ(distanceZ3);
-        final Distance distanceZ4 = measurement.getDistanceZ();
+        final var distanceZ4 = measurement.getDistanceZ();
 
         assertEquals(distanceZ2, distanceZ3);
         assertEquals(distanceZ2, distanceZ4);
     }
 
     @Test
-    public void testSetPositionCoordinates() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testSetPositionCoordinates() {
+        final var measurement = new GNSSMeasurement();
 
         // check default values
         assertEquals(0.0, measurement.getX(), 0.0);
@@ -415,10 +410,10 @@ public class GNSSMeasurementTest {
         assertEquals(0.0, measurement.getZ(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
         measurement.setPositionCoordinates(x, y, z);
 
@@ -429,13 +424,13 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void setPositionCoordinatesWithDistances() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void setPositionCoordinatesWithDistances() {
+        final var measurement = new GNSSMeasurement();
 
         // check default values
-        final Distance distanceX1 = measurement.getDistanceX();
-        final Distance distanceY1 = measurement.getDistanceY();
-        final Distance distanceZ1 = measurement.getDistanceZ();
+        final var distanceX1 = measurement.getDistanceX();
+        final var distanceY1 = measurement.getDistanceY();
+        final var distanceZ1 = measurement.getDistanceZ();
 
         assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceX1.getUnit());
@@ -445,20 +440,20 @@ public class GNSSMeasurementTest {
         assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
         measurement.setPositionCoordinates(distanceX2, distanceY2, distanceZ2);
 
         // check
-        final Distance distanceX3 = measurement.getDistanceX();
-        final Distance distanceY3 = measurement.getDistanceY();
-        final Distance distanceZ3 = measurement.getDistanceZ();
+        final var distanceX3 = measurement.getDistanceX();
+        final var distanceY3 = measurement.getDistanceY();
+        final var distanceZ3 = measurement.getDistanceZ();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceY2, distanceY3);
@@ -466,27 +461,27 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetPosition() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPosition() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Point3D position1 = measurement.getPosition();
+        final var position1 = measurement.getPosition();
 
         // check
         assertEquals(position1, Point3D.create());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final Point3D position2 = new InhomogeneousPoint3D(x, y, z);
+        final var position2 = new InhomogeneousPoint3D(x, y, z);
         measurement.setPosition(position2);
 
         // check
-        final Point3D position3 = measurement.getPosition();
-        final Point3D position4 = Point3D.create();
+        final var position3 = measurement.getPosition();
+        final var position4 = Point3D.create();
         measurement.getPosition(position4);
 
         assertEquals(position2, position3);
@@ -494,11 +489,11 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetEcefPosition() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetEcefPosition() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final ECEFPosition position1 = measurement.getEcefPosition();
+        final var position1 = measurement.getEcefPosition();
 
         // check
         assertEquals(0.0, position1.getX(), 0.0);
@@ -506,17 +501,17 @@ public class GNSSMeasurementTest {
         assertEquals(0.0, position1.getZ(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
         measurement.setEcefPosition(position2);
 
         // check
-        final ECEFPosition position3 = measurement.getEcefPosition();
-        final ECEFPosition position4 = new ECEFPosition();
+        final var position3 = measurement.getEcefPosition();
+        final var position4 = new ECEFPosition();
         measurement.getEcefPosition(position4);
 
         assertEquals(position2, position3);
@@ -524,15 +519,15 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetVx() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetVx() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getVx(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         measurement.setVx(vx);
 
         // check
@@ -540,25 +535,25 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetSpeedX() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetSpeedX() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Speed speedX1 = measurement.getSpeedX();
+        final var speedX1 = measurement.getSpeedX();
 
         assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
         measurement.setSpeedX(speedX2);
 
         // check
-        final Speed speedX3 = measurement.getSpeedX();
-        final Speed speedX4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedX3 = measurement.getSpeedX();
+        final var speedX4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         measurement.getSpeedX(speedX4);
 
         assertEquals(speedX2, speedX3);
@@ -566,15 +561,15 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetVy() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetVy() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getVy(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         measurement.setVy(vy);
 
         // check
@@ -582,25 +577,25 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetSpeedY() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetSpeedY() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Speed speedY1 = measurement.getSpeedY();
+        final var speedY1 = measurement.getSpeedY();
 
         assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         measurement.setSpeedY(speedY2);
 
         // check
-        final Speed speedY3 = measurement.getSpeedY();
-        final Speed speedY4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedY3 = measurement.getSpeedY();
+        final var speedY4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         measurement.getSpeedY(speedY4);
 
         assertEquals(speedY2, speedY3);
@@ -608,15 +603,15 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetVz() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetVz() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
         assertEquals(0.0, measurement.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         measurement.setVz(vz);
 
         // check
@@ -624,25 +619,25 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetSpeedZ() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetSpeedZ() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final Speed speedZ1 = measurement.getSpeedZ();
+        final var speedZ1 = measurement.getSpeedZ();
 
         assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
         measurement.setSpeedZ(speedZ2);
 
         // check
-        final Speed speedZ3 = measurement.getSpeedZ();
-        final Speed speedZ4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedZ3 = measurement.getSpeedZ();
+        final var speedZ4 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         measurement.getSpeedZ(speedZ4);
 
         assertEquals(speedZ2, speedZ3);
@@ -650,8 +645,8 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testSetVelocityCoordinates() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testSetVelocityCoordinates() {
+        final var measurement = new GNSSMeasurement();
 
         // check default values
         assertEquals(0.0, measurement.getVx(), 0.0);
@@ -659,10 +654,10 @@ public class GNSSMeasurementTest {
         assertEquals(0.0, measurement.getVz(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         measurement.setVelocityCoordinates(vx, vy, vz);
 
         // check
@@ -672,13 +667,13 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testSetVelocityCoordinatesWithSpeed() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testSetVelocityCoordinatesWithSpeed() {
+        final var measurement = new GNSSMeasurement();
 
         // check default values
-        final Speed speedX1 = measurement.getSpeedX();
-        final Speed speedY1 = measurement.getSpeedY();
-        final Speed speedZ1 = measurement.getSpeedZ();
+        final var speedX1 = measurement.getSpeedX();
+        final var speedY1 = measurement.getSpeedY();
+        final var speedZ1 = measurement.getSpeedZ();
 
         assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
@@ -688,20 +683,20 @@ public class GNSSMeasurementTest {
         assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
         measurement.setVelocityCoordinates(speedX2, speedY2, speedZ2);
 
         // check
-        final Speed speedX3 = measurement.getSpeedX();
-        final Speed speedY3 = measurement.getSpeedY();
-        final Speed speedZ3 = measurement.getSpeedZ();
+        final var speedX3 = measurement.getSpeedX();
+        final var speedY3 = measurement.getSpeedY();
+        final var speedZ3 = measurement.getSpeedZ();
 
         assertEquals(speedX2, speedX3);
         assertEquals(speedY2, speedY3);
@@ -709,41 +704,41 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testGetSetEcefVelocity() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetEcefVelocity() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final ECEFVelocity velocity1 = measurement.getEcefVelocity();
+        final var velocity1 = measurement.getEcefVelocity();
 
         assertEquals(0.0, velocity1.getVx(), 0.0);
         assertEquals(0.0, velocity1.getVy(), 0.0);
         assertEquals(0.0, velocity1.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final var velocity2 = new ECEFVelocity(vx, vy, vz);
 
         measurement.setEcefVelocity(velocity2);
 
         // check
-        final ECEFVelocity velocity3 = new ECEFVelocity();
+        final var velocity3 = new ECEFVelocity();
         measurement.getEcefVelocity(velocity3);
-        final ECEFVelocity velocity4 = measurement.getEcefVelocity();
+        final var velocity4 = measurement.getEcefVelocity();
 
         assertEquals(velocity2, velocity3);
         assertEquals(velocity2, velocity4);
     }
 
     @Test
-    public void testGetSetPositionAndVelocity() {
-        final GNSSMeasurement measurement = new GNSSMeasurement();
+    void testGetSetPositionAndVelocity() {
+        final var measurement = new GNSSMeasurement();
 
         // check default value
-        final ECEFPositionAndVelocity positionAndVelocity1 = measurement.getPositionAndVelocity();
+        final var positionAndVelocity1 = measurement.getPositionAndVelocity();
 
         assertEquals(0.0, positionAndVelocity1.getX(), 0.0);
         assertEquals(0.0, positionAndVelocity1.getY(), 0.0);
@@ -753,45 +748,45 @@ public class GNSSMeasurementTest {
         assertEquals(0.0, positionAndVelocity1.getVz(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final var positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
         measurement.setPositionAndVelocity(positionAndVelocity2);
 
         // check
-        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
+        final var positionAndVelocity3 = new ECEFPositionAndVelocity();
         measurement.getPositionAndVelocity(positionAndVelocity3);
-        final ECEFPositionAndVelocity positionAndVelocity4 = measurement.getPositionAndVelocity();
+        final var positionAndVelocity4 = measurement.getPositionAndVelocity();
 
         assertEquals(positionAndVelocity2, positionAndVelocity3);
         assertEquals(positionAndVelocity2, positionAndVelocity4);
     }
 
     @Test
-    public void testCopyTo() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testCopyTo() {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
-        final GNSSMeasurement measurement2 = new GNSSMeasurement();
+        final var measurement2 = new GNSSMeasurement();
         measurement1.copyTo(measurement2);
 
         // check
@@ -807,22 +802,22 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testCopyFrom() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testCopyFrom() {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
-        final GNSSMeasurement measurement2 = new GNSSMeasurement();
+        final var measurement2 = new GNSSMeasurement();
         measurement2.copyFrom(measurement1);
 
         // check
@@ -838,44 +833,44 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testHashCode() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testHashCode() {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement3 = new GNSSMeasurement();
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement3 = new GNSSMeasurement();
 
         assertEquals(measurement1.hashCode(), measurement2.hashCode());
         assertNotEquals(measurement1.hashCode(), measurement3.hashCode());
     }
 
     @Test
-    public void testEquals() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testEquals() {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement3 = new GNSSMeasurement();
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement3 = new GNSSMeasurement();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(measurement1.equals((Object)measurement1));
@@ -887,26 +882,26 @@ public class GNSSMeasurementTest {
         assertFalse(measurement1.equals((Object)null));
         assertFalse(measurement1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(measurement1.equals(new Object()));
+        assertNotEquals(new Object(), measurement1);
     }
 
     @Test
-    public void testEqualsWithThreshold() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testEqualsWithThreshold() {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement3 = new GNSSMeasurement();
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement3 = new GNSSMeasurement();
 
         assertTrue(measurement1.equals(measurement1, THRESHOLD));
         assertTrue(measurement1.equals(measurement2, THRESHOLD));
@@ -915,45 +910,45 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testClone() throws CloneNotSupportedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testClone() throws CloneNotSupportedException {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
-        final Object measurement2 = measurement1.clone();
+        final var measurement2 = measurement1.clone();
 
         assertEquals(measurement1, measurement2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var randomizer = new UniformRandomizer();
+        final var pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final var z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final var vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final var measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(measurement1);
-        final GNSSMeasurement measurement2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(measurement1);
+        final var measurement2 = SerializationHelper.<GNSSMeasurement>deserialize(bytes);
 
         // check
         assertEquals(measurement1, measurement2);

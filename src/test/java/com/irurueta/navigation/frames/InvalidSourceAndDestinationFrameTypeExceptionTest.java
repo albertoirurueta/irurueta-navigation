@@ -15,23 +15,22 @@
  */
 package com.irurueta.navigation.frames;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class InvalidSourceAndDestinationFrameTypeExceptionTest {
+class InvalidSourceAndDestinationFrameTypeExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidSourceAndDestinationFrameTypeException ex =
-                new InvalidSourceAndDestinationFrameTypeException();
+    void testConstructor() {
+        var ex = new InvalidSourceAndDestinationFrameTypeException();
         assertNotNull(ex);
 
         ex = new InvalidSourceAndDestinationFrameTypeException("message");
         assertNotNull(ex);
         assertEquals("message", ex.getMessage());
 
-        final Exception cause = new Exception();
+        final var cause = new Exception();
         ex = new InvalidSourceAndDestinationFrameTypeException(cause);
         assertNotNull(ex);
         assertSame(ex.getCause(), cause);

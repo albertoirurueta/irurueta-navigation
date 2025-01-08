@@ -9,14 +9,13 @@ import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ECEFPositionTest {
+class ECEFPositionTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -26,10 +25,10 @@ public class ECEFPositionTest {
     private static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
 
         // test empty constructor
-        ECEFPosition position = new ECEFPosition();
+        var position = new ECEFPosition();
 
         // check
         assertEquals(0.0, position.getX(), 0.0);
@@ -48,10 +47,10 @@ public class ECEFPositionTest {
         assertEquals(DistanceUnit.METER, distanceZ.getUnit());
 
         // test constructor with coordinates
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
         position = new ECEFPosition(x, y, z);
 
@@ -73,9 +72,9 @@ public class ECEFPositionTest {
 
 
         // test constructor with coordinate distances
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
 
         position = new ECEFPosition(distanceX2, distanceY2, distanceZ2);
 
@@ -94,7 +93,7 @@ public class ECEFPositionTest {
 
 
         // test copy constructor
-        final ECEFPosition position2 = new ECEFPosition(position);
+        final var position2 = new ECEFPosition(position);
 
         // check
         assertEquals(position.getX(), position2.getX(), 0.0);
@@ -104,11 +103,11 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetSetX() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetX() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
         assertEquals(0.0, position.getX(), 0.0);
@@ -121,11 +120,11 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetSetY() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetY() {
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
         assertEquals(0.0, position.getY(), 0.0);
@@ -138,11 +137,11 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetSetZ() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetZ() {
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
         assertEquals(0.0, position.getZ(), 0.0);
@@ -155,13 +154,13 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testSetCoordinates() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testSetCoordinates() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default values
         assertEquals(0.0, position.getX(), 0.0);
@@ -178,24 +177,24 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetSetPosition() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetPosition() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
         assertEquals(Point3D.create(), position.getPosition());
 
         // set new vale
-        final Point3D pos1 = new InhomogeneousPoint3D(x, y, z);
+        final var pos1 = new InhomogeneousPoint3D(x, y, z);
         position.setPosition(pos1);
 
         // check
-        final Point3D pos2 = position.getPosition();
-        final Point3D pos3 = new InhomogeneousPoint3D();
+        final var pos2 = position.getPosition();
+        final var pos3 = new InhomogeneousPoint3D();
         position.getPosition(pos3);
 
         assertEquals(pos1, pos2);
@@ -203,96 +202,96 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetSetDistanceX() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetDistanceX() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
-        final Distance distanceX1 = position.getDistanceX();
+        final var distanceX1 = position.getDistanceX();
 
         assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
-        final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
+        final var distanceX2 = new Distance(x, DistanceUnit.METER);
         position.setX(distanceX2);
 
         // check
-        final Distance distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getDistanceX(distanceX3);
-        final Distance distanceX4 = position.getDistanceX();
+        final var distanceX4 = position.getDistanceX();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceX2, distanceX4);
     }
 
     @Test
-    public void testGetSetDistanceY() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetDistanceY() {
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default value
-        final Distance distanceY1 = position.getDistanceY();
+        final var distanceY1 = position.getDistanceY();
 
         assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
-        final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
+        final var distanceY2 = new Distance(y, DistanceUnit.METER);
         position.setY(distanceY2);
 
         // check
-        final Distance distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getDistanceY(distanceY3);
-        final Distance distanceY4 = position.getDistanceY();
+        final var distanceY4 = position.getDistanceY();
 
         assertEquals(distanceY2, distanceY3);
         assertEquals(distanceY2, distanceY4);
     }
 
     @Test
-    public void testGetSetDistanceZ() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetSetDistanceZ() {
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default values
-        final Distance distanceZ1 = position.getDistanceZ();
+        final var distanceZ1 = position.getDistanceZ();
 
         assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
-        final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
+        final var distanceZ2 = new Distance(z, DistanceUnit.METER);
         position.setZ(distanceZ2);
 
         // check
-        final Distance distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getDistanceZ(distanceZ3);
-        final Distance distanceZ4 = position.getDistanceZ();
+        final var distanceZ4 = position.getDistanceZ();
 
         assertEquals(distanceZ2, distanceZ3);
         assertEquals(distanceZ2, distanceZ4);
     }
 
     @Test
-    public void testSetDistanceCoordinates() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testSetDistanceCoordinates() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition();
+        final var position = new ECEFPosition();
 
         // check default values
-        final Distance distanceX = new Distance(x, DistanceUnit.METER);
-        final Distance distanceY = new Distance(y, DistanceUnit.METER);
-        final Distance distanceZ = new Distance(z, DistanceUnit.METER);
+        final var distanceX = new Distance(x, DistanceUnit.METER);
+        final var distanceY = new Distance(y, DistanceUnit.METER);
+        final var distanceZ = new Distance(z, DistanceUnit.METER);
         position.setCoordinates(distanceX, distanceY, distanceZ);
 
         // check
@@ -302,20 +301,20 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testGetNorm() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testGetNorm() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition(x, y, z);
+        final var position = new ECEFPosition(x, y, z);
 
-        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
+        final var norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
         assertEquals(position.getNorm(), norm, ABSOLUTE_ERROR);
 
-        final Distance normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getNormAsDistance(normDistance1);
-        final Distance normDistance2 = position.getNormAsDistance();
+        final var normDistance2 = position.getNormAsDistance();
 
         assertEquals(norm, normDistance1.getValue().doubleValue(), ABSOLUTE_ERROR);
         assertEquals(DistanceUnit.METER, normDistance1.getUnit());
@@ -323,14 +322,14 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testCopyTo() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testCopyTo() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
-        final ECEFPosition position2 = new ECEFPosition();
+        final var position1 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition();
 
         position1.copyTo(position2);
 
@@ -341,14 +340,14 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testCopyFrom() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testCopyFrom() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
-        final ECEFPosition position2 = new ECEFPosition();
+        final var position1 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition();
 
         position2.copyFrom(position1);
 
@@ -359,18 +358,18 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testAsArray() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testAsArray() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition(x, y, z);
+        final var position = new ECEFPosition(x, y, z);
 
-        final double[] result1 = new double[ECEFPosition.COMPONENTS];
+        final var result1 = new double[ECEFPosition.COMPONENTS];
         position.asArray(result1);
 
-        final double[] result2 = position.asArray();
+        final var result2 = position.asArray();
 
         assertEquals(x, result1[0], 0.0);
         assertEquals(y, result1[1], 0.0);
@@ -379,28 +378,24 @@ public class ECEFPositionTest {
         assertArrayEquals(result1, result2, 0.0);
 
         // Force IllegalArgumentException
-        try {
-            position.asArray(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> position.asArray(new double[1]));
     }
 
     @Test
-    public void testAsMatrix() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testAsMatrix() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position = new ECEFPosition(x, y, z);
+        final var position = new ECEFPosition(x, y, z);
 
-        final Matrix result1 = new Matrix(ECEFPosition.COMPONENTS, 1);
+        final var result1 = new Matrix(ECEFPosition.COMPONENTS, 1);
         position.asMatrix(result1);
 
-        final Matrix result2 = position.asMatrix();
+        final var result2 = position.asMatrix();
 
-        final Matrix result3 = new Matrix(1, 1);
+        final var result3 = new Matrix(1, 1);
         position.asMatrix(result3);
 
         assertEquals(x, result1.getElementAtIndex(0), 0.0);
@@ -412,30 +407,30 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testHashCode() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testHashCode() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
-        final ECEFPosition position3 = new ECEFPosition();
+        final var position1 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
+        final var position3 = new ECEFPosition();
 
         assertEquals(position1.hashCode(), position2.hashCode());
         assertNotEquals(position1.hashCode(), position3.hashCode());
     }
 
     @Test
-    public void testEquals() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testEquals() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
-        final ECEFPosition position3 = new ECEFPosition();
+        final var position1 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
+        final var position3 = new ECEFPosition();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(position1.equals((Object) position1));
@@ -447,19 +442,19 @@ public class ECEFPositionTest {
         assertFalse(position1.equals((Object) null));
         assertFalse(position1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(position1.equals(new Object()));
+        assertNotEquals(new Object(), position1);
     }
 
     @Test
-    public void testEqualsWithThreshold() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testEqualsWithThreshold() {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
-        final ECEFPosition position3 = new ECEFPosition();
+        final var position1 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
+        final var position3 = new ECEFPosition();
 
         assertTrue(position1.equals(position1, THRESHOLD));
         assertTrue(position1.equals(position2, THRESHOLD));
@@ -468,31 +463,31 @@ public class ECEFPositionTest {
     }
 
     @Test
-    public void testClone() throws CloneNotSupportedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testClone() throws CloneNotSupportedException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final var position1 = new ECEFPosition(x, y, z);
 
-        final Object position2 = position1.clone();
+        final var position2 = position1.clone();
 
         assertEquals(position1, position2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final var position1 = new ECEFPosition(x, y, z);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(position1);
-        final ECEFPosition position2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(position1);
+        final var position2 = SerializationHelper.<ECEFPosition>deserialize(bytes);
 
         // check
         assertEquals(position1, position2);

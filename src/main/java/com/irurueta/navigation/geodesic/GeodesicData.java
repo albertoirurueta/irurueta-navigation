@@ -92,8 +92,7 @@ public class GeodesicData {
      * Initialize all the fields to Double.NaN.
      */
     public GeodesicData() {
-        lat1 = lon1 = azi1 = lat2 = lon2 = azi2 = s12 = a12 = m12 =
-                scaleM12 = scaleM21 = areaS12 = Double.NaN;
+        lat1 = lon1 = azi1 = lat2 = lon2 = azi2 = s12 = a12 = m12 = scaleM12 = scaleM21 = areaS12 = Double.NaN;
     }
 
     /**

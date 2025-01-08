@@ -16,40 +16,35 @@
 package com.irurueta.navigation.utils;
 
 import com.irurueta.navigation.geodesic.Geodesic;
-import com.irurueta.navigation.geodesic.GeodesicData;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LocationUtilsTest {
+class LocationUtilsTest {
 
-    @BeforeClass
-    public static void setUpClass() {
+    @BeforeAll
+    static void setUpClass() {
         Locale.setDefault(Locale.ENGLISH);
     }
 
     @Test
-    public void testConvertDoubleToString() {
-        String str = LocationUtils.convert(45.0, LocationUtils.FORMAT_DEGREES);
+    void testConvertDoubleToString() {
+        var str = LocationUtils.convert(45.0, LocationUtils.FORMAT_DEGREES);
         assertEquals("45", str);
-
 
         str = LocationUtils.convert(45.5, LocationUtils.FORMAT_DEGREES);
         assertEquals("45.5", str);
 
-
         str = LocationUtils.convert(45.0, LocationUtils.FORMAT_MINUTES);
         assertEquals("45:0", str);
 
-
         str = LocationUtils.convert(45.5, LocationUtils.FORMAT_MINUTES);
         assertEquals("45:30", str);
-
 
         str = LocationUtils.convert(45.54, LocationUtils.FORMAT_SECONDS);
         assertEquals("45:32:24", str);
@@ -58,28 +53,16 @@ public class LocationUtilsTest {
         assertEquals("-45", str);
 
         // force IllegalArgumentException
-        str = null;
-        try {
-            str = LocationUtils.convert(-181.0, LocationUtils.FORMAT_DEGREES);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            str = LocationUtils.convert(181.0, LocationUtils.FORMAT_DEGREES);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            str = LocationUtils.convert(45.0, -1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(str);
+        assertThrows(IllegalArgumentException.class,
+                () -> LocationUtils.convert(-181.0, LocationUtils.FORMAT_DEGREES));
+        assertThrows(IllegalArgumentException.class,
+                () -> LocationUtils.convert(181.0, LocationUtils.FORMAT_DEGREES));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert(45.0, -1));
     }
 
     @Test
-    public void testConvertStringToDouble() {
-        double value = LocationUtils.convert("45");
+    void testConvertStringToDouble() {
+        var value = LocationUtils.convert("45");
         assertEquals(45.0, value, 0.0);
 
         value = LocationUtils.convert("45.5");
@@ -98,77 +81,38 @@ public class LocationUtilsTest {
         assertEquals(-45.0, value, 0.0);
 
         // force NullPointerException
-        value = 0.0;
-        try {
-            value = LocationUtils.convert(null);
-            fail("NullPointerException expected but not thrown");
-        } catch (final NullPointerException ignore) {
-        }
+        assertThrows(NullPointerException.class, () -> LocationUtils.convert(null));
 
         // force IllegalArgumentException
-        try {
-            value = LocationUtils.convert(" ");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("m");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("--1:30");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertEquals(0.0, value, 0.0);
-        try {
-            value = LocationUtils.convert("181:30");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("45:-1");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("45:60");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("45:30:-1");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            value = LocationUtils.convert("45:30:60");
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertEquals(0.0, value, 0.0);
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert(" "));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("m"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("--1:30"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("181:30"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("45:-1"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("45:60"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("45:30:-1"));
+        assertThrows(IllegalArgumentException.class, () -> LocationUtils.convert("45:30:60"));
     }
 
     @Test
-    public void testDistanceAndBearing() {
+    void testDistanceAndBearing() {
         // define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         // 41.382643,2.176700
         // 41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final LocationUtils.BearingDistance bd1 = new LocationUtils.BearingDistance();
+        final var bd1 = new LocationUtils.BearingDistance();
         LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, bd1);
 
-        final LocationUtils.BearingDistance bd2 = LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2);
+        final var bd2 = LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2);
 
         // check
         assertEquals(lat1, bd1.getStartLatitude(), 0.0);
@@ -189,23 +133,23 @@ public class LocationUtilsTest {
     }
 
     @Test
-    public void testDistanceAndBearingArray() {
+    void testDistanceAndBearingArray() {
         // define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         // 41.382643,2.176700
         // 41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final double[] result1 = new double[1];
-        final double[] result2 = new double[2];
-        final double[] result3 = new double[3];
+        final var result1 = new double[1];
+        final var result2 = new double[2];
+        final var result3 = new double[3];
 
         LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, result1);
         LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, result2);
@@ -222,43 +166,40 @@ public class LocationUtilsTest {
         assertEquals(data.getAzi2(), result3[2], 0.0);
 
         // force IllegalArgumentException
-        try {
-            LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, new double[0]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, new double[0]));
     }
 
     @Test
-    public void testDistanceBetween() {
+    void testDistanceBetween() {
         // define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         // 41.382643,2.176700
         // 41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
         assertEquals(data.getS12(), LocationUtils.distanceBetweenMeters(lat1, lon1, lat2, lon2), 0.0);
 
-        final Distance d1 = LocationUtils.distanceBetween(lat1, lon1, lat2, lon2);
+        final var d1 = LocationUtils.distanceBetween(lat1, lon1, lat2, lon2);
         assertEquals(data.getS12(), d1.getValue());
         assertEquals(DistanceUnit.METER, d1.getUnit());
 
-        final Distance d2 = new Distance(0.0, DistanceUnit.MILLIMETER);
+        final var d2 = new Distance(0.0, DistanceUnit.MILLIMETER);
         assertSame(d2, LocationUtils.distanceBetween(lat1, lon1, lat2, lon2, d2));
         assertEquals(data.getS12(), d2.getValue());
         assertEquals(DistanceUnit.METER, d2.getUnit());
     }
 
     @Test
-    public void testBearingDistanceConstructor() {
-        final LocationUtils.BearingDistance bd = new LocationUtils.BearingDistance();
+    void testBearingDistanceConstructor() {
+        final var bd = new LocationUtils.BearingDistance();
 
         // check default value
         assertEquals(0.0, bd.getStartLatitude(), 0.0);
@@ -267,11 +208,11 @@ public class LocationUtilsTest {
         assertEquals(0.0, bd.getEndLongitude(), 0.0);
         assertEquals(0.0, bd.getDistanceMeters(), 0.0);
 
-        final Distance d1 = bd.getDistance();
+        final var d1 = bd.getDistance();
         assertEquals(0.0, d1.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, d1.getUnit());
 
-        final Distance d2 = new Distance(1.0, DistanceUnit.METER);
+        final var d2 = new Distance(1.0, DistanceUnit.METER);
         assertSame(d2, bd.getDistance(d2));
         assertEquals(0.0, d2.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, d2.getUnit());

@@ -49,29 +49,28 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     /**
      * Levenberg-Marquardt  fitter to find a non-linear solution.
      */
-    private final LevenbergMarquardtMultiDimensionFitter mFitter =
-            new LevenbergMarquardtMultiDimensionFitter();
+    private final LevenbergMarquardtMultiDimensionFitter fitter = new LevenbergMarquardtMultiDimensionFitter();
 
     /**
      * Estimated covariance matrix for estimated position.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Estimated chi square value.
      */
-    private double mChiSq;
+    private double chiSq;
 
     /**
      * Initial position to start lateration solving.
      * If not defined, centroid of provided position points will be used.
      */
-    private P mInitialPosition;
+    private P initialPosition;
 
     /**
      * Standard deviations of provided distances.
      */
-    private double[] mDistanceStandardDeviations;
+    private double[] distanceStandardDeviations;
 
     /**
      * Constructor.
@@ -88,8 +87,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required 2 points.
      */
-    protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances) {
+    protected NonLinearLeastSquaresLaterationSolver(final P[] positions, final double[] distances) {
         super();
         internalSetPositionsAndDistances(positions, distances);
     }
@@ -101,7 +99,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      */
     protected NonLinearLeastSquaresLaterationSolver(final P initialPosition) {
         super();
-        mInitialPosition = initialPosition;
+        this.initialPosition = initialPosition;
     }
 
     /**
@@ -125,8 +123,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    protected NonLinearLeastSquaresLaterationSolver(
-            final LaterationSolverListener<P> listener) {
+    protected NonLinearLeastSquaresLaterationSolver(final LaterationSolverListener<P> listener) {
         super(listener);
     }
 
@@ -140,8 +137,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  length is smaller than required 2 points.
      */
     protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final LaterationSolverListener<P> listener) {
+            final P[] positions, final double[] distances, final LaterationSolverListener<P> listener) {
         super(listener);
         internalSetPositionsAndDistances(positions, distances);
     }
@@ -155,7 +151,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     protected NonLinearLeastSquaresLaterationSolver(
             final P initialPosition, final LaterationSolverListener<P> listener) {
         super(listener);
-        mInitialPosition = initialPosition;
+        this.initialPosition = initialPosition;
     }
 
     /**
@@ -187,11 +183,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         super();
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -206,11 +200,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final P initialPosition) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final P initialPosition) {
         this(initialPosition);
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -225,12 +218,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final LaterationSolverListener<P> listener) {
         super(listener);
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -246,12 +237,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final P initialPosition,
-            final LaterationSolverListener<P> listener) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final P initialPosition, final LaterationSolverListener<P> listener) {
         this(initialPosition, listener);
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -265,8 +254,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     @Override
-    public void setPositionsAndDistances(final P[] positions, final double[] distances)
-            throws LockedException {
+    public void setPositionsAndDistances(final P[] positions, final double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -287,13 +275,12 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws LockedException          if instance is busy solving the trilateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) throws LockedException {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -302,7 +289,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @return standard deviations of provided distances.
      */
     public double[] getDistanceStandardDeviations() {
-        return mDistanceStandardDeviations;
+        return distanceStandardDeviations;
     }
 
     /**
@@ -311,7 +298,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @return estimated covariance matrix for estimated position.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -320,7 +307,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @return estimated chi square value.
      */
     public double getChiSq() {
-        return mChiSq;
+        return chiSq;
     }
 
     /**
@@ -330,7 +317,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @return initial position to start lateration.
      */
     public P getInitialPosition() {
-        return mInitialPosition;
+        return initialPosition;
     }
 
     /**
@@ -344,7 +331,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
         if (isLocked()) {
             throw new LockedException();
         }
-        mInitialPosition = initialPosition;
+        this.initialPosition = initialPosition;
     }
 
     /**
@@ -355,8 +342,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
-    public void solve() throws LaterationException, NotReadyException,
-            LockedException {
+    public void solve() throws LaterationException, NotReadyException, LockedException {
         if (!isReady()) {
             throw new NotReadyException();
         }
@@ -365,28 +351,28 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onSolveStart(this);
+            if (listener != null) {
+                listener.onSolveStart(this);
             }
 
             setupFitter();
 
-            mFitter.fit();
+            fitter.fit();
 
             // estimated position
-            mEstimatedPositionCoordinates = mFitter.getA();
-            mCovariance = mFitter.getCovar();
-            mChiSq = mFitter.getChisq();
+            estimatedPositionCoordinates = fitter.getA();
+            covariance = fitter.getCovar();
+            chiSq = fitter.getChisq();
 
-            if (mListener != null) {
-                mListener.onSolveEnd(this);
+            if (listener != null) {
+                listener.onSolveEnd(this);
             }
         } catch (final NumericalException e) {
             throw new LaterationException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -410,13 +396,12 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  length is smaller than required (2 points).
      */
     @Override
-    protected void internalSetPositionsAndDistances(
-            final P[] positions, final double[] distances) {
+    protected void internalSetPositionsAndDistances(final P[] positions, final double[] distances) {
         super.internalSetPositionsAndDistances(positions, distances);
 
         // initialize distances standard deviations to default values
-        mDistanceStandardDeviations = new double[distances.length];
-        Arrays.fill(mDistanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);
+        distanceStandardDeviations = new double[distances.length];
+        Arrays.fill(distanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);
     }
 
     /**
@@ -432,8 +417,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *                                  (2 points).
      */
     protected void internalSetPositionsDistancesAndStandardDeviations(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         if (distanceStandardDeviations == null || distances == null) {
             throw new IllegalArgumentException();
         }
@@ -442,7 +426,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
         }
 
         super.internalSetPositionsAndDistances(positions, distances);
-        mDistanceStandardDeviations = distanceStandardDeviations;
+        this.distanceStandardDeviations = distanceStandardDeviations;
     }
 
     /**
@@ -451,78 +435,72 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitter() throws FittingException {
-        mFitter.setFunctionEvaluator(
-                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-                    @Override
-                    public int getNumberOfDimensions() {
-                        return NonLinearLeastSquaresLaterationSolver.this.getNumberOfDimensions();
-                    }
+        fitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+            @Override
+            public int getNumberOfDimensions() {
+                return NonLinearLeastSquaresLaterationSolver.this.getNumberOfDimensions();
+            }
 
-                    @Override
-                    public double[] createInitialParametersArray() {
-                        final int dims = getNumberOfDimensions();
-                        final double[] initial = new double[dims];
+            @Override
+            public double[] createInitialParametersArray() {
+                final var dims = getNumberOfDimensions();
+                final var initial = new double[dims];
 
-                        if (mInitialPosition == null) {
-                            // use centroid of positions as initial value
-                            final int numSamples = mPositions.length;
+                if (initialPosition == null) {
+                    // use centroid of positions as initial value
+                    final var numSamples = positions.length;
 
-                            for (int i = 0; i < dims; i++) {
-                                initial[i] = 0.0;
-                                for (final P position : mPositions) {
-                                    initial[i] += position.getInhomogeneousCoordinate(i) / numSamples;
-                                }
-                            }
-                        } else {
-                            // use provided initial position
-                            for (int i = 0; i < dims; i++) {
-                                initial[i] = mInitialPosition.getInhomogeneousCoordinate(i);
-                            }
+                    for (var i = 0; i < dims; i++) {
+                        initial[i] = 0.0;
+                        for (final var position : positions) {
+                            initial[i] += position.getInhomogeneousCoordinate(i) / numSamples;
                         }
-
-                        return initial;
                     }
-
-                    @Override
-                    public double evaluate(
-                            final int i, final double[] point, final double[] params,
-                            final double[] derivatives) {
-                        // we want to estimate the position contained as inhomogeneous coordinates in params array.
-                        // the function evaluates the distance to provided point respect to current parameter
-                        // (estimated position)
-                        // sqrDist = (x - px)^2 + (y - py)^2
-                        // grad = [2*(x - px), 2*(y - py)]
-                        final int dims = getNumberOfDimensions();
-                        double result = 0.0;
-                        double diff;
-                        double param;
-                        for (int j = 0; j < dims; j++) {
-                            param = params[j];
-                            diff = param - point[j];
-                            result += diff * diff;
-                            derivatives[j] = 2.0 * diff;
-                        }
-
-                        return result;
+                } else {
+                    // use provided initial position
+                    for (var i = 0; i < dims; i++) {
+                        initial[i] = initialPosition.getInhomogeneousCoordinate(i);
                     }
-                });
-
-        final int dims = getNumberOfDimensions();
-        double dist;
-
-        try {
-            final Matrix x = new Matrix(mPositions.length, dims);
-            final double[] y = new double[mPositions.length];
-            for (int i = 0; i < mPositions.length; i++) {
-                for (int j = 0; j < dims; j++) {
-                    x.setElementAt(i, j, mPositions[i].getInhomogeneousCoordinate(j));
                 }
 
-                dist = mDistances[i];
+                return initial;
+            }
+
+            @Override
+            public double evaluate(final int i, final double[] point, final double[] params,
+                                   final double[] derivatives) {
+                // we want to estimate the position contained as inhomogeneous coordinates in params array.
+                // the function evaluates the distance to provided point respect to current parameter
+                // (estimated position)
+                // sqrDist = (x - px)^2 + (y - py)^2
+                // grad = [2*(x - px), 2*(y - py)]
+                final var dims = getNumberOfDimensions();
+                var result = 0.0;
+                for (var j = 0; j < dims; j++) {
+                    final var param = params[j];
+                    final var diff = param - point[j];
+                    result += diff * diff;
+                    derivatives[j] = 2.0 * diff;
+                }
+
+                return result;
+            }
+        });
+
+        final var dims = getNumberOfDimensions();
+        try {
+            final var x = new Matrix(positions.length, dims);
+            final var y = new double[positions.length];
+            for (var i = 0; i < positions.length; i++) {
+                for (var j = 0; j < dims; j++) {
+                    x.setElementAt(i, j, positions[i].getInhomogeneousCoordinate(j));
+                }
+
+                final var dist = distances[i];
                 y[i] = dist * dist;
             }
 
-            mFitter.setInputData(x, y, mDistanceStandardDeviations);
+            fitter.setInputData(x, y, distanceStandardDeviations);
         } catch (final AlgebraException ignore) {
             // never happens
         }

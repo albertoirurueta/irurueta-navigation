@@ -33,90 +33,90 @@ public class GNSSConfig implements Serializable, Cloneable {
     /**
      * Minimum interval between GNSS epochs expressed in seconds (s).
      */
-    private double mEpochInterval;
+    private double epochInterval;
 
     /**
      * X coordinate of initial estimated position resolved along ECEF axes and
      * expressed in meters (m).
      */
-    private double mInitialEstimatedEcefPositionX;
+    private double initialEstimatedEcefPositionX;
 
     /**
      * Y coordinate of initial estimated position resolved along ECEF axes and
      * expressed in meters (m).
      */
-    private double mInitialEstimatedEcefPositionY;
+    private double initialEstimatedEcefPositionY;
 
     /**
      * Z coordinate of initial estimated position resolved along ECEF axes and
      * expressed in meters (m).
      */
-    private double mInitialEstimatedEcefPositionZ;
+    private double initialEstimatedEcefPositionZ;
 
     /**
      * Number of satellites in constellation.
      */
-    private int mNumberOfSatellites = MIN_SATELLITES;
+    private int numberOfSatellites = MIN_SATELLITES;
 
     /**
      * Orbital radius of satellites expressed in meters (m).
      */
-    private double mOrbitalRadiusOfSatellites;
+    private double orbitalRadiusOfSatellites;
 
     /**
      * Inclination angle of satellites expressed in degrees (deg).
      */
-    private double mSatellitesInclinationDegrees;
+    private double satellitesInclinationDegrees;
 
     /**
      * Longitude offset of constellation expressed in degrees (deg).
      */
-    private double mConstellationLongitudeOffsetDegrees;
+    private double constellationLongitudeOffsetDegrees;
 
     /**
      * Timing offset of constellation expressed in seconds (s).
      */
-    private double mConstellationTimingOffset;
+    private double constellationTimingOffset;
 
     /**
      * Mask angle expressed in degrees (deg).
      */
-    private double mMaskAngleDegrees;
+    private double maskAngleDegrees;
 
     /**
      * Signal In Space (SIS) error Standard Deviation (SD) expressed in meters (m).
      */
-    private double mSISErrorSD;
+    private double sisErrorSD;
 
     /**
      * Zenith ionosphere error Standard Deviation (SD) expressed in meters (m).
      */
-    private double mZenithIonosphereErrorSD;
+    private double zenithIonosphereErrorSD;
 
     /**
      * Zenith troposphere error Standard Deviation (SD) expressed in meters (m).
      */
-    private double mZenithTroposphereErrorSD;
+    private double zenithTroposphereErrorSD;
 
     /**
      * Code tracking error Standard Deviation (SD) expressed in meters per second (m/s).
      */
-    private double mCodeTrackingErrorSD;
+    private double codeTrackingErrorSD;
 
     /**
      * Range rate tracking error Standard Deviation (SD) expressed in meters per second (m/s).
      */
-    private double mRangeRateTrackingErrorSD;
+    private double rangeRateTrackingErrorSD;
 
     /**
      * Initial receiver clock offset at time = 0 expressed in meters (m).
      */
-    private double mInitialReceiverClockOffset;
+    private double initialReceiverClockOffset;
 
     /**
      * Initial receiver clock drift at time = 0 expressed in meters per second (m/s).
      */
-    private double mInitialReceiverClockDrift;
+    private double initialReceiverClockDrift;
 
     /**
      * Constructor.
@@ -547,7 +547,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return minimum interval between GNSS epochs.
      */
     public double getEpochInterval() {
-        return mEpochInterval;
+        return epochInterval;
     }
 
     /**
@@ -560,7 +560,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (epochInterval < 0.0) {
             throw new IllegalArgumentException();
         }
-        mEpochInterval = epochInterval;
+        this.epochInterval = epochInterval;
     }
 
     /**
@@ -570,7 +570,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               will be stored.
      */
     public void getEpochIntervalTime(final Time result) {
-        result.setValue(mEpochInterval);
+        result.setValue(epochInterval);
         result.setUnit(TimeUnit.SECOND);
     }
 
@@ -580,7 +580,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return minimum interval between GNSS epochs.
      */
     public Time getEpochIntervalTime() {
-        return new Time(mEpochInterval, TimeUnit.SECOND);
+        return new Time(epochInterval, TimeUnit.SECOND);
     }
 
     /**
@@ -591,8 +591,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      */
     public void setEpochIntervalTime(final Time epochInterval) {
         setEpochInterval(TimeConverter.convert(
-                epochInterval.getValue().doubleValue(),
-                epochInterval.getUnit(), TimeUnit.SECOND));
+                epochInterval.getValue().doubleValue(), epochInterval.getUnit(), TimeUnit.SECOND));
     }
 
     /**
@@ -602,7 +601,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return x coordinate of initial estimated position.
      */
     public double getInitialEstimatedEcefPositionX() {
-        return mInitialEstimatedEcefPositionX;
+        return initialEstimatedEcefPositionX;
     }
 
     /**
@@ -611,9 +610,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param initialEstimatedEcefPositionX x coordinate of initial estimated position.
      */
-    public void setInitialEstimatedEcefPositionX(
-            final double initialEstimatedEcefPositionX) {
-        mInitialEstimatedEcefPositionX = initialEstimatedEcefPositionX;
+    public void setInitialEstimatedEcefPositionX(final double initialEstimatedEcefPositionX) {
+        this.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;
     }
 
     /**
@@ -623,7 +621,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getInitialEstimatedEcefPositionXDistance(final Distance result) {
-        result.setValue(mInitialEstimatedEcefPositionX);
+        result.setValue(initialEstimatedEcefPositionX);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -633,8 +631,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return x coordinate of initial estimated position.
      */
     public Distance getInitialEstimatedEcefPositionXDistance() {
-        return new Distance(mInitialEstimatedEcefPositionX,
-                DistanceUnit.METER);
+        return new Distance(initialEstimatedEcefPositionX, DistanceUnit.METER);
     }
 
     /**
@@ -643,11 +640,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPositionX x coordinate of initial estimated
      *                                      position.
      */
-    public void setInitialEstimatedEcefPositionXDistance(
-            final Distance initialEstimatedEcefPositionX) {
-        mInitialEstimatedEcefPositionX = DistanceConverter.convert(
-                initialEstimatedEcefPositionX.getValue().doubleValue(),
-                initialEstimatedEcefPositionX.getUnit(),
+    public void setInitialEstimatedEcefPositionXDistance(final Distance initialEstimatedEcefPositionX) {
+        this.initialEstimatedEcefPositionX = DistanceConverter.convert(
+                initialEstimatedEcefPositionX.getValue().doubleValue(), initialEstimatedEcefPositionX.getUnit(),
                 DistanceUnit.METER);
     }
 
@@ -658,7 +653,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return x coordinate of initial estimated position.
      */
     public double getInitialEstimatedEcefPositionY() {
-        return mInitialEstimatedEcefPositionY;
+        return initialEstimatedEcefPositionY;
     }
 
     /**
@@ -668,9 +663,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPositionY y coordinate of initial estimated
      *                                      position.
      */
-    public void setInitialEstimatedEcefPositionY(
-            final double initialEstimatedEcefPositionY) {
-        mInitialEstimatedEcefPositionY = initialEstimatedEcefPositionY;
+    public void setInitialEstimatedEcefPositionY(final double initialEstimatedEcefPositionY) {
+        this.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;
     }
 
     /**
@@ -680,7 +674,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getInitialEstimatedEcefPositionYDistance(final Distance result) {
-        result.setValue(mInitialEstimatedEcefPositionY);
+        result.setValue(initialEstimatedEcefPositionY);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -690,8 +684,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return y coordinate of initial estimated position.
      */
     public Distance getInitialEstimatedEcefPositionYDistance() {
-        return new Distance(mInitialEstimatedEcefPositionY,
-                DistanceUnit.METER);
+        return new Distance(initialEstimatedEcefPositionY, DistanceUnit.METER);
     }
 
     /**
@@ -700,11 +693,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPositionY y coordinate of initial estimated
      *                                      position.
      */
-    public void setInitialEstimatedEcefPositionYDistance(
-            final Distance initialEstimatedEcefPositionY) {
-        mInitialEstimatedEcefPositionY = DistanceConverter.convert(
-                initialEstimatedEcefPositionY.getValue().doubleValue(),
-                initialEstimatedEcefPositionY.getUnit(),
+    public void setInitialEstimatedEcefPositionYDistance(final Distance initialEstimatedEcefPositionY) {
+        this.initialEstimatedEcefPositionY = DistanceConverter.convert(
+                initialEstimatedEcefPositionY.getValue().doubleValue(), initialEstimatedEcefPositionY.getUnit(),
                 DistanceUnit.METER);
     }
 
@@ -715,7 +706,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return z coordinate of initial estimated position.
      */
     public double getInitialEstimatedEcefPositionZ() {
-        return mInitialEstimatedEcefPositionZ;
+        return initialEstimatedEcefPositionZ;
     }
 
     /**
@@ -725,9 +716,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
      *                                      position.
      */
-    public void setInitialEstimatedEcefPositionZ(
-            final double initialEstimatedEcefPositionZ) {
-        mInitialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;
+    public void setInitialEstimatedEcefPositionZ(final double initialEstimatedEcefPositionZ) {
+        this.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;
     }
 
     /**
@@ -737,7 +727,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getInitialEstimatedEcefPositionZDistance(final Distance result) {
-        result.setValue(mInitialEstimatedEcefPositionZ);
+        result.setValue(initialEstimatedEcefPositionZ);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -747,8 +737,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return z coordinate of initial estimated position.
      */
     public Distance getInitialEstimatedEcefPositionZDistance() {
-        return new Distance(mInitialEstimatedEcefPositionZ,
-                DistanceUnit.METER);
+        return new Distance(initialEstimatedEcefPositionZ, DistanceUnit.METER);
     }
 
     /**
@@ -757,11 +746,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
      *                                      position.
      */
-    public void setInitialEstimatedEcefPositionZDistance(
-            final Distance initialEstimatedEcefPositionZ) {
-        mInitialEstimatedEcefPositionZ = DistanceConverter.convert(
-                initialEstimatedEcefPositionZ.getValue().doubleValue(),
-                initialEstimatedEcefPositionZ.getUnit(),
+    public void setInitialEstimatedEcefPositionZDistance(final Distance initialEstimatedEcefPositionZ) {
+        this.initialEstimatedEcefPositionZ = DistanceConverter.convert(
+                initialEstimatedEcefPositionZ.getValue().doubleValue(), initialEstimatedEcefPositionZ.getUnit(),
                 DistanceUnit.METER);
     }
 
@@ -771,9 +758,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where initial estimated position will be stored.
      */
     public void getInitialEstimatedEcefPosition(final ECEFPosition result) {
-        result.setCoordinates(mInitialEstimatedEcefPositionX,
-                mInitialEstimatedEcefPositionY,
-                mInitialEstimatedEcefPositionZ);
+        result.setCoordinates(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+                initialEstimatedEcefPositionZ);
     }
 
     /**
@@ -782,9 +768,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial estimated position.
      */
     public ECEFPosition getInitialEstimatedEcefPosition() {
-        return new ECEFPosition(mInitialEstimatedEcefPositionX,
-                mInitialEstimatedEcefPositionY,
-                mInitialEstimatedEcefPositionZ);
+        return new ECEFPosition(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+                initialEstimatedEcefPositionZ);
     }
 
     /**
@@ -793,11 +778,10 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedEcefPosition initial estimated position resolved
      *                                     along ECEF axes.
      */
-    public void setInitialEstimatedEcefPosition(
-            final ECEFPosition initialEstimatedEcefPosition) {
-        mInitialEstimatedEcefPositionX = initialEstimatedEcefPosition.getX();
-        mInitialEstimatedEcefPositionY = initialEstimatedEcefPosition.getY();
-        mInitialEstimatedEcefPositionZ = initialEstimatedEcefPosition.getZ();
+    public void setInitialEstimatedEcefPosition(final ECEFPosition initialEstimatedEcefPosition) {
+        initialEstimatedEcefPositionX = initialEstimatedEcefPosition.getX();
+        initialEstimatedEcefPositionY = initialEstimatedEcefPosition.getY();
+        initialEstimatedEcefPositionZ = initialEstimatedEcefPosition.getZ();
     }
 
     /**
@@ -807,9 +791,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where initial estimated position will be stored.
      */
     public void getInitialEstimatedPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mInitialEstimatedEcefPositionX,
-                mInitialEstimatedEcefPositionY,
-                mInitialEstimatedEcefPositionZ);
+        result.setInhomogeneousCoordinates(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+                initialEstimatedEcefPositionZ);
     }
 
     /**
@@ -819,9 +802,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial estimated position.
      */
     public Point3D getInitialEstimatedPosition() {
-        return new InhomogeneousPoint3D(mInitialEstimatedEcefPositionX,
-                mInitialEstimatedEcefPositionY,
-                mInitialEstimatedEcefPositionZ);
+        return new InhomogeneousPoint3D(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+                initialEstimatedEcefPositionZ);
     }
 
     /**
@@ -831,9 +813,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param initialEstimatedPosition initial estimated position.
      */
     public void setInitialEstimatedPosition(final Point3D initialEstimatedPosition) {
-        mInitialEstimatedEcefPositionX = initialEstimatedPosition.getInhomX();
-        mInitialEstimatedEcefPositionY = initialEstimatedPosition.getInhomY();
-        mInitialEstimatedEcefPositionZ = initialEstimatedPosition.getInhomZ();
+        initialEstimatedEcefPositionX = initialEstimatedPosition.getInhomX();
+        initialEstimatedEcefPositionY = initialEstimatedPosition.getInhomY();
+        initialEstimatedEcefPositionZ = initialEstimatedPosition.getInhomZ();
     }
 
     /**
@@ -842,7 +824,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return number of satellites in constellation.
      */
     public int getNumberOfSatellites() {
-        return mNumberOfSatellites;
+        return numberOfSatellites;
     }
 
     /**
@@ -856,7 +838,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (numberOfSatellites < MIN_SATELLITES) {
             throw new IllegalArgumentException();
         }
-        mNumberOfSatellites = numberOfSatellites;
+        this.numberOfSatellites = numberOfSatellites;
     }
 
     /**
@@ -865,7 +847,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return orbital radius of satellites.
      */
     public double getOrbitalRadiusOfSatellites() {
-        return mOrbitalRadiusOfSatellites;
+        return orbitalRadiusOfSatellites;
     }
 
     /**
@@ -878,7 +860,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (orbitalRadiusOfSatellites < 0.0) {
             throw new IllegalArgumentException();
         }
-        mOrbitalRadiusOfSatellites = orbitalRadiusOfSatellites;
+        this.orbitalRadiusOfSatellites = orbitalRadiusOfSatellites;
     }
 
     /**
@@ -887,7 +869,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where orbital radius of satellites will be stored.
      */
     public void getOrbitalRadiusOfSatellitesDistance(final Distance result) {
-        result.setValue(mOrbitalRadiusOfSatellites);
+        result.setValue(orbitalRadiusOfSatellites);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -897,8 +879,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return orbital radius of satellites.
      */
     public Distance getOrbitalRadiusOfSatellitesDistance() {
-        return new Distance(mOrbitalRadiusOfSatellites,
-                DistanceUnit.METER);
+        return new Distance(orbitalRadiusOfSatellites, DistanceUnit.METER);
     }
 
     /**
@@ -907,10 +888,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param orbitalRadiusOfSatellites orbital radius of satellites.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setOrbitalRadiusOfSatellitesDistance(
-            final Distance orbitalRadiusOfSatellites) {
-        setOrbitalRadiusOfSatellites(DistanceConverter.convert(
-                orbitalRadiusOfSatellites.getValue().doubleValue(),
+    public void setOrbitalRadiusOfSatellitesDistance(final Distance orbitalRadiusOfSatellites) {
+        setOrbitalRadiusOfSatellites(DistanceConverter.convert(orbitalRadiusOfSatellites.getValue().doubleValue(),
                 orbitalRadiusOfSatellites.getUnit(), DistanceUnit.METER));
     }
 
@@ -920,7 +899,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return inclination angle of satellites.
      */
     public double getSatellitesInclinationDegrees() {
-        return mSatellitesInclinationDegrees;
+        return satellitesInclinationDegrees;
     }
 
     /**
@@ -928,9 +907,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param satellitesInclinationDegrees inclination angle of satellites.
      */
-    public void setSatellitesInclinationDegrees(
-            final double satellitesInclinationDegrees) {
-        mSatellitesInclinationDegrees = satellitesInclinationDegrees;
+    public void setSatellitesInclinationDegrees(final double satellitesInclinationDegrees) {
+        this.satellitesInclinationDegrees = satellitesInclinationDegrees;
     }
 
     /**
@@ -940,7 +918,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               stored.
      */
     public void getSatellitesInclinationAngle(final Angle result) {
-        result.setValue(mSatellitesInclinationDegrees);
+        result.setValue(satellitesInclinationDegrees);
         result.setUnit(AngleUnit.DEGREES);
     }
 
@@ -950,8 +928,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return inclination angle of satellites.
      */
     public Angle getSatellitesInclinationAngle() {
-        return new Angle(mSatellitesInclinationDegrees,
-                AngleUnit.DEGREES);
+        return new Angle(satellitesInclinationDegrees, AngleUnit.DEGREES);
     }
 
     /**
@@ -960,8 +937,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param satellitesInclination inclination angle of satellites.
      */
     public void setSatellitesInclinationAngle(final Angle satellitesInclination) {
-        mSatellitesInclinationDegrees = AngleConverter.convert(
-                satellitesInclination.getValue().doubleValue(),
+        satellitesInclinationDegrees = AngleConverter.convert(satellitesInclination.getValue().doubleValue(),
                 satellitesInclination.getUnit(), AngleUnit.DEGREES);
     }
 
@@ -971,7 +947,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return longitude offset of constellation.
      */
     public double getConstellationLongitudeOffsetDegrees() {
-        return mConstellationLongitudeOffsetDegrees;
+        return constellationLongitudeOffsetDegrees;
     }
 
     /**
@@ -979,9 +955,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param constellationLongitudeOffsetDegrees longitude offset of constellation.
      */
-    public void setConstellationLongitudeOffsetDegrees(
-            final double constellationLongitudeOffsetDegrees) {
-        mConstellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;
+    public void setConstellationLongitudeOffsetDegrees(final double constellationLongitudeOffsetDegrees) {
+        this.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;
     }
 
     /**
@@ -990,7 +965,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where longitude offset of constellation will be stored.
      */
     public void getConstellationLongitudeOffsetAngle(final Angle result) {
-        result.setValue(mConstellationLongitudeOffsetDegrees);
+        result.setValue(constellationLongitudeOffsetDegrees);
         result.setUnit(AngleUnit.DEGREES);
     }
 
@@ -1000,8 +975,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return longitude offset of constellation.
      */
     public Angle getConstellationLongitudeOffsetAngle() {
-        return new Angle(mConstellationLongitudeOffsetDegrees,
-                AngleUnit.DEGREES);
+        return new Angle(constellationLongitudeOffsetDegrees, AngleUnit.DEGREES);
     }
 
     /**
@@ -1009,9 +983,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param constellationLongitudeOffset longitude offset of constellation.
      */
-    public void setConstellationLongitudeOffsetAngle(
-            final Angle constellationLongitudeOffset) {
-        mConstellationLongitudeOffsetDegrees = AngleConverter.convert(
+    public void setConstellationLongitudeOffsetAngle(final Angle constellationLongitudeOffset) {
+        constellationLongitudeOffsetDegrees = AngleConverter.convert(
                 constellationLongitudeOffset.getValue().doubleValue(),
                 constellationLongitudeOffset.getUnit(), AngleUnit.DEGREES);
     }
@@ -1022,7 +995,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return timing offset of constellation.
      */
     public double getConstellationTimingOffset() {
-        return mConstellationTimingOffset;
+        return constellationTimingOffset;
     }
 
     /**
@@ -1030,9 +1003,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param constellationTimingOffset timing offset of constellation.
      */
-    public void setConstellationTimingOffset(
-            final double constellationTimingOffset) {
-        mConstellationTimingOffset = constellationTimingOffset;
+    public void setConstellationTimingOffset(final double constellationTimingOffset) {
+        this.constellationTimingOffset = constellationTimingOffset;
     }
 
     /**
@@ -1041,7 +1013,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where timing offset of constellation will be stored.
      */
     public void getConstellationTimingOffsetTime(final Time result) {
-        result.setValue(mConstellationTimingOffset);
+        result.setValue(constellationTimingOffset);
         result.setUnit(TimeUnit.SECOND);
     }
 
@@ -1051,7 +1023,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return timing offset of constellation.
      */
     public Time getConstellationTimingOffsetTime() {
-        return new Time(mConstellationTimingOffset, TimeUnit.SECOND);
+        return new Time(constellationTimingOffset, TimeUnit.SECOND);
     }
 
     /**
@@ -1060,8 +1032,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param constellationTimingOffset timing offset of constellation.
      */
     public void setConstellationTimingOffsetTime(final Time constellationTimingOffset) {
-        mConstellationTimingOffset = TimeConverter.convert(
-                constellationTimingOffset.getValue().doubleValue(),
+        this.constellationTimingOffset = TimeConverter.convert(constellationTimingOffset.getValue().doubleValue(),
                 constellationTimingOffset.getUnit(), TimeUnit.SECOND);
     }
 
@@ -1071,7 +1042,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return mask angle.
      */
     public double getMaskAngleDegrees() {
-        return mMaskAngleDegrees;
+        return maskAngleDegrees;
     }
 
     /**
@@ -1080,7 +1051,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param maskAngleDegrees mask angle.
      */
     public void setMaskAngleDegrees(final double maskAngleDegrees) {
-        mMaskAngleDegrees = maskAngleDegrees;
+        this.maskAngleDegrees = maskAngleDegrees;
     }
 
     /**
@@ -1089,7 +1060,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where mask angle will be stored.
      */
     public void getMaskAngle(final Angle result) {
-        result.setValue(mMaskAngleDegrees);
+        result.setValue(maskAngleDegrees);
         result.setUnit(AngleUnit.DEGREES);
     }
 
@@ -1099,7 +1070,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return mask angle.
      */
     public Angle getMaskAngle() {
-        return new Angle(mMaskAngleDegrees, AngleUnit.DEGREES);
+        return new Angle(maskAngleDegrees, AngleUnit.DEGREES);
     }
 
     /**
@@ -1108,8 +1079,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param maskAngle mask angle.
      */
     public void setMaskAngle(final Angle maskAngle) {
-        mMaskAngleDegrees = AngleConverter.convert(
-                maskAngle.getValue().doubleValue(),
+        maskAngleDegrees = AngleConverter.convert(maskAngle.getValue().doubleValue(),
                 maskAngle.getUnit(), AngleUnit.DEGREES);
     }
 
@@ -1120,7 +1090,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Signal In Space error Standard Deviation.
      */
     public double getSISErrorSD() {
-        return mSISErrorSD;
+        return sisErrorSD;
     }
 
     /**
@@ -1134,7 +1104,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (sisErrorSD < 0.0) {
             throw new IllegalArgumentException();
         }
-        mSISErrorSD = sisErrorSD;
+        this.sisErrorSD = sisErrorSD;
     }
 
     /**
@@ -1144,7 +1114,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               Standard Deviation (SD) will be stored.
      */
     public void getSISErrorSDDistance(final Distance result) {
-        result.setValue(mSISErrorSD);
+        result.setValue(sisErrorSD);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -1154,7 +1124,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Signal In Space (SIS) error Standard Deviation (SD).
      */
     public Distance getSISErrorSDDistance() {
-        return new Distance(mSISErrorSD, DistanceUnit.METER);
+        return new Distance(sisErrorSD, DistanceUnit.METER);
     }
 
     /**
@@ -1164,8 +1134,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setSISErrorSDDistance(final Distance sisErrorSD) {
-        setSISErrorSD(DistanceConverter.convert(
-                sisErrorSD.getValue().doubleValue(),
+        setSISErrorSD(DistanceConverter.convert(sisErrorSD.getValue().doubleValue(),
                 sisErrorSD.getUnit(), DistanceUnit.METER));
     }
 
@@ -1175,7 +1144,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Zenith ionosphere error Standard Deviation.
      */
     public double getZenithIonosphereErrorSD() {
-        return mZenithIonosphereErrorSD;
+        return zenithIonosphereErrorSD;
     }
 
     /**
@@ -1188,7 +1157,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (zenithIonosphereErrorSD < 0.0) {
             throw new IllegalArgumentException();
         }
-        mZenithIonosphereErrorSD = zenithIonosphereErrorSD;
+        this.zenithIonosphereErrorSD = zenithIonosphereErrorSD;
     }
 
     /**
@@ -1198,7 +1167,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               will be stored.
      */
     public void getZenithIonosphereErrorSDDistance(final Distance result) {
-        result.setValue(mZenithIonosphereErrorSD);
+        result.setValue(zenithIonosphereErrorSD);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -1208,8 +1177,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Zenith ionosphere error Standard Deviation.
      */
     public Distance getZenithIonosphereErrorSDDistance() {
-        return new Distance(mZenithIonosphereErrorSD,
-                DistanceUnit.METER);
+        return new Distance(zenithIonosphereErrorSD, DistanceUnit.METER);
     }
 
     /**
@@ -1218,12 +1186,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param zenithIonosphereErrorSD Zenith ionosphere error Standard Deviation.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setZenithIonosphereErrorSDDistance(
-            final Distance zenithIonosphereErrorSD) {
-        setZenithIonosphereErrorSD(DistanceConverter.convert(
-                zenithIonosphereErrorSD.getValue().doubleValue(),
-                zenithIonosphereErrorSD.getUnit(),
-                DistanceUnit.METER));
+    public void setZenithIonosphereErrorSDDistance(final Distance zenithIonosphereErrorSD) {
+        setZenithIonosphereErrorSD(DistanceConverter.convert(zenithIonosphereErrorSD.getValue().doubleValue(),
+                zenithIonosphereErrorSD.getUnit(), DistanceUnit.METER));
     }
 
     /**
@@ -1232,7 +1197,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Zenith troposphere error Standard Deviation.
      */
     public double getZenithTroposphereErrorSD() {
-        return mZenithTroposphereErrorSD;
+        return zenithTroposphereErrorSD;
     }
 
     /**
@@ -1245,7 +1210,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (zenithTroposphereErrorSD < 0.0) {
             throw new IllegalArgumentException();
         }
-        mZenithTroposphereErrorSD = zenithTroposphereErrorSD;
+        this.zenithTroposphereErrorSD = zenithTroposphereErrorSD;
     }
 
     /**
@@ -1255,7 +1220,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               will be stored.
      */
     public void getZenithTroposphereErrorSDDistance(final Distance result) {
-        result.setValue(mZenithTroposphereErrorSD);
+        result.setValue(zenithTroposphereErrorSD);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -1265,8 +1230,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return Zenith troposphere error Standard Deviation (SD).
      */
     public Distance getZenithTroposphereErrorSDDistance() {
-        return new Distance(mZenithTroposphereErrorSD,
-                DistanceUnit.METER);
+        return new Distance(zenithTroposphereErrorSD, DistanceUnit.METER);
     }
 
     /**
@@ -1275,12 +1239,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param zenithTroposphereErrorSD Zenith troposphere error Standard Deviation.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setZenithTroposphereErrorSDDistance(
-            final Distance zenithTroposphereErrorSD) {
-        setZenithTroposphereErrorSD(DistanceConverter.convert(
-                zenithTroposphereErrorSD.getValue().doubleValue(),
-                zenithTroposphereErrorSD.getUnit(),
-                DistanceUnit.METER));
+    public void setZenithTroposphereErrorSDDistance(final Distance zenithTroposphereErrorSD) {
+        setZenithTroposphereErrorSD(DistanceConverter.convert(zenithTroposphereErrorSD.getValue().doubleValue(),
+                zenithTroposphereErrorSD.getUnit(), DistanceUnit.METER));
     }
 
     /**
@@ -1290,7 +1251,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return code tracking error Standard Deviation (SD).
      */
     public double getCodeTrackingErrorSD() {
-        return mCodeTrackingErrorSD;
+        return codeTrackingErrorSD;
     }
 
     /**
@@ -1304,7 +1265,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (codeTrackingErrorSD < 0.0) {
             throw new IllegalArgumentException();
         }
-        mCodeTrackingErrorSD = codeTrackingErrorSD;
+        this.codeTrackingErrorSD = codeTrackingErrorSD;
     }
 
     /**
@@ -1314,7 +1275,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getCodeTrackingErrorSDSpeed(final Speed result) {
-        result.setValue(mCodeTrackingErrorSD);
+        result.setValue(codeTrackingErrorSD);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -1324,7 +1285,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return code tracking error Standard Deviation.
      */
     public Speed getCodeTrackingErrorSDSpeed() {
-        return new Speed(mCodeTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(codeTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -1334,8 +1295,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setCodeTrackingErrorSDSpeed(final Speed codeTrackingErrorSD) {
-        setCodeTrackingErrorSD(SpeedConverter.convert(
-                codeTrackingErrorSD.getValue().doubleValue(),
+        setCodeTrackingErrorSD(SpeedConverter.convert(codeTrackingErrorSD.getValue().doubleValue(),
                 codeTrackingErrorSD.getUnit(), SpeedUnit.METERS_PER_SECOND));
     }
 
@@ -1346,7 +1306,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return range rate tracking error.
      */
     public double getRangeRateTrackingErrorSD() {
-        return mRangeRateTrackingErrorSD;
+        return rangeRateTrackingErrorSD;
     }
 
     /**
@@ -1360,7 +1320,7 @@ public class GNSSConfig implements Serializable, Cloneable {
         if (rangeRateTrackingErrorSD < 0.0) {
             throw new IllegalArgumentException();
         }
-        mRangeRateTrackingErrorSD = rangeRateTrackingErrorSD;
+        this.rangeRateTrackingErrorSD = rangeRateTrackingErrorSD;
     }
 
     /**
@@ -1370,7 +1330,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getRangeRateTrackingErrorSDSpeed(final Speed result) {
-        result.setValue(mRangeRateTrackingErrorSD);
+        result.setValue(rangeRateTrackingErrorSD);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -1380,7 +1340,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return range rate tracking error.
      */
     public Speed getRangeRateTrackingErrorSDSpeed() {
-        return new Speed(mRangeRateTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(rangeRateTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -1389,10 +1349,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param rangeRateTrackingErrorSD range rate tracking error.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setRangeRateTrackingErrorSDSpeed(
-            final Speed rangeRateTrackingErrorSD) {
-        setRangeRateTrackingErrorSD(SpeedConverter.convert(
-                rangeRateTrackingErrorSD.getValue().doubleValue(),
+    public void setRangeRateTrackingErrorSDSpeed(final Speed rangeRateTrackingErrorSD) {
+        setRangeRateTrackingErrorSD(SpeedConverter.convert(rangeRateTrackingErrorSD.getValue().doubleValue(),
                 rangeRateTrackingErrorSD.getUnit(), SpeedUnit.METERS_PER_SECOND));
     }
 
@@ -1402,7 +1360,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial receiver clock offset.
      */
     public double getInitialReceiverClockOffset() {
-        return mInitialReceiverClockOffset;
+        return initialReceiverClockOffset;
     }
 
     /**
@@ -1410,9 +1368,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param initialReceiverClockOffset initial receiver clock offset.
      */
-    public void setInitialReceiverClockOffset(
-            final double initialReceiverClockOffset) {
-        mInitialReceiverClockOffset = initialReceiverClockOffset;
+    public void setInitialReceiverClockOffset(final double initialReceiverClockOffset) {
+        this.initialReceiverClockOffset = initialReceiverClockOffset;
     }
 
     /**
@@ -1421,7 +1378,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param result instance where initial receiver clock offset will be stored.
      */
     public void getInitialReceiverClockOffsetDistance(final Distance result) {
-        result.setValue(mInitialReceiverClockOffset);
+        result.setValue(initialReceiverClockOffset);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -1431,7 +1388,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial receiver clock offset.
      */
     public Distance getInitialReceiverClockOffsetDistance() {
-        return new Distance(mInitialReceiverClockOffset, DistanceUnit.METER);
+        return new Distance(initialReceiverClockOffset, DistanceUnit.METER);
     }
 
     /**
@@ -1439,12 +1396,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param initialReceiverClockOffset initial receiver clock offset.
      */
-    public void setInitialReceiverClockOffsetDistance(
-            final Distance initialReceiverClockOffset) {
-        mInitialReceiverClockOffset = DistanceConverter.convert(
-                initialReceiverClockOffset.getValue().doubleValue(),
-                initialReceiverClockOffset.getUnit(),
-                DistanceUnit.METER);
+    public void setInitialReceiverClockOffsetDistance(final Distance initialReceiverClockOffset) {
+        this.initialReceiverClockOffset = DistanceConverter.convert(initialReceiverClockOffset.getValue().doubleValue(),
+                initialReceiverClockOffset.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -1454,7 +1408,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial receiver clock drift.
      */
     public double getInitialReceiverClockDrift() {
-        return mInitialReceiverClockDrift;
+        return initialReceiverClockDrift;
     }
 
     /**
@@ -1463,9 +1417,8 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param initialReceiverClockDrift initial receiver clock drift.
      */
-    public void setInitialReceiverClockDrift(
-            final double initialReceiverClockDrift) {
-        mInitialReceiverClockDrift = initialReceiverClockDrift;
+    public void setInitialReceiverClockDrift(final double initialReceiverClockDrift) {
+        this.initialReceiverClockDrift = initialReceiverClockDrift;
     }
 
     /**
@@ -1475,7 +1428,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      *               be stored.
      */
     public void getInitialReceiverClockDriftSpeed(final Speed result) {
-        result.setValue(mInitialReceiverClockDrift);
+        result.setValue(initialReceiverClockDrift);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -1485,8 +1438,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @return initial receiver clock drift at time = 0.
      */
     public Speed getInitialReceiverClockDriftSpeed() {
-        return new Speed(mInitialReceiverClockDrift,
-                SpeedUnit.METERS_PER_SECOND);
+        return new Speed(initialReceiverClockDrift, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -1494,12 +1446,9 @@ public class GNSSConfig implements Serializable, Cloneable {
      *
      * @param initialReceiverClockDrift initial receiver clock drift at time = 0.
      */
-    public void setInitialReceiverClockDriftSpeed(
-            final Speed initialReceiverClockDrift) {
-        mInitialReceiverClockDrift = SpeedConverter.convert(
-                initialReceiverClockDrift.getValue().doubleValue(),
-                initialReceiverClockDrift.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+    public void setInitialReceiverClockDriftSpeed(final Speed initialReceiverClockDrift) {
+        this.initialReceiverClockDrift = SpeedConverter.convert(initialReceiverClockDrift.getValue().doubleValue(),
+                initialReceiverClockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -1575,22 +1524,22 @@ public class GNSSConfig implements Serializable, Cloneable {
                           final double initialReceiverClockOffset,
                           final double initialReceiverClockDrift) {
         setEpochInterval(epochInterval);
-        mInitialEstimatedEcefPositionX = initialEstimatedEcefPositionX;
-        mInitialEstimatedEcefPositionY = initialEstimatedEcefPositionY;
-        mInitialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;
+        this.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;
+        this.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;
+        this.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;
         setNumberOfSatellites(numberOfSatellites);
         setOrbitalRadiusOfSatellites(orbitalRadiusOfSatellites);
-        mSatellitesInclinationDegrees = satellitesInclinationDegrees;
-        mConstellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;
-        mConstellationTimingOffset = constellationTimingOffset;
-        mMaskAngleDegrees = maskAngleDegrees;
+        this.satellitesInclinationDegrees = satellitesInclinationDegrees;
+        this.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;
+        this.constellationTimingOffset = constellationTimingOffset;
+        this.maskAngleDegrees = maskAngleDegrees;
         setSISErrorSD(sisErrorSD);
         setZenithIonosphereErrorSD(zenithIonosphereErrorSD);
         setZenithTroposphereErrorSD(zenithTroposphereErrorSD);
         setCodeTrackingErrorSD(codeTrackingErrorSD);
         setRangeRateTrackingErrorSD(rangeRateTrackingErrorSD);
-        mInitialReceiverClockOffset = initialReceiverClockOffset;
-        mInitialReceiverClockDrift = initialReceiverClockDrift;
+        this.initialReceiverClockOffset = initialReceiverClockOffset;
+        this.initialReceiverClockDrift = initialReceiverClockDrift;
     }
 
     /**
@@ -1652,12 +1601,10 @@ public class GNSSConfig implements Serializable, Cloneable {
         setInitialEstimatedEcefPositionXDistance(initialEstimatedEcefPositionX);
         setInitialEstimatedEcefPositionYDistance(initialEstimatedEcefPositionY);
         setInitialEstimatedEcefPositionZDistance(initialEstimatedEcefPositionZ);
-        internalSetValues(numberOfSatellites,
-                orbitalRadiusOfSatellites, satellitesInclination,
-                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
-                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
-                codeTrackingErrorSD, rangeRateTrackingErrorSD,
-                initialReceiverClockOffset, initialReceiverClockDrift);
+        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
     }
 
     /**
@@ -1724,20 +1671,11 @@ public class GNSSConfig implements Serializable, Cloneable {
                           final double rangeRateTrackingErrorSD,
                           final double initialReceiverClockOffset,
                           final double initialReceiverClockDrift) {
-        setValues(epochInterval, initialEstimatedEcefPosition.getX(),
-                initialEstimatedEcefPosition.getY(),
-                initialEstimatedEcefPosition.getZ(), numberOfSatellites,
-                orbitalRadiusOfSatellites, satellitesInclinationDegrees,
-                constellationLongitudeOffsetDegrees,
-                constellationTimingOffset,
-                maskAngleDegrees,
-                sisErrorSD,
-                zenithIonosphereErrorSD,
-                zenithTroposphereErrorSD,
-                codeTrackingErrorSD,
-                rangeRateTrackingErrorSD,
-                initialReceiverClockOffset,
-                initialReceiverClockDrift);
+        setValues(epochInterval, initialEstimatedEcefPosition.getX(), initialEstimatedEcefPosition.getY(),
+                initialEstimatedEcefPosition.getZ(), numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset, initialReceiverClockDrift);
     }
 
     /**
@@ -1791,12 +1729,10 @@ public class GNSSConfig implements Serializable, Cloneable {
                           final Speed initialReceiverClockDrift) {
         setEpochIntervalTime(epochInterval);
         setInitialEstimatedEcefPosition(initialEstimatedEcefPosition);
-        internalSetValues(numberOfSatellites,
-                orbitalRadiusOfSatellites, satellitesInclination,
-                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
-                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
-                codeTrackingErrorSD, rangeRateTrackingErrorSD,
-                initialReceiverClockOffset, initialReceiverClockDrift);
+        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
     }
 
     /**
@@ -1864,21 +1800,11 @@ public class GNSSConfig implements Serializable, Cloneable {
                           final double rangeRateTrackingErrorSD,
                           final double initialReceiverClockOffset,
                           final double initialReceiverClockDrift) {
-        setValues(epochInterval, initialEstimatedPosition.getInhomX(),
-                initialEstimatedPosition.getInhomY(),
-                initialEstimatedPosition.getInhomZ(),
-                numberOfSatellites,
-                orbitalRadiusOfSatellites, satellitesInclinationDegrees,
-                constellationLongitudeOffsetDegrees,
-                constellationTimingOffset,
-                maskAngleDegrees,
-                sisErrorSD,
-                zenithIonosphereErrorSD,
-                zenithTroposphereErrorSD,
-                codeTrackingErrorSD,
-                rangeRateTrackingErrorSD,
-                initialReceiverClockOffset,
-                initialReceiverClockDrift);
+        setValues(epochInterval, initialEstimatedPosition.getInhomX(), initialEstimatedPosition.getInhomY(),
+                initialEstimatedPosition.getInhomZ(), numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset, initialReceiverClockDrift);
     }
 
     /**
@@ -1933,12 +1859,10 @@ public class GNSSConfig implements Serializable, Cloneable {
                           final Speed initialReceiverClockDrift) {
         setEpochIntervalTime(epochInterval);
         setInitialEstimatedPosition(initialEstimatedPosition);
-        internalSetValues(numberOfSatellites,
-                orbitalRadiusOfSatellites, satellitesInclination,
-                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
-                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
-                codeTrackingErrorSD, rangeRateTrackingErrorSD,
-                initialReceiverClockOffset, initialReceiverClockDrift);
+        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
     }
 
     /**
@@ -1947,24 +1871,23 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final GNSSConfig output) {
-        output.mEpochInterval = mEpochInterval;
-        output.mInitialEstimatedEcefPositionX = mInitialEstimatedEcefPositionX;
-        output.mInitialEstimatedEcefPositionY = mInitialEstimatedEcefPositionY;
-        output.mInitialEstimatedEcefPositionZ = mInitialEstimatedEcefPositionZ;
-        output.mNumberOfSatellites = mNumberOfSatellites;
-        output.mOrbitalRadiusOfSatellites = mOrbitalRadiusOfSatellites;
-        output.mSatellitesInclinationDegrees = mSatellitesInclinationDegrees;
-        output.mConstellationLongitudeOffsetDegrees =
-                mConstellationLongitudeOffsetDegrees;
-        output.mConstellationTimingOffset = mConstellationTimingOffset;
-        output.mMaskAngleDegrees = mMaskAngleDegrees;
-        output.mSISErrorSD = mSISErrorSD;
-        output.mZenithIonosphereErrorSD = mZenithIonosphereErrorSD;
-        output.mZenithTroposphereErrorSD = mZenithTroposphereErrorSD;
-        output.mCodeTrackingErrorSD = mCodeTrackingErrorSD;
-        output.mRangeRateTrackingErrorSD = mRangeRateTrackingErrorSD;
-        output.mInitialReceiverClockOffset = mInitialReceiverClockOffset;
-        output.mInitialReceiverClockDrift = mInitialReceiverClockDrift;
+        output.epochInterval = epochInterval;
+        output.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;
+        output.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;
+        output.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;
+        output.numberOfSatellites = numberOfSatellites;
+        output.orbitalRadiusOfSatellites = orbitalRadiusOfSatellites;
+        output.satellitesInclinationDegrees = satellitesInclinationDegrees;
+        output.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;
+        output.constellationTimingOffset = constellationTimingOffset;
+        output.maskAngleDegrees = maskAngleDegrees;
+        output.sisErrorSD = sisErrorSD;
+        output.zenithIonosphereErrorSD = zenithIonosphereErrorSD;
+        output.zenithTroposphereErrorSD = zenithTroposphereErrorSD;
+        output.codeTrackingErrorSD = codeTrackingErrorSD;
+        output.rangeRateTrackingErrorSD = rangeRateTrackingErrorSD;
+        output.initialReceiverClockOffset = initialReceiverClockOffset;
+        output.initialReceiverClockDrift = initialReceiverClockDrift;
     }
 
     /**
@@ -1973,24 +1896,23 @@ public class GNSSConfig implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final GNSSConfig input) {
-        mEpochInterval = input.mEpochInterval;
-        mInitialEstimatedEcefPositionX = input.mInitialEstimatedEcefPositionX;
-        mInitialEstimatedEcefPositionY = input.mInitialEstimatedEcefPositionY;
-        mInitialEstimatedEcefPositionZ = input.mInitialEstimatedEcefPositionZ;
-        mNumberOfSatellites = input.mNumberOfSatellites;
-        mOrbitalRadiusOfSatellites = input.mOrbitalRadiusOfSatellites;
-        mSatellitesInclinationDegrees = input.mSatellitesInclinationDegrees;
-        mConstellationLongitudeOffsetDegrees =
-                input.mConstellationLongitudeOffsetDegrees;
-        mConstellationTimingOffset = input.mConstellationTimingOffset;
-        mMaskAngleDegrees = input.mMaskAngleDegrees;
-        mSISErrorSD = input.mSISErrorSD;
-        mZenithIonosphereErrorSD = input.mZenithIonosphereErrorSD;
-        mZenithTroposphereErrorSD = input.mZenithTroposphereErrorSD;
-        mCodeTrackingErrorSD = input.mCodeTrackingErrorSD;
-        mRangeRateTrackingErrorSD = input.mRangeRateTrackingErrorSD;
-        mInitialReceiverClockOffset = input.mInitialReceiverClockOffset;
-        mInitialReceiverClockDrift = input.mInitialReceiverClockDrift;
+        epochInterval = input.epochInterval;
+        initialEstimatedEcefPositionX = input.initialEstimatedEcefPositionX;
+        initialEstimatedEcefPositionY = input.initialEstimatedEcefPositionY;
+        initialEstimatedEcefPositionZ = input.initialEstimatedEcefPositionZ;
+        numberOfSatellites = input.numberOfSatellites;
+        orbitalRadiusOfSatellites = input.orbitalRadiusOfSatellites;
+        satellitesInclinationDegrees = input.satellitesInclinationDegrees;
+        constellationLongitudeOffsetDegrees = input.constellationLongitudeOffsetDegrees;
+        constellationTimingOffset = input.constellationTimingOffset;
+        maskAngleDegrees = input.maskAngleDegrees;
+        sisErrorSD = input.sisErrorSD;
+        zenithIonosphereErrorSD = input.zenithIonosphereErrorSD;
+        zenithTroposphereErrorSD = input.zenithTroposphereErrorSD;
+        codeTrackingErrorSD = input.codeTrackingErrorSD;
+        rangeRateTrackingErrorSD = input.rangeRateTrackingErrorSD;
+        initialReceiverClockOffset = input.initialReceiverClockOffset;
+        initialReceiverClockDrift = input.initialReceiverClockDrift;
     }
 
     /**
@@ -2001,14 +1923,14 @@ public class GNSSConfig implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mEpochInterval, mInitialEstimatedEcefPositionX,
-                mInitialEstimatedEcefPositionY, mInitialEstimatedEcefPositionZ,
-                mNumberOfSatellites, mOrbitalRadiusOfSatellites,
-                mSatellitesInclinationDegrees, mConstellationLongitudeOffsetDegrees,
-                mConstellationTimingOffset, mMaskAngleDegrees, mSISErrorSD,
-                mZenithIonosphereErrorSD, mZenithTroposphereErrorSD,
-                mCodeTrackingErrorSD, mRangeRateTrackingErrorSD,
-                mInitialReceiverClockOffset, mInitialReceiverClockDrift);
+        return Objects.hash(epochInterval, initialEstimatedEcefPositionX,
+                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
+                numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
+                constellationTimingOffset, maskAngleDegrees, sisErrorSD,
+                zenithIonosphereErrorSD, zenithTroposphereErrorSD,
+                codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                initialReceiverClockOffset, initialReceiverClockDrift);
     }
 
     /**
@@ -2055,24 +1977,24 @@ public class GNSSConfig implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mEpochInterval - other.mEpochInterval) <= threshold
-                && Math.abs(mInitialEstimatedEcefPositionX - other.mInitialEstimatedEcefPositionX) <= threshold
-                && Math.abs(mInitialEstimatedEcefPositionY - other.mInitialEstimatedEcefPositionY) <= threshold
-                && Math.abs(mInitialEstimatedEcefPositionZ - other.mInitialEstimatedEcefPositionZ) <= threshold
-                && Math.abs(mNumberOfSatellites - other.mNumberOfSatellites) <= threshold
-                && Math.abs(mOrbitalRadiusOfSatellites - other.mOrbitalRadiusOfSatellites) <= threshold
-                && Math.abs(mSatellitesInclinationDegrees - other.mSatellitesInclinationDegrees) <= threshold
-                && Math.abs(mConstellationLongitudeOffsetDegrees - other.mConstellationLongitudeOffsetDegrees)
+        return Math.abs(epochInterval - other.epochInterval) <= threshold
+                && Math.abs(initialEstimatedEcefPositionX - other.initialEstimatedEcefPositionX) <= threshold
+                && Math.abs(initialEstimatedEcefPositionY - other.initialEstimatedEcefPositionY) <= threshold
+                && Math.abs(initialEstimatedEcefPositionZ - other.initialEstimatedEcefPositionZ) <= threshold
+                && Math.abs(numberOfSatellites - other.numberOfSatellites) <= threshold
+                && Math.abs(orbitalRadiusOfSatellites - other.orbitalRadiusOfSatellites) <= threshold
+                && Math.abs(satellitesInclinationDegrees - other.satellitesInclinationDegrees) <= threshold
+                && Math.abs(constellationLongitudeOffsetDegrees - other.constellationLongitudeOffsetDegrees)
                 <= threshold
-                && Math.abs(mConstellationTimingOffset - other.mConstellationTimingOffset) <= threshold
-                && Math.abs(mMaskAngleDegrees - other.mMaskAngleDegrees) <= threshold
-                && Math.abs(mSISErrorSD - other.mSISErrorSD) <= threshold
-                && Math.abs(mZenithIonosphereErrorSD - other.mZenithIonosphereErrorSD) <= threshold
-                && Math.abs(mZenithTroposphereErrorSD - other.mZenithTroposphereErrorSD) <= threshold
-                && Math.abs(mCodeTrackingErrorSD - other.mCodeTrackingErrorSD) <= threshold
-                && Math.abs(mRangeRateTrackingErrorSD - other.mRangeRateTrackingErrorSD) <= threshold
-                && Math.abs(mInitialReceiverClockOffset - other.mInitialReceiverClockOffset) <= threshold
-                && Math.abs(mInitialReceiverClockDrift - other.mInitialReceiverClockDrift) <= threshold;
+                && Math.abs(constellationTimingOffset - other.constellationTimingOffset) <= threshold
+                && Math.abs(maskAngleDegrees - other.maskAngleDegrees) <= threshold
+                && Math.abs(sisErrorSD - other.sisErrorSD) <= threshold
+                && Math.abs(zenithIonosphereErrorSD - other.zenithIonosphereErrorSD) <= threshold
+                && Math.abs(zenithTroposphereErrorSD - other.zenithTroposphereErrorSD) <= threshold
+                && Math.abs(codeTrackingErrorSD - other.codeTrackingErrorSD) <= threshold
+                && Math.abs(rangeRateTrackingErrorSD - other.rangeRateTrackingErrorSD) <= threshold
+                && Math.abs(initialReceiverClockOffset - other.initialReceiverClockOffset) <= threshold
+                && Math.abs(initialReceiverClockDrift - other.initialReceiverClockDrift) <= threshold;
     }
 
     /**
@@ -2083,7 +2005,7 @@ public class GNSSConfig implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSConfig result = (GNSSConfig)super.clone();
+        final var result = (GNSSConfig)super.clone();
         copyTo(result);
         return result;
     }

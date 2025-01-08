@@ -21,14 +21,15 @@ import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Random;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSolverListener<Point3D> {
+@ExtendWith(MockitoExtension.class)
+class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 4;
     private static final int MAX_SPHERES = 10;
@@ -51,9 +52,9 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
     private int solveEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+        var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // check correctness
         assertNull(solver.getListener());
@@ -72,12 +73,12 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions and distances
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances);
 
         // check correctness
@@ -97,35 +98,20 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[3];
-        final Point3D[] shortPositions = new Point3D[1];
-        final double[] shortDistances = new double[1];
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        final var wrong = new double[3];
+        final var shortPositions = new Point3D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null,
+                distances));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                wrong));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances));
 
         // constructor with initial position
-        final InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D();
+        final var initialPosition = new InhomogeneousPoint3D();
         solver = new NonLinearLeastSquaresLateration3DSolver(initialPosition);
 
         // check correctness
@@ -143,7 +129,6 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertNull(solver.getSpheres());
         assertEquals(LaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER, solver.getType());
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
-
 
         // constructor with positions, distances and initial position
         solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, initialPosition);
@@ -165,30 +150,14 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null, distances, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null,
+                distances, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, initialPosition));
 
         // constructor with listener
         // noinspection unchecked
@@ -231,28 +200,14 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null, distances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null,
+                distances, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, listener));
 
         // constructor with initial position and listener
         solver = new NonLinearLeastSquaresLateration3DSolver(initialPosition, listener);
@@ -272,7 +227,6 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertNull(solver.getSpheres());
         assertEquals(LaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER, solver.getType());
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
-
 
         // constructor with positions, distances, initial position and listener
         solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, initialPosition, listener);
@@ -294,35 +248,17 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null, distances, initialPosition,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null, initialPosition,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Point3D[]) null,
+                distances, initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, initialPosition, listener));
 
         // constructor with spheres
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -346,21 +282,10 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final Sphere[] shortSpheres = new Sphere[1];
-
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        final var shortSpheres = new Sphere[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres));
 
         // constructor with spheres and initial position
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, initialPosition);
@@ -382,19 +307,10 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                initialPosition));
 
         // constructor with spheres and listener
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, listener);
@@ -416,19 +332,10 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
+                listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                listener));
 
         // constructor with circles, initial position and listener
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, initialPosition, listener);
@@ -450,22 +357,13 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                initialPosition, listener));
 
         // constructor with positions, distances and standard deviations
-        final double[] standardDeviations = new double[4];
+        final var standardDeviations = new double[4];
         solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, standardDeviations);
 
         // check correctness
@@ -485,44 +383,21 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, (double[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                distances, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, (double[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, wrong));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations));
 
         // constructor with positions, distances, standard deviations and initial position
-        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                standardDeviations, initialPosition);
+        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, standardDeviations, initialPosition);
 
         // check correctness
         assertNull(solver.getListener());
@@ -541,48 +416,21 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, distances,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                    null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, wrong, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                distances, standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, null, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, wrong, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations, initialPosition));
 
         // check positions, distances, standard deviations and listener
-        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                standardDeviations, this);
+        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, standardDeviations, this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -601,48 +449,22 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, distances,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                    (double[]) null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                distances, standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, (double[]) null, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, wrong, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations, this));
 
         // check positions, distances, standard deviations, initial position and listener
-        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                standardDeviations, initialPosition, this);
+        solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, standardDeviations, initialPosition,
+                this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -661,44 +483,18 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(null, distances,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, null,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                    null, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances,
-                    wrong, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(null,
+                distances, standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                null, standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, null, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions, wrong,
+                standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(positions,
+                distances, wrong, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortPositions,
+                shortDistances, standardDeviations, initialPosition, this));
 
         // constructor with spheres and standard deviations
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, standardDeviations);
@@ -720,19 +516,10 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                standardDeviations));
 
         // constructor with spheres, standard deviations and initial position
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, standardDeviations, initialPosition);
@@ -754,21 +541,10 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
+                standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                standardDeviations, initialPosition));
 
         // constructor with spheres, standard deviations and listener
         solver = new NonLinearLeastSquaresLateration3DSolver(spheres, standardDeviations, this);
@@ -790,25 +566,13 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                standardDeviations, this));
 
         // constructor with spheres, standard deviations, initial position and listener
-        solver = new NonLinearLeastSquaresLateration3DSolver(spheres,
-                standardDeviations, initialPosition, this);
+        solver = new NonLinearLeastSquaresLateration3DSolver(spheres, standardDeviations, initialPosition, this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -827,33 +591,23 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver((Sphere[]) null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration3DSolver(shortSpheres,
+                standardDeviations, this));
     }
 
     @Test
-    public void testGetSetSpheres() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetSpheres() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getSpheres());
 
         // set new value
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
@@ -863,13 +617,13 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
 
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -878,7 +632,7 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         solver.setSpheres(spheres);
 
         // check
-        final Sphere[] spheres2 = solver.getSpheres();
+        final var spheres2 = solver.getSpheres();
         assertSame(spheres[0].getCenter(), spheres2[0].getCenter());
         assertSame(spheres[1].getCenter(), spheres2[1].getCenter());
         assertSame(spheres[2].getCenter(), spheres2[2].getCenter());
@@ -889,30 +643,22 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertEquals(spheres[3].getRadius(), spheres2[3].getRadius(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            solver.setSpheres(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheres(new Sphere[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(new Sphere[1]));
     }
 
     @Test
-    public void testGetSetSpheresAndStandardDeviations() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetSpheresAndStandardDeviations() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getSpheres());
         assertNull(solver.getDistanceStandardDeviations());
 
         // set new value
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
@@ -922,24 +668,24 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
 
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
         spheres[3] = new Sphere(positions[3], distances[3]);
 
-        final double[] standardDeviations = new double[4];
+        final var standardDeviations = new double[4];
 
         solver.setSpheresAndStandardDeviations(spheres, standardDeviations);
 
         // check
-        final Sphere[] spheres2 = solver.getSpheres();
+        final var spheres2 = solver.getSpheres();
         assertSame(spheres[0].getCenter(), spheres2[0].getCenter());
         assertSame(spheres[1].getCenter(), spheres2[1].getCenter());
         assertSame(spheres[2].getCenter(), spheres2[2].getCenter());
@@ -951,31 +697,19 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
 
         // force IllegalArgumentException
-        try {
-            solver.setSpheresAndStandardDeviations(null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(new Sphere[1], standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(spheres, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(spheres, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(new Sphere[1],
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(spheres,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheresAndStandardDeviations(spheres,
+                new double[1]));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+    void testGetSetListener() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getListener());
@@ -990,8 +724,8 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() throws LockedException {
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+    void testGetSetPositionsAndDistances() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -999,12 +733,12 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertFalse(solver.isReady());
 
         // set new values
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
+        final var distances = new double[4];
 
         solver.setPositionsAndDistances(positions, distances);
 
@@ -1014,31 +748,16 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[3]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point3D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[3]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point3D[1],
+                new double[1]));
     }
 
     @Test
-    public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+    void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -1047,13 +766,13 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertFalse(solver.isReady());
 
         // set new values
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
-        final double[] standardDeviations = new double[4];
+        final var distances = new double[4];
+        final var standardDeviations = new double[4];
 
         solver.setPositionsDistancesAndStandardDeviations(positions, distances, standardDeviations);
 
@@ -1064,37 +783,22 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[3]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point3D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[3]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point3D[1],
+                new double[1]));
     }
 
     @Test
-    public void testGetSetInitialPosition() throws LockedException {
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
+    void testGetSetInitialPosition() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
 
         // check initial value
         assertNull(solver.getInitialPosition());
 
         // set new value
-        final InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D();
+        final var initialPosition = new InhomogeneousPoint3D();
         solver.setInitialPosition(initialPosition);
 
         // check
@@ -1102,32 +806,29 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveNoInitialPositionAndNoError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius;
-            final Sphere[] spheres = new Sphere[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver(
-                    spheres, this);
+            final var solver = new NonLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1138,8 +839,8 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
-            final double distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1151,65 +852,48 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertTrue(numValid > numInvalid);
 
         // Force NotReadyException
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Sphere[] spheres = new Sphere[4];
-        InhomogeneousPoint3D center;
-        double radius;
-        for (int i = 0; i < 4; i++) {
-            center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
-            radius = LaterationSolver.EPSILON;
+        final var spheres = new Sphere[4];
+        for (var i = 0; i < 4; i++) {
+            final var center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
+            final var radius = LaterationSolver.EPSILON;
             spheres[i] = new Sphere(center, radius);
         }
         solver.setSpheres(spheres);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Test
-    public void testSolveWithInitialPositionAndNoError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithInitialPositionAndNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
         // when an initial solution close to the real solution is provided, the algorithm
         // always converges to the true solution
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
-                    position.getInhomX() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR),
-                    position.getInhomY() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR),
-                    position.getInhomZ() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR));
-            InhomogeneousPoint3D center;
-            double radius;
-            final Sphere[] spheres = new Sphere[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint3D(
+            final var initialPosition = new InhomogeneousPoint3D(
+                    position.getInhomX() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
+                    position.getInhomY() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
+                    position.getInhomZ() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR));
+            final var spheres = new Sphere[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver(
-                    spheres, initialPosition, this);
+            final var solver = new NonLinearLeastSquaresLateration3DSolver(spheres, initialPosition, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1220,41 +904,38 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
         }
     }
 
     @Test
-    public void testSolveNoInitialPositionAndError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D point;
-            double distance, error;
-            final Point3D[] positions = new Point3D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint3D(
+            final var positions = new Point3D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver(
-                    positions, distances, this);
+            final var solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1265,8 +946,8 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
             solver.solve();
 
-            Point3D estimatedPosition = solver.getEstimatedPosition();
-            distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1279,41 +960,38 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveWithInitialPositionAndError()
-            throws LaterationException, NotReadyException, LockedException {
-        int numValid = 0;
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithInitialPositionAndError() throws LaterationException, NotReadyException, LockedException {
+        var numValid = 0;
+        final var randomizer = new UniformRandomizer();
 
         // when an initial solution close to the real solution is provided, the algorithm
         // always converges to the true solution
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+            final var initialPosition = new InhomogeneousPoint3D(
                     position.getInhomX() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
                     position.getInhomY() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
                     position.getInhomZ() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR));
-            InhomogeneousPoint3D point;
-            double distance, error;
-            final Point3D[] positions = new Point3D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint3D(
+            final var positions = new Point3D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver(
-                    positions, distances, initialPosition, this);
+            final var solver = new NonLinearLeastSquaresLateration3DSolver(positions, distances, initialPosition,
+                    this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1324,7 +1002,7 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
 
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
@@ -1338,32 +1016,29 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveNoInitialPositionAndNoError4Spheres()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndNoError4Spheres() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = MIN_SPHERES;
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = MIN_SPHERES;
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius;
-            final Sphere[] spheres = new Sphere[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver(
-                    spheres, this);
+            final var solver = new NonLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1374,8 +1049,8 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
-            final double distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1387,28 +1062,18 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         assertTrue(numValid > numInvalid);
 
         // Force NotReadyException
-        final NonLinearLeastSquaresLateration3DSolver solver = new NonLinearLeastSquaresLateration3DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new NonLinearLeastSquaresLateration3DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Sphere[] spheres = new Sphere[4];
-        InhomogeneousPoint3D center;
-        double radius;
-        for (int i = 0; i < 4; i++) {
-            center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
-            radius = LaterationSolver.EPSILON;
+        final var spheres = new Sphere[4];
+        for (var i = 0; i < 4; i++) {
+            final var center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
+            final var radius = LaterationSolver.EPSILON;
             spheres[i] = new Sphere(center, radius);
         }
         solver.setSpheres(spheres);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Override
@@ -1427,45 +1092,15 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
         solveStart = solveEnd = 0;
     }
 
-    private void checkLocked(final NonLinearLeastSquaresLateration3DSolver solver) {
-        try {
-            solver.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    null, null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setInitialPosition(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setSpheres(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setSpheresAndStandardDeviations(
-                    null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.solve();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final NonLinearLeastSquaresLateration3DSolver solver) {
+        assertThrows(LockedException.class, () -> solver.setListener(null));
+        assertThrows(LockedException.class, () -> solver.setPositionsAndDistances(null, null));
+        assertThrows(LockedException.class, () -> solver.setPositionsDistancesAndStandardDeviations(
+                null, null, null));
+        assertThrows(LockedException.class, () -> solver.setInitialPosition(null));
+        assertThrows(LockedException.class, () -> solver.setSpheres(null));
+        assertThrows(LockedException.class, () -> solver.setSpheresAndStandardDeviations(null,
+                null));
+        assertThrows(LockedException.class, solver::solve);
     }
 }

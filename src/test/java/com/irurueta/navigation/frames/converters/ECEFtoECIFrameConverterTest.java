@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation.frames.converters;
 
-import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.RotationException;
@@ -28,13 +27,11 @@ import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Time;
 import com.irurueta.units.TimeUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class ECEFtoECIFrameConverterTest {
+class ECEFtoECIFrameConverterTest {
 
     private static final double ABSOLUTE_ERROR = 1e-8;
 
@@ -43,10 +40,8 @@ public class ECEFtoECIFrameConverterTest {
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
 
-    private static final double MIN_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
     private static final double MIN_Z_VALUE = -50.0;
     private static final double MAX_Z_VALUE = 50.0;
@@ -57,13 +52,13 @@ public class ECEFtoECIFrameConverterTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(ECEFtoECIFrameConverter.EARTH_ROTATION_RATE, Constants.EARTH_ROTATION_RATE, 0.0);
     }
 
     @Test
-    public void testConstructor() {
-        final ECEFtoECIFrameConverter converter = new ECEFtoECIFrameConverter();
+    void testConstructor() {
+        final var converter = new ECEFtoECIFrameConverter();
 
         // check
         assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, converter.getSourceType());
@@ -71,42 +66,40 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertAndReturnNewWithSecondsTimeInterval() throws InvalidRotationMatrixException,
+    void testConvertAndReturnNewWithSecondsTimeInterval() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECEFtoECIFrameConverter converter1 = new ECEFtoECIFrameConverter();
+            final var converter1 = new ECEFtoECIFrameConverter();
 
-            final ECIFrame eciFrame = converter1.convertAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame1);
+            final var eciFrame = converter1.convertAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame1);
 
             // convert back to ECEF
-            final ECItoECEFFrameConverter converter2 = new ECItoECEFFrameConverter();
+            final var converter2 = new ECItoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame2 = converter2.convertAndReturnNew(TIME_INTERVAL_SECONDS, eciFrame);
+            final var ecefFrame2 = converter2.convertAndReturnNew(TIME_INTERVAL_SECONDS, eciFrame);
 
             // check
             assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
@@ -122,10 +115,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -140,44 +133,41 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertWithSecondsTimeInterval() throws InvalidRotationMatrixException,
+    void testConvertWithSecondsTimeInterval() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECEFtoECIFrameConverter converter1 = new ECEFtoECIFrameConverter();
+            final var converter1 = new ECEFtoECIFrameConverter();
 
-            final ECIFrame eciFrame = new ECIFrame();
+            final var eciFrame = new ECIFrame();
             converter1.convert(TIME_INTERVAL_SECONDS, ecefFrame1, eciFrame);
 
             // convert back to ECEF
-            final ECItoECEFFrameConverter converter2 = new ECItoECEFFrameConverter();
+            final var converter2 = new ECItoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
+            final var ecefFrame2 = new ECEFFrame();
             converter2.convert(TIME_INTERVAL_SECONDS, eciFrame, ecefFrame2);
 
             // check
@@ -194,10 +184,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -212,40 +202,38 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertECEFtoECIAndReturnNewWithSecondsTimeInterval()
-            throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
-            RotationException {
+    void testConvertECEFtoECIAndReturnNewWithSecondsTimeInterval() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
-                    TIME_INTERVAL_SECONDS, ecefFrame1);
+            final var eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(TIME_INTERVAL_SECONDS,
+                    ecefFrame1);
 
             // convert back to ECEF
-            final ECEFFrame ecefFrame2 = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(
-                    TIME_INTERVAL_SECONDS, eciFrame);
+            final var ecefFrame2 = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+                    eciFrame);
 
             // check
             assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
@@ -261,10 +249,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -279,38 +267,37 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertECEFtoECIWithSecondsTimeInterval() throws InvalidRotationMatrixException,
+    void testConvertECEFtoECIWithSecondsTimeInterval() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECIFrame eciFrame = new ECIFrame();
+            final var eciFrame = new ECIFrame();
             ECEFtoECIFrameConverter.convertECEFtoECI(TIME_INTERVAL_SECONDS, ecefFrame1, eciFrame);
 
             // convert back to ECEF
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
+            final var ecefFrame2 = new ECEFFrame();
             ECItoECEFFrameConverter.convertECItoECEF(TIME_INTERVAL_SECONDS, eciFrame, ecefFrame2);
 
             // check
@@ -327,10 +314,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -345,43 +332,42 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertAndReturnNew() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvertAndReturnNew() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final var timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECEFtoECIFrameConverter converter1 = new ECEFtoECIFrameConverter();
+            final var converter1 = new ECEFtoECIFrameConverter();
 
-            final ECIFrame eciFrame = converter1.convertAndReturnNew(timeInterval, ecefFrame1);
+            final var eciFrame = converter1.convertAndReturnNew(timeInterval, ecefFrame1);
 
             // convert back to ECEF
-            final ECItoECEFFrameConverter converter2 = new ECItoECEFFrameConverter();
+            final var converter2 = new ECItoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame2 = converter2.convertAndReturnNew(timeInterval, eciFrame);
+            final var ecefFrame2 = converter2.convertAndReturnNew(timeInterval, eciFrame);
 
             // check
             assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
@@ -397,10 +383,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -415,44 +401,43 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvert() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvert() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final var timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECEFtoECIFrameConverter converter1 = new ECEFtoECIFrameConverter();
+            final var converter1 = new ECEFtoECIFrameConverter();
 
-            final ECIFrame eciFrame = new ECIFrame();
+            final var eciFrame = new ECIFrame();
             converter1.convert(timeInterval, ecefFrame1, eciFrame);
 
             // convert back to ECEF
-            final ECItoECEFFrameConverter converter2 = new ECItoECEFFrameConverter();
+            final var converter2 = new ECItoECEFFrameConverter();
 
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
+            final var ecefFrame2 = new ECEFFrame();
             converter2.convert(timeInterval, eciFrame, ecefFrame2);
 
             // check
@@ -469,10 +454,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -487,43 +472,38 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertECEFtoECIAndReturnNew() throws InvalidRotationMatrixException,
+    void testConvertECEFtoECIAndReturnNew() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
-        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final var timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
-                    timeInterval, ecefFrame1);
+            final var eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(timeInterval, ecefFrame1);
 
             // convert back to ECEF
-            final ECEFFrame ecefFrame2 = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(
-                    timeInterval, eciFrame);
+            final var ecefFrame2 = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(timeInterval, eciFrame);
 
             // check
             assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
@@ -539,10 +519,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
@@ -557,40 +537,39 @@ public class ECEFtoECIFrameConverterTest {
     }
 
     @Test
-    public void testConvertECEFtoECI() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    void testConvertECEFtoECI() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
-        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final var timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final var z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
 
-            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
+            final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var q = new Quaternion(roll, pitch, yaw);
 
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            final var m = q.asInhomogeneousMatrix();
+            final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final var ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-            final ECIFrame eciFrame = new ECIFrame();
+            final var eciFrame = new ECIFrame();
             ECEFtoECIFrameConverter.convertECEFtoECI(timeInterval, ecefFrame1, eciFrame);
 
             // convert back to ECEF
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
+            final var ecefFrame2 = new ECEFFrame();
             ECItoECEFFrameConverter.convertECItoECEF(timeInterval, eciFrame, ecefFrame2);
 
             // check
@@ -607,10 +586,10 @@ public class ECEFtoECIFrameConverterTest {
             assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
                     ecefFrame2.getCoordinateTransformation().getDestinationType());
 
-            final Quaternion q1 = new Quaternion();
+            final var q1 = new Quaternion();
             ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
-            final Quaternion q2 = new Quaternion();
+            final var q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
