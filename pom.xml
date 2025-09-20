@@ -30,22 +30,7 @@
         <developerConnection>scm:git@github.com:albertoirurueta/irurueta-navigation.git</developerConnection>
         <url>git@github.com:albertoirurueta/irurueta-navigation.git</url>
     </scm>
-
-    <distributionManagement>
-        <!-- maven central snapshot repository -->
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>maven-central-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
