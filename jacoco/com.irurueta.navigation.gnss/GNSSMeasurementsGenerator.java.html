@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSMeasurementsGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSMeasurementsGenerator.java</span></div><h1>GNSSMeasurementsGenerator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.Utils;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.navigation.frames.NEDPosition;
+import com.irurueta.navigation.frames.NEDVelocity;
+import com.irurueta.navigation.frames.converters.ECEFtoNEDPositionVelocityConverter;
+import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Generates satellite GNSS measurement data.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m
+ * &lt;/a&gt;
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class GNSSMeasurementsGenerator {
+
+    /**
+     * Speed of light in the vacuum expressed in meters per second (m/s).
+     */
+    public static final double SPEED_OF_LIGHT = Constants.SPEED_OF_LIGHT;
+
+    /**
+     * Earth rotation rate expressed in radians per second (rad/s).
+     */
+    public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
+
+    /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSMeasurementsGenerator() {
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time.
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPositionAndVelocity         user position and velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @return collection of GNSS measurements.
+     */
+    public static Collection&lt;GNSSMeasurement&gt; generate(
+            final Time time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L81">        return generate(convertTime(time), satellitePositionsAndVelocities, userPositionAndVelocity,</span>
+                gnssRangeErrorBiases, config, random);
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time.
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPositionAndVelocity         user position and velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @param result                          instance where resulting collection of
+     *                                        GNSS measurements are stored.
+     */
+    public static void generate(
+            final Time time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection&lt;GNSSMeasurement&gt; result) {
+<span class="fc" id="L102">        generate(convertTime(time), satellitePositionsAndVelocities, userPositionAndVelocity, gnssRangeErrorBiases,</span>
+                config, random, result);
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPositionAndVelocity         user position and velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @return collection of GNSS measurements.
+     */
+    public static Collection&lt;GNSSMeasurement&gt; generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L123">        return generate(time, satellitePositionsAndVelocities, userPositionAndVelocity.getX(),</span>
+<span class="fc" id="L124">                userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),</span>
+<span class="fc" id="L125">                userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),</span>
+<span class="fc" id="L126">                userPositionAndVelocity.getVz(), gnssRangeErrorBiases, config, random);</span>
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPositionAndVelocity         user position and velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @param result                          instance where resulting collection of
+     *                                        GNSS measurements are stored.
+     */
+    public static void generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection&lt;GNSSMeasurement&gt; result) {
+<span class="fc" id="L147">        generate(time, satellitePositionsAndVelocities, userPositionAndVelocity.getX(),</span>
+<span class="fc" id="L148">                userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),</span>
+<span class="fc" id="L149">                userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),</span>
+<span class="fc" id="L150">                userPositionAndVelocity.getVz(), gnssRangeErrorBiases, config, random, result);</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time.
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPosition                    user position.
+     * @param userVelocity                    user velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each satellite
+     *                                        position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @return collection of GNSS measurements.
+     */
+    public static Collection&lt;GNSSMeasurement&gt; generate(
+            final Time time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L170">        return generate(convertTime(time), satellitePositionsAndVelocities,</span>
+                userPosition, userVelocity, gnssRangeErrorBiases, config, random);
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time.
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPosition                    user position.
+     * @param userVelocity                    user velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each satellite
+     *                                        position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @param result                          instance where resulting collection of
+     *                                        GNSS measurements are stored.
+     */
+    public static void generate(
+            final Time time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection&lt;GNSSMeasurement&gt; result) {
+<span class="fc" id="L192">        generate(convertTime(time), satellitePositionsAndVelocities, userPosition, userVelocity, gnssRangeErrorBiases,</span>
+                config, random, result);
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPosition                    user position.
+     * @param userVelocity                    user velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each satellite
+     *                                        position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @return collection of GNSS measurements.
+     */
+    public static Collection&lt;GNSSMeasurement&gt; generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L214">        return generate(time, satellitePositionsAndVelocities,</span>
+<span class="fc" id="L215">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L216">                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBiases, config, random);</span>
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userPosition                    user position.
+     * @param userVelocity                    user velocity.
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @param result                          instance where resulting collection of
+     *                                        GNSS measurements are stored.
+     */
+    public static void generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List&lt;Double&gt; gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection&lt;GNSSMeasurement&gt; result) {
+<span class="fc" id="L238">        generate(time, satellitePositionsAndVelocities,</span>
+<span class="fc" id="L239">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L240">                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBiases, config, random,</span>
+                result);
+<span class="fc" id="L242">    }</span>
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userX                           x ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userY                           y ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userZ                           z ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userVx                          x ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param userVy                          y ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param userVz                          z ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @return collection of GNSS measurements.
+     */
+    public static Collection&lt;GNSSMeasurement&gt; generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz,
+            final List&lt;Double&gt; gnssRangeErrorBiases, final GNSSConfig config, final Random random) {
+<span class="fc" id="L273">        final var result = new ArrayList&lt;GNSSMeasurement&gt;();</span>
+<span class="fc" id="L274">        generate(time, satellitePositionsAndVelocities, userX, userY, userZ, userVx, userVy, userVz,</span>
+                gnssRangeErrorBiases, config, random, result);
+<span class="fc" id="L276">        return result;</span>
+    }
+
+    /**
+     * Generates satellite GNSS measurements.
+     *
+     * @param time                            current simulation time expressed in
+     *                                        seconds (s).
+     * @param satellitePositionsAndVelocities satellite positions and velocities.
+     * @param userX                           x ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userY                           y ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userZ                           z ECEF coordinate of user position
+     *                                        expressed in meters (m).
+     * @param userVx                          x ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param userVy                          y ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param userVz                          z ECEF coordinate of user velocity
+     *                                        expressed in meters per second (m/s).
+     * @param gnssRangeErrorBiases            GNSS range error biases for each
+     *                                        satellite position and velocity.
+     * @param config                          GNSS configuration parameters.
+     * @param random                          random number generator.
+     * @param result                          instance where resulting collection of
+     *                                        GNSS measurements are stored.
+     */
+    public static void generate(
+            final double time, final List&lt;ECEFPositionAndVelocity&gt; satellitePositionsAndVelocities,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz,
+            final List&lt;Double&gt; gnssRangeErrorBiases, final GNSSConfig config,
+            final Random random, final Collection&lt;GNSSMeasurement&gt; result) {
+
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (satellitePositionsAndVelocities.size() != gnssRangeErrorBiases.size()) {</span>
+<span class="nc" id="L312">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L315">        result.clear();</span>
+
+<span class="fc" id="L317">        var pos = 0;</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        for (final var satellitePositionAndVelocity : satellitePositionsAndVelocities) {</span>
+<span class="fc" id="L319">            final var gnssRangeErrorBias = gnssRangeErrorBiases.get(pos);</span>
+<span class="fc" id="L320">            pos++;</span>
+
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">            if (gnssRangeErrorBias == null) {</span>
+<span class="nc" id="L323">                continue;</span>
+            }
+
+<span class="fc" id="L326">            final var measurement = generate(time,</span>
+<span class="fc" id="L327">                    satellitePositionAndVelocity.getX(),</span>
+<span class="fc" id="L328">                    satellitePositionAndVelocity.getY(),</span>
+<span class="fc" id="L329">                    satellitePositionAndVelocity.getZ(),</span>
+<span class="fc" id="L330">                    satellitePositionAndVelocity.getVx(),</span>
+<span class="fc" id="L331">                    satellitePositionAndVelocity.getVy(),</span>
+<span class="fc" id="L332">                    satellitePositionAndVelocity.getVz(),</span>
+                    userX, userY, userZ,
+                    userVx, userVy, userVz,
+<span class="fc" id="L335">                    gnssRangeErrorBias, config, random);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">            if (measurement != null) {</span>
+<span class="fc" id="L337">                result.add(measurement);</span>
+            }
+<span class="fc" id="L339">        }</span>
+<span class="fc" id="L340">    }</span>
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time                         current simulation time.
+     * @param satellitePositionAndVelocity satellite position and velocity.
+     * @param userPositionAndVelocity      user position and velocity.
+     * @param gnssRangeErrorBias           GNSS range error bias.
+     * @param config                       GNSS configuration parameters.
+     * @param random                       random number generator.
+     * @return a new GNSS measurement.
+     */
+    public static GNSSMeasurement generate(
+            final Time time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L357">        return generate(convertTime(time), satellitePositionAndVelocity, userPositionAndVelocity, gnssRangeErrorBias,</span>
+                config, random);
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time                         current simulation time.
+     * @param satellitePositionAndVelocity satellite position and velocity.
+     * @param userPositionAndVelocity      user position and velocity.
+     * @param gnssRangeErrorBias           GNSS range error bias.
+     * @param config                       GNSS configuration parameters.
+     * @param random                       random number generator.
+     * @param result                       instance where resulting GNSS measurement
+     *                                     is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    public static boolean generate(
+            final Time time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+<span class="fc" id="L379">        return generate(convertTime(time), satellitePositionAndVelocity, userPositionAndVelocity, gnssRangeErrorBias,</span>
+                config, random, result);
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time                         current simulation time expressed in
+     *                                     seconds (s).
+     * @param satellitePositionAndVelocity satellite position and velocity.
+     * @param userPositionAndVelocity      user position and velocity.
+     * @param gnssRangeErrorBias           GNSS range error bias.
+     * @param config                       GNSS configuration parameters.
+     * @param random                       random number generator.
+     * @return a new GNSS measurement.
+     */
+    public static GNSSMeasurement generate(
+            final double time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L399">        return generate(time, satellitePositionAndVelocity.getX(),</span>
+<span class="fc" id="L400">                satellitePositionAndVelocity.getY(), satellitePositionAndVelocity.getZ(),</span>
+<span class="fc" id="L401">                satellitePositionAndVelocity.getVx(), satellitePositionAndVelocity.getVy(),</span>
+<span class="fc" id="L402">                satellitePositionAndVelocity.getVz(), userPositionAndVelocity.getX(),</span>
+<span class="fc" id="L403">                userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),</span>
+<span class="fc" id="L404">                userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),</span>
+<span class="fc" id="L405">                userPositionAndVelocity.getVz(), gnssRangeErrorBias, config, random);</span>
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time                         current simulation time expressed in
+     *                                     seconds (s).
+     * @param satellitePositionAndVelocity satellite position and velocity.
+     * @param userPositionAndVelocity      user position and velocity.
+     * @param gnssRangeErrorBias           GNSS range error bias.
+     * @param config                       GNSS configuration parameters.
+     * @param random                       random number generator.
+     * @param result                       instance where resulting GNSS measurement
+     *                                     is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    public static boolean generate(
+            final double time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+<span class="fc" id="L427">        return generate(time, satellitePositionAndVelocity.getX(),</span>
+<span class="fc" id="L428">                satellitePositionAndVelocity.getY(), satellitePositionAndVelocity.getZ(),</span>
+<span class="fc" id="L429">                satellitePositionAndVelocity.getVx(), satellitePositionAndVelocity.getVy(),</span>
+<span class="fc" id="L430">                satellitePositionAndVelocity.getVz(), userPositionAndVelocity.getX(),</span>
+<span class="fc" id="L431">                userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),</span>
+<span class="fc" id="L432">                userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),</span>
+<span class="fc" id="L433">                userPositionAndVelocity.getVz(), gnssRangeErrorBias, config, random, result);</span>
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time.
+     * @param satellitePosition  satellite position.
+     * @param satelliteVelocity  satellite velocity.
+     * @param userPosition       user position.
+     * @param userVelocity       user velocity.
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @return a new GNSS measurement.
+     */
+    public static GNSSMeasurement generate(
+            final Time time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L453">        return generate(convertTime(time), satellitePosition, satelliteVelocity, userPosition, userVelocity,</span>
+                gnssRangeErrorBias, config, random);
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time.
+     * @param satellitePosition  satellite position.
+     * @param satelliteVelocity  satellite velocity.
+     * @param userPosition       user position.
+     * @param userVelocity       user velocity.
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @param result             instance where resulting GNSS measurement is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    public static boolean generate(
+            final Time time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+<span class="fc" id="L476">        return generate(convertTime(time), satellitePosition, satelliteVelocity, userPosition, userVelocity,</span>
+                gnssRangeErrorBias, config, random, result);
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satellitePosition  satellite position.
+     * @param satelliteVelocity  satellite velocity.
+     * @param userPosition       user position.
+     * @param userVelocity       user velocity.
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @return a new GNSS measurement.
+     */
+    public static GNSSMeasurement generate(
+            final double time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
+<span class="fc" id="L497">        return generate(time, satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),</span>
+<span class="fc" id="L498">                satelliteVelocity.getVx(), satelliteVelocity.getVy(), satelliteVelocity.getVz(),</span>
+<span class="fc" id="L499">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L500">                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBias, config, random);</span>
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satellitePosition  satellite position.
+     * @param satelliteVelocity  satellite velocity.
+     * @param userPosition       user position.
+     * @param userVelocity       user velocity.
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @param result             instance where resulting GNSS measurement
+     *                           is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    public static boolean generate(
+            final double time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+<span class="fc" id="L523">        return generate(time, satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),</span>
+<span class="fc" id="L524">                satelliteVelocity.getVx(), satelliteVelocity.getVy(), satelliteVelocity.getVz(),</span>
+<span class="fc" id="L525">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L526">                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(),</span>
+                gnssRangeErrorBias, config, random, result);
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satelliteX         x ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteY         y ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteZ         z ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteVx        x ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVy        y ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVz        z ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param userX              x ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userY              y ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userZ              z ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userVx             x ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVy             y ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVz             z ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @return a new GNSS measurement.
+     */
+    public static GNSSMeasurement generate(
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz,
+            final double gnssRangeErrorBias, final GNSSConfig config, final Random random) {
+<span class="fc" id="L569">        final var result = new GNSSMeasurement();</span>
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">        if (generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,</span>
+                userX, userY, userZ, userVx, userVy, userVz, gnssRangeErrorBias, config, random, result)) {
+<span class="fc" id="L572">            return result;</span>
+        } else {
+<span class="nc" id="L574">            return null;</span>
+        }
+    }
+
+    /**
+     * Generates a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satelliteX         x ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteY         y ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteZ         z ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteVx        x ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVy        y ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVz        z ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param userX              x ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userY              y ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userZ              z ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userVx             x ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVy             y ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVz             z ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @param result             instance where resulting GNSS measurement
+     *                           is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    public static boolean generate(
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+<span class="fc" id="L620">        final var userNedPosition = new NEDPosition();</span>
+<span class="fc" id="L621">        final var userNedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L622">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userX, userY, userZ, userVx, userVy, userVz,</span>
+                userNedPosition, userNedVelocity);
+<span class="fc" id="L624">        final var userLatitude = userNedPosition.getLatitude();</span>
+<span class="fc" id="L625">        final var userLongitude = userNedPosition.getLongitude();</span>
+
+<span class="fc" id="L627">        return generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,</span>
+                userX, userY, userZ, userLatitude, userLongitude, userVx, userVy, userVz, gnssRangeErrorBias,
+                config, random, result);
+    }
+
+    /**
+     * Internal method to generate a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satelliteX         x ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteY         y ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteZ         z ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteVx        x ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVy        y ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVz        z ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param userX              x ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userY              y ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userZ              z ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userLatitude       latitude of user NED position expressed in
+     *                           radians (rad).
+     * @param userLongitude      longitude of user NED position expressed in
+     *                           radians (rad).
+     * @param userVx             x ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVy             y ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVz             z ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param random             random number generator.
+     * @param result             instance where resulting GNSS measurement
+     *                           is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     */
+    private static boolean generate(
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userLatitude, final double userLongitude,
+            final double userVx, final double userVy, final double userVz,
+            final double gnssRangeErrorBias, final GNSSConfig config, final Random random,
+            final GNSSMeasurement result) {
+
+        // Calculate ECEF to NED coordinate transformation matrix using (2.150)
+<span class="fc" id="L682">        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
+
+        // Skew symmetric matrix of Earth rate
+        try {
+<span class="fc" id="L686">            final var omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});</span>
+<span class="fc" id="L687">            final var cei = Matrix.identity(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L688">            final var satellitePosition = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L689">            final var deltaR = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L690">            final var satelliteVelocity = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L691">            final var userPosition = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L692">            final var userVelocity = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L693">            final var tmp1 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L694">            final var tmp2 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L695">            final var tmp3 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L696">            final var tmp4 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L697">            final var tmp5 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+<span class="fc" id="L698">            final var tmp6 = new Matrix(CoordinateTransformation.ROWS, 1);</span>
+
+<span class="fc" id="L700">            return generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,</span>
+                    userX, userY, userZ, userVx, userVy, userVz, gnssRangeErrorBias, config, cen, omegaIe, cei,
+                    satellitePosition, deltaR, satelliteVelocity, userPosition, userVelocity, tmp1, tmp2, tmp3, tmp4,
+                    tmp5, tmp6, random, result);
+<span class="nc" id="L704">        } catch (final WrongSizeException ignore) {</span>
+<span class="nc" id="L705">            return false;</span>
+        }
+    }
+
+    /**
+     * Internal method to generate a single satellite GNSS measurement.
+     *
+     * @param time               current simulation time expressed in seconds (s).
+     * @param satelliteX         x ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteY         y ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteZ         z ECEF coordinate of satellite position
+     *                           expressed in meters (m).
+     * @param satelliteVx        x ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVy        y ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param satelliteVz        z ECEF coordinate of satellite velocity
+     *                           expressed in meters per second (m/s).
+     * @param userX              x ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userY              y ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userZ              z ECEF coordinate of user position
+     *                           expressed in meters (m).
+     * @param userVx             x ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVy             y ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param userVz             z ECEF coordinate of user velocity
+     *                           expressed in meters per second (m/s).
+     * @param gnssRangeErrorBias GNSS range error bias.
+     * @param config             GNSS configuration parameters.
+     * @param cen                ECEF to NED coordinate transformation matrix.
+     * @param omegaIe            skew symmetric matrix of Earth rotation rate.
+     * @param cei                ECEF to ECI conversion matrix.
+     * @param satellitePosition  column matrix containing satellite position.
+     * @param deltaR             vector containing satellite to user position
+     *                           difference.
+     * @param satelliteVelocity  column matrix containing satellite velocity.
+     * @param userPosition       column matrix containing user position.
+     * @param userVelocity       column matrix containing user velocity.
+     * @param tmp1               column matrix containing temporal values.
+     * @param tmp2               column matrix containing temporal values.
+     * @param tmp3               column matrix containing temporal values.
+     * @param tmp4               column matrix containing temporal values.
+     * @param tmp5               column matrix containing temporal values.
+     * @param tmp6               column matrix containing temporal values.
+     * @param random             random number generator.
+     * @param result             instance where resulting GNSS measurement
+     *                           is stored.
+     * @return true if result has been obtained, failed if satellite is below elevation
+     * mask angle and result is not updated.
+     * @throws WrongSizeException if an error occurs.
+     */
+    private static boolean generate(
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz,
+            final double gnssRangeErrorBias, final GNSSConfig config,
+            final Matrix cen, final Matrix omegaIe, final Matrix cei,
+            final Matrix satellitePosition, final Matrix deltaR,
+            final Matrix satelliteVelocity, final Matrix userPosition,
+            final Matrix userVelocity, final Matrix tmp1, final Matrix tmp2,
+            final Matrix tmp3, final Matrix tmp4, final Matrix tmp5, final Matrix tmp6,
+            final Random random, final GNSSMeasurement result) throws WrongSizeException {
+
+        // Determine ECEF line-of-sight vector using (8.41)
+<span class="fc" id="L775">        final var deltaRx = satelliteX - userX;</span>
+<span class="fc" id="L776">        final var deltaRy = satelliteY - userY;</span>
+<span class="fc" id="L777">        final var deltaRz = satelliteZ - userZ;</span>
+
+<span class="fc" id="L779">        final var approxRange = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
+
+<span class="fc" id="L781">        final var uaseX = deltaRx / approxRange;</span>
+<span class="fc" id="L782">        final var uaseY = deltaRy / approxRange;</span>
+<span class="fc" id="L783">        final var uaseZ = deltaRz / approxRange;</span>
+
+        // Convert line-of-sight vector to NED using (8.39) and determine
+        // elevation using (8.57)
+<span class="fc" id="L787">        final var cen1 = cen.getElementAt(2, 0);</span>
+<span class="fc" id="L788">        final var cen2 = cen.getElementAt(2, 1);</span>
+<span class="fc" id="L789">        final var cen3 = cen.getElementAt(2, 2);</span>
+
+<span class="fc" id="L791">        final var elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
+
+        // Determine if satellite is above the masking angle
+<span class="pc bpc" id="L794" title="1 of 2 branches missed.">        if (elevation &gt;= Math.toRadians(config.getMaskAngleDegrees())) {</span>
+
+            // Calculate frame rotation during signal transit time using (8.36)
+<span class="fc" id="L797">            final var ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;</span>
+<span class="fc" id="L798">            cei.setElementAt(0, 1, ceiValue);</span>
+<span class="fc" id="L799">            cei.setElementAt(1, 0, -ceiValue);</span>
+
+            // Calculate range using (8.35)
+<span class="fc" id="L802">            satellitePosition.setElementAtIndex(0, satelliteX);</span>
+<span class="fc" id="L803">            satellitePosition.setElementAtIndex(1, satelliteY);</span>
+<span class="fc" id="L804">            satellitePosition.setElementAtIndex(2, satelliteZ);</span>
+
+<span class="fc" id="L806">            cei.multiply(satellitePosition, deltaR);</span>
+
+<span class="fc" id="L808">            deltaR.setElementAtIndex(0, deltaR.getElementAtIndex(0) - userX);</span>
+<span class="fc" id="L809">            deltaR.setElementAtIndex(1, deltaR.getElementAtIndex(1) - userY);</span>
+<span class="fc" id="L810">            deltaR.setElementAtIndex(2, deltaR.getElementAtIndex(2) - userZ);</span>
+
+<span class="fc" id="L812">            final var range = Utils.normF(deltaR);</span>
+
+            // Calculate range rate using (8.44)
+
+<span class="fc" id="L816">            satelliteVelocity.setElementAtIndex(0, satelliteVx);</span>
+<span class="fc" id="L817">            satelliteVelocity.setElementAtIndex(1, satelliteVy);</span>
+<span class="fc" id="L818">            satelliteVelocity.setElementAtIndex(2, satelliteVz);</span>
+
+<span class="fc" id="L820">            omegaIe.multiply(satellitePosition, tmp1);</span>
+
+<span class="fc" id="L822">            satelliteVelocity.add(tmp1, tmp2);</span>
+
+<span class="fc" id="L824">            cei.multiply(tmp2, tmp3);</span>
+
+<span class="fc" id="L826">            userPosition.setElementAtIndex(0, userX);</span>
+<span class="fc" id="L827">            userPosition.setElementAtIndex(1, userY);</span>
+<span class="fc" id="L828">            userPosition.setElementAtIndex(2, userZ);</span>
+
+<span class="fc" id="L830">            omegaIe.multiply(userPosition, tmp4);</span>
+
+<span class="fc" id="L832">            userVelocity.setElementAtIndex(0, userVx);</span>
+<span class="fc" id="L833">            userVelocity.setElementAtIndex(1, userVy);</span>
+<span class="fc" id="L834">            userVelocity.setElementAtIndex(2, userVz);</span>
+
+<span class="fc" id="L836">            userVelocity.add(tmp4, tmp5);</span>
+
+<span class="fc" id="L838">            tmp3.subtract(tmp5, tmp6);</span>
+
+<span class="fc" id="L840">            final var rangeRate = uaseX * tmp6.getElementAtIndex(0) + uaseY * tmp6.getElementAtIndex(1)</span>
+<span class="fc" id="L841">                    + uaseZ * tmp6.getElementAtIndex(2);</span>
+
+            // Calculate pseudo-range measurement
+<span class="fc" id="L844">            final var pseudoRange = range + gnssRangeErrorBias + config.getInitialReceiverClockOffset()</span>
+<span class="fc" id="L845">                    + config.getInitialReceiverClockDrift() * time</span>
+<span class="fc" id="L846">                    + config.getCodeTrackingErrorSD() * random.nextGaussian();</span>
+
+            // Calculate pseudo-range rate measurement
+<span class="fc" id="L849">            final var pseudoRate = rangeRate + config.getInitialReceiverClockDrift()</span>
+<span class="fc" id="L850">                    + config.getRangeRateTrackingErrorSD() * random.nextGaussian();</span>
+
+            // Set result values
+<span class="fc" id="L853">            result.setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L854">            result.setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L855">            result.setPositionCoordinates(satelliteX, satelliteY, satelliteZ);</span>
+<span class="fc" id="L856">            result.setVelocityCoordinates(satelliteVx, satelliteVy, satelliteVz);</span>
+
+            // Indicate that result has been updated
+<span class="fc" id="L859">            return true;</span>
+        } else {
+            // Indicate that result is not updated
+<span class="nc" id="L862">            return false;</span>
+        }
+    }
+
+    /**
+     * Converts time instance into seconds.
+     *
+     * @param time instance to be converted.
+     * @return time converted to seconds.
+     */
+    private static double convertTime(final Time time) {
+<span class="fc" id="L873">        return TimeConverter.convert(time.getValue().doubleValue(), time.getUnit(), TimeUnit.SECOND);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

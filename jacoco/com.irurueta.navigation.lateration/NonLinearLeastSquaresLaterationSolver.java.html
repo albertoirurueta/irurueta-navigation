@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NonLinearLeastSquaresLaterationSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">NonLinearLeastSquaresLaterationSolver.java</span></div><h1>NonLinearLeastSquaresLaterationSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Point;
+import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.fitting.FittingException;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
+
+import java.util.Arrays;
+
+/**
+ * Solves a Trilateration problem with an instance of the least squares optimizer.
+ * By solving the lateration problem linearly, this class is able to estimate
+ * the covariance of estimated position.
+ * To achieve better results, it is usually better to provide an initial coarse
+ * solution.
+ * This class is base on the implementation found at:
+ * &lt;a href=&quot;https://github.com/lemmingapex/trilateration&quot;&gt;https://github.com/lemmingapex/trilateration&lt;/a&gt;
+ *
+ * @param &lt;P&gt; a {@link Point} type.
+ */
+public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&lt;?&gt;&gt; extends LaterationSolver&lt;P&gt; {
+
+    /**
+     * Default standard deviation assumed for provided distances when none is
+     * explicitly provided.
+     */
+    public static final double DEFAULT_DISTANCE_STANDARD_DEVIATION = 1.0e-3;
+
+    /**
+     * Levenberg-Marquardt  fitter to find a non-linear solution.
+     */
+<span class="fc" id="L52">    private final LevenbergMarquardtMultiDimensionFitter fitter = new LevenbergMarquardtMultiDimensionFitter();</span>
+
+    /**
+     * Estimated covariance matrix for estimated position.
+     */
+    private Matrix covariance;
+
+    /**
+     * Estimated chi square value.
+     */
+    private double chiSq;
+
+    /**
+     * Initial position to start lateration solving.
+     * If not defined, centroid of provided position points will be used.
+     */
+    private P initialPosition;
+
+    /**
+     * Standard deviations of provided distances.
+     */
+    private double[] distanceStandardDeviations;
+
+    /**
+     * Constructor.
+     */
+    protected NonLinearLeastSquaresLaterationSolver() {
+<span class="fc" id="L79">        super();</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required 2 points.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(final P[] positions, final double[] distances) {
+<span class="fc" id="L91">        super();</span>
+<span class="fc" id="L92">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialPosition initial position to start lateration solving.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(final P initialPosition) {
+<span class="fc" id="L101">        super();</span>
+<span class="fc" id="L102">        this.initialPosition = initialPosition;</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
+     * @param initialPosition initial position to start lateration solving.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final P initialPosition) {
+<span class="fc" id="L117">        this(initialPosition);</span>
+<span class="fc" id="L118">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events raised by this instance.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L127">        super(listener);</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required 2 points.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L141">        super(listener);</span>
+<span class="fc" id="L142">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L143">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialPosition initial position to start lateration solving.
+     * @param listener        listener to be notified of events raised by this instance.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P initialPosition, final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L153">        super(listener);</span>
+<span class="fc" id="L154">        this.initialPosition = initialPosition;</span>
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
+     * @param initialPosition initial position to start lateration solving.
+     * @param listener        listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final P initialPosition,
+            final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L171">        this(initialPosition, listener);</span>
+<span class="fc" id="L172">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
+<span class="fc" id="L187">        super();</span>
+<span class="fc" id="L188">        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param initialPosition            initial position to start lateration solving.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final P initialPosition) {
+<span class="fc" id="L205">        this(initialPosition);</span>
+<span class="fc" id="L206">        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L223">        super(listener);</span>
+<span class="fc" id="L224">        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param initialPosition            initial position to start lateration solving.
+     * @param listener                   listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     */
+    protected NonLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final P initialPosition, final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L242">        this(initialPosition, listener);</span>
+<span class="fc" id="L243">        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L244">    }</span>
+
+    /**
+     * Sets known positions and Euclidean distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (2 points).
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     */
+    @Override
+    public void setPositionsAndDistances(final P[] positions, final double[] distances) throws LockedException {
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L259">            throw new LockedException();</span>
+        }
+<span class="fc" id="L261">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L262">    }</span>
+
+    /**
+     * Sets known positions, Euclidean distances and the respective standard deviations of
+     * measured distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     * @throws LockedException          if instance is busy solving the trilateration problem.
+     */
+    public void setPositionsDistancesAndStandardDeviations(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations)
+            throws LockedException {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L281">            throw new LockedException();</span>
+        }
+<span class="fc" id="L283">        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L284">    }</span>
+
+    /**
+     * Gets standard deviations of provided distances.
+     *
+     * @return standard deviations of provided distances.
+     */
+    public double[] getDistanceStandardDeviations() {
+<span class="fc" id="L292">        return distanceStandardDeviations;</span>
+    }
+
+    /**
+     * Gets estimated covariance matrix for estimated position.
+     *
+     * @return estimated covariance matrix for estimated position.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L301">        return covariance;</span>
+    }
+
+    /**
+     * Gets estimated chi square value.
+     *
+     * @return estimated chi square value.
+     */
+    public double getChiSq() {
+<span class="fc" id="L310">        return chiSq;</span>
+    }
+
+    /**
+     * Gets initial position to start lateration solving.
+     * If not defined, centroid of provided position points will be used to start lateration.
+     *
+     * @return initial position to start lateration.
+     */
+    public P getInitialPosition() {
+<span class="fc" id="L320">        return initialPosition;</span>
+    }
+
+    /**
+     * Sets initial position to start lateration solving.
+     * If not defined, centroid of provided position points will be used to start lateration.
+     *
+     * @param initialPosition initial position to start lateration.
+     * @throws LockedException if instance is busy solving the lateration problem.
+     */
+    public void setInitialPosition(final P initialPosition) throws LockedException {
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L332">            throw new LockedException();</span>
+        }
+<span class="fc" id="L334">        this.initialPosition = initialPosition;</span>
+<span class="fc" id="L335">    }</span>
+
+    /**
+     * Solves the lateration problem.
+     *
+     * @throws LaterationException if lateration fails.
+     * @throws NotReadyException   is solver is not ready.
+     * @throws LockedException     if instance is busy solving the lateration problem.
+     */
+    @Override
+    public void solve() throws LaterationException, NotReadyException, LockedException {
+<span class="fc bfc" id="L346" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L347">            throw new NotReadyException();</span>
+        }
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L350">            throw new LockedException();</span>
+        }
+
+        try {
+<span class="fc" id="L354">            locked = true;</span>
+
+<span class="fc bfc" id="L356" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L357">                listener.onSolveStart(this);</span>
+            }
+
+<span class="fc" id="L360">            setupFitter();</span>
+
+<span class="fc" id="L362">            fitter.fit();</span>
+
+            // estimated position
+<span class="fc" id="L365">            estimatedPositionCoordinates = fitter.getA();</span>
+<span class="fc" id="L366">            covariance = fitter.getCovar();</span>
+<span class="fc" id="L367">            chiSq = fitter.getChisq();</span>
+
+<span class="fc bfc" id="L369" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L370">                listener.onSolveEnd(this);</span>
+            }
+<span class="fc" id="L372">        } catch (final NumericalException e) {</span>
+<span class="fc" id="L373">            throw new LaterationException(e);</span>
+        } finally {
+<span class="fc" id="L375">            locked = false;</span>
+        }
+<span class="fc" id="L377">    }</span>
+
+    /**
+     * Gets lateration solver type.
+     *
+     * @return lateration solver type.
+     */
+    @Override
+    public LaterationSolverType getType() {
+<span class="fc" id="L386">        return LaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER;</span>
+    }
+
+    /**
+     * Internally sets known positions and Euclidean distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (2 points).
+     */
+    @Override
+    protected void internalSetPositionsAndDistances(final P[] positions, final double[] distances) {
+<span class="fc" id="L400">        super.internalSetPositionsAndDistances(positions, distances);</span>
+
+        // initialize distances standard deviations to default values
+<span class="fc" id="L403">        distanceStandardDeviations = new double[distances.length];</span>
+<span class="fc" id="L404">        Arrays.fill(distanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);</span>
+<span class="fc" id="L405">    }</span>
+
+    /**
+     * Internally sets known positions, Euclidean distances and the respective standard deviations of
+     * measured distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     */
+    protected void internalSetPositionsDistancesAndStandardDeviations(
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
+<span class="fc bfc" id="L421" title="All 4 branches covered.">        if (distanceStandardDeviations == null || distances == null) {</span>
+<span class="fc" id="L422">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        if (distances.length != distanceStandardDeviations.length) {</span>
+<span class="fc" id="L425">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L428">        super.internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L429">        this.distanceStandardDeviations = distanceStandardDeviations;</span>
+<span class="fc" id="L430">    }</span>
+
+    /**
+     * Setups fitter to solve lateration problem.
+     *
+     * @throws FittingException if Levenberg-Marquardt fitting fails.
+     */
+    private void setupFitter() throws FittingException {
+<span class="fc" id="L438">        fitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+            @Override
+            public int getNumberOfDimensions() {
+<span class="fc" id="L441">                return NonLinearLeastSquaresLaterationSolver.this.getNumberOfDimensions();</span>
+            }
+
+            @Override
+            public double[] createInitialParametersArray() {
+<span class="fc" id="L446">                final var dims = getNumberOfDimensions();</span>
+<span class="fc" id="L447">                final var initial = new double[dims];</span>
+
+<span class="fc bfc" id="L449" title="All 2 branches covered.">                if (initialPosition == null) {</span>
+                    // use centroid of positions as initial value
+<span class="fc" id="L451">                    final var numSamples = positions.length;</span>
+
+<span class="fc bfc" id="L453" title="All 2 branches covered.">                    for (var i = 0; i &lt; dims; i++) {</span>
+<span class="fc" id="L454">                        initial[i] = 0.0;</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">                        for (final var position : positions) {</span>
+<span class="fc" id="L456">                            initial[i] += position.getInhomogeneousCoordinate(i) / numSamples;</span>
+                        }
+                    }
+<span class="fc" id="L459">                } else {</span>
+                    // use provided initial position
+<span class="fc bfc" id="L461" title="All 2 branches covered.">                    for (var i = 0; i &lt; dims; i++) {</span>
+<span class="fc" id="L462">                        initial[i] = initialPosition.getInhomogeneousCoordinate(i);</span>
+                    }
+                }
+
+<span class="fc" id="L466">                return initial;</span>
+            }
+
+            @Override
+            public double evaluate(final int i, final double[] point, final double[] params,
+                                   final double[] derivatives) {
+                // we want to estimate the position contained as inhomogeneous coordinates in params array.
+                // the function evaluates the distance to provided point respect to current parameter
+                // (estimated position)
+                // sqrDist = (x - px)^2 + (y - py)^2
+                // grad = [2*(x - px), 2*(y - py)]
+<span class="fc" id="L477">                final var dims = getNumberOfDimensions();</span>
+<span class="fc" id="L478">                var result = 0.0;</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">                for (var j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L480">                    final var param = params[j];</span>
+<span class="fc" id="L481">                    final var diff = param - point[j];</span>
+<span class="fc" id="L482">                    result += diff * diff;</span>
+<span class="fc" id="L483">                    derivatives[j] = 2.0 * diff;</span>
+                }
+
+<span class="fc" id="L486">                return result;</span>
+            }
+        });
+
+<span class="fc" id="L490">        final var dims = getNumberOfDimensions();</span>
+        try {
+<span class="fc" id="L492">            final var x = new Matrix(positions.length, dims);</span>
+<span class="fc" id="L493">            final var y = new double[positions.length];</span>
+<span class="fc bfc" id="L494" title="All 2 branches covered.">            for (var i = 0; i &lt; positions.length; i++) {</span>
+<span class="fc bfc" id="L495" title="All 2 branches covered.">                for (var j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L496">                    x.setElementAt(i, j, positions[i].getInhomogeneousCoordinate(j));</span>
+                }
+
+<span class="fc" id="L499">                final var dist = distances[i];</span>
+<span class="fc" id="L500">                y[i] = dist * dist;</span>
+            }
+
+<span class="fc" id="L503">            fitter.setInputData(x, y, distanceStandardDeviations);</span>
+<span class="nc" id="L504">        } catch (final AlgebraException ignore) {</span>
+            // never happens
+<span class="fc" id="L506">        }</span>
+<span class="fc" id="L507">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

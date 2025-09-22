@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InhomogeneousLinearLeastSquaresLateration2DSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">InhomogeneousLinearLeastSquaresLateration2DSolver.java</span></div><h1>InhomogeneousLinearLeastSquaresLateration2DSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.geometry.Circle;
+import com.irurueta.geometry.InhomogeneousPoint2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.LockedException;
+
+/**
+ * Linearly solves the lateration problem using an inhomogeneous solution.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
+        InhomogeneousLinearLeastSquaresLaterationSolver&lt;Point2D&gt; {
+
+    /**
+     * Constructor.
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver() {
+<span class="fc" id="L34">        super();</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (3 points).
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final Point2D[] positions, final double[] distances) {
+<span class="fc" id="L46">        super(positions, distances);</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events raised by this instance.
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final LaterationSolverListener&lt;Point2D&gt; listener) {
+<span class="fc" id="L55">        super(listener);</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     *                                  length is smaller than required (3 points).
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances, final LaterationSolverListener&lt;Point2D&gt; listener) {
+<span class="fc" id="L69">        super(positions, distances, listener);</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param circles circles defining positions and distances.
+     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final Circle[] circles) {
+<span class="fc" id="L79">        super();</span>
+<span class="fc" id="L80">        internalSetCircles(circles);</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param circles  circles defining positions and distances.
+     * @param listener listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
+     */
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles, final LaterationSolverListener&lt;Point2D&gt; listener) {
+<span class="fc" id="L92">        super(listener);</span>
+<span class="fc" id="L93">        internalSetCircles(circles);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Gets circles defined by provided positions and distances.
+     *
+     * @return circles defined by provided positions and distances.
+     */
+    public Circle[] getCircles() {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (positions == null) {</span>
+<span class="fc" id="L103">            return null;</span>
+        }
+
+<span class="fc" id="L106">        final var result = new Circle[positions.length];</span>
+
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        for (var i = 0; i &lt; positions.length; i++) {</span>
+<span class="fc" id="L109">            result[i] = new Circle(positions[i], distances[i]);</span>
+        }
+<span class="fc" id="L111">        return result;</span>
+    }
+
+    /**
+     * Sets circles defining positions and euclidean distances.
+     *
+     * @param circles circles defining positions and distances.
+     * @throws IllegalArgumentException if circles is null or length of array of circles
+     *                                  is less than 2.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     */
+    public void setCircles(final Circle[] circles) throws LockedException {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L124">            throw new LockedException();</span>
+        }
+<span class="fc" id="L126">        internalSetCircles(circles);</span>
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Gets number of dimensions of provided points.
+     *
+     * @return always returns 2 dimensions.
+     */
+    @Override
+    public int getNumberOfDimensions() {
+<span class="fc" id="L136">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+    }
+
+    /**
+     * Minimum required number of positions and distances.
+     * At least 3 positions and distances will be required to linearly solve a 2D problem.
+     *
+     * @return minimum required number of positions and distances.
+     */
+    @Override
+    public int getMinRequiredPositionsAndDistances() {
+<span class="fc" id="L147">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;</span>
+    }
+
+    /**
+     * Gets estimated position.
+     *
+     * @return estimated position.
+     */
+    @Override
+    public Point2D getEstimatedPosition() {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (estimatedPositionCoordinates == null) {</span>
+<span class="fc" id="L158">            return null;</span>
+        }
+
+<span class="fc" id="L161">        final var position = new InhomogeneousPoint2D();</span>
+<span class="fc" id="L162">        getEstimatedPosition(position);</span>
+<span class="fc" id="L163">        return position;</span>
+    }
+
+    /**
+     * Internally sets circles defining positions and Euclidean distances.
+     *
+     * @param circles circles defining positions and distances.
+     * @throws IllegalArgumentException if circles is null or length of array of circles
+     *                                  is less than 3.
+     */
+    private void internalSetCircles(final Circle[] circles) {
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        if (circles == null || circles.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L175">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L178">        final var positions = new Point2D[circles.length];</span>
+<span class="fc" id="L179">        final var distances = new double[circles.length];</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        for (var i = 0; i &lt; circles.length; i++) {</span>
+<span class="fc" id="L181">            final var circle = circles[i];</span>
+<span class="fc" id="L182">            positions[i] = circle.getCenter();</span>
+<span class="fc" id="L183">            distances[i] = circle.getRadius();</span>
+        }
+
+<span class="fc" id="L186">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L187">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

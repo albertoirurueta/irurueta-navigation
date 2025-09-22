@@ -1,0 +1,2071 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSConfig.java</span></div><h1>GNSSConfig.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.units.*;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains GNSS configuration parameters.
+ */
+public class GNSSConfig implements Serializable, Cloneable {
+
+    public static final int MIN_SATELLITES = 4;
+
+    /**
+     * Minimum interval between GNSS epochs expressed in seconds (s).
+     */
+    private double epochInterval;
+
+    /**
+     * X coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     */
+    private double initialEstimatedEcefPositionX;
+
+    /**
+     * Y coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     */
+    private double initialEstimatedEcefPositionY;
+
+    /**
+     * Z coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     */
+    private double initialEstimatedEcefPositionZ;
+
+    /**
+     * Number of satellites in constellation.
+     */
+<span class="fc" id="L59">    private int numberOfSatellites = MIN_SATELLITES;</span>
+
+    /**
+     * Orbital radius of satellites expressed in meters (m).
+     */
+    private double orbitalRadiusOfSatellites;
+
+    /**
+     * Inclination angle of satellites expressed in degrees (deg).
+     */
+    private double satellitesInclinationDegrees;
+
+    /**
+     * Longitude offset of constellation expressed in degrees (deg).
+     */
+    private double constellationLongitudeOffsetDegrees;
+
+    /**
+     * Timing offset of constellation expressed in seconds (s).
+     */
+    private double constellationTimingOffset;
+
+    /**
+     * Mask angle expressed in degrees (deg).
+     */
+    private double maskAngleDegrees;
+
+    /**
+     * Signal In Space (SIS) error Standard Deviation (SD) expressed in meters (m).
+     */
+    private double sisErrorSD;
+
+    /**
+     * Zenith ionosphere error Standard Deviation (SD) expressed in meters (m).
+     */
+    private double zenithIonosphereErrorSD;
+
+    /**
+     * Zenith troposphere error Standard Deviation (SD) expressed in meters (m).
+     */
+    private double zenithTroposphereErrorSD;
+
+    /**
+     * Code tracking error Standard Deviation (SD) expressed in meters per second (m/s).
+     */
+    private double codeTrackingErrorSD;
+
+    /**
+     * Range rate tracking error Standard Deviation (SD) expressed in meters per second (m/s).
+     */
+    private double rangeRateTrackingErrorSD;
+
+    /**
+     * Initial receiver clock offset at time = 0 expressed in meters (m).
+     */
+    private double initialReceiverClockOffset;
+
+    /**
+     * Initial receiver clock drift at time = 0 expressed in meters per second (m/s).
+     */
+    private double initialReceiverClockDrift;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L124">    public GNSSConfig() {</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedEcefPositionX       x coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param initialEstimatedEcefPositionY       y coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param initialEstimatedEcefPositionZ       z coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param numberOfSatellites                  number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final double epochInterval,
+                      final double initialEstimatedEcefPositionX,
+                      final double initialEstimatedEcefPositionY,
+                      final double initialEstimatedEcefPositionZ,
+                      final int numberOfSatellites,
+                      final double orbitalRadiusOfSatellites,
+                      final double satellitesInclinationDegrees,
+                      final double constellationLongitudeOffsetDegrees,
+                      final double constellationTimingOffset,
+                      final double maskAngleDegrees,
+                      final double sisErrorSD,
+                      final double zenithIonosphereErrorSD,
+                      final double zenithTroposphereErrorSD,
+                      final double codeTrackingErrorSD,
+                      final double rangeRateTrackingErrorSD,
+                      final double initialReceiverClockOffset,
+<span class="fc" id="L198">                      final double initialReceiverClockDrift) {</span>
+<span class="fc" id="L199">        setValues(epochInterval, initialEstimatedEcefPositionX,</span>
+                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
+                numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
+                constellationTimingOffset, maskAngleDegrees, sisErrorSD,
+                zenithIonosphereErrorSD, zenithTroposphereErrorSD,
+                codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Constructor
+     *
+     * @param epochInterval                 minimum interval between GNSS epochs.
+     * @param initialEstimatedEcefPositionX x coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param initialEstimatedEcefPositionY y coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param numberOfSatellites            number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites     orbital radius of satellites.
+     * @param satellitesInclination         inclination angle of satellites.
+     * @param constellationLongitudeOffset  longitude offset of constellation.
+     * @param constellationTimingOffset     timing offset of constellation.
+     * @param maskAngle                     mask angle.
+     * @param sisErrorSD                    Signal In Space (SIS) error Standard
+     *                                      Deviation (SD).
+     * @param zenithIonosphereErrorSD       zenith ionosphere error Standard
+     *                                      Deviation (SD).
+     * @param zenithTroposphereErrorSD      zenith troposphere error Standard
+     *                                      Deviation (SD).
+     * @param codeTrackingErrorSD           code tracking error Standard Deviation
+     *                                      (SD).
+     * @param rangeRateTrackingErrorSD      range rate tracking error Standard
+     *                                      Deviation (SD).
+     * @param initialReceiverClockOffset    initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift     initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final Time epochInterval,
+                      final Distance initialEstimatedEcefPositionX,
+                      final Distance initialEstimatedEcefPositionY,
+                      final Distance initialEstimatedEcefPositionZ,
+                      final int numberOfSatellites,
+                      final Distance orbitalRadiusOfSatellites,
+                      final Angle satellitesInclination,
+                      final Angle constellationLongitudeOffset,
+                      final Time constellationTimingOffset,
+                      final Angle maskAngle,
+                      final Distance sisErrorSD,
+                      final Distance zenithIonosphereErrorSD,
+                      final Distance zenithTroposphereErrorSD,
+                      final Speed codeTrackingErrorSD,
+                      final Speed rangeRateTrackingErrorSD,
+                      final Distance initialReceiverClockOffset,
+<span class="fc" id="L263">                      final Speed initialReceiverClockDrift) {</span>
+<span class="fc" id="L264">        setValues(epochInterval, initialEstimatedEcefPositionX,</span>
+                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
+                numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
+                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
+                codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L271">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedEcefPosition        initial estimated position
+     *                                            resolved along ECEF axes.
+     * @param numberOfSatellites                  number of satellites in
+     *                                            constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final double epochInterval,
+                      final ECEFPosition initialEstimatedEcefPosition,
+                      final int numberOfSatellites,
+                      final double orbitalRadiusOfSatellites,
+                      final double satellitesInclinationDegrees,
+                      final double constellationLongitudeOffsetDegrees,
+                      final double constellationTimingOffset,
+                      final double maskAngleDegrees,
+                      final double sisErrorSD,
+                      final double zenithIonosphereErrorSD,
+                      final double zenithTroposphereErrorSD,
+                      final double codeTrackingErrorSD,
+                      final double rangeRateTrackingErrorSD,
+                      final double initialReceiverClockOffset,
+<span class="fc" id="L336">                      final double initialReceiverClockDrift) {</span>
+<span class="fc" id="L337">        setValues(epochInterval, initialEstimatedEcefPosition, numberOfSatellites,</span>
+                orbitalRadiusOfSatellites, satellitesInclinationDegrees,
+                constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+<span class="fc" id="L344">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval                minimum interval between GNSS epochs.
+     * @param initialEstimatedEcefPosition initial estimated position
+     *                                     resolved along ECEF axes.
+     * @param numberOfSatellites           number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites    orbital radius of satellites.
+     * @param satellitesInclination        inclination angle of satellites.
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     * @param constellationTimingOffset    timing offset of constellation.
+     * @param maskAngle                    mask angle.
+     * @param sisErrorSD                   Signal In Space (SIS) error Standard
+     *                                     Deviation (SD).
+     * @param zenithIonosphereErrorSD      zenith ionosphere error Standard
+     *                                     Deviation (SD).
+     * @param zenithTroposphereErrorSD     zenith troposphere error Standard
+     *                                     Deviation (SD).
+     * @param codeTrackingErrorSD          code tracking error Standard Deviation
+     *                                     (SD).
+     * @param rangeRateTrackingErrorSD     range rate tracking error Standard
+     *                                     Deviation (SD).
+     * @param initialReceiverClockOffset   initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift    initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final Time epochInterval,
+                      final ECEFPosition initialEstimatedEcefPosition,
+                      final int numberOfSatellites,
+                      final Distance orbitalRadiusOfSatellites,
+                      final Angle satellitesInclination,
+                      final Angle constellationLongitudeOffset,
+                      final Time constellationTimingOffset,
+                      final Angle maskAngle,
+                      final Distance sisErrorSD,
+                      final Distance zenithIonosphereErrorSD,
+                      final Distance zenithTroposphereErrorSD,
+                      final Speed codeTrackingErrorSD,
+                      final Speed rangeRateTrackingErrorSD,
+                      final Distance initialReceiverClockOffset,
+<span class="fc" id="L394">                      final Speed initialReceiverClockDrift) {</span>
+<span class="fc" id="L395">        setValues(epochInterval, initialEstimatedEcefPosition, numberOfSatellites,</span>
+                orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
+                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
+                codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L401">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedPosition            initial estimated position
+     *                                            resolved along ECEF axes and expressed
+     *                                            in meters (m).
+     * @param numberOfSatellites                  number of satellites in
+     *                                            constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final double epochInterval,
+                      final Point3D initialEstimatedPosition,
+                      final int numberOfSatellites,
+                      final double orbitalRadiusOfSatellites,
+                      final double satellitesInclinationDegrees,
+                      final double constellationLongitudeOffsetDegrees,
+                      final double constellationTimingOffset,
+                      final double maskAngleDegrees,
+                      final double sisErrorSD,
+                      final double zenithIonosphereErrorSD,
+                      final double zenithTroposphereErrorSD,
+                      final double codeTrackingErrorSD,
+                      final double rangeRateTrackingErrorSD,
+                      final double initialReceiverClockOffset,
+<span class="fc" id="L467">                      final double initialReceiverClockDrift) {</span>
+<span class="fc" id="L468">        setValues(epochInterval, initialEstimatedPosition, numberOfSatellites,</span>
+                orbitalRadiusOfSatellites, satellitesInclinationDegrees,
+                constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+<span class="fc" id="L475">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                minimum interval between GNSS epochs.
+     * @param initialEstimatedPosition     initial estimated position
+     *                                     resolved along ECEF axes and expressed
+     *                                     in meters (m).
+     * @param numberOfSatellites           number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites    orbital radius of satellites.
+     * @param satellitesInclination        inclination angle of satellites.
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     * @param constellationTimingOffset    timing offset of constellation.
+     * @param maskAngle                    mask angle.
+     * @param sisErrorSD                   Signal In Space (SIS) error Standard
+     *                                     Deviation (SD).
+     * @param zenithIonosphereErrorSD      zenith ionosphere error Standard
+     *                                     Deviation (SD).
+     * @param zenithTroposphereErrorSD     zenith troposphere error Standard
+     *                                     Deviation (SD).
+     * @param codeTrackingErrorSD          code tracking error Standard Deviation
+     *                                     (SD).
+     * @param rangeRateTrackingErrorSD     range rate tracking error Standard
+     *                                     Deviation (SD).
+     * @param initialReceiverClockOffset   initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift    initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public GNSSConfig(final Time epochInterval,
+                      final Point3D initialEstimatedPosition,
+                      final int numberOfSatellites,
+                      final Distance orbitalRadiusOfSatellites,
+                      final Angle satellitesInclination,
+                      final Angle constellationLongitudeOffset,
+                      final Time constellationTimingOffset,
+                      final Angle maskAngle,
+                      final Distance sisErrorSD,
+                      final Distance zenithIonosphereErrorSD,
+                      final Distance zenithTroposphereErrorSD,
+                      final Speed codeTrackingErrorSD,
+                      final Speed rangeRateTrackingErrorSD,
+                      final Distance initialReceiverClockOffset,
+<span class="fc" id="L526">                      final Speed initialReceiverClockDrift) {</span>
+<span class="fc" id="L527">        setValues(epochInterval, initialEstimatedPosition, numberOfSatellites,</span>
+                orbitalRadiusOfSatellites, satellitesInclination,
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle,
+                sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD,
+                codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L533">    }</span>
+
+    /**
+     * Copy constructor.
+     *
+     * @param input input instance to copy data from.
+     */
+<span class="fc" id="L540">    public GNSSConfig(final GNSSConfig input) {</span>
+<span class="fc" id="L541">        copyFrom(input);</span>
+<span class="fc" id="L542">    }</span>
+
+    /**
+     * Gets minimum interval between GNSS epochs expressed in seconds (s).
+     *
+     * @return minimum interval between GNSS epochs.
+     */
+    public double getEpochInterval() {
+<span class="fc" id="L550">        return epochInterval;</span>
+    }
+
+    /**
+     * Sets minimum interval between GNSS epochs expressed in seconds (s).
+     *
+     * @param epochInterval minimum interval between GNSS epochs.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setEpochInterval(final double epochInterval) {
+<span class="fc bfc" id="L560" title="All 2 branches covered.">        if (epochInterval &lt; 0.0) {</span>
+<span class="fc" id="L561">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L563">        this.epochInterval = epochInterval;</span>
+<span class="fc" id="L564">    }</span>
+
+    /**
+     * Gets minimum interval between GNSS epochs.
+     *
+     * @param result instance where minimum interval between GNSS epochs
+     *               will be stored.
+     */
+    public void getEpochIntervalTime(final Time result) {
+<span class="fc" id="L573">        result.setValue(epochInterval);</span>
+<span class="fc" id="L574">        result.setUnit(TimeUnit.SECOND);</span>
+<span class="fc" id="L575">    }</span>
+
+    /**
+     * Gets minimum interval between GNSS epochs.
+     *
+     * @return minimum interval between GNSS epochs.
+     */
+    public Time getEpochIntervalTime() {
+<span class="fc" id="L583">        return new Time(epochInterval, TimeUnit.SECOND);</span>
+    }
+
+    /**
+     * Sets minimum interval between GNSS epochs.
+     *
+     * @param epochInterval minimum interval between GNSS epochs.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setEpochIntervalTime(final Time epochInterval) {
+<span class="fc" id="L593">        setEpochInterval(TimeConverter.convert(</span>
+<span class="fc" id="L594">                epochInterval.getValue().doubleValue(), epochInterval.getUnit(), TimeUnit.SECOND));</span>
+<span class="fc" id="L595">    }</span>
+
+    /**
+     * Gets x coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return x coordinate of initial estimated position.
+     */
+    public double getInitialEstimatedEcefPositionX() {
+<span class="fc" id="L604">        return initialEstimatedEcefPositionX;</span>
+    }
+
+    /**
+     * Sets x coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param initialEstimatedEcefPositionX x coordinate of initial estimated position.
+     */
+    public void setInitialEstimatedEcefPositionX(final double initialEstimatedEcefPositionX) {
+<span class="fc" id="L614">        this.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;</span>
+<span class="fc" id="L615">    }</span>
+
+    /**
+     * Gets x coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param result instance where x coordinate of initial estimated position will
+     *               be stored.
+     */
+    public void getInitialEstimatedEcefPositionXDistance(final Distance result) {
+<span class="fc" id="L624">        result.setValue(initialEstimatedEcefPositionX);</span>
+<span class="fc" id="L625">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L626">    }</span>
+
+    /**
+     * Gets x coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @return x coordinate of initial estimated position.
+     */
+    public Distance getInitialEstimatedEcefPositionXDistance() {
+<span class="fc" id="L634">        return new Distance(initialEstimatedEcefPositionX, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets x coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param initialEstimatedEcefPositionX x coordinate of initial estimated
+     *                                      position.
+     */
+    public void setInitialEstimatedEcefPositionXDistance(final Distance initialEstimatedEcefPositionX) {
+<span class="fc" id="L644">        this.initialEstimatedEcefPositionX = DistanceConverter.convert(</span>
+<span class="fc" id="L645">                initialEstimatedEcefPositionX.getValue().doubleValue(), initialEstimatedEcefPositionX.getUnit(),</span>
+                DistanceUnit.METER);
+<span class="fc" id="L647">    }</span>
+
+    /**
+     * Gets y coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return x coordinate of initial estimated position.
+     */
+    public double getInitialEstimatedEcefPositionY() {
+<span class="fc" id="L656">        return initialEstimatedEcefPositionY;</span>
+    }
+
+    /**
+     * Sets y coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param initialEstimatedEcefPositionY y coordinate of initial estimated
+     *                                      position.
+     */
+    public void setInitialEstimatedEcefPositionY(final double initialEstimatedEcefPositionY) {
+<span class="fc" id="L667">        this.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;</span>
+<span class="fc" id="L668">    }</span>
+
+    /**
+     * Gets y coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param result instance where y coordinate of initial estimated position will
+     *               be stored.
+     */
+    public void getInitialEstimatedEcefPositionYDistance(final Distance result) {
+<span class="fc" id="L677">        result.setValue(initialEstimatedEcefPositionY);</span>
+<span class="fc" id="L678">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L679">    }</span>
+
+    /**
+     * Gets y coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @return y coordinate of initial estimated position.
+     */
+    public Distance getInitialEstimatedEcefPositionYDistance() {
+<span class="fc" id="L687">        return new Distance(initialEstimatedEcefPositionY, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets y coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param initialEstimatedEcefPositionY y coordinate of initial estimated
+     *                                      position.
+     */
+    public void setInitialEstimatedEcefPositionYDistance(final Distance initialEstimatedEcefPositionY) {
+<span class="fc" id="L697">        this.initialEstimatedEcefPositionY = DistanceConverter.convert(</span>
+<span class="fc" id="L698">                initialEstimatedEcefPositionY.getValue().doubleValue(), initialEstimatedEcefPositionY.getUnit(),</span>
+                DistanceUnit.METER);
+<span class="fc" id="L700">    }</span>
+
+    /**
+     * Gets z coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return z coordinate of initial estimated position.
+     */
+    public double getInitialEstimatedEcefPositionZ() {
+<span class="fc" id="L709">        return initialEstimatedEcefPositionZ;</span>
+    }
+
+    /**
+     * Sets z coordinate of initial estimated position resolved along ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
+     *                                      position.
+     */
+    public void setInitialEstimatedEcefPositionZ(final double initialEstimatedEcefPositionZ) {
+<span class="fc" id="L720">        this.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;</span>
+<span class="fc" id="L721">    }</span>
+
+    /**
+     * Gets z coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param result instance where z coordinate of initial estimated position will
+     *               be stored.
+     */
+    public void getInitialEstimatedEcefPositionZDistance(final Distance result) {
+<span class="fc" id="L730">        result.setValue(initialEstimatedEcefPositionZ);</span>
+<span class="fc" id="L731">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L732">    }</span>
+
+    /**
+     * Gets z coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @return z coordinate of initial estimated position.
+     */
+    public Distance getInitialEstimatedEcefPositionZDistance() {
+<span class="fc" id="L740">        return new Distance(initialEstimatedEcefPositionZ, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets z coordinate of initial estimated position resolved along ECEF axes.
+     *
+     * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
+     *                                      position.
+     */
+    public void setInitialEstimatedEcefPositionZDistance(final Distance initialEstimatedEcefPositionZ) {
+<span class="fc" id="L750">        this.initialEstimatedEcefPositionZ = DistanceConverter.convert(</span>
+<span class="fc" id="L751">                initialEstimatedEcefPositionZ.getValue().doubleValue(), initialEstimatedEcefPositionZ.getUnit(),</span>
+                DistanceUnit.METER);
+<span class="fc" id="L753">    }</span>
+
+    /**
+     * Gets initial estimated position resolved along ECEF axes.
+     *
+     * @param result instance where initial estimated position will be stored.
+     */
+    public void getInitialEstimatedEcefPosition(final ECEFPosition result) {
+<span class="fc" id="L761">        result.setCoordinates(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,</span>
+                initialEstimatedEcefPositionZ);
+<span class="fc" id="L763">    }</span>
+
+    /**
+     * Gets initial estimated position resolved along ECEF axes.
+     *
+     * @return initial estimated position.
+     */
+    public ECEFPosition getInitialEstimatedEcefPosition() {
+<span class="fc" id="L771">        return new ECEFPosition(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,</span>
+                initialEstimatedEcefPositionZ);
+    }
+
+    /**
+     * Sets initial estimated position resolved along ECEF axes.
+     *
+     * @param initialEstimatedEcefPosition initial estimated position resolved
+     *                                     along ECEF axes.
+     */
+    public void setInitialEstimatedEcefPosition(final ECEFPosition initialEstimatedEcefPosition) {
+<span class="fc" id="L782">        initialEstimatedEcefPositionX = initialEstimatedEcefPosition.getX();</span>
+<span class="fc" id="L783">        initialEstimatedEcefPositionY = initialEstimatedEcefPosition.getY();</span>
+<span class="fc" id="L784">        initialEstimatedEcefPositionZ = initialEstimatedEcefPosition.getZ();</span>
+<span class="fc" id="L785">    }</span>
+
+    /**
+     * Gets initial estimated position resolved along ECEF axes and expressed in
+     * meters (m).
+     *
+     * @param result instance where initial estimated position will be stored.
+     */
+    public void getInitialEstimatedPosition(final Point3D result) {
+<span class="fc" id="L794">        result.setInhomogeneousCoordinates(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,</span>
+                initialEstimatedEcefPositionZ);
+<span class="fc" id="L796">    }</span>
+
+    /**
+     * Gets initial estimated position resolved along ECEF axes and expressed in
+     * meters (m).
+     *
+     * @return initial estimated position.
+     */
+    public Point3D getInitialEstimatedPosition() {
+<span class="fc" id="L805">        return new InhomogeneousPoint3D(initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,</span>
+                initialEstimatedEcefPositionZ);
+    }
+
+    /**
+     * Sets initial estimated position resolved along ECEF axes and expressed in
+     * meters (m).
+     *
+     * @param initialEstimatedPosition initial estimated position.
+     */
+    public void setInitialEstimatedPosition(final Point3D initialEstimatedPosition) {
+<span class="fc" id="L816">        initialEstimatedEcefPositionX = initialEstimatedPosition.getInhomX();</span>
+<span class="fc" id="L817">        initialEstimatedEcefPositionY = initialEstimatedPosition.getInhomY();</span>
+<span class="fc" id="L818">        initialEstimatedEcefPositionZ = initialEstimatedPosition.getInhomZ();</span>
+<span class="fc" id="L819">    }</span>
+
+    /**
+     * Gets number of satellites in constellation.
+     *
+     * @return number of satellites in constellation.
+     */
+    public int getNumberOfSatellites() {
+<span class="fc" id="L827">        return numberOfSatellites;</span>
+    }
+
+    /**
+     * Sets number of satellites in constellation.
+     *
+     * @param numberOfSatellites number of satellites in constellation.
+     * @throws IllegalArgumentException if number of satellites is less than 4, which
+     *                                  prevents proper position estimation.
+     */
+    public void setNumberOfSatellites(final int numberOfSatellites) {
+<span class="fc bfc" id="L838" title="All 2 branches covered.">        if (numberOfSatellites &lt; MIN_SATELLITES) {</span>
+<span class="fc" id="L839">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L841">        this.numberOfSatellites = numberOfSatellites;</span>
+<span class="fc" id="L842">    }</span>
+
+    /**
+     * Gets orbital radius of satellites expressed in meters (m).
+     *
+     * @return orbital radius of satellites.
+     */
+    public double getOrbitalRadiusOfSatellites() {
+<span class="fc" id="L850">        return orbitalRadiusOfSatellites;</span>
+    }
+
+    /**
+     * Sets orbital radius of satellites expressed in meters (m).
+     *
+     * @param orbitalRadiusOfSatellites orbital radius of satellites.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setOrbitalRadiusOfSatellites(final double orbitalRadiusOfSatellites) {
+<span class="fc bfc" id="L860" title="All 2 branches covered.">        if (orbitalRadiusOfSatellites &lt; 0.0) {</span>
+<span class="fc" id="L861">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L863">        this.orbitalRadiusOfSatellites = orbitalRadiusOfSatellites;</span>
+<span class="fc" id="L864">    }</span>
+
+    /**
+     * Gets orbital radius of satellites.
+     *
+     * @param result instance where orbital radius of satellites will be stored.
+     */
+    public void getOrbitalRadiusOfSatellitesDistance(final Distance result) {
+<span class="fc" id="L872">        result.setValue(orbitalRadiusOfSatellites);</span>
+<span class="fc" id="L873">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L874">    }</span>
+
+    /**
+     * Gets orbital radius of satellites.
+     *
+     * @return orbital radius of satellites.
+     */
+    public Distance getOrbitalRadiusOfSatellitesDistance() {
+<span class="fc" id="L882">        return new Distance(orbitalRadiusOfSatellites, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets orbital radius of satellites.
+     *
+     * @param orbitalRadiusOfSatellites orbital radius of satellites.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setOrbitalRadiusOfSatellitesDistance(final Distance orbitalRadiusOfSatellites) {
+<span class="fc" id="L892">        setOrbitalRadiusOfSatellites(DistanceConverter.convert(orbitalRadiusOfSatellites.getValue().doubleValue(),</span>
+<span class="fc" id="L893">                orbitalRadiusOfSatellites.getUnit(), DistanceUnit.METER));</span>
+<span class="fc" id="L894">    }</span>
+
+    /**
+     * Gets inclination angle of satellites expressed in degrees (deg).
+     *
+     * @return inclination angle of satellites.
+     */
+    public double getSatellitesInclinationDegrees() {
+<span class="fc" id="L902">        return satellitesInclinationDegrees;</span>
+    }
+
+    /**
+     * Sets inclination angle of satellites expressed in degrees (deg).
+     *
+     * @param satellitesInclinationDegrees inclination angle of satellites.
+     */
+    public void setSatellitesInclinationDegrees(final double satellitesInclinationDegrees) {
+<span class="fc" id="L911">        this.satellitesInclinationDegrees = satellitesInclinationDegrees;</span>
+<span class="fc" id="L912">    }</span>
+
+    /**
+     * Gets inclination angle of satellites.
+     *
+     * @param result instance where inclination angle of satellites will be
+     *               stored.
+     */
+    public void getSatellitesInclinationAngle(final Angle result) {
+<span class="fc" id="L921">        result.setValue(satellitesInclinationDegrees);</span>
+<span class="fc" id="L922">        result.setUnit(AngleUnit.DEGREES);</span>
+<span class="fc" id="L923">    }</span>
+
+    /**
+     * Gets inclination angle of satellites.
+     *
+     * @return inclination angle of satellites.
+     */
+    public Angle getSatellitesInclinationAngle() {
+<span class="fc" id="L931">        return new Angle(satellitesInclinationDegrees, AngleUnit.DEGREES);</span>
+    }
+
+    /**
+     * Sets inclination angle of satellites.
+     *
+     * @param satellitesInclination inclination angle of satellites.
+     */
+    public void setSatellitesInclinationAngle(final Angle satellitesInclination) {
+<span class="fc" id="L940">        satellitesInclinationDegrees = AngleConverter.convert(satellitesInclination.getValue().doubleValue(),</span>
+<span class="fc" id="L941">                satellitesInclination.getUnit(), AngleUnit.DEGREES);</span>
+<span class="fc" id="L942">    }</span>
+
+    /**
+     * Gets longitude offset of constellation expressed in degrees (deg).
+     *
+     * @return longitude offset of constellation.
+     */
+    public double getConstellationLongitudeOffsetDegrees() {
+<span class="fc" id="L950">        return constellationLongitudeOffsetDegrees;</span>
+    }
+
+    /**
+     * Sets longitude offset of constellation expressed in degrees (deg).
+     *
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation.
+     */
+    public void setConstellationLongitudeOffsetDegrees(final double constellationLongitudeOffsetDegrees) {
+<span class="fc" id="L959">        this.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;</span>
+<span class="fc" id="L960">    }</span>
+
+    /**
+     * Gets longitude offset of constellation.
+     *
+     * @param result instance where longitude offset of constellation will be stored.
+     */
+    public void getConstellationLongitudeOffsetAngle(final Angle result) {
+<span class="fc" id="L968">        result.setValue(constellationLongitudeOffsetDegrees);</span>
+<span class="fc" id="L969">        result.setUnit(AngleUnit.DEGREES);</span>
+<span class="fc" id="L970">    }</span>
+
+    /**
+     * Gets longitude offset of constellation.
+     *
+     * @return longitude offset of constellation.
+     */
+    public Angle getConstellationLongitudeOffsetAngle() {
+<span class="fc" id="L978">        return new Angle(constellationLongitudeOffsetDegrees, AngleUnit.DEGREES);</span>
+    }
+
+    /**
+     * Sets longitude offset of constellation.
+     *
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     */
+    public void setConstellationLongitudeOffsetAngle(final Angle constellationLongitudeOffset) {
+<span class="fc" id="L987">        constellationLongitudeOffsetDegrees = AngleConverter.convert(</span>
+<span class="fc" id="L988">                constellationLongitudeOffset.getValue().doubleValue(),</span>
+<span class="fc" id="L989">                constellationLongitudeOffset.getUnit(), AngleUnit.DEGREES);</span>
+<span class="fc" id="L990">    }</span>
+
+    /**
+     * Gets timing offset of constellation expressed in seconds (s).
+     *
+     * @return timing offset of constellation.
+     */
+    public double getConstellationTimingOffset() {
+<span class="fc" id="L998">        return constellationTimingOffset;</span>
+    }
+
+    /**
+     * Sets timing offset of constellation expressed in seconds (s).
+     *
+     * @param constellationTimingOffset timing offset of constellation.
+     */
+    public void setConstellationTimingOffset(final double constellationTimingOffset) {
+<span class="fc" id="L1007">        this.constellationTimingOffset = constellationTimingOffset;</span>
+<span class="fc" id="L1008">    }</span>
+
+    /**
+     * Gets timing offset of constellation.
+     *
+     * @param result instance where timing offset of constellation will be stored.
+     */
+    public void getConstellationTimingOffsetTime(final Time result) {
+<span class="fc" id="L1016">        result.setValue(constellationTimingOffset);</span>
+<span class="fc" id="L1017">        result.setUnit(TimeUnit.SECOND);</span>
+<span class="fc" id="L1018">    }</span>
+
+    /**
+     * Gets timing offset of constellation.
+     *
+     * @return timing offset of constellation.
+     */
+    public Time getConstellationTimingOffsetTime() {
+<span class="fc" id="L1026">        return new Time(constellationTimingOffset, TimeUnit.SECOND);</span>
+    }
+
+    /**
+     * Sets timing offset of constellation.
+     *
+     * @param constellationTimingOffset timing offset of constellation.
+     */
+    public void setConstellationTimingOffsetTime(final Time constellationTimingOffset) {
+<span class="fc" id="L1035">        this.constellationTimingOffset = TimeConverter.convert(constellationTimingOffset.getValue().doubleValue(),</span>
+<span class="fc" id="L1036">                constellationTimingOffset.getUnit(), TimeUnit.SECOND);</span>
+<span class="fc" id="L1037">    }</span>
+
+    /**
+     * Gets mask angle expressed in degrees (deg).
+     *
+     * @return mask angle.
+     */
+    public double getMaskAngleDegrees() {
+<span class="fc" id="L1045">        return maskAngleDegrees;</span>
+    }
+
+    /**
+     * Sets mask angle expressed in degrees (deg).
+     *
+     * @param maskAngleDegrees mask angle.
+     */
+    public void setMaskAngleDegrees(final double maskAngleDegrees) {
+<span class="fc" id="L1054">        this.maskAngleDegrees = maskAngleDegrees;</span>
+<span class="fc" id="L1055">    }</span>
+
+    /**
+     * Gets mask angle.
+     *
+     * @param result instance where mask angle will be stored.
+     */
+    public void getMaskAngle(final Angle result) {
+<span class="fc" id="L1063">        result.setValue(maskAngleDegrees);</span>
+<span class="fc" id="L1064">        result.setUnit(AngleUnit.DEGREES);</span>
+<span class="fc" id="L1065">    }</span>
+
+    /**
+     * Gets mask angle.
+     *
+     * @return mask angle.
+     */
+    public Angle getMaskAngle() {
+<span class="fc" id="L1073">        return new Angle(maskAngleDegrees, AngleUnit.DEGREES);</span>
+    }
+
+    /**
+     * Sets mask angle.
+     *
+     * @param maskAngle mask angle.
+     */
+    public void setMaskAngle(final Angle maskAngle) {
+<span class="fc" id="L1082">        maskAngleDegrees = AngleConverter.convert(maskAngle.getValue().doubleValue(),</span>
+<span class="fc" id="L1083">                maskAngle.getUnit(), AngleUnit.DEGREES);</span>
+<span class="fc" id="L1084">    }</span>
+
+    /**
+     * Gets Signal In Space (SIS) error Standard Deviation (SD) expressed in
+     * meters (m).
+     *
+     * @return Signal In Space error Standard Deviation.
+     */
+    public double getSISErrorSD() {
+<span class="fc" id="L1093">        return sisErrorSD;</span>
+    }
+
+    /**
+     * Sets Signal In Space (SIS) error Standard Deviation (SD) expressed in
+     * meters (m).
+     *
+     * @param sisErrorSD Signal In Space (SIS) error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setSISErrorSD(final double sisErrorSD) {
+<span class="fc bfc" id="L1104" title="All 2 branches covered.">        if (sisErrorSD &lt; 0.0) {</span>
+<span class="fc" id="L1105">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1107">        this.sisErrorSD = sisErrorSD;</span>
+<span class="fc" id="L1108">    }</span>
+
+    /**
+     * Gets Signal In Space (SIS) error Standard Deviation (SD).
+     *
+     * @param result instance where Signal In Space (SIS) error
+     *               Standard Deviation (SD) will be stored.
+     */
+    public void getSISErrorSDDistance(final Distance result) {
+<span class="fc" id="L1117">        result.setValue(sisErrorSD);</span>
+<span class="fc" id="L1118">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L1119">    }</span>
+
+    /**
+     * Gets Signal In Space (SIS) error Standard Deviation (SD).
+     *
+     * @return Signal In Space (SIS) error Standard Deviation (SD).
+     */
+    public Distance getSISErrorSDDistance() {
+<span class="fc" id="L1127">        return new Distance(sisErrorSD, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets Signal In Space (SIS) error Standard Deviation (SD).
+     *
+     * @param sisErrorSD Signal In Space (SIS) error Standard Deviation (SD).
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setSISErrorSDDistance(final Distance sisErrorSD) {
+<span class="fc" id="L1137">        setSISErrorSD(DistanceConverter.convert(sisErrorSD.getValue().doubleValue(),</span>
+<span class="fc" id="L1138">                sisErrorSD.getUnit(), DistanceUnit.METER));</span>
+<span class="fc" id="L1139">    }</span>
+
+    /**
+     * Gets Zenith ionosphere error Standard Deviation (SD) expressed in meters (m).
+     *
+     * @return Zenith ionosphere error Standard Deviation.
+     */
+    public double getZenithIonosphereErrorSD() {
+<span class="fc" id="L1147">        return zenithIonosphereErrorSD;</span>
+    }
+
+    /**
+     * Sets Zenith ionosphere error Standard Deviation (SD) expressed in meters (m).
+     *
+     * @param zenithIonosphereErrorSD Zenith ionosphere error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setZenithIonosphereErrorSD(final double zenithIonosphereErrorSD) {
+<span class="fc bfc" id="L1157" title="All 2 branches covered.">        if (zenithIonosphereErrorSD &lt; 0.0) {</span>
+<span class="fc" id="L1158">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1160">        this.zenithIonosphereErrorSD = zenithIonosphereErrorSD;</span>
+<span class="fc" id="L1161">    }</span>
+
+    /**
+     * Gets Zenith ionosphere error Standard Deviation (SD).
+     *
+     * @param result instance where Zenith ionosphere error Standard Deviation
+     *               will be stored.
+     */
+    public void getZenithIonosphereErrorSDDistance(final Distance result) {
+<span class="fc" id="L1170">        result.setValue(zenithIonosphereErrorSD);</span>
+<span class="fc" id="L1171">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L1172">    }</span>
+
+    /**
+     * Gets Zenith ionosphere error Standard Deviation (SD).
+     *
+     * @return Zenith ionosphere error Standard Deviation.
+     */
+    public Distance getZenithIonosphereErrorSDDistance() {
+<span class="fc" id="L1180">        return new Distance(zenithIonosphereErrorSD, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets Zenith ionosphere error Standard Deviation (SD).
+     *
+     * @param zenithIonosphereErrorSD Zenith ionosphere error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setZenithIonosphereErrorSDDistance(final Distance zenithIonosphereErrorSD) {
+<span class="fc" id="L1190">        setZenithIonosphereErrorSD(DistanceConverter.convert(zenithIonosphereErrorSD.getValue().doubleValue(),</span>
+<span class="fc" id="L1191">                zenithIonosphereErrorSD.getUnit(), DistanceUnit.METER));</span>
+<span class="fc" id="L1192">    }</span>
+
+    /**
+     * Gets Zenith troposphere error Standard Deviation (SD) expressed in meters (m).
+     *
+     * @return Zenith troposphere error Standard Deviation.
+     */
+    public double getZenithTroposphereErrorSD() {
+<span class="fc" id="L1200">        return zenithTroposphereErrorSD;</span>
+    }
+
+    /**
+     * Sets Zenith troposphere error Standard Deviation (SD) expressed in meters (m).
+     *
+     * @param zenithTroposphereErrorSD Zenith troposphere error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setZenithTroposphereErrorSD(final double zenithTroposphereErrorSD) {
+<span class="fc bfc" id="L1210" title="All 2 branches covered.">        if (zenithTroposphereErrorSD &lt; 0.0) {</span>
+<span class="fc" id="L1211">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1213">        this.zenithTroposphereErrorSD = zenithTroposphereErrorSD;</span>
+<span class="fc" id="L1214">    }</span>
+
+    /**
+     * Gets Zenith troposphere error Standard Deviation (SD).
+     *
+     * @param result instance where Zenith troposphere error Standard Deviation (SD)
+     *               will be stored.
+     */
+    public void getZenithTroposphereErrorSDDistance(final Distance result) {
+<span class="fc" id="L1223">        result.setValue(zenithTroposphereErrorSD);</span>
+<span class="fc" id="L1224">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L1225">    }</span>
+
+    /**
+     * Gets Zenith troposphere error Standard Deviation (SD).
+     *
+     * @return Zenith troposphere error Standard Deviation (SD).
+     */
+    public Distance getZenithTroposphereErrorSDDistance() {
+<span class="fc" id="L1233">        return new Distance(zenithTroposphereErrorSD, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets Zenith troposphere error Standard Deviation (SD).
+     *
+     * @param zenithTroposphereErrorSD Zenith troposphere error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setZenithTroposphereErrorSDDistance(final Distance zenithTroposphereErrorSD) {
+<span class="fc" id="L1243">        setZenithTroposphereErrorSD(DistanceConverter.convert(zenithTroposphereErrorSD.getValue().doubleValue(),</span>
+<span class="fc" id="L1244">                zenithTroposphereErrorSD.getUnit(), DistanceUnit.METER));</span>
+<span class="fc" id="L1245">    }</span>
+
+    /**
+     * Gets code tracking error Standard Deviation (SD) expressed in meters per
+     * second (m/s).
+     *
+     * @return code tracking error Standard Deviation (SD).
+     */
+    public double getCodeTrackingErrorSD() {
+<span class="fc" id="L1254">        return codeTrackingErrorSD;</span>
+    }
+
+    /**
+     * Sets code tracking error Standard Deviation (SD) expressed in meters per
+     * second (m/s).
+     *
+     * @param codeTrackingErrorSD code tracking error Standard Deviation (SD).
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setCodeTrackingErrorSD(final double codeTrackingErrorSD) {
+<span class="fc bfc" id="L1265" title="All 2 branches covered.">        if (codeTrackingErrorSD &lt; 0.0) {</span>
+<span class="fc" id="L1266">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1268">        this.codeTrackingErrorSD = codeTrackingErrorSD;</span>
+<span class="fc" id="L1269">    }</span>
+
+    /**
+     * Gets code tracking error Standard Deviation (SD).
+     *
+     * @param result instance where code tracking error Standard Deviation will
+     *               be stored.
+     */
+    public void getCodeTrackingErrorSDSpeed(final Speed result) {
+<span class="fc" id="L1278">        result.setValue(codeTrackingErrorSD);</span>
+<span class="fc" id="L1279">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L1280">    }</span>
+
+    /**
+     * Gets code tracking error Standard Deviation (SD).
+     *
+     * @return code tracking error Standard Deviation.
+     */
+    public Speed getCodeTrackingErrorSDSpeed() {
+<span class="fc" id="L1288">        return new Speed(codeTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets code tracking error Standard Deviation (SD).
+     *
+     * @param codeTrackingErrorSD code tracking error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setCodeTrackingErrorSDSpeed(final Speed codeTrackingErrorSD) {
+<span class="fc" id="L1298">        setCodeTrackingErrorSD(SpeedConverter.convert(codeTrackingErrorSD.getValue().doubleValue(),</span>
+<span class="fc" id="L1299">                codeTrackingErrorSD.getUnit(), SpeedUnit.METERS_PER_SECOND));</span>
+<span class="fc" id="L1300">    }</span>
+
+    /**
+     * Gets range rate tracking error Standard Deviation (SD) expressed in meters
+     * per second (m/s).
+     *
+     * @return range rate tracking error.
+     */
+    public double getRangeRateTrackingErrorSD() {
+<span class="fc" id="L1309">        return rangeRateTrackingErrorSD;</span>
+    }
+
+    /**
+     * Sets range rate tracking error Standard Deviation (SD) expressed in meters
+     * per second (m/s).
+     *
+     * @param rangeRateTrackingErrorSD range rate tracking error Standard Deviation.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setRangeRateTrackingErrorSD(final double rangeRateTrackingErrorSD) {
+<span class="fc bfc" id="L1320" title="All 2 branches covered.">        if (rangeRateTrackingErrorSD &lt; 0.0) {</span>
+<span class="fc" id="L1321">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1323">        this.rangeRateTrackingErrorSD = rangeRateTrackingErrorSD;</span>
+<span class="fc" id="L1324">    }</span>
+
+    /**
+     * Gets range rate tracking error Standard Deviation (SD).
+     *
+     * @param result instance where range rate tracking error Standard Deviation will
+     *               be stored.
+     */
+    public void getRangeRateTrackingErrorSDSpeed(final Speed result) {
+<span class="fc" id="L1333">        result.setValue(rangeRateTrackingErrorSD);</span>
+<span class="fc" id="L1334">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L1335">    }</span>
+
+    /**
+     * Gets range rate tracking error Standard Deviation (SD).
+     *
+     * @return range rate tracking error.
+     */
+    public Speed getRangeRateTrackingErrorSDSpeed() {
+<span class="fc" id="L1343">        return new Speed(rangeRateTrackingErrorSD, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets range rate tracking error Standard Deviation (SD).
+     *
+     * @param rangeRateTrackingErrorSD range rate tracking error.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setRangeRateTrackingErrorSDSpeed(final Speed rangeRateTrackingErrorSD) {
+<span class="fc" id="L1353">        setRangeRateTrackingErrorSD(SpeedConverter.convert(rangeRateTrackingErrorSD.getValue().doubleValue(),</span>
+<span class="fc" id="L1354">                rangeRateTrackingErrorSD.getUnit(), SpeedUnit.METERS_PER_SECOND));</span>
+<span class="fc" id="L1355">    }</span>
+
+    /**
+     * Gets initial receiver clock offset at time = 0 expressed in meters (m).
+     *
+     * @return initial receiver clock offset.
+     */
+    public double getInitialReceiverClockOffset() {
+<span class="fc" id="L1363">        return initialReceiverClockOffset;</span>
+    }
+
+    /**
+     * Sets initial receiver clock offset at time = 0 expressed in meters (m).
+     *
+     * @param initialReceiverClockOffset initial receiver clock offset.
+     */
+    public void setInitialReceiverClockOffset(final double initialReceiverClockOffset) {
+<span class="fc" id="L1372">        this.initialReceiverClockOffset = initialReceiverClockOffset;</span>
+<span class="fc" id="L1373">    }</span>
+
+    /**
+     * Gets initial receiver clock offset at time = 0.
+     *
+     * @param result instance where initial receiver clock offset will be stored.
+     */
+    public void getInitialReceiverClockOffsetDistance(final Distance result) {
+<span class="fc" id="L1381">        result.setValue(initialReceiverClockOffset);</span>
+<span class="fc" id="L1382">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L1383">    }</span>
+
+    /**
+     * Gets initial receiver clock offset at time = 0.
+     *
+     * @return initial receiver clock offset.
+     */
+    public Distance getInitialReceiverClockOffsetDistance() {
+<span class="fc" id="L1391">        return new Distance(initialReceiverClockOffset, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets initial receiver clock offset at time = 0.
+     *
+     * @param initialReceiverClockOffset initial receiver clock offset.
+     */
+    public void setInitialReceiverClockOffsetDistance(final Distance initialReceiverClockOffset) {
+<span class="fc" id="L1400">        this.initialReceiverClockOffset = DistanceConverter.convert(initialReceiverClockOffset.getValue().doubleValue(),</span>
+<span class="fc" id="L1401">                initialReceiverClockOffset.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L1402">    }</span>
+
+    /**
+     * Gets initial receiver clock drift at time = 0 expressed in meters per
+     * second (m/s).
+     *
+     * @return initial receiver clock drift.
+     */
+    public double getInitialReceiverClockDrift() {
+<span class="fc" id="L1411">        return initialReceiverClockDrift;</span>
+    }
+
+    /**
+     * Sets initial receiver clock drift at time = 0 expressed in meters per
+     * second (m/s).
+     *
+     * @param initialReceiverClockDrift initial receiver clock drift.
+     */
+    public void setInitialReceiverClockDrift(final double initialReceiverClockDrift) {
+<span class="fc" id="L1421">        this.initialReceiverClockDrift = initialReceiverClockDrift;</span>
+<span class="fc" id="L1422">    }</span>
+
+    /**
+     * Gets initial receiver clock drift at time = 0.
+     *
+     * @param result instance where initial receiver clock drift at time = 0 will
+     *               be stored.
+     */
+    public void getInitialReceiverClockDriftSpeed(final Speed result) {
+<span class="fc" id="L1431">        result.setValue(initialReceiverClockDrift);</span>
+<span class="fc" id="L1432">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L1433">    }</span>
+
+    /**
+     * Gets initial receiver clock drift at time = 0.
+     *
+     * @return initial receiver clock drift at time = 0.
+     */
+    public Speed getInitialReceiverClockDriftSpeed() {
+<span class="fc" id="L1441">        return new Speed(initialReceiverClockDrift, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets initial receiver clock drift at time = 0.
+     *
+     * @param initialReceiverClockDrift initial receiver clock drift at time = 0.
+     */
+    public void setInitialReceiverClockDriftSpeed(final Speed initialReceiverClockDrift) {
+<span class="fc" id="L1450">        this.initialReceiverClockDrift = SpeedConverter.convert(initialReceiverClockDrift.getValue().doubleValue(),</span>
+<span class="fc" id="L1451">                initialReceiverClockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L1452">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedEcefPositionX       x coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param initialEstimatedEcefPositionY       y coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param initialEstimatedEcefPositionZ       z coordinate of initial estimated
+     *                                            position resolved along ECEF axes
+     *                                            and expressed in meters (m).
+     * @param numberOfSatellites                  number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final double epochInterval,
+                          final double initialEstimatedEcefPositionX,
+                          final double initialEstimatedEcefPositionY,
+                          final double initialEstimatedEcefPositionZ,
+                          final int numberOfSatellites,
+                          final double orbitalRadiusOfSatellites,
+                          final double satellitesInclinationDegrees,
+                          final double constellationLongitudeOffsetDegrees,
+                          final double constellationTimingOffset,
+                          final double maskAngleDegrees,
+                          final double sisErrorSD,
+                          final double zenithIonosphereErrorSD,
+                          final double zenithTroposphereErrorSD,
+                          final double codeTrackingErrorSD,
+                          final double rangeRateTrackingErrorSD,
+                          final double initialReceiverClockOffset,
+                          final double initialReceiverClockDrift) {
+<span class="fc" id="L1526">        setEpochInterval(epochInterval);</span>
+<span class="fc" id="L1527">        this.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;</span>
+<span class="fc" id="L1528">        this.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;</span>
+<span class="fc" id="L1529">        this.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;</span>
+<span class="fc" id="L1530">        setNumberOfSatellites(numberOfSatellites);</span>
+<span class="fc" id="L1531">        setOrbitalRadiusOfSatellites(orbitalRadiusOfSatellites);</span>
+<span class="fc" id="L1532">        this.satellitesInclinationDegrees = satellitesInclinationDegrees;</span>
+<span class="fc" id="L1533">        this.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;</span>
+<span class="fc" id="L1534">        this.constellationTimingOffset = constellationTimingOffset;</span>
+<span class="fc" id="L1535">        this.maskAngleDegrees = maskAngleDegrees;</span>
+<span class="fc" id="L1536">        setSISErrorSD(sisErrorSD);</span>
+<span class="fc" id="L1537">        setZenithIonosphereErrorSD(zenithIonosphereErrorSD);</span>
+<span class="fc" id="L1538">        setZenithTroposphereErrorSD(zenithTroposphereErrorSD);</span>
+<span class="fc" id="L1539">        setCodeTrackingErrorSD(codeTrackingErrorSD);</span>
+<span class="fc" id="L1540">        setRangeRateTrackingErrorSD(rangeRateTrackingErrorSD);</span>
+<span class="fc" id="L1541">        this.initialReceiverClockOffset = initialReceiverClockOffset;</span>
+<span class="fc" id="L1542">        this.initialReceiverClockDrift = initialReceiverClockDrift;</span>
+<span class="fc" id="L1543">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                 minimum interval between GNSS epochs.
+     * @param initialEstimatedEcefPositionX x coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param initialEstimatedEcefPositionY y coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param initialEstimatedEcefPositionZ z coordinate of initial estimated
+     *                                      position resolved along ECEF axes.
+     * @param numberOfSatellites            number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites     orbital radius of satellites.
+     * @param satellitesInclination         inclination angle of satellites.
+     * @param constellationLongitudeOffset  longitude offset of constellation.
+     * @param constellationTimingOffset     timing offset of constellation.
+     * @param maskAngle                     mask angle.
+     * @param sisErrorSD                    Signal In Space (SIS) error Standard
+     *                                      Deviation (SD).
+     * @param zenithIonosphereErrorSD       zenith ionosphere error Standard
+     *                                      Deviation (SD).
+     * @param zenithTroposphereErrorSD      zenith troposphere error Standard
+     *                                      Deviation (SD).
+     * @param codeTrackingErrorSD           code tracking error Standard Deviation
+     *                                      (SD).
+     * @param rangeRateTrackingErrorSD      range rate tracking error Standard
+     *                                      Deviation (SD).
+     * @param initialReceiverClockOffset    initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift     initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final Time epochInterval,
+                          final Distance initialEstimatedEcefPositionX,
+                          final Distance initialEstimatedEcefPositionY,
+                          final Distance initialEstimatedEcefPositionZ,
+                          final int numberOfSatellites,
+                          final Distance orbitalRadiusOfSatellites,
+                          final Angle satellitesInclination,
+                          final Angle constellationLongitudeOffset,
+                          final Time constellationTimingOffset,
+                          final Angle maskAngle,
+                          final Distance sisErrorSD,
+                          final Distance zenithIonosphereErrorSD,
+                          final Distance zenithTroposphereErrorSD,
+                          final Speed codeTrackingErrorSD,
+                          final Speed rangeRateTrackingErrorSD,
+                          final Distance initialReceiverClockOffset,
+                          final Speed initialReceiverClockDrift) {
+<span class="fc" id="L1600">        setEpochIntervalTime(epochInterval);</span>
+<span class="fc" id="L1601">        setInitialEstimatedEcefPositionXDistance(initialEstimatedEcefPositionX);</span>
+<span class="fc" id="L1602">        setInitialEstimatedEcefPositionYDistance(initialEstimatedEcefPositionY);</span>
+<span class="fc" id="L1603">        setInitialEstimatedEcefPositionZDistance(initialEstimatedEcefPositionZ);</span>
+<span class="fc" id="L1604">        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,</span>
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+<span class="fc" id="L1608">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedEcefPosition        initial estimated position
+     *                                            resolved along ECEF axes.
+     * @param numberOfSatellites                  number of satellites in
+     *                                            constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final double epochInterval,
+                          final ECEFPosition initialEstimatedEcefPosition,
+                          final int numberOfSatellites,
+                          final double orbitalRadiusOfSatellites,
+                          final double satellitesInclinationDegrees,
+                          final double constellationLongitudeOffsetDegrees,
+                          final double constellationTimingOffset,
+                          final double maskAngleDegrees,
+                          final double sisErrorSD,
+                          final double zenithIonosphereErrorSD,
+                          final double zenithTroposphereErrorSD,
+                          final double codeTrackingErrorSD,
+                          final double rangeRateTrackingErrorSD,
+                          final double initialReceiverClockOffset,
+                          final double initialReceiverClockDrift) {
+<span class="fc" id="L1674">        setValues(epochInterval, initialEstimatedEcefPosition.getX(), initialEstimatedEcefPosition.getY(),</span>
+<span class="fc" id="L1675">                initialEstimatedEcefPosition.getZ(), numberOfSatellites, orbitalRadiusOfSatellites,</span>
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L1679">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                minimum interval between GNSS epochs.
+     * @param initialEstimatedEcefPosition initial estimated position
+     *                                     resolved along ECEF axes.
+     * @param numberOfSatellites           number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites    orbital radius of satellites.
+     * @param satellitesInclination        inclination angle of satellites.
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     * @param constellationTimingOffset    timing offset of constellation.
+     * @param maskAngle                    mask angle.
+     * @param sisErrorSD                   Signal In Space (SIS) error Standard
+     *                                     Deviation (SD).
+     * @param zenithIonosphereErrorSD      zenith ionosphere error Standard
+     *                                     Deviation (SD).
+     * @param zenithTroposphereErrorSD     zenith troposphere error Standard
+     *                                     Deviation (SD).
+     * @param codeTrackingErrorSD          code tracking error Standard Deviation
+     *                                     (SD).
+     * @param rangeRateTrackingErrorSD     range rate tracking error Standard
+     *                                     Deviation (SD).
+     * @param initialReceiverClockOffset   initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift    initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final Time epochInterval,
+                          final ECEFPosition initialEstimatedEcefPosition,
+                          final int numberOfSatellites,
+                          final Distance orbitalRadiusOfSatellites,
+                          final Angle satellitesInclination,
+                          final Angle constellationLongitudeOffset,
+                          final Time constellationTimingOffset,
+                          final Angle maskAngle,
+                          final Distance sisErrorSD,
+                          final Distance zenithIonosphereErrorSD,
+                          final Distance zenithTroposphereErrorSD,
+                          final Speed codeTrackingErrorSD,
+                          final Speed rangeRateTrackingErrorSD,
+                          final Distance initialReceiverClockOffset,
+                          final Speed initialReceiverClockDrift) {
+<span class="fc" id="L1730">        setEpochIntervalTime(epochInterval);</span>
+<span class="fc" id="L1731">        setInitialEstimatedEcefPosition(initialEstimatedEcefPosition);</span>
+<span class="fc" id="L1732">        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,</span>
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+<span class="fc" id="L1736">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                       minimum interval between GNSS
+     *                                            epochs expressed in seconds (s).
+     * @param initialEstimatedPosition            initial estimated position
+     *                                            resolved along ECEF axes and expressed
+     *                                            in meters (m).
+     * @param numberOfSatellites                  number of satellites in
+     *                                            constellation.
+     * @param orbitalRadiusOfSatellites           orbital radius of satellites
+     *                                            expressed in meters (m).
+     * @param satellitesInclinationDegrees        inclination angle of satellites
+     *                                            expressed in degrees (deg).
+     * @param constellationLongitudeOffsetDegrees longitude offset of constellation
+     *                                            expressed in degrees (deg).
+     * @param constellationTimingOffset           timing offset of constellation
+     *                                            expressed in seconds (s).
+     * @param maskAngleDegrees                    mask angle expressed in degrees
+     *                                            (deg).
+     * @param sisErrorSD                          Signal In Space (SIS) error
+     *                                            Standard Deviation (SD) expressed
+     *                                            in meters (m).
+     * @param zenithIonosphereErrorSD             zenith ionosphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param zenithTroposphereErrorSD            zenith troposphere error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            (m).
+     * @param codeTrackingErrorSD                 code tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param rangeRateTrackingErrorSD            range rate tracking error Standard
+     *                                            Deviation (SD) expressed in meters
+     *                                            per second (m/s).
+     * @param initialReceiverClockOffset          initial receiver clock offset at
+     *                                            time = 0 expressed in meters (m).
+     * @param initialReceiverClockDrift           initial receiver clock drift at
+     *                                            time = 0 expressed in meters per
+     *                                            second (m/s).
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final double epochInterval,
+                          final Point3D initialEstimatedPosition,
+                          final int numberOfSatellites,
+                          final double orbitalRadiusOfSatellites,
+                          final double satellitesInclinationDegrees,
+                          final double constellationLongitudeOffsetDegrees,
+                          final double constellationTimingOffset,
+                          final double maskAngleDegrees,
+                          final double sisErrorSD,
+                          final double zenithIonosphereErrorSD,
+                          final double zenithTroposphereErrorSD,
+                          final double codeTrackingErrorSD,
+                          final double rangeRateTrackingErrorSD,
+                          final double initialReceiverClockOffset,
+                          final double initialReceiverClockDrift) {
+<span class="fc" id="L1803">        setValues(epochInterval, initialEstimatedPosition.getInhomX(), initialEstimatedPosition.getInhomY(),</span>
+<span class="fc" id="L1804">                initialEstimatedPosition.getInhomZ(), numberOfSatellites, orbitalRadiusOfSatellites,</span>
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset, initialReceiverClockDrift);
+<span class="fc" id="L1808">    }</span>
+
+    /**
+     * Sets values.
+     *
+     * @param epochInterval                minimum interval between GNSS epochs.
+     * @param initialEstimatedPosition     initial estimated position
+     *                                     resolved along ECEF axes and expressed
+     *                                     in meters (m).
+     * @param numberOfSatellites           number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites    orbital radius of satellites.
+     * @param satellitesInclination        inclination angle of satellites.
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     * @param constellationTimingOffset    timing offset of constellation.
+     * @param maskAngle                    mask angle.
+     * @param sisErrorSD                   Signal In Space (SIS) error Standard
+     *                                     Deviation (SD).
+     * @param zenithIonosphereErrorSD      zenith ionosphere error Standard
+     *                                     Deviation (SD).
+     * @param zenithTroposphereErrorSD     zenith troposphere error Standard
+     *                                     Deviation (SD).
+     * @param codeTrackingErrorSD          code tracking error Standard Deviation
+     *                                     (SD).
+     * @param rangeRateTrackingErrorSD     range rate tracking error Standard
+     *                                     Deviation (SD).
+     * @param initialReceiverClockOffset   initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift    initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if provided epoch interval is negative or
+     *                                  if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    public void setValues(final Time epochInterval,
+                          final Point3D initialEstimatedPosition,
+                          final int numberOfSatellites,
+                          final Distance orbitalRadiusOfSatellites,
+                          final Angle satellitesInclination,
+                          final Angle constellationLongitudeOffset,
+                          final Time constellationTimingOffset,
+                          final Angle maskAngle,
+                          final Distance sisErrorSD,
+                          final Distance zenithIonosphereErrorSD,
+                          final Distance zenithTroposphereErrorSD,
+                          final Speed codeTrackingErrorSD,
+                          final Speed rangeRateTrackingErrorSD,
+                          final Distance initialReceiverClockOffset,
+                          final Speed initialReceiverClockDrift) {
+<span class="fc" id="L1860">        setEpochIntervalTime(epochInterval);</span>
+<span class="fc" id="L1861">        setInitialEstimatedPosition(initialEstimatedPosition);</span>
+<span class="fc" id="L1862">        internalSetValues(numberOfSatellites, orbitalRadiusOfSatellites, satellitesInclination,</span>
+                constellationLongitudeOffset, constellationTimingOffset, maskAngle, sisErrorSD, zenithIonosphereErrorSD,
+                zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+<span class="fc" id="L1866">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final GNSSConfig output) {
+<span class="fc" id="L1874">        output.epochInterval = epochInterval;</span>
+<span class="fc" id="L1875">        output.initialEstimatedEcefPositionX = initialEstimatedEcefPositionX;</span>
+<span class="fc" id="L1876">        output.initialEstimatedEcefPositionY = initialEstimatedEcefPositionY;</span>
+<span class="fc" id="L1877">        output.initialEstimatedEcefPositionZ = initialEstimatedEcefPositionZ;</span>
+<span class="fc" id="L1878">        output.numberOfSatellites = numberOfSatellites;</span>
+<span class="fc" id="L1879">        output.orbitalRadiusOfSatellites = orbitalRadiusOfSatellites;</span>
+<span class="fc" id="L1880">        output.satellitesInclinationDegrees = satellitesInclinationDegrees;</span>
+<span class="fc" id="L1881">        output.constellationLongitudeOffsetDegrees = constellationLongitudeOffsetDegrees;</span>
+<span class="fc" id="L1882">        output.constellationTimingOffset = constellationTimingOffset;</span>
+<span class="fc" id="L1883">        output.maskAngleDegrees = maskAngleDegrees;</span>
+<span class="fc" id="L1884">        output.sisErrorSD = sisErrorSD;</span>
+<span class="fc" id="L1885">        output.zenithIonosphereErrorSD = zenithIonosphereErrorSD;</span>
+<span class="fc" id="L1886">        output.zenithTroposphereErrorSD = zenithTroposphereErrorSD;</span>
+<span class="fc" id="L1887">        output.codeTrackingErrorSD = codeTrackingErrorSD;</span>
+<span class="fc" id="L1888">        output.rangeRateTrackingErrorSD = rangeRateTrackingErrorSD;</span>
+<span class="fc" id="L1889">        output.initialReceiverClockOffset = initialReceiverClockOffset;</span>
+<span class="fc" id="L1890">        output.initialReceiverClockDrift = initialReceiverClockDrift;</span>
+<span class="fc" id="L1891">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final GNSSConfig input) {
+<span class="fc" id="L1899">        epochInterval = input.epochInterval;</span>
+<span class="fc" id="L1900">        initialEstimatedEcefPositionX = input.initialEstimatedEcefPositionX;</span>
+<span class="fc" id="L1901">        initialEstimatedEcefPositionY = input.initialEstimatedEcefPositionY;</span>
+<span class="fc" id="L1902">        initialEstimatedEcefPositionZ = input.initialEstimatedEcefPositionZ;</span>
+<span class="fc" id="L1903">        numberOfSatellites = input.numberOfSatellites;</span>
+<span class="fc" id="L1904">        orbitalRadiusOfSatellites = input.orbitalRadiusOfSatellites;</span>
+<span class="fc" id="L1905">        satellitesInclinationDegrees = input.satellitesInclinationDegrees;</span>
+<span class="fc" id="L1906">        constellationLongitudeOffsetDegrees = input.constellationLongitudeOffsetDegrees;</span>
+<span class="fc" id="L1907">        constellationTimingOffset = input.constellationTimingOffset;</span>
+<span class="fc" id="L1908">        maskAngleDegrees = input.maskAngleDegrees;</span>
+<span class="fc" id="L1909">        sisErrorSD = input.sisErrorSD;</span>
+<span class="fc" id="L1910">        zenithIonosphereErrorSD = input.zenithIonosphereErrorSD;</span>
+<span class="fc" id="L1911">        zenithTroposphereErrorSD = input.zenithTroposphereErrorSD;</span>
+<span class="fc" id="L1912">        codeTrackingErrorSD = input.codeTrackingErrorSD;</span>
+<span class="fc" id="L1913">        rangeRateTrackingErrorSD = input.rangeRateTrackingErrorSD;</span>
+<span class="fc" id="L1914">        initialReceiverClockOffset = input.initialReceiverClockOffset;</span>
+<span class="fc" id="L1915">        initialReceiverClockDrift = input.initialReceiverClockDrift;</span>
+<span class="fc" id="L1916">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L1926">        return Objects.hash(epochInterval, initialEstimatedEcefPositionX,</span>
+<span class="fc" id="L1927">                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,</span>
+<span class="fc" id="L1928">                numberOfSatellites, orbitalRadiusOfSatellites,</span>
+<span class="fc" id="L1929">                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,</span>
+<span class="fc" id="L1930">                constellationTimingOffset, maskAngleDegrees, sisErrorSD,</span>
+<span class="fc" id="L1931">                zenithIonosphereErrorSD, zenithTroposphereErrorSD,</span>
+<span class="fc" id="L1932">                codeTrackingErrorSD, rangeRateTrackingErrorSD,</span>
+<span class="fc" id="L1933">                initialReceiverClockOffset, initialReceiverClockDrift);</span>
+    }
+
+    /**
+     * Checks if provided object is a GNSSConfig having exactly the same contents
+     * as this instance.
+     *
+     * @param o object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L1945" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L1946">            return true;</span>
+        }
+<span class="pc bpc" id="L1948" title="1 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="fc" id="L1949">            return false;</span>
+        }
+
+<span class="fc" id="L1952">        final GNSSConfig other = (GNSSConfig) o;</span>
+<span class="fc" id="L1953">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final GNSSConfig other) {
+<span class="fc" id="L1963">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed for values.
+     * @return true if both instances are considered to be equal (up to provided threshold),
+     * false otherwise.
+     */
+    public boolean equals(final GNSSConfig other, final double threshold) {
+<span class="fc bfc" id="L1976" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L1977">            return false;</span>
+        }
+
+<span class="fc bfc" id="L1980" title="All 2 branches covered.">        return Math.abs(epochInterval - other.epochInterval) &lt;= threshold</span>
+<span class="pc bpc" id="L1981" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(initialEstimatedEcefPositionX - other.initialEstimatedEcefPositionX) &lt;= threshold</span>
+<span class="pc bpc" id="L1982" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(initialEstimatedEcefPositionY - other.initialEstimatedEcefPositionY) &lt;= threshold</span>
+<span class="pc bpc" id="L1983" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(initialEstimatedEcefPositionZ - other.initialEstimatedEcefPositionZ) &lt;= threshold</span>
+<span class="pc bpc" id="L1984" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(numberOfSatellites - other.numberOfSatellites) &lt;= threshold</span>
+<span class="pc bpc" id="L1985" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(orbitalRadiusOfSatellites - other.orbitalRadiusOfSatellites) &lt;= threshold</span>
+<span class="pc bpc" id="L1986" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(satellitesInclinationDegrees - other.satellitesInclinationDegrees) &lt;= threshold</span>
+<span class="pc bpc" id="L1987" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(constellationLongitudeOffsetDegrees - other.constellationLongitudeOffsetDegrees)</span>
+                &lt;= threshold
+<span class="pc bpc" id="L1989" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(constellationTimingOffset - other.constellationTimingOffset) &lt;= threshold</span>
+<span class="pc bpc" id="L1990" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(maskAngleDegrees - other.maskAngleDegrees) &lt;= threshold</span>
+<span class="pc bpc" id="L1991" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(sisErrorSD - other.sisErrorSD) &lt;= threshold</span>
+<span class="pc bpc" id="L1992" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(zenithIonosphereErrorSD - other.zenithIonosphereErrorSD) &lt;= threshold</span>
+<span class="pc bpc" id="L1993" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(zenithTroposphereErrorSD - other.zenithTroposphereErrorSD) &lt;= threshold</span>
+<span class="pc bpc" id="L1994" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(codeTrackingErrorSD - other.codeTrackingErrorSD) &lt;= threshold</span>
+<span class="pc bpc" id="L1995" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(rangeRateTrackingErrorSD - other.rangeRateTrackingErrorSD) &lt;= threshold</span>
+<span class="pc bpc" id="L1996" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(initialReceiverClockOffset - other.initialReceiverClockOffset) &lt;= threshold</span>
+<span class="pc bpc" id="L1997" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(initialReceiverClockDrift - other.initialReceiverClockDrift) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L2008">        final var result = (GNSSConfig)super.clone();</span>
+<span class="fc" id="L2009">        copyTo(result);</span>
+<span class="fc" id="L2010">        return result;</span>
+    }
+
+    /**
+     * Method used internally to set values.
+     *
+     * @param numberOfSatellites           number of satellites in constellation.
+     * @param orbitalRadiusOfSatellites    orbital radius of satellites.
+     * @param satellitesInclination        inclination angle of satellites.
+     * @param constellationLongitudeOffset longitude offset of constellation.
+     * @param constellationTimingOffset    timing offset of constellation.
+     * @param maskAngle                    mask angle.
+     * @param sisErrorSD                   Signal In Space (SIS) error Standard
+     *                                     Deviation (SD).
+     * @param zenithIonosphereErrorSD      zenith ionosphere error Standard
+     *                                     Deviation (SD).
+     * @param zenithTroposphereErrorSD     zenith troposphere error Standard
+     *                                     Deviation (SD).
+     * @param codeTrackingErrorSD          code tracking error Standard Deviation
+     *                                     (SD).
+     * @param rangeRateTrackingErrorSD     range rate tracking error Standard
+     *                                     Deviation (SD).
+     * @param initialReceiverClockOffset   initial receiver clock offset at time = 0.
+     * @param initialReceiverClockDrift    initial receiver clock drift at time = 0.
+     * @throws IllegalArgumentException if number of satellites in constellation is
+     *                                  less than 4 or if orbital radius of
+     *                                  satellites is negative or if SIS error SD is
+     *                                  negative, or if zenith ionosphere error SD
+     *                                  is negative, or if zenith troposphere error
+     *                                  SD is negative, or if code tracking error SD
+     *                                  is negative, or if range rate tracking error
+     *                                  SD is negative.
+     */
+    private void internalSetValues(final int numberOfSatellites,
+                                   final Distance orbitalRadiusOfSatellites,
+                                   final Angle satellitesInclination,
+                                   final Angle constellationLongitudeOffset,
+                                   final Time constellationTimingOffset,
+                                   final Angle maskAngle,
+                                   final Distance sisErrorSD,
+                                   final Distance zenithIonosphereErrorSD,
+                                   final Distance zenithTroposphereErrorSD,
+                                   final Speed codeTrackingErrorSD,
+                                   final Speed rangeRateTrackingErrorSD,
+                                   final Distance initialReceiverClockOffset,
+                                   final Speed initialReceiverClockDrift) {
+<span class="fc" id="L2056">        setNumberOfSatellites(numberOfSatellites);</span>
+<span class="fc" id="L2057">        setOrbitalRadiusOfSatellitesDistance(orbitalRadiusOfSatellites);</span>
+<span class="fc" id="L2058">        setSatellitesInclinationAngle(satellitesInclination);</span>
+<span class="fc" id="L2059">        setConstellationLongitudeOffsetAngle(constellationLongitudeOffset);</span>
+<span class="fc" id="L2060">        setConstellationTimingOffsetTime(constellationTimingOffset);</span>
+<span class="fc" id="L2061">        setMaskAngle(maskAngle);</span>
+<span class="fc" id="L2062">        setSISErrorSDDistance(sisErrorSD);</span>
+<span class="fc" id="L2063">        setZenithIonosphereErrorSDDistance(zenithIonosphereErrorSD);</span>
+<span class="fc" id="L2064">        setZenithTroposphereErrorSDDistance(zenithTroposphereErrorSD);</span>
+<span class="fc" id="L2065">        setCodeTrackingErrorSDSpeed(codeTrackingErrorSD);</span>
+<span class="fc" id="L2066">        setRangeRateTrackingErrorSDSpeed(rangeRateTrackingErrorSD);</span>
+<span class="fc" id="L2067">        setInitialReceiverClockOffsetDistance(initialReceiverClockOffset);</span>
+<span class="fc" id="L2068">        setInitialReceiverClockDriftSpeed(initialReceiverClockDrift);</span>
+<span class="fc" id="L2069">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

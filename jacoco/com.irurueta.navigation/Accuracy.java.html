@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Accuracy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation</a> &gt; <span class="el_source">Accuracy.java</span></div><h1>Accuracy.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
+
+/**
+ * Base class representing the confidence of provided accuracy from a covariance matrix
+ * expressed in the distance unit of such matrix.
+ * This class contains utility methods to convert covariance matrices into geometric figures
+ * with the requested confidence.
+ *
+ * @param &lt;A&gt; type of internal accuracy.
+ */
+public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
+
+    /**
+     * Internal accuracy reference.
+     */
+    protected A internalAccuracy;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L41">    protected Accuracy() {</span>
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param internalAccuracy internal accuracy to be set.
+     */
+<span class="fc" id="L49">    Accuracy(final A internalAccuracy) {</span>
+<span class="fc" id="L50">        this.internalAccuracy = internalAccuracy;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Gets covariance matrix representing the accuracy of an estimated point or measure.
+     *
+     * @return covariance matrix representing the accuracy of an estimated point or measure.
+     */
+    public Matrix getCovarianceMatrix() {
+<span class="fc" id="L59">        return internalAccuracy.getCovarianceMatrix();</span>
+    }
+
+    /**
+     * Sets covariance matrix representing the accuracy of an estimated point or measure.
+     *
+     * @param covarianceMatrix covariance matrix representing the accuracy of an estimated
+     *                         point or measure.
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to a geometric
+     *                                                     figure - e.g. an ellipse or an ellipsoid).
+     * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not symmetric
+     *                                                     and positive definite.
+     */
+    public void setCovarianceMatrix(final Matrix covarianceMatrix) throws NonSymmetricPositiveDefiniteMatrixException {
+<span class="fc" id="L74">        internalAccuracy.setCovarianceMatrix(covarianceMatrix);</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Gets standard deviation factor to account for a given accuracy confidence.
+     * Typically, a factor of 2.0 will be used, which means that accuracy can be drawn as
+     * a geometric figure of size equal to 2 times the standard deviation. Assuming a
+     * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
+     * accuracy.
+     *
+     * @return standard deviation factor.
+     */
+    public double getStandardDeviationFactor() {
+<span class="fc" id="L87">        return internalAccuracy.getStandardDeviationFactor();</span>
+    }
+
+    /**
+     * Sets standard deviation factor to account for a given accuracy confidence.
+     * Typically, a factor of 2.0 will be used, which means that accuracy can be drawn as
+     * a geometric figure of size equal to 2 times the standard deviation. Assuming a
+     * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
+     * accuracy.
+     *
+     * @param standardDeviationFactor standard deviation factor to be set.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setStandardDeviationFactor(final double standardDeviationFactor) {
+<span class="fc" id="L101">        internalAccuracy.setStandardDeviationFactor(standardDeviationFactor);</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Gets confidence of provided accuracy of estimated point or measure.
+     * This is expressed as a value between 0 and 1, where 1 indicates a 100% confidence
+     * that the real point or measure is within provided accuracy.
+     *
+     * @return confidence of provided accuracy of estimated point or measure.
+     */
+    public double getConfidence() {
+<span class="fc" id="L112">        return internalAccuracy.getConfidence();</span>
+    }
+
+    /**
+     * Sets confidence of provided accuracy of estimated point or measure.
+     * This is expressed as a value between 0 and 1, where 1 indicates a 100% confidence
+     * that the real point or measure is within provided accuracy.
+     *
+     * @param confidence confidence of provided accuracy of estimated point or measure.
+     * @throws IllegalArgumentException if provided value is not within 0 and 1.
+     */
+    public void setConfidence(final double confidence) {
+<span class="fc" id="L124">        internalAccuracy.setConfidence(confidence);</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D).
+     * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
+     * @return smallest accuracy in any direction.
+     */
+    public Distance getSmallestAccuracy() {
+<span class="fc" id="L134">        return new Distance(getSmallestAccuracyMeters(), DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D)
+     * expressed in meters.
+     * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
+     * @return smallest accuracy in any direction expressed in meters.
+     */
+    public double getSmallestAccuracyMeters() {
+<span class="fc" id="L145">        return internalAccuracy.getSmallestAccuracy();</span>
+    }
+
+    /**
+     * Gets largest (worse) accuracy in any direction (i.e. either 2D or 3D).
+     * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
+     * @return largest accuracy in any direction.
+     */
+    public Distance getLargestAccuracy() {
+<span class="fc" id="L155">        return new Distance(getLargestAccuracyMeters(), DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Gets largest (worse) accuracy in any direction (i.e. either 2D or 3D)
+     * expressed in meters.
+     * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
+     * @return largest accuracy in any direction expressed in meters.
+     */
+    public double getLargestAccuracyMeters() {
+<span class="fc" id="L166">        return internalAccuracy.getLargestAccuracy();</span>
+    }
+
+    /**
+     * Gets average accuracy among all directions.
+     * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
+     * accuracy.
+     *
+     * @return average accuracy among all directions.
+     */
+    public Distance getAverageAccuracy() {
+<span class="fc" id="L177">        return new Distance(getAverageAccuracyMeters(), DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Gets average accuracy among all directions expressed in meters.
+     * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
+     * accuracy.
+     *
+     * @return average accuracy among all directions expressed in meters.
+     */
+    public double getAverageAccuracyMeters() {
+<span class="fc" id="L188">        return internalAccuracy.getAverageAccuracy();</span>
+    }
+
+    /**
+     * Gets number of dimensions.
+     * This is equal to 2 for 2D, and 3 for 3D.
+     *
+     * @return number of dimensions.
+     */
+    public int getNumberOfDimensions() {
+<span class="fc" id="L198">        return internalAccuracy.getNumberOfDimensions();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

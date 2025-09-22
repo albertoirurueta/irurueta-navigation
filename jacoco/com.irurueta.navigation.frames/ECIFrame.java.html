@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECIFrame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">ECIFrame.java</span></div><h1>ECIFrame.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.geometry.Point3D;
+import com.irurueta.units.Distance;
+import com.irurueta.units.Speed;
+
+/**
+ * Contains position, velocity and coordinates transformation matrix expressed in ECI frame.
+ * Position and velocity of this frame is expressed along ECI axes as described here:
+ * {@link FrameType#EARTH_CENTERED_INERTIAL_FRAME}.
+ */
+public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; implements Cloneable {
+
+    /**
+     * Constructor.
+     * Initializes position and velocity coordinates to zero and the coordinate transformation matrix to the
+     * identity.
+     */
+    public ECIFrame() {
+<span class="fc" id="L35">        super(ECIFrame.class);</span>
+<span class="fc" id="L36">        c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param c Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L46">        super(c);</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     * @param z cartesian z coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     */
+    public ECIFrame(final double x, final double y, final double z) {
+<span class="fc" id="L60">        this();</span>
+<span class="fc" id="L61">        setCoordinates(x, y, z);</span>
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     */
+    public ECIFrame(final Point3D position) {
+<span class="fc" id="L70">        this();</span>
+<span class="fc" id="L71">        setPosition(position);</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set resolved along ECI-frame axes.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ) {
+<span class="fc" id="L82">        this();</span>
+<span class="fc" id="L83">        setPositionCoordinates(positionX, positionY, positionZ);</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param y  cartesian y coordinate of body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param z  cartesian z coordinate of body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param vx x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     * @param vy y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     */
+    public ECIFrame(final double x, final double y, final double z,
+                    final double vx, final double vy, final double vz) {
+<span class="fc" id="L101">        this(x, y, z);</span>
+<span class="fc" id="L102">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     */
+    public ECIFrame(final Point3D position, final double vx, final double vy, final double vz) {
+<span class="fc" id="L117">        this(position);</span>
+<span class="fc" id="L118">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param speedX   x coordinate of velocity to be set resolved along ECI-frame axes.
+     * @param speedY   y coordinate of velocity to be set resolved along ECI-frame axes.
+     * @param speedZ   z coordinate of velocity to be set resolved along ECI-frame axes.
+     */
+    public ECIFrame(final Point3D position, final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L130">        this(position);</span>
+<span class="fc" id="L131">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param speedX x coordinate of velocity to be set resolved along ECI-frame axes.
+     * @param speedY y coordinate of velocity to be set resolved along ECI-frame axes.
+     * @param speedZ z coordinate of velocity to be set resolved along ECI-frame axes.
+     */
+    public ECIFrame(final double x, final double y, final double z,
+                    final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L149">        this(x, y, z);</span>
+<span class="fc" id="L150">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final double vx, final double vy, final double vz) {
+<span class="fc" id="L168">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L169">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L170">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param speedX    x coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedY    y coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedZ    z coordinate of velocity to be set, resolved along ECI-frame axes.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L184">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L185">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     * @param z cartesian z coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *          ECI-frame axes.
+     * @param c Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final double x, final double y, final double z, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L202">        this(x, y, z);</span>
+<span class="fc" id="L203">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param c        Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Point3D position, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+<span class="fc" id="L216">        this(position);</span>
+<span class="fc" id="L217">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param c         Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
+
+<span class="fc" id="L232">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L233">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L234">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *           ECI-frame axes.
+     * @param y  cartesian y coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *           ECI-frame axes.
+     * @param z  cartesian z coordinate of body position expressed in meters (m) with respect ECI frame, resolved along
+     *           ECI-frame axes.
+     * @param vx x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     * @param vy y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECI-frame axes.
+     * @param c  Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final double x, final double y, final double z,
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L257">        this(x, y, z, vx, vy, vz);</span>
+<span class="fc" id="L258">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L259">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECI-frame axes.
+     * @param c        Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Point3D position,
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L277">        this(position, vx, vy, vz);</span>
+<span class="fc" id="L278">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L279">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
+     * @param speedX   x coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedY   y coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedZ   z coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param c        Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Point3D position,
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L294">        this(position, speedX, speedY, speedZ);</span>
+<span class="fc" id="L295">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECI frame, resolved
+     *               along ECI-frame axes.
+     * @param speedX x coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedY y coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedZ z coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param c      Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final double x, final double y, final double z,
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L316">        this(x, y, z, speedX, speedY, speedZ);</span>
+<span class="fc" id="L317">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L318">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECI-frame axes.
+     * @param c         Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final double vx, final double vy, final double vz, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L338">        this(positionX, positionY, positionZ, vx, vy, vz);</span>
+<span class="fc" id="L339">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L340">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI-frame axes.
+     * @param speedX    x coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedY    y coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param speedZ    z coordinate of velocity to be set, resolved along ECI-frame axes.
+     * @param c         Body to ECI coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECIFrame(final Distance positionX, final Distance positionY, final Distance positionZ,
+                    final Speed speedX, final Speed speedY, final Speed speedZ, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L357">        this(positionX, positionY, positionZ, speedX, speedY, speedZ);</span>
+<span class="fc" id="L358">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L359">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input ECI frame to copy data from.
+     */
+    public ECIFrame(final ECIFrame input) {
+<span class="fc" id="L367">        this();</span>
+<span class="fc" id="L368">        copyFrom(input);</span>
+<span class="fc" id="L369">    }</span>
+
+    /**
+     * Gets coordinate transformation matrix.
+     *
+     * @return coordinate transformation matrix.
+     */
+    @Override
+    public CoordinateTransformation getCoordinateTransformation() {
+<span class="fc" id="L378">        final var result = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L379">        getCoordinateTransformation(result);</span>
+<span class="fc" id="L380">        return result;</span>
+    }
+
+    /**
+     * Gets coordinate transformation matrix.
+     *
+     * @param result instance where coordinate transformation matrix will be copied to.
+     */
+    @Override
+    public void getCoordinateTransformation(final CoordinateTransformation result) {
+<span class="fc" id="L390">        c.copyTo(result);</span>
+<span class="fc" id="L391">    }</span>
+
+    /**
+     * Sets coordinate transformation matrix.
+     * Provided value must be a body to ECI transformation matrix.
+     *
+     * @param c coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    @Override
+    public void setCoordinateTransformation(final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc bfc" id="L403" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
+<span class="fc" id="L404">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
+        }
+
+<span class="fc" id="L407">        this.c = c;</span>
+<span class="fc" id="L408">    }</span>
+
+    /**
+     * Checks whether provided coordinate transformation is valid or not.
+     * Only body to ECI transformation matrices are considered to be valid.
+     *
+     * @param c coordinate transformation matrix to be checked.
+     * @return true if provided value is valid, false otherwise.
+     */
+    public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
+<span class="fc bfc" id="L418" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">                &amp;&amp; c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L430">        final var result = (ECIFrame)super.clone();</span>
+<span class="fc" id="L431">        copyTo(result);</span>
+<span class="fc" id="L432">        clazz = ECIFrame.class;</span>
+<span class="fc" id="L433">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECEFtoNEDFrameConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames.converters</a> &gt; <span class="el_source">ECEFtoNEDFrameConverter.java</span></div><h1>ECEFtoNEDFrameConverter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames.converters;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.ECIorECEFFrame;
+import com.irurueta.navigation.frames.FrameType;
+import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
+import com.irurueta.navigation.frames.NEDFrame;
+import com.irurueta.navigation.geodesic.Constants;
+
+/**
+ * Converts from ECEF frame to NED frame.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/ECEF_to_NED.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/ECEF_to_NED.m
+ * &lt;/a&gt;
+ */
+<span class="fc" id="L37">public class ECEFtoNEDFrameConverter implements FrameConverter&lt;ECEFFrame, NEDFrame&gt; {</span>
+
+    /**
+     * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
+     */
+    public static final double EARTH_EQUATORIAL_RADIUS_WGS84 = Constants.EARTH_EQUATORIAL_RADIUS_WGS84;
+
+    /**
+     * Earth eccentricity as defined on the WGS84 ellipsoid.
+     */
+    public static final double EARTH_ECCENTRICITY = Constants.EARTH_ECCENTRICITY;
+
+    /**
+     * Converts source ECEF frame to a new NED frame instance.
+     *
+     * @param source source frame to convert from.
+     * @return a new destination frame instance.
+     */
+    @Override
+    public NEDFrame convertAndReturnNew(final ECEFFrame source) {
+<span class="fc" id="L57">        final var result = new NEDFrame();</span>
+<span class="fc" id="L58">        convert(source, result);</span>
+<span class="fc" id="L59">        return result;</span>
+    }
+
+    /**
+     * Converts source ECEF frame to destination NED frame.
+     *
+     * @param source      source frame to convert from.
+     * @param destination destination frame instance to convert to.
+     */
+    @Override
+    public void convert(final ECEFFrame source, final NEDFrame destination) {
+<span class="fc" id="L70">        convertECEFtoNED(source, destination);</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Gets source frame type.
+     *
+     * @return source frame type.
+     */
+    @Override
+    public FrameType getSourceType() {
+<span class="fc" id="L80">        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
+    }
+
+    /**
+     * Gets destination frame type.
+     *
+     * @return destination frame type.
+     */
+    @Override
+    public FrameType getDestinationType() {
+<span class="fc" id="L90">        return FrameType.LOCAL_NAVIGATION_FRAME;</span>
+    }
+
+    /**
+     * Converts source ECEF frame to a new NED frame instance.
+     *
+     * @param source source frame to convert from.
+     * @return a new destination frame instance.
+     */
+    public static NEDFrame convertECEFtoNEDAndReturnNew(final ECEFFrame source) {
+<span class="fc" id="L100">        final var result = new NEDFrame();</span>
+<span class="fc" id="L101">        convertECEFtoNED(source, result);</span>
+<span class="fc" id="L102">        return result;</span>
+    }
+
+    /**
+     * Converts source ECEF frame to destination NED frame.
+     *
+     * @param source      source frame to convert from.
+     * @param destination destination frame instance to convert to.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    public static void convertECEFtoNED(final ECEFFrame source, final NEDFrame destination) {
+<span class="fc" id="L113">        final var x = source.getX();</span>
+<span class="fc" id="L114">        final var y = source.getY();</span>
+<span class="fc" id="L115">        final var z = source.getZ();</span>
+
+        // Convert position using Borkowski closed-form exact solution from (2.113).
+<span class="fc" id="L118">        final var longitude = Math.atan2(y, x);</span>
+
+        // From (C.29) and (C.30)
+<span class="fc" id="L121">        final var ecc2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;</span>
+<span class="fc" id="L122">        final var k1 = Math.sqrt(1.0 - ecc2) * Math.abs(z);</span>
+<span class="fc" id="L123">        final var k2 = ecc2 * EARTH_EQUATORIAL_RADIUS_WGS84;</span>
+
+<span class="fc" id="L125">        final var x2 = x * x;</span>
+<span class="fc" id="L126">        final var y2 = y * y;</span>
+<span class="fc" id="L127">        final var beta = Math.sqrt(x2 + y2);</span>
+
+<span class="fc" id="L129">        final var e = (k1 - k2) / beta;</span>
+<span class="fc" id="L130">        final var f = (k1 + k2) / beta;</span>
+
+        // From (C.31)
+<span class="fc" id="L133">        final var p = 4.0 / 3.0 * (e * f + 1.0);</span>
+
+        // From (C.32)
+<span class="fc" id="L136">        final var e2 = e * e;</span>
+<span class="fc" id="L137">        final var f2 = f * f;</span>
+<span class="fc" id="L138">        final var q = 2.0 * (e2 - f2);</span>
+
+        // From (C.33)
+<span class="fc" id="L141">        final var p3 = p * p * p;</span>
+<span class="fc" id="L142">        final var q2 = q * q;</span>
+<span class="fc" id="L143">        final var d = p3 + q2;</span>
+
+        // From (C.34)
+<span class="fc" id="L146">        final var sqrtD = Math.sqrt(d);</span>
+<span class="fc" id="L147">        final var exp = 1.0 / 3.0;</span>
+<span class="fc" id="L148">        final var v = Math.pow(sqrtD - q, exp) - Math.pow(sqrtD + q, exp);</span>
+
+        // From (C.35)
+<span class="fc" id="L151">        final var g = 0.5 * (Math.sqrt(e2 + v) + e);</span>
+
+        // From (C.36)
+<span class="fc" id="L154">        final var g2 = g * g;</span>
+<span class="fc" id="L155">        final var t = Math.sqrt(g2 + (f - v * g) / (2.0 * g - e)) - g;</span>
+
+        // From (C.37)
+<span class="fc" id="L158">        final var t2 = t * t;</span>
+<span class="fc" id="L159">        final var latitude = Math.signum(z) * Math.atan((1.0 - t2) / (2.0 * t * Math.sqrt(1.0 - ecc2)));</span>
+
+        // From (C.38)
+<span class="fc" id="L162">        final var height = (beta - EARTH_EQUATORIAL_RADIUS_WGS84 * t) * Math.cos(latitude)</span>
+<span class="fc" id="L163">                + (z - Math.signum(z) * EARTH_EQUATORIAL_RADIUS_WGS84 * Math.sqrt(1.0 - ecc2))</span>
+<span class="fc" id="L164">                * Math.sin(latitude);</span>
+
+        try {
+            // Calculate ECEF to NED coordinate transformation matrix
+<span class="fc" id="L168">            final var cen = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);</span>
+
+            // Transform velocity using (2.73)
+<span class="fc" id="L171">            final var vx = source.getVx();</span>
+<span class="fc" id="L172">            final var vy = source.getVy();</span>
+<span class="fc" id="L173">            final var vz = source.getVz();</span>
+<span class="fc" id="L174">            final var vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);</span>
+<span class="fc" id="L175">            vEbe.setElementAtIndex(0, vx);</span>
+<span class="fc" id="L176">            vEbe.setElementAtIndex(1, vy);</span>
+<span class="fc" id="L177">            vEbe.setElementAtIndex(2, vz);</span>
+
+<span class="fc" id="L179">            final var vEbn = cen.multiplyAndReturnNew(vEbe);</span>
+<span class="fc" id="L180">            final var vn = vEbn.getElementAtIndex(0);</span>
+<span class="fc" id="L181">            final var ve = vEbn.getElementAtIndex(1);</span>
+<span class="fc" id="L182">            final var vd = vEbn.getElementAtIndex(2);</span>
+
+            // Transform attitude using (2.15)
+<span class="fc" id="L185">            final var cbe = source.getCoordinateTransformation().getMatrix();</span>
+<span class="fc" id="L186">            cen.multiply(cbe); // cen is now cbn</span>
+
+<span class="fc" id="L188">            final var c = new CoordinateTransformation(cen, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);</span>
+
+            // Set result
+<span class="fc" id="L191">            destination.setLatitude(latitude);</span>
+<span class="fc" id="L192">            destination.setLongitude(longitude);</span>
+<span class="fc" id="L193">            destination.setHeight(height);</span>
+
+<span class="fc" id="L195">            destination.setVn(vn);</span>
+<span class="fc" id="L196">            destination.setVe(ve);</span>
+<span class="fc" id="L197">            destination.setVd(vd);</span>
+
+<span class="fc" id="L199">            destination.setCoordinateTransformation(c);</span>
+
+<span class="nc" id="L201">        } catch (final WrongSizeException | InvalidRotationMatrixException</span>
+                | InvalidSourceAndDestinationFrameTypeException ignore) {
+            // never happens
+<span class="fc" id="L204">        }</span>
+<span class="fc" id="L205">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

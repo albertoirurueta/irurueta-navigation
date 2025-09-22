@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECEFPositionAndVelocity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">ECEFPositionAndVelocity.java</span></div><h1>ECEFPositionAndVelocity.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains position and velocity resolved in ECEF axes.
+ */
+public class ECEFPositionAndVelocity implements Serializable, Cloneable {
+
+    /**
+     * Cartesian x coordinate of position resolved in ECEF axes and expressed
+     * in meters (m).
+     */
+    double x;
+
+    /**
+     * Cartesian y coordinate of position resolved in ECEF axes and expressed
+     * in meters (m).
+     */
+    double y;
+
+    /**
+     * Cartesian z coordinate of position resolved in ECEF axes and expressed
+     * in meters(m).
+     */
+    double z;
+
+    /**
+     * X coordinate of velocity resolved in ECEF axes and expressed in meters
+     * per second (m/s).
+     */
+    double vx;
+
+    /**
+     * Y coordinate of velocity resolved in ECEF axes and expressed in meters
+     * per second (m/s).
+     */
+    double vy;
+
+    /**
+     * Z coordinate of velocity resolved in ECEF axes and expressed in meters
+     * per second (m/s).
+     */
+    double vz;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L76">    public ECEFPositionAndVelocity() {</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of ECEF position expressed in
+     *          meters (m).
+     * @param y cartesian y coordinate of ECEF position expressed in
+     *          meters (m).
+     * @param z cartesian z coordinate of ECEF position expressed in
+     *          meters (m).
+     */
+<span class="fc" id="L89">    public ECEFPositionAndVelocity(final double x, final double y, final double z) {</span>
+<span class="fc" id="L90">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of ECEF position.
+     * @param y cartesian y coordinate of ECEF position.
+     * @param z cartesian z coordinate of ECEF position.
+     */
+<span class="fc" id="L100">    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z) {</span>
+<span class="fc" id="L101">        setPositionDistanceCoordinates(x, y, z);</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param ecefPosition ECEF position.
+     */
+<span class="fc" id="L109">    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition) {</span>
+<span class="fc" id="L110">        setEcefPosition(ecefPosition);</span>
+<span class="fc" id="L111">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position position to be set.
+     */
+<span class="fc" id="L118">    public ECEFPositionAndVelocity(final Point3D position) {</span>
+<span class="fc" id="L119">        setPosition(position);</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param vx x coordinate of velocity resolved in ECEF axes.
+     * @param vy y coordinate of velocity resolved in ECEF axes.
+     * @param vz z coordinate of velocity resolved in ECEF axes.
+     */
+<span class="fc" id="L129">    public ECEFPositionAndVelocity(final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L130">        setSpeedCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param ecefVelocity velocity to be set.
+     */
+<span class="fc" id="L138">    public ECEFPositionAndVelocity(final ECEFVelocity ecefVelocity) {</span>
+<span class="fc" id="L139">        setEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param y  cartesian y coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param z  cartesian z coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param vx x coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     * @param vy y coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     * @param vz z coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     */
+    public ECEFPositionAndVelocity(final double x, final double y, final double z,
+                                   final double vx, final double vy, final double vz) {
+<span class="fc" id="L160">        this(x, y, z);</span>
+<span class="fc" id="L161">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L162">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param y  cartesian y coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param z  cartesian z coordinate of ECEF position expressed in
+     *           meters (m).
+     * @param vx x coordinate of velocity resolved in ECEF axes.
+     * @param vy y coordinate of velocity resolved in ECEF axes.
+     * @param vz z coordinate of velocity resolved in ECEF axes.
+     */
+    public ECEFPositionAndVelocity(final double x, final double y, final double z,
+                                   final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L179">        this(x, y, z);</span>
+<span class="fc" id="L180">        setSpeedCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L181">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x            cartesian x coordinate of ECEF position expressed in
+     *                     meters (m).
+     * @param y            cartesian y coordinate of ECEF position expressed in
+     *                     meters (m).
+     * @param z            cartesian z coordinate of ECEF position expressed in
+     *                     meters (m).
+     * @param ecefVelocity satellite velocity.
+     */
+    public ECEFPositionAndVelocity(final double x, final double y, final double z, final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L195">        this(x, y, z);</span>
+<span class="fc" id="L196">        setEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of ECEF position.
+     * @param y  cartesian y coordinate of ECEF position.
+     * @param z  cartesian z coordinate of ECEF position.
+     * @param vx x coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     * @param vy y coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     * @param vz z coordinate of velocity resolved in ECEF axes and expressed
+     *           in meters per second (m/s).
+     */
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
+                                   final double vx, final double vy, final double vz) {
+<span class="fc" id="L214">        this(x, y, z);</span>
+<span class="fc" id="L215">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of ECEF position.
+     * @param y  cartesian y coordinate of ECEF position.
+     * @param z  cartesian z coordinate of ECEF position.
+     * @param vx x coordinate of velocity resolved in ECEF axes.
+     * @param vy y coordinate of velocity resolved in ECEF axes.
+     * @param vz z coordinate of velocity resolved in ECEF axes.
+     */
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
+                                   final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L230">        this(x, y, z);</span>
+<span class="fc" id="L231">        setSpeedCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L232">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x            cartesian x coordinate of ECEF position.
+     * @param y            cartesian y coordinate of ECEF position.
+     * @param z            cartesian z coordinate of ECEF position.
+     * @param ecefVelocity satellite velocity.
+     */
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
+                                   final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L244">        this(x, y, z);</span>
+<span class="fc" id="L245">        setEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param ecefPosition ECEF position to be set.
+     * @param vx           x coordinate of velocity resolved in ECEF axes and expressed
+     *                     in meters per second (m/s).
+     * @param vy           y coordinate of velocity resolved in ECEF axes and expressed
+     *                     in meters per second (m/s).
+     * @param vz           z coordinate of velocity resolved in ECEF axes and expressed
+     *                     in meters per second (m/s).
+     */
+    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition,
+                                   final double vx, final double vy, final double vz) {
+<span class="fc" id="L261">        this(ecefPosition);</span>
+<span class="fc" id="L262">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L263">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param ecefPosition ECEF position to be set.
+     * @param vx           x coordinate of velocity resolved in ECEF axes.
+     * @param vy           y coordinate of velocity resolved in ECEF axes.
+     * @param vz           z coordinate of velocity resolved in ECEF axes.
+     */
+    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition,
+                                   final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L275">        this(ecefPosition);</span>
+<span class="fc" id="L276">        setSpeedCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L277">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param ecefPosition ECEF position to be set.
+     * @param ecefVelocity velocity to be set.
+     */
+    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition, final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L286">        this(ecefPosition);</span>
+<span class="fc" id="L287">        setEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L288">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position position to be set.
+     * @param vx       x coordinate of velocity resolved in ECEF axes and expressed
+     *                 in meters per second (m/s).
+     * @param vy       y coordinate of velocity resolved in ECEF axes and expressed
+     *                 in meters per second (m/s).
+     * @param vz       z coordinate of velocity resolved in ECEF axes and expressed
+     *                 in meters per second (m/s).
+     */
+    public ECEFPositionAndVelocity(final Point3D position, final double vx, final double vy, final double vz) {
+<span class="fc" id="L302">        this(position);</span>
+<span class="fc" id="L303">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position position to be set.
+     * @param vx       x coordinate of velocity resolved in ECEF axes.
+     * @param vy       y coordinate of velocity resolved in ECEF axes.
+     * @param vz       z coordinate of velocity resolved in ECEF axes.
+     */
+    public ECEFPositionAndVelocity(final Point3D position, final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L315">        this(position);</span>
+<span class="fc" id="L316">        setSpeedCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L317">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position     position to be set.
+     * @param ecefVelocity velocity to be set.
+     */
+    public ECEFPositionAndVelocity(final Point3D position, final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L326">        this(position);</span>
+<span class="fc" id="L327">        setEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L328">    }</span>
+
+    /**
+     * Copy constructor.
+     *
+     * @param input input instance to copy data from.
+     */
+<span class="fc" id="L335">    public ECEFPositionAndVelocity(final ECEFPositionAndVelocity input) {</span>
+<span class="fc" id="L336">        copyFrom(input);</span>
+<span class="fc" id="L337">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return cartesian x coordinate of position resolved in ECEF axes
+     * and expressed in meters (m).
+     */
+    public double getX() {
+<span class="fc" id="L347">        return x;</span>
+    }
+
+    /**
+     * Sets cartesian x coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param x cartesian x coordinate of position resolved in ECEF axes
+     *          and expressed in meters (m).
+     */
+    public void setX(final double x) {
+<span class="fc" id="L358">        this.x = x;</span>
+<span class="fc" id="L359">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return cartesian y coordinate of position resolved in ECEF axes
+     * and expressed in meters (m).
+     */
+    public double getY() {
+<span class="fc" id="L369">        return y;</span>
+    }
+
+    /**
+     * Sets cartesian y coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param y cartesian y coordinate of position resolved in ECEF axes
+     *          and expressed in meters (m).
+     */
+    public void setY(final double y) {
+<span class="fc" id="L380">        this.y = y;</span>
+<span class="fc" id="L381">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @return cartesian z coordinate of position resolved in ECEF axes
+     * and expressed in meters (m).
+     */
+    public double getZ() {
+<span class="fc" id="L391">        return z;</span>
+    }
+
+    /**
+     * Sets cartesian z coordinate of position resolved in ECEF axes and
+     * expressed in meters (m).
+     *
+     * @param z cartesian z coordinate of position resolved in ECEF axes
+     *          and expressed in meters (m).
+     */
+    public void setZ(final double z) {
+<span class="fc" id="L402">        this.z = z;</span>
+<span class="fc" id="L403">    }</span>
+
+    /**
+     * Sets ECEF position expressed in meters (m).
+     *
+     * @param x cartesian x coordinate of position.
+     * @param y cartesian y coordinate of position.
+     * @param z cartesian z coordinate of position.
+     */
+    public void setPositionCoordinates(final double x, final double y, final double z) {
+<span class="fc" id="L413">        this.x = x;</span>
+<span class="fc" id="L414">        this.y = y;</span>
+<span class="fc" id="L415">        this.z = z;</span>
+<span class="fc" id="L416">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of position resolved in ECEF axes.
+     *
+     * @param result instance where cartesian x coordinate of position will
+     *               be stored.
+     */
+    public void getXDistance(final Distance result) {
+<span class="fc" id="L425">        result.setValue(x);</span>
+<span class="fc" id="L426">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L427">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of position resolved in ECEF axes.
+     *
+     * @return cartesian x coordinate of position.
+     */
+    public Distance getXDistance() {
+<span class="fc" id="L435">        return new Distance(x, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian x coordinate of position resolved in ECEF axes.
+     *
+     * @param x cartesian x coordinate of position.
+     */
+    public void setXDistance(final Distance x) {
+<span class="fc" id="L444">        this.x = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L445">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of position resolved in ECEF axes.
+     *
+     * @param result instance where cartesian y coordinate of position will
+     *               be stored.
+     */
+    public void getYDistance(final Distance result) {
+<span class="fc" id="L454">        result.setValue(y);</span>
+<span class="fc" id="L455">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L456">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of position resolved in ECEF axes.
+     *
+     * @return cartesian y coordinate of position.
+     */
+    public Distance getYDistance() {
+<span class="fc" id="L464">        return new Distance(y, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian y coordinate of position resolved in ECEF axes.
+     *
+     * @param y cartesian y coordinate of position.
+     */
+    public void setYDistance(final Distance y) {
+<span class="fc" id="L473">        this.y = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L474">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of position resolved in ECEF axes.
+     *
+     * @param result instance where cartesian z coordinate of position will
+     *               be stored.
+     */
+    public void getZDistance(final Distance result) {
+<span class="fc" id="L483">        result.setValue(z);</span>
+<span class="fc" id="L484">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L485">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of position resolved in ECEF axes.
+     *
+     * @return cartesian z coordinate of position.
+     */
+    public Distance getZDistance() {
+<span class="fc" id="L493">        return new Distance(z, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian z coordinate of position resolved in ECEF axes.
+     *
+     * @param z cartesian z coordinate of position.
+     */
+    public void setZDistance(final Distance z) {
+<span class="fc" id="L502">        this.z = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L503">    }</span>
+
+    /**
+     * Sets position resolved in ECEF axes.
+     *
+     * @param x cartesian x coordinate of position.
+     * @param y cartesian y coordinate of position.
+     * @param z cartesian z coordinate of position.
+     */
+    public void setPositionDistanceCoordinates(final Distance x, final Distance y, final Distance z) {
+<span class="fc" id="L513">        setXDistance(x);</span>
+<span class="fc" id="L514">        setYDistance(y);</span>
+<span class="fc" id="L515">        setZDistance(z);</span>
+<span class="fc" id="L516">    }</span>
+
+    /**
+     * Gets ECEF position.
+     *
+     * @param result instance where ECEF position will be stored.
+     */
+    public void getEcefPosition(final ECEFPosition result) {
+<span class="fc" id="L524">        result.setCoordinates(x, y, z);</span>
+<span class="fc" id="L525">    }</span>
+
+    /**
+     * Gets ECEF position.
+     *
+     * @return ECEF position.
+     */
+    public ECEFPosition getEcefPosition() {
+<span class="fc" id="L533">        return new ECEFPosition(x, y, z);</span>
+    }
+
+    /**
+     * Sets ECEF position.
+     *
+     * @param ecefPosition ECEF position.
+     */
+    public void setEcefPosition(final ECEFPosition ecefPosition) {
+<span class="fc" id="L542">        x = ecefPosition.getX();</span>
+<span class="fc" id="L543">        y = ecefPosition.getY();</span>
+<span class="fc" id="L544">        z = ecefPosition.getZ();</span>
+<span class="fc" id="L545">    }</span>
+
+    /**
+     * Gets position resolved in ECEF axes.
+     *
+     * @param result instance where position will be stored.
+     */
+    public void getPosition(final Point3D result) {
+<span class="fc" id="L553">        result.setInhomogeneousCoordinates(x, y, z);</span>
+<span class="fc" id="L554">    }</span>
+
+    /**
+     * Gets position resolved in ECEF axes.
+     *
+     * @return position.
+     */
+    public Point3D getPosition() {
+<span class="fc" id="L562">        return new InhomogeneousPoint3D(x, y, z);</span>
+    }
+
+    /**
+     * Sets position resolved in ECEF axes.
+     *
+     * @param position position.
+     */
+    public void setPosition(final Point3D position) {
+<span class="fc" id="L571">        x = position.getInhomX();</span>
+<span class="fc" id="L572">        y = position.getInhomY();</span>
+<span class="fc" id="L573">        z = position.getInhomZ();</span>
+<span class="fc" id="L574">    }</span>
+
+    /**
+     * Gets x coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @return x coordinate of velocity resolved in ECEF axes.
+     */
+    public double getVx() {
+<span class="fc" id="L583">        return vx;</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @param vx x coordinate of velocity resolved in ECEF axes.
+     */
+    public void setVx(final double vx) {
+<span class="fc" id="L593">        this.vx = vx;</span>
+<span class="fc" id="L594">    }</span>
+
+    /**
+     * Gets y coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @return y coordinate of velocity resolved in ECEF axes.
+     */
+    public double getVy() {
+<span class="fc" id="L603">        return vy;</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @param vy y coordinate of velocity resolved in ECEf axes.
+     */
+    public void setVy(final double vy) {
+<span class="fc" id="L613">        this.vy = vy;</span>
+<span class="fc" id="L614">    }</span>
+
+    /**
+     * Gets z coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @return z coordinate of velocity resolved in ECEF axes.
+     */
+    public double getVz() {
+<span class="fc" id="L623">        return vz;</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @param vz z coordinate of velocity resolved in ECEF axes.
+     */
+    public void setVz(final double vz) {
+<span class="fc" id="L633">        this.vz = vz;</span>
+<span class="fc" id="L634">    }</span>
+
+    /**
+     * Sets velocity coordinates resolved in ECEF axes and expressed in
+     * meters per second (m/s).
+     *
+     * @param vx x coordinate of velocity.
+     * @param vy y coordinate of velocity.
+     * @param vz z coordinate of velocity.
+     */
+    public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
+<span class="fc" id="L645">        this.vx = vx;</span>
+<span class="fc" id="L646">        this.vy = vy;</span>
+<span class="fc" id="L647">        this.vz = vz;</span>
+<span class="fc" id="L648">    }</span>
+
+    /**
+     * Gets x coordinate of velocity resolved in ECEF axes.
+     *
+     * @param result instance where x coordinate of velocity will be stored.
+     */
+    public void getSpeedX(final Speed result) {
+<span class="fc" id="L656">        result.setValue(vx);</span>
+<span class="fc" id="L657">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L658">    }</span>
+
+    /**
+     * Gets x coordinate of velocity resolved in ECEF axes.
+     *
+     * @return x coordinate of velocity.
+     */
+    public Speed getSpeedX() {
+<span class="fc" id="L666">        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity resolved in ECEF axes.
+     *
+     * @param vx x coordinate of velocity.
+     */
+    public void setSpeedX(final Speed vx) {
+<span class="fc" id="L675">        this.vx = SpeedConverter.convert(vx.getValue().doubleValue(), vx.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L676">    }</span>
+
+    /**
+     * Gets y coordinate of velocity resolved in ECEF axes.
+     *
+     * @param result instance where y coordinate of velocity will be stored.
+     */
+    public void getSpeedY(final Speed result) {
+<span class="fc" id="L684">        result.setValue(vy);</span>
+<span class="fc" id="L685">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L686">    }</span>
+
+    /**
+     * Gets y coordinate of velocity resolved in ECEF axes.
+     *
+     * @return y coordinate of velocity.
+     */
+    public Speed getSpeedY() {
+<span class="fc" id="L694">        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity resolved in ECEF axes.
+     *
+     * @param vy y coordinate of velocity.
+     */
+    public void setSpeedY(final Speed vy) {
+<span class="fc" id="L703">        this.vy = SpeedConverter.convert(vy.getValue().doubleValue(), vy.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L704">    }</span>
+
+    /**
+     * Gets z coordinate of velocity resolved in ECEF axes.
+     *
+     * @param result instance where z coordinate of velocity will be stored.
+     */
+    public void getSpeedZ(final Speed result) {
+<span class="fc" id="L712">        result.setValue(vz);</span>
+<span class="fc" id="L713">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L714">    }</span>
+
+    /**
+     * Gets z coordinate of velocity resolved in ECEF axes.
+     *
+     * @return z coordinate of velocity.
+     */
+    public Speed getSpeedZ() {
+<span class="fc" id="L722">        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity resolved in ECEF axes.
+     *
+     * @param vz z coordinate of velocity.
+     */
+    public void setSpeedZ(final Speed vz) {
+<span class="fc" id="L731">        this.vz = SpeedConverter.convert(vz.getValue().doubleValue(), vz.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L732">    }</span>
+
+    /**
+     * Sets coordinates of velocity resolved in ECEF axes.
+     *
+     * @param vx x coordinate of velocity.
+     * @param vy y coordinate of velocity.
+     * @param vz z coordinate of velocity.
+     */
+    public void setSpeedCoordinates(final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L742">        setSpeedX(vx);</span>
+<span class="fc" id="L743">        setSpeedY(vy);</span>
+<span class="fc" id="L744">        setSpeedZ(vz);</span>
+<span class="fc" id="L745">    }</span>
+
+    /**
+     * Gets velocity resolved in ECEF axes.
+     *
+     * @param result instance where velocity will be stored.
+     */
+    public void getEcefVelocity(final ECEFVelocity result) {
+<span class="fc" id="L753">        result.setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L754">    }</span>
+
+    /**
+     * Gets velocity resolved in ECEF axes.
+     *
+     * @return velocity.
+     */
+    public ECEFVelocity getEcefVelocity() {
+<span class="fc" id="L762">        return new ECEFVelocity(vx, vy, vz);</span>
+    }
+
+    /**
+     * Sets velocity resolved in ECEF axes.
+     *
+     * @param ecefVelocity velocity.
+     */
+    public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L771">        vx = ecefVelocity.getVx();</span>
+<span class="fc" id="L772">        vy = ecefVelocity.getVy();</span>
+<span class="fc" id="L773">        vz = ecefVelocity.getVz();</span>
+<span class="fc" id="L774">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final ECEFPositionAndVelocity output) {
+<span class="fc" id="L782">        output.x = x;</span>
+<span class="fc" id="L783">        output.y = y;</span>
+<span class="fc" id="L784">        output.z = z;</span>
+
+<span class="fc" id="L786">        output.vx = vx;</span>
+<span class="fc" id="L787">        output.vy = vy;</span>
+<span class="fc" id="L788">        output.vz = vz;</span>
+<span class="fc" id="L789">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final ECEFPositionAndVelocity input) {
+<span class="fc" id="L797">        x = input.x;</span>
+<span class="fc" id="L798">        y = input.y;</span>
+<span class="fc" id="L799">        z = input.z;</span>
+
+<span class="fc" id="L801">        vx = input.vx;</span>
+<span class="fc" id="L802">        vy = input.vy;</span>
+<span class="fc" id="L803">        vz = input.vz;</span>
+<span class="fc" id="L804">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in
+     * collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L815">        return Objects.hash(x, y, z, vx, vy, vz);</span>
+    }
+
+    /**
+     * Checks if provided object is a ECEFPositionAndVelocity having exactly the
+     * same contents as this instance.
+     *
+     * @param o object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object o) {
+<span class="fc bfc" id="L827" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L828">            return true;</span>
+        }
+<span class="pc bpc" id="L830" title="1 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="fc" id="L831">            return false;</span>
+        }
+<span class="fc" id="L833">        final var other = (ECEFPositionAndVelocity) o;</span>
+<span class="fc" id="L834">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final ECEFPositionAndVelocity other) {
+<span class="fc" id="L844">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between position and velocity
+     *                  coordinates.
+     * @return true if both instances are considered to be equal (up to provided
+     * threshold), false otherwise.
+     */
+    public boolean equals(final ECEFPositionAndVelocity other, final double threshold) {
+<span class="fc bfc" id="L858" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L859">            return false;</span>
+        }
+
+<span class="fc bfc" id="L862" title="All 2 branches covered.">        return Math.abs(x - other.x) &lt;= threshold</span>
+<span class="pc bpc" id="L863" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(y - other.y) &lt;= threshold</span>
+<span class="pc bpc" id="L864" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(z - other.z) &lt;= threshold</span>
+<span class="pc bpc" id="L865" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vx - other.vx) &lt;= threshold</span>
+<span class="pc bpc" id="L866" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vy - other.vy) &lt;= threshold</span>
+<span class="pc bpc" id="L867" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vz - other.vz) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L878">        final var result = (ECEFPositionAndVelocity) super.clone();</span>
+<span class="fc" id="L879">        copyTo(result);</span>
+<span class="fc" id="L880">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

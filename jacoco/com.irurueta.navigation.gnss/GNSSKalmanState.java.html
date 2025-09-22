@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSKalmanState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSKalmanState.java</span></div><h1>GNSSKalmanState.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.algebra.Matrix;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Kalman filter state for filtered GNSS estimation.
+ */
+public class GNSSKalmanState implements Serializable, Cloneable {
+
+    /**
+     * Contains estimation of ECEF position and velocity, and estimated clock
+     * offset and drift.
+     */
+    private GNSSEstimation estimation;
+
+    /**
+     * Kalman filter error covariance matrix.
+     */
+    private Matrix covariance;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L42">    public GNSSKalmanState() {</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param estimation GNSS estimation containing ECEF position, velocity and clock
+     *                   offset and drift.
+     * @param covariance Kalman filter error covariance matrix. Must be 8x8.
+     * @throws IllegalArgumentException if provided covariance matrix is not 8x8.
+     */
+<span class="fc" id="L53">    public GNSSKalmanState(final GNSSEstimation estimation, final Matrix covariance) {</span>
+<span class="fc" id="L54">        setEstimation(estimation);</span>
+<span class="fc" id="L55">        setCovariance(covariance);</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Copy constructor.
+     *
+     * @param input input instance to copy data from.
+     */
+<span class="fc" id="L63">    public GNSSKalmanState(final GNSSKalmanState input) {</span>
+<span class="fc" id="L64">        copyFrom(input);</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * Gets estimation of ECEF position and velocity, and estimated clock offset
+     * and drift.
+     * If GNSS estimation data is not available, this method makes no action.
+     *
+     * @param result instance where result data will be copied to.
+     * @return true if result data has been copied, false otherwise.
+     */
+    public boolean getEstimation(final GNSSEstimation result) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (estimation != null) {</span>
+<span class="fc" id="L77">            estimation.copyTo(result);</span>
+<span class="fc" id="L78">            return true;</span>
+        } else {
+<span class="fc" id="L80">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets estimation of ECEF position and velocity, and estimated clock offset
+     * and drift.
+     *
+     * @return GNSS estimation.
+     */
+    public GNSSEstimation getEstimation() {
+<span class="fc" id="L91">        return estimation;</span>
+    }
+
+    /**
+     * Sets estimation of ECEF position and velocity, and estimated clock offset
+     * and drift.
+     *
+     * @param estimation GNSS estimation to be set.
+     */
+    public void setEstimation(final GNSSEstimation estimation) {
+<span class="fc" id="L101">        this.estimation = estimation;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Gets Kalman filter error covariance matrix.
+     *
+     * @param result instance where result data will be copied to.
+     * @return true if result data has been copied, false otherwise.
+     */
+    public boolean getCovariance(final Matrix result) {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (covariance != null) {</span>
+<span class="fc" id="L112">            covariance.copyTo(result);</span>
+<span class="fc" id="L113">            return true;</span>
+        } else {
+<span class="fc" id="L115">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets Kalman filter error covariance matrix.
+     *
+     * @return Kalman filter error covariance matrix.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L125">        return covariance;</span>
+    }
+
+    /**
+     * Sets Kalman filter error covariance matrix.
+     *
+     * @param covariance Kalman filter error covariance matrix to be set.
+     * @throws IllegalArgumentException if provided covariance matrix is not 8x8.
+     */
+    public void setCovariance(final Matrix covariance) {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (covariance.getRows() != GNSSEstimation.NUM_PARAMETERS</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">                || covariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {</span>
+<span class="fc" id="L137">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L140">        this.covariance = covariance;</span>
+<span class="fc" id="L141">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final GNSSKalmanState output) {
+<span class="fc" id="L149">        output.copyFrom(this);</span>
+<span class="fc" id="L150">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final GNSSKalmanState input) {
+        // copy estimation
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (input.estimation == null) {</span>
+<span class="fc" id="L160">            estimation = null;</span>
+        } else {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            if (estimation == null) {</span>
+<span class="fc" id="L163">                estimation = new GNSSEstimation();</span>
+            }
+<span class="fc" id="L165">            estimation.copyFrom(input.estimation);</span>
+        }
+
+        // copy covariance
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (input.covariance == null) {</span>
+<span class="fc" id="L170">            covariance = null;</span>
+        } else {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            if (covariance == null) {</span>
+<span class="fc" id="L173">                covariance = new Matrix(input.covariance);</span>
+            } else {
+<span class="fc" id="L175">                covariance.copyFrom(input.covariance);</span>
+            }
+        }
+<span class="fc" id="L178">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L188">        return Objects.hash(estimation, covariance);</span>
+    }
+
+    /**
+     * Checks if provided object is a GNSSKalmanState having exactly the same
+     * contents as this instance.
+     *
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L201">            return true;</span>
+        }
+<span class="pc bpc" id="L203" title="1 of 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L204">            return false;</span>
+        }
+<span class="fc" id="L206">        final var other = (GNSSKalmanState) obj;</span>
+<span class="fc" id="L207">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final GNSSKalmanState other) {
+<span class="fc" id="L217">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed for values.
+     * @return true if both instances are considered to be equal (up to provided threshold),
+     * false otherwise.
+     */
+    public boolean equals(final GNSSKalmanState other, final double threshold) {
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L231">            return false;</span>
+        }
+
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        return other.estimation != null</span>
+<span class="pc bpc" id="L235" title="2 of 4 branches missed.">                &amp;&amp; other.estimation.equals(estimation, threshold)</span>
+                &amp;&amp; other.covariance != null
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">                &amp;&amp; other.covariance.equals(covariance, threshold);</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L248">        final var result = (GNSSKalmanState) super.clone();</span>
+<span class="fc" id="L249">        copyTo(result);</span>
+<span class="fc" id="L250">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

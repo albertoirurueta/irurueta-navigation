@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROMedSRobustLateration3DSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">PROMedSRobustLateration3DSolver.java</span></div><h1>PROMedSRobustLateration3DSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
+import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
+import com.irurueta.numerical.robust.PROMedSRobustEstimator;
+import com.irurueta.numerical.robust.PROMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * Robustly solves the lateration problem by finding the best pairs of 3D
+ * positions and distances among the provided ones using PROMedS algorithm to
+ * discard outliers.
+ */
+@SuppressWarnings(&quot;Duplicates&quot;)
+public class PROMedSRobustLateration3DSolver extends RobustLateration3DSolver {
+
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
+
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+<span class="fc" id="L78">    private double stopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+
+    /**
+     * Quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] qualityScores;
+
+    /**
+     * Constructor.
+     */
+    public PROMedSRobustLateration3DSolver() {
+<span class="fc" id="L90">        super();</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public PROMedSRobustLateration3DSolver(final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L100">        super(listener);</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length of their length is smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
+<span class="fc" id="L113">        super(positions, distances);</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
+<span class="fc" id="L128">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation stats,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions, distances or
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L146">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events such as when estimation stats,
+     *                  ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L162">        super(positions, distances, listener);</span>
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres spheres defining positions and distances.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(final Sphere[] spheres) {
+<span class="fc" id="L173">        super(spheres);</span>
+<span class="fc" id="L174">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations) {
+<span class="fc" id="L186">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L187">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres  spheres defining positions and distances.
+     * @param listener listener to be notified of events such as when estimation starts,
+     *                 ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L200">        super(spheres, listener);</span>
+<span class="fc" id="L201">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public PROMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L216">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L217">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @throws IllegalArgumentException if quality scores is null, length
+     *                                  of quality scores is less than required minimum (4 samples).
+     */
+    public PROMedSRobustLateration3DSolver(final double[] qualityScores) {
+<span class="fc" id="L229">        super();</span>
+<span class="fc" id="L230">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L231">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if quality scores is null, length
+     *                                  of quality scores is less than required minimum (4 samples).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L246">        super(listener);</span>
+<span class="fc" id="L247">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
+     * @throws IllegalArgumentException if either positions, distances or quality
+     *                                  scores are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances) {
+<span class="fc" id="L265">        super(positions, distances);</span>
+<span class="fc" id="L266">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L267">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions, distances, quality scores or
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
+<span class="fc" id="L286">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L287">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L288">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions, distances or
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L308">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L309">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L310">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node.
+     * @param listener      listener to be notified of events such as when
+     *                      estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions, distances,
+     *                                  quality scores or standard deviations are null, don't have the same
+     *                                  length or their length is smaller than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L329">        super(positions, distances, listener);</span>
+<span class="fc" id="L330">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L331">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param spheres       spheres defining positions and distances.
+     * @throws IllegalArgumentException if either spheres or quality scores
+     *                                  are null don't have the same length or their length is less than
+     *                                  required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(final double[] qualityScores, final Sphere[] spheres) {
+<span class="fc" id="L345">        super(spheres);</span>
+<span class="fc" id="L346">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L347">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either spheres, quality scores or
+     *                                  standard deviations are null, don't have the same length or their
+     *                                  length is less than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations) {
+<span class="fc" id="L363">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L364">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L365">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param spheres       spheres defining positions and distances.
+     * @param listener      listener to be notified of events such as when estimation starts,
+     *                      ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either spheres or quality scores
+     *                                  are null, don't have the same length or their length is less than
+     *                                  required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L383">        super(spheres, listener);</span>
+<span class="fc" id="L384">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L385">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either spheres, quality scores
+     *                                  or standard deviations are null, don't have the same length or their
+     *                                  length is less than required (4 points).
+     */
+    public PROMedSRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L404">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L405">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L406">    }</span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L428">        return stopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if this solver is locked.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L453" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L454">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L456" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L457">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L460">        this.stopThreshold = stopThreshold;</span>
+<span class="fc" id="L461">    }</span>
+
+    /**
+     * Returns quality scores corresponding to each pair of
+     * positions and distances (i.e. sample).
+     * The larger the score value the better the quality of the sample.
+     *
+     * @return quality scores corresponding to each sample.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L472">        return qualityScores;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each pair of positions and
+     * distances (i.e. sample).
+     * The larger the score value the better the quality of the sample.
+     *
+     * @param qualityScores quality scores corresponding to each pair of
+     *                      matched points.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
+     */
+    @Override
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc bfc" id="L489" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L490">            throw new LockedException();</span>
+        }
+<span class="fc" id="L492">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L493">    }</span>
+
+    /**
+     * Indicates whether solver is ready to find a solution.
+     *
+     * @return true if solver is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L502" title="1 of 6 branches missed.">        return super.isReady() &amp;&amp; qualityScores != null &amp;&amp; qualityScores.length == distances.length;</span>
+    }
+
+    /**
+     * Solves the lateration problem.
+     *
+     * @return estimated position.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @Override
+    public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L516" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L517">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L519" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L520">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L523">        final var innerEstimator = new PROMedSRobustEstimator&lt;&gt;(new PROMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
+            @Override
+            public double[] getQualityScores() {
+<span class="fc" id="L526">                return qualityScores;</span>
+            }
+
+            @Override
+            public double getThreshold() {
+<span class="nc" id="L531">                return stopThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L536">                return distances.length;</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L541">                return preliminarySubsetSize;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L546">                solvePreliminarySolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L547">            }</span>
+
+            @Override
+            public double computeResidual(final Point3D currentEstimation, final int i) {
+<span class="fc" id="L551">                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L556">                return PROMedSRobustLateration3DSolver.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
+                // no action needed
+<span class="fc" id="L562">            }</span>
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
+                // no action needed
+<span class="fc" id="L567">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
+<span class="pc bpc" id="L571" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L572">                    listener.onSolveNextIteration(PROMedSRobustLateration3DSolver.this, iteration);</span>
+                }
+<span class="fc" id="L574">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
+<span class="nc bnc" id="L578" title="All 2 branches missed.">                if (listener != null) {</span>
+<span class="nc" id="L579">                    listener.onSolveProgressChange(PROMedSRobustLateration3DSolver.this, progress);</span>
+                }
+<span class="nc" id="L581">            }</span>
+        });
+
+        try {
+<span class="fc" id="L585">            locked = true;</span>
+
+<span class="pc bpc" id="L587" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L588">                listener.onSolveStart(this);</span>
+            }
+
+<span class="fc" id="L591">            inliersData = null;</span>
+<span class="fc" id="L592">            innerEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L593">            innerEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L594">            innerEstimator.setProgressDelta(progressDelta);</span>
+<span class="fc" id="L595">            innerEstimator.setUseInlierThresholds(false);</span>
+<span class="fc" id="L596">            var result = innerEstimator.estimate();</span>
+<span class="fc" id="L597">            inliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L598">            result = attemptRefine(result);</span>
+
+<span class="pc bpc" id="L600" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L601">                listener.onSolveEnd(this);</span>
+            }
+
+<span class="fc" id="L604">            return result;</span>
+
+<span class="nc" id="L606">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L607">            throw new LockedException(e);</span>
+<span class="nc" id="L608">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L609">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L611">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L622">        return RobustEstimatorMethod.PROMEDS;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided sample.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     *
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 3 samples.
+     */
+    private void internalSetQualityScores(final double[] qualityScores) {
+<span class="fc bfc" id="L635" title="All 4 branches covered.">        if (qualityScores == null || qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L636">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L639">        this.qualityScores = qualityScores;</span>
+<span class="fc" id="L640">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
