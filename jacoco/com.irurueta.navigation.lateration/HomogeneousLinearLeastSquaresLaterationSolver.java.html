@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HomogeneousLinearLeastSquaresLaterationSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">HomogeneousLinearLeastSquaresLaterationSolver.java</span></div><h1>HomogeneousLinearLeastSquaresLaterationSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.Point;
+import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
+
+/**
+ * Linearly solves the lateration problem using an homogeneous LMSE solution.
+ */
+public abstract class HomogeneousLinearLeastSquaresLaterationSolver&lt;P extends Point&lt;?&gt;&gt; extends LaterationSolver&lt;P&gt; {
+
+    /**
+     * Constructor.
+     */
+    protected HomogeneousLinearLeastSquaresLaterationSolver() {
+<span class="fc" id="L34">        super();</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required points.
+     */
+    protected HomogeneousLinearLeastSquaresLaterationSolver(final P[] positions, final double[] distances) {
+<span class="fc" id="L46">        super(positions, distances);</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events raised by this instance.
+     */
+    protected HomogeneousLinearLeastSquaresLaterationSolver(final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L55">        super(listener);</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events raised by this instance.
+     * @throws IllegalArgumentException if either position or distances are null,
+     *                                  don't have the same length or their length is smaller than required points.
+     */
+    protected HomogeneousLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances, final LaterationSolverListener&lt;P&gt; listener) {
+<span class="fc" id="L69">        super(positions, distances, listener);</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Solves the lateration problem.
+     *
+     * @throws LaterationException if lateration fails.
+     * @throws NotReadyException   if solver is not ready.
+     * @throws LockedException     if instance is busy solving the lateration problem.
+     */
+    @Override
+    public void solve() throws LaterationException, NotReadyException, LockedException {
+        // The implementation on this method follows the algorithm  bellow.
+
+        // Having 3 2D circles:
+        // c1x, c1y, r1
+        // c2x, c2y, r2
+        // c3x, c3y, r3
+        // where (c1x, c1y) are the coordinates of 1st circle center and r1 is its radius.
+        // (c2x, c2y) are the coordinates of 2nd circle center and r2 is its radius.
+        // (c3x, c3y) are the coordinates of 3rd circle center and r3 is its radius.
+
+        // The equations of the circles are as follows:
+        // (x - c1x)^2 + (y - c1y)^2 = r1^2
+        // (x - c2x)^2 + (y - c2y)^2 = r2^2
+        // (x - c3x)^2 + (y - c3y)^2 = r3^2
+
+        // x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2 = r1^2
+        // x^2 - 2*c2x*x + c2x^2 + y^2 - 2*c2y*y + c2y^2 = r2^2
+        // x^2 - 2*c3x*x + c3x^2 + y^2 - 2*c3y*y + c3y^2 = r3^2
+
+        // remove 1st equation from others (we use 1st point as reference)
+
+        // x^2 - 2*c2x*x + c2x^2 + y^2 - 2*c2y*y + c2y^2 - (x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2) = r2^2 - r1^2
+        // x^2 - 2*c3x*x + c3x^2 + y^2 - 2*c3y*y + c3y^2 - (x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2) = r3^2 - r1^2
+
+        // - 2*c2x*x + c2x^2 - 2*c2y*y + c2y^2 + 2*c1x*x - c1x^2 + 2*c1y*y - c1y^2 = r2^2 - r1^2
+        // - 2*c3x*x + c3x^2 - 2*c3y*y + c3y^2 + 2*c1x*x - c1x^2 + 2*c1y*y - c1y^2 = r3^2 - r1^2
+
+        // 2*(c1x - c2x)*x + c2x^2 + 2*(c1y - c2y)*y + c2y^2 - c1x^2 - c1y^2 = r2^2 - r1^2
+        // 2*(c1x - c3x)*x + c3x^2 + 2*(c1y - c3y)*y + c3y^2 - c1x^2 - c1y^2 = r3^2 - r1^2
+
+        // 2*(c1x - c2x)*x + 2*(c1y - c2y)*y = r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2
+        // 2*(c1x - c3x)*x + 2*(c1y - c3y)*y = r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2
+
+        // x and y are the inhomogeneous coordinates of the point (x,y) we want to find, we
+        // substitute such point by the corresponding homogeneous coordinates (x,y) = (x'/w', y'/w')
+
+        // Hence
+        // 2*(c1x - c2x)*x'/w' + 2*(c1y - c2y)*y'/w' = r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2
+        // 2*(c1x - c3x)*x'/w' + 2*(c1y - c3y)*y'/w' = r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2
+
+        // Multiplying by w' at both sides...
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' = (r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2)*w'
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' = (r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2)*w'
+
+        // Obtaining the following homogeneous equations
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' - (r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2)*w' = 0
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' - (r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2)*w' = 0
+
+        // Fixing signs...
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' + (r1^2 - r2^2 + c2x^2 + c2y^2 - c1x^2 - c1y^2)*w' = 0
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + (r1^2 - r3^2 + c3x^2 + c3y^2 - c1x^2 - c1y^2)*w' = 0
+
+
+        // The homogeneous equations can be expressed as a linear system of homogeneous equations A*x = 0
+        // where the unknowns to be solved are (x', y', w') up to scale.
+
+        // [2*(c1x - c2x)   2*(c1y - c2y)    r1^2 - r2^2 + c2x^2 + c2y^2 - c1x^2 - c1y^2][x'] = 0
+        // [2*(c1x - c3x)   2*(c1y - c3y)    r1^2 - r3^2 + c3x^2 + c3y^2 - c1x^2 - c1y^2][y'] = 0
+        //                                                                               [w']
+
+        // This can be solved by using the SVD decomposition of matrix A and picking the last column of
+        // resulting V matrix. At least 2 equations are required to find a solution, since 1 additional
+        // point is used as a reference, at least 3 points are required.
+
+        // For spheres the solution is analogous
+
+        // Having 4 3D spheres:
+        // c1x, c1y, c1z, r1
+        // c2x, c2y, c2z, r2
+        // c3x, c3y, c3z, r3
+        // c4x, c4y, c4z, r4
+        // where (c1x, c1y, c1z) are the coordinates of 1st sphere center and r1 is its radius.
+        // (c2x, c2y, c2z) are the coordinates of 2nd sphere center and r2 is its radius.
+        // (c3x, c3y, c3z) are the coordinates of 3rd sphere center and r3 is its radius.
+        // (c4x, c4y, c4z) are the coordinates of 4th sphere center and r4 is its radius.
+
+        // The equations of the spheres are as follows:
+        // (x - c1x)^2 + (y - c1y)^2 + (z - c1z)^2 = r1^2
+        // (x - c2x)^2 + (y - c2y)^2 + (z - c2z)^2 = r2^2
+        // (x - c3x)^2 + (y - c3y)^2 + (z - c3z)^2 = r3^2
+        // (x - c4x)^2 + (y - c4y)^2 + (z - c4z)^2 = r4^2
+
+        // x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2 + z^2 - 2*c1z*z + c1z^2 = r1^2
+        // x^2 - 2*c2x*x + c2x^2 + y^2 - 2*c2y*y + c2y^2 + z^2 - 2*c2z*z + c2z^2 = r2^2
+        // x^2 - 2*c3x*x + c3x^2 + y^2 - 2*c3y*y + c3y^3 + z^2 - 2*c3z*z + c3z^2 = r3^2
+        // x^2 - 2*c4x*x + c4x^2 + y^2 - 2*c4y*y + c4y^2 + z^2 - 2*c4z*z + c4z^2 = r4^2
+
+        // remove 1st equation from others (we use 1st point as reference)
+        // x^2 - 2*c2x*x + c2x^2 + y^2 - 2*c2y*y + c2y^2 + z^2 - 2*c2z*z + c2z^2 - (x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2 + z^2 - 2*c1z*z + c1z^2) = r2^2 - r1^2
+        // x^2 - 2*c3x*x + c3x^2 + y^2 - 2*c3y*y + c3y^3 + z^2 - 2*c3z*z + c3z^2 - (x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2 + z^2 - 2*c1z*z + c1z^2) = r3^2 - r1^2
+        // x^2 - 2*c4x*x + c4x^2 + y^2 - 2*c4y*y + c4y^2 + z^2 - 2*c4z*z + c4z^2 - (x^2 - 2*c1x*x + c1x^2 + y^2 - 2*c1y*y + c1y^2 + z^2 - 2*c1z*z + c1z^2) = r4^2 - r1^2
+
+        // - 2*c2x*x + c2x^2 - 2*c2y*y + c2y^2 - 2*c2z*z + c2z^2 + 2*c1x*x - c1x^2 + 2*c1y*y - c1y^2 + 2*c1z*z - c1z^2 = r2^2 - r1^2
+        // - 2*c3x*x + c3x^2 - 2*c3y*y + c3y^3 - 2*c3z*z + c3z^2 + 2*c1x*x - c1x^2 + 2*c1y*y - c1y^2 + 2*c1z*z - c1z^2 = r3^2 - r1^2
+        // - 2*c4x*x + c4x^2 - 2*c4y*y + c4y^2 - 2*c4z*z + c4z^2 + 2*c1x*x - c1x^2 + 2*c1y*y - c1y^2 + 2*c1z*z - c1z^2 = r4^2 - r1^2
+
+        // 2*(c1x - c2x)*x + c2x^2 + 2*(c1y - c2y)*y + c2y^2 + 2*(c1z - c2z)*z + c2z^2 - c1x^2 - c1y^2 - c1z^2 = r2^2 - r1^2
+        // 2*(c1x - c3x)*x + c3x^2 + 2*(c1y - c3y)*y + c3y^3 + 2*(c1z - c3z)*z + c3z^2 - c1x^2 - c1y^2 - c1z^2 = r3^2 - r1^2
+        // 2*(c1x - c4x)*x + c4x^2 + 2*(c1y - c4y)*y + c4y^2 + 2*(c1z - c4z)*z + c4z^2 - c1x^2 - c1y^2 - c1z^2 = r4^2 - r1^2
+
+        // 2*(c1x - c2x)*x + 2*(c1y - c2y)*y + 2*(c1z - c2z)*z = r2^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c2x^2 - c2y^2 - c2z^2
+        // 2*(c1x - c3x)*x + 2*(c1y - c3y)*y + 2*(c1z - c3z)*z = r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2
+        // 2*(c1x - c4x)*x + 2*(c1y - c4y)*y + 2*(c1z - c4z)*z = r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2
+
+        // x, y and z the inhomogeneous coordinates of the point (x,y,z) we want to find,
+        // we substitute such point by the corresponding homogeneous coordinates
+        // (x, y, z) = (x'/w', y'/w', z'/w')
+
+        // Hence
+        // 2*(c1x - c2x)*x'/w' + 2*(c1y - c2y)*y'/w' + 2*(c1z - c2z)*z'/w' = r2^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c2x^2 - c2y^2 - c2z^2
+        // 2*(c1x - c3x)*x'/w' + 2*(c1y - c3y)*y'/w' + 2*(c1z - c3z)*z'/w' = r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2
+        // 2*(c1x - c4x)*x'/w' + 2*(c1y - c4y)*y'/w' + 2*(c1z - c4z)*z'/w' = r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2
+
+        // Multiplying by w' at both sides...
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' + 2*(c1z - c2z)*z' = (r2^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c2x^2 - c2y^2 - c2z^2)*w'
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + 2*(c1z - c3z)*z' = (r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2)*w'
+        // 2*(c1x - c4x)*x' + 2*(c1y - c4y)*y' + 2*(c1z - c4z)*z' = (r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2)*w'
+
+        // Obtaining the following homogeneous equations
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' + 2*(c1z - c2z)*z' - (r2^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c2x^2 - c2y^2 - c2z^2)*w' = 0
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + 2*(c1z - c3z)*z' - (r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2)*w' = 0
+        // 2*(c1x - c4x)*x' + 2*(c1y - c4y)*y' + 2*(c1z - c4z)*z' - (r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2)*w' = 0
+
+        // Fixing signs...
+        // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' + 2*(c1z - c2z)*z' + (r1^2 - r2^2 + c2x^2 + c2y^2 + c2z^2 - c1x^2 - c1y^2 - c1z^2)*w' = 0
+        // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + 2*(c1z - c3z)*z' + (r1^2 - r3^2 + c3x^2 + c3y^3 + c3z^2 - c1x^2 - c1y^2 - c1z^2)*w' = 0
+        // 2*(c1x - c4x)*x' + 2*(c1y - c4y)*y' + 2*(c1z - c4z)*z' + (r1^2 - r4^2 + c4x^2 + c4y^2 + c4z^2 - c1x^2 - c1y^2 - c1z^2)*w' = 0
+
+        // The homogeneous equations can be expressed as a linear system of homogeneous equations
+        // where the unknowns to be solved are (x', y', z', w') up to scale.
+
+        // [2*(c1x - c2x)   2*(c1y - c2y)   2*(c1z - c2z)   r1^2 - r2^2 + c2x^2 + c2y^2 + c2z^2 - c1x^2 - c1y^2 - c1z^2][x'] = 0
+        // [2*(c1x - c3x)   2*(c1y - c3y)   2*(c1z - c3z)   r1^2 - r3^2 + c3x^2 + c3y^3 + c3z^2 - c1x^2 - c1y^2 - c1z^2][y'] = 0
+        // [2*(c1x - c4x)   2*(c1y - c4y)   2*(c1z - c4z)   r1^2 - r4^2 + c4x^2 + c4y^2 + c4z^2 - c1x^2 - c1y^2 - c1z^2][z'] = 0
+        //                                                                                                              [w']
+
+        // This can be solved by using the SVD decomposition of matrix A and picking the last column of
+        // resulting V matrix. At least 3 equations are required to find a solution, since 1 additional
+        // point is used as a reference, at least 4 points are required.
+
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L222">            throw new NotReadyException();</span>
+        }
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L225">            throw new LockedException();</span>
+        }
+
+        try {
+<span class="fc" id="L229">            locked = true;</span>
+
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L232">                listener.onSolveStart(this);</span>
+            }
+
+<span class="fc" id="L235">            final var numberOfPositions = positions.length;</span>
+<span class="fc" id="L236">            final var numberOfPositionsMinus1 = numberOfPositions - 1;</span>
+<span class="fc" id="L237">            final var dims = getNumberOfDimensions();</span>
+
+<span class="fc" id="L239">            final var referenceDistance = distances[0];</span>
+<span class="fc" id="L240">            final var sqrRefDistance = referenceDistance * referenceDistance;</span>
+<span class="fc" id="L241">            final var refPosition = positions[0];</span>
+
+<span class="fc" id="L243">            var sqrRefNorm = 0.0;</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">            for (var j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L245">                final var coord = refPosition.getInhomogeneousCoordinate(j);</span>
+<span class="fc" id="L246">                sqrRefNorm += coord * coord;</span>
+            }
+
+<span class="fc" id="L249">            final var a = new Matrix(numberOfPositionsMinus1, dims + 1);</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">            for (int i = 1, i2 = 0; i &lt; numberOfPositions; i++, i2++) {</span>
+
+<span class="fc" id="L252">                var sqrNorm = 0.0;</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                for (var j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L254">                    final var refCoord = refPosition.getInhomogeneousCoordinate(j);</span>
+<span class="fc" id="L255">                    final var coord = positions[i].getInhomogeneousCoordinate(j);</span>
+
+<span class="fc" id="L257">                    a.setElementAt(i2, j, 2.0 * (refCoord - coord));</span>
+
+<span class="fc" id="L259">                    sqrNorm += coord * coord;</span>
+                }
+
+<span class="fc" id="L262">                final var distance = distances[i];</span>
+<span class="fc" id="L263">                final var sqrDistance = distance * distance;</span>
+<span class="fc" id="L264">                a.setElementAt(i2, dims, sqrRefDistance - sqrDistance + sqrNorm - sqrRefNorm);</span>
+            }
+
+<span class="fc" id="L267">            final var decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L268">            decomposer.decompose();</span>
+
+<span class="fc" id="L270">            final var nullity = decomposer.getNullity();</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            if (nullity &gt; 1) {</span>
+                // linear system of equations is degenerate (does not have enough rank),
+                // probably because there are dependencies or repeated data between
+                // points
+<span class="fc" id="L275">                throw new LaterationException();</span>
+            }
+
+<span class="fc" id="L278">            final var v = decomposer.getV();</span>
+<span class="fc" id="L279">            final var homogeneousEstimatedPositionCoordinates = v.getSubmatrixAsArray(</span>
+                    0, dims, dims, dims);
+
+<span class="fc" id="L282">            final var w = homogeneousEstimatedPositionCoordinates[dims];</span>
+<span class="fc" id="L283">            estimatedPositionCoordinates = new double[dims];</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">            for (var j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L285">                estimatedPositionCoordinates[j] = homogeneousEstimatedPositionCoordinates[j] / w;</span>
+            }
+
+<span class="fc bfc" id="L288" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L289">                listener.onSolveEnd(this);</span>
+            }
+<span class="nc" id="L291">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L292">            throw new LaterationException(e);</span>
+        } finally {
+<span class="fc" id="L294">            locked = false;</span>
+        }
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Gets lateration solver type.
+     *
+     * @return lateration solver type.
+     */
+    @Override
+    public LaterationSolverType getType() {
+<span class="fc" id="L305">        return LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

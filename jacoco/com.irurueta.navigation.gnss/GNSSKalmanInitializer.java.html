@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSKalmanInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSKalmanInitializer.java</span></div><h1>GNSSKalmanInitializer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+
+/**
+ * Initializes the GNSS EKF Kalman filter state estimates and error covariance matrix.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_KF.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_KF.m
+ * &lt;/a&gt;
+ */
+public class GNSSKalmanInitializer {
+
+    /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSKalmanInitializer() {
+    }
+
+    /**
+     * Initializes GNSS Kalman filter state.
+     *
+     * @param estimation initial GNSS estimation containing ECEF position and velocity,
+     *                   and estimated clock offset and drift.
+     * @param config     Kalman filter configuration.
+     * @param result     instance where resulting initialized Kalman filter state will be
+     *                   stored.
+     */
+    public static void initialize(final GNSSEstimation estimation,
+                                  final GNSSKalmanConfig config,
+                                  final GNSSKalmanState result) {
+<span class="fc" id="L50">        result.setEstimation(estimation);</span>
+
+<span class="fc" id="L52">        final var initPosUnc = config.getInitialPositionUncertainty();</span>
+<span class="fc" id="L53">        final var initVelUnc = config.getInitialVelocityUncertainty();</span>
+<span class="fc" id="L54">        final var initClockOffsetUnc = config.getInitialClockOffsetUncertainty();</span>
+<span class="fc" id="L55">        final var initClockDriftUnc = config.getInitialClockDriftUncertainty();</span>
+
+<span class="fc" id="L57">        final var initPosUnc2 = initPosUnc * initPosUnc;</span>
+<span class="fc" id="L58">        final var initVelUnc2 = initVelUnc * initVelUnc;</span>
+<span class="fc" id="L59">        final var initClockOffsetUnc2 = initClockOffsetUnc * initClockOffsetUnc;</span>
+<span class="fc" id="L60">        final var initClockDriftUnc2 = initClockDriftUnc * initClockDriftUnc;</span>
+
+        Matrix covariance;
+        try {
+<span class="fc" id="L64">            covariance = new Matrix(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);</span>
+
+<span class="fc" id="L66">            covariance.setElementAt(0, 0, initPosUnc2);</span>
+<span class="fc" id="L67">            covariance.setElementAt(1, 1, initPosUnc2);</span>
+<span class="fc" id="L68">            covariance.setElementAt(2, 2, initPosUnc2);</span>
+
+<span class="fc" id="L70">            covariance.setElementAt(3, 3, initVelUnc2);</span>
+<span class="fc" id="L71">            covariance.setElementAt(4, 4, initVelUnc2);</span>
+<span class="fc" id="L72">            covariance.setElementAt(5, 5, initVelUnc2);</span>
+
+<span class="fc" id="L74">            covariance.setElementAt(6, 6, initClockOffsetUnc2);</span>
+<span class="fc" id="L75">            covariance.setElementAt(7, 7, initClockDriftUnc2);</span>
+
+<span class="fc" id="L77">            result.setCovariance(covariance);</span>
+
+<span class="nc" id="L79">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="fc" id="L81">        }</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Initializes GNSS Kalman filter state.
+     *
+     * @param estimation initial GNSS estimation containing ECEF position and velocity,
+     *                   and estimated clock offset and drift.
+     * @param config     Kalman filter configuration.
+     * @return initialized Kalman filter state.
+     */
+    public static GNSSKalmanState initialize(final GNSSEstimation estimation, final GNSSKalmanConfig config) {
+<span class="fc" id="L93">        final var result = new GNSSKalmanState();</span>
+<span class="fc" id="L94">        initialize(estimation, config, result);</span>
+<span class="fc" id="L95">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

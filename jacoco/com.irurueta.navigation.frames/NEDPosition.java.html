@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NEDPosition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">NEDPosition.java</span></div><h1>NEDPosition.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains body curvilinear position with respect Earth, expressed in latitude, longitude and height.
+ */
+public class NEDPosition implements Serializable, Cloneable {
+
+    /**
+     * Latitude expressed in radians (rad).
+     */
+    private double latitude;
+
+    /**
+     * Longitude expressed in radians (rad).
+     */
+    private double longitude;
+
+    /**
+     * Height expressed in meters (m).
+     */
+    private double height;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L51">    public NEDPosition() {</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude expressed in radians (rad).
+     * @param longitude longitude expressed in radians (rad).
+     * @param height    height expressed in meters (m).
+     */
+<span class="fc" id="L61">    public NEDPosition(final double latitude, final double longitude, final double height) {</span>
+<span class="fc" id="L62">        setCoordinates(latitude, longitude, height);</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude.
+     * @param longitude longitude.
+     * @param height    height.
+     */
+<span class="fc" id="L72">    public NEDPosition(final Angle latitude, final Angle longitude, final Distance height) {</span>
+<span class="fc" id="L73">        setCoordinates(latitude, longitude, height);</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input position to copy data from.
+     */
+<span class="fc" id="L81">    public NEDPosition(final NEDPosition input) {</span>
+<span class="fc" id="L82">        copyFrom(input);</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Gets latitude expressed in radians (rad).
+     *
+     * @return latitude expressed in radians.
+     */
+    public double getLatitude() {
+<span class="fc" id="L91">        return latitude;</span>
+    }
+
+    /**
+     * Sets latitude expressed in radians (rad).
+     *
+     * @param latitude latitude expressed in radians to be set.
+     */
+    public void setLatitude(final double latitude) {
+<span class="fc" id="L100">        this.latitude = latitude;</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Gets longitude expressed in radians (rad).
+     *
+     * @return longitude expressed in radians.
+     */
+    public double getLongitude() {
+<span class="fc" id="L109">        return longitude;</span>
+    }
+
+    /**
+     * Sets longitude expressed in radians (rad).
+     *
+     * @param longitude longitude expressed in radians to be set.
+     */
+    public void setLongitude(final double longitude) {
+<span class="fc" id="L118">        this.longitude = longitude;</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Gets height expressed in meters (m).
+     *
+     * @return height expressed in meters.
+     */
+    public double getHeight() {
+<span class="fc" id="L127">        return height;</span>
+    }
+
+    /**
+     * Sets height expressed in meters (m).
+     *
+     * @param height height expressed in meters to be set.
+     */
+    public void setHeight(final double height) {
+<span class="fc" id="L136">        this.height = height;</span>
+<span class="fc" id="L137">    }</span>
+
+    /**
+     * Sets curvilinear position coordinates.
+     *
+     * @param latitude  latitude expressed in radians (rad) to be set.
+     * @param longitude longitude expressed in radians (rad) to be set.
+     * @param height    height expressed in meters (m) to be set.
+     */
+    public void setCoordinates(final double latitude, final double longitude, final double height) {
+<span class="fc" id="L147">        this.latitude = latitude;</span>
+<span class="fc" id="L148">        this.longitude = longitude;</span>
+<span class="fc" id="L149">        this.height = height;</span>
+<span class="fc" id="L150">    }</span>
+
+    /**
+     * Gets latitude angle.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getLatitudeAngle(final Angle result) {
+<span class="fc" id="L158">        result.setValue(latitude);</span>
+<span class="fc" id="L159">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Gets latitude angle.
+     *
+     * @return latitude angle.
+     */
+    public Angle getLatitudeAngle() {
+<span class="fc" id="L168">        return new Angle(latitude, AngleUnit.RADIANS);</span>
+    }
+
+    /**
+     * Sets latitude angle.
+     *
+     * @param latitude latitude angle to be set.
+     */
+    public void setLatitudeAngle(final Angle latitude) {
+<span class="fc" id="L177">        this.latitude = AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(),</span>
+                AngleUnit.RADIANS);
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Gets longitude angle.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getLongitudeAngle(final Angle result) {
+<span class="fc" id="L187">        result.setValue(longitude);</span>
+<span class="fc" id="L188">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Gets longitude angle.
+     *
+     * @return longitude angle.
+     */
+    public Angle getLongitudeAngle() {
+<span class="fc" id="L197">        return new Angle(longitude, AngleUnit.RADIANS);</span>
+    }
+
+    /**
+     * Sets longitude angle.
+     *
+     * @param longitude longitude angle to be set.
+     */
+    public void setLongitudeAngle(final Angle longitude) {
+<span class="fc" id="L206">        this.longitude = AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(),</span>
+                AngleUnit.RADIANS);
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Gets height distance.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getHeightDistance(final Distance result) {
+<span class="fc" id="L216">        result.setValue(height);</span>
+<span class="fc" id="L217">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * Gets height distance.
+     *
+     * @return height distance.
+     */
+    public Distance getHeightDistance() {
+<span class="fc" id="L226">        return new Distance(height, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets height distance.
+     *
+     * @param height height distance to be set.
+     */
+    public void setHeightDistance(final Distance height) {
+<span class="fc" id="L235">        this.height = DistanceConverter.convert(height.getValue().doubleValue(), height.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L236">    }</span>
+
+    /**
+     * Sets curvilinear position coordinates.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     */
+    public void setCoordinates(
+            final Angle latitude, final Angle longitude, final Distance height) {
+<span class="fc" id="L247">        setLatitudeAngle(latitude);</span>
+<span class="fc" id="L248">        setLongitudeAngle(longitude);</span>
+<span class="fc" id="L249">        setHeightDistance(height);</span>
+<span class="fc" id="L250">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final NEDPosition output) {
+<span class="fc" id="L258">        output.latitude = latitude;</span>
+<span class="fc" id="L259">        output.longitude = longitude;</span>
+<span class="fc" id="L260">        output.height = height;</span>
+<span class="fc" id="L261">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final NEDPosition input) {
+<span class="fc" id="L269">        latitude = input.latitude;</span>
+<span class="fc" id="L270">        longitude = input.longitude;</span>
+<span class="fc" id="L271">        height = input.height;</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L282">        return Objects.hash(latitude, longitude, height);</span>
+    }
+
+    /**
+     * Checks if provided object is a NEDPosition having exactly the same contents as
+     * this instance.
+     *
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L295">            return false;</span>
+        }
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L298">            return true;</span>
+        }
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        if (!(obj instanceof NEDPosition other)) {</span>
+<span class="nc" id="L301">            return false;</span>
+        }
+
+<span class="fc" id="L304">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final NEDPosition other) {
+<span class="fc" id="L314">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between position coordinates.
+     * @return true if both instances are considered to be equal (up to provided threshold),
+     * false otherwise.
+     */
+    public boolean equals(final NEDPosition other, final double threshold) {
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L328">            return false;</span>
+        }
+
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        return Math.abs(latitude - other.latitude) &lt;= threshold</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(longitude - other.longitude) &lt;= threshold</span>
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(height - other.height) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L344">        final var result = (NEDPosition) super.clone();</span>
+<span class="fc" id="L345">        copyTo(result);</span>
+<span class="fc" id="L346">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

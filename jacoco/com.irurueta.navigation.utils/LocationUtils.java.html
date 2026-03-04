@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LocationUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.utils</a> &gt; <span class="el_source">LocationUtils.java</span></div><h1>LocationUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.utils;
+
+import com.irurueta.navigation.geodesic.Geodesic;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
+
+import java.text.DecimalFormat;
+import java.util.StringTokenizer;
+
+/**
+ * Location utility class based on Android's SDK Location class.
+ */
+public class LocationUtils {
+    /**
+     * Constant used to specify formatting of a latitude or longitude
+     * in the form &quot;[+-]DDD.DDDDD where D indicates degrees.
+     */
+    public static final int FORMAT_DEGREES = 0;
+
+    /**
+     * Constant used to specify formatting of a latitude or longitude
+     * in the form &quot;[+-]DDD:MM.MMMMM&quot; where D indicates degrees and
+     * M indicates minutes of arc (1 minute = 1/60th of a degree).
+     */
+    public static final int FORMAT_MINUTES = 1;
+
+    /**
+     * Constant used to specify formatting of a latitude or longitude
+     * in the form &quot;DDD:MM:SS.SSSSS&quot; where D indicates degrees, M
+     * indicates minutes of arc, and S indicates seconds of arc (1
+     * minute = 1/60th of a degree, 1 second = 1/3600th of a degree).
+     */
+    public static final int FORMAT_SECONDS = 2;
+
+    /**
+     * Constructor.
+     * Prevents public instantiation.
+     */
+    private LocationUtils() {
+    }
+
+    /**
+     * Converts a coordinate to a String representation. The outputType
+     * may be one of FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
+     * The coordinate must be a valid double between -180.0 and 180.0.
+     * This conversion is performed in a method that is dependent on the
+     * default locale, and so is not guaranteed to round-trip with
+     * {@link #convert(String)}.
+     *
+     * @param coordinate coordinate to be converted.
+     * @param outputType output format.
+     * @return converted coordinate.
+     * @throws IllegalArgumentException if coordinate is less than
+     *                                  -180.0, greater than 180.0, or is not a number.
+     * @throws IllegalArgumentException if outputType is not one of
+     *                                  FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
+     */
+    public static String convert(double coordinate, final int outputType) {
+<span class="pc bpc" id="L74" title="1 of 6 branches missed.">        if (coordinate &lt; -180.0 || coordinate &gt; 180.0 || Double.isNaN(coordinate)) {</span>
+<span class="fc" id="L75">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L77" title="All 6 branches covered.">        if ((outputType != FORMAT_DEGREES) &amp;&amp; (outputType != FORMAT_MINUTES) &amp;&amp; (outputType != FORMAT_SECONDS)) {</span>
+<span class="fc" id="L78">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L81">        final var sb = new StringBuilder();</span>
+
+        // Handle negative values
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (coordinate &lt; 0) {</span>
+<span class="fc" id="L85">            sb.append('-');</span>
+<span class="fc" id="L86">            coordinate = -coordinate;</span>
+        }
+
+<span class="fc" id="L89">        final var df = new DecimalFormat(&quot;###.#####&quot;);</span>
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        if (outputType == FORMAT_MINUTES || outputType == FORMAT_SECONDS) {</span>
+<span class="fc" id="L91">            final var degrees = (int) Math.floor(coordinate);</span>
+<span class="fc" id="L92">            sb.append(degrees);</span>
+<span class="fc" id="L93">            sb.append(':');</span>
+<span class="fc" id="L94">            coordinate -= degrees;</span>
+<span class="fc" id="L95">            coordinate *= 60.0;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            if (outputType == FORMAT_SECONDS) {</span>
+<span class="fc" id="L97">                final var minutes = (int) Math.floor(coordinate);</span>
+<span class="fc" id="L98">                sb.append(minutes);</span>
+<span class="fc" id="L99">                sb.append(':');</span>
+<span class="fc" id="L100">                coordinate -= minutes;</span>
+<span class="fc" id="L101">                coordinate *= 60.0;</span>
+            }
+        }
+<span class="fc" id="L104">        sb.append(df.format(coordinate));</span>
+<span class="fc" id="L105">        return sb.toString();</span>
+    }
+
+    /**
+     * Converts a String in one of the formats described by
+     * FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS into a
+     * double. This conversion is performed in a locale agnostic
+     * method, and so is not guaranteed to round-trip with
+     * {@link #convert(double, int)}.
+     *
+     * @param coordinate coordinate to be parsed.
+     * @return parsed value.
+     * @throws NullPointerException     if coordinate is null
+     * @throws IllegalArgumentException if the coordinate is not
+     *                                  in one of the valid formats.
+     */
+    public static double convert(String coordinate) {
+        // IllegalArgumentException if bad syntax
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (coordinate == null) {</span>
+<span class="fc" id="L124">            throw new NullPointerException();</span>
+        }
+
+<span class="fc" id="L127">        var negative = false;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (coordinate.charAt(0) == '-') {</span>
+<span class="fc" id="L129">            coordinate = coordinate.substring(1);</span>
+<span class="fc" id="L130">            negative = true;</span>
+        }
+
+<span class="fc" id="L133">        final var st = new StringTokenizer(coordinate, &quot;:&quot;);</span>
+<span class="fc" id="L134">        final var tokens = st.countTokens();</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (tokens &lt; 1) {</span>
+<span class="nc" id="L136">            throw new IllegalArgumentException();</span>
+        }
+        try {
+<span class="fc" id="L139">            final var degrees = st.nextToken();</span>
+            double val;
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            if (tokens == 1) {</span>
+<span class="fc" id="L142">                val = Double.parseDouble(degrees);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                return negative ? -val : val;</span>
+            }
+
+<span class="fc" id="L146">            final var minutes = st.nextToken();</span>
+<span class="fc" id="L147">            final var deg = Integer.parseInt(degrees);</span>
+            double min;
+<span class="fc" id="L149">            var sec = 0.0;</span>
+<span class="fc" id="L150">            var secPresent = false;</span>
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">            if (st.hasMoreTokens()) {</span>
+<span class="fc" id="L153">                min = Integer.parseInt(minutes);</span>
+<span class="fc" id="L154">                final var seconds = st.nextToken();</span>
+<span class="fc" id="L155">                sec = Double.parseDouble(seconds);</span>
+<span class="fc" id="L156">                secPresent = true;</span>
+<span class="fc" id="L157">            } else {</span>
+<span class="fc" id="L158">                min = Double.parseDouble(minutes);</span>
+            }
+
+<span class="pc bpc" id="L161" title="5 of 8 branches missed.">            final var isNegative180 = negative &amp;&amp; (deg == 180) &amp;&amp; (min == 0) &amp;&amp; (sec == 0);</span>
+
+            // deg must be in [0, 179] except for the case of -180 degrees
+<span class="pc bpc" id="L164" title="1 of 6 branches missed.">            if ((deg &lt; 0.0) || (deg &gt; 179 &amp;&amp; !isNegative180)) {</span>
+<span class="fc" id="L165">                throw new IllegalArgumentException();</span>
+            }
+
+            // min must be in [0, 59] if seconds are present, otherwise [0.0, 60.0)
+<span class="pc bpc" id="L169" title="1 of 8 branches missed.">            if (min &lt; 0 || min &gt;= 60 || (secPresent &amp;&amp; (min &gt; 59))) {</span>
+<span class="fc" id="L170">                throw new IllegalArgumentException();</span>
+            }
+
+            // sec must be in [0.0, 60.0)
+<span class="fc bfc" id="L174" title="All 4 branches covered.">            if (sec &lt; 0 || sec &gt;= 60) {</span>
+<span class="fc" id="L175">                throw new IllegalArgumentException();</span>
+            }
+
+<span class="fc" id="L178">            val = deg * 3600.0 + min * 60.0 + sec;</span>
+<span class="fc" id="L179">            val /= 3600.0;</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            return negative ? -val : val;</span>
+<span class="fc" id="L181">        } catch (final NumberFormatException nfe) {</span>
+<span class="fc" id="L182">            throw new IllegalArgumentException();</span>
+        }
+    }
+
+    /**
+     * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
+     * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param results        instance containing results.
+     */
+    public static void distanceAndBearing(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final BearingDistance results) {
+        //noinspection all
+<span class="fc" id="L200">        final var data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
+<span class="fc" id="L201">        results.startLatitude = data.getLat1();</span>
+<span class="fc" id="L202">        results.startLongitude = data.getLon1();</span>
+<span class="fc" id="L203">        results.endLatitude = data.getLat2();</span>
+<span class="fc" id="L204">        results.endLongitude = data.getLon2();</span>
+<span class="fc" id="L205">        results.distance = data.getS12();</span>
+<span class="fc" id="L206">        results.initialBearing = data.getAzi1();</span>
+<span class="fc" id="L207">        results.finalBearing = data.getAzi2();</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
+     * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @return bearing and distance results.
+     */
+    public static BearingDistance distanceAndBearing(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
+<span class="fc" id="L223">        final var results = new BearingDistance();</span>
+<span class="fc" id="L224">        distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);</span>
+<span class="fc" id="L225">        return results;</span>
+    }
+
+    /**
+     * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
+     * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param results        array containing results. First element will contain distance. Second element will contain
+     *                       initial bearing (optional). Third element will contain ending bearing (optional).
+     * @throws IllegalArgumentException if results does not have at least 1 element.
+     */
+    public static void distanceAndBearing(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final double[] results) {
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (results.length == 0) {</span>
+<span class="fc" id="L244">            throw new IllegalArgumentException();</span>
+        }
+        //noinspection all
+<span class="fc" id="L247">        final var data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
+<span class="fc" id="L248">        results[0] = data.getS12();</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (results.length &gt; 1) {</span>
+<span class="fc" id="L250">            results[1] = data.getAzi1();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">            if (results.length &gt; 2) {</span>
+<span class="fc" id="L252">                results[2] = data.getAzi2();</span>
+            }
+        }
+<span class="fc" id="L255">    }</span>
+
+    /**
+     * Computes the approximate distance in meters between two locations.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @return distance in meters between two locations.
+     */
+    public static double distanceBetweenMeters(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
+        //noinspection all
+<span class="fc" id="L270">        return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).getS12();</span>
+    }
+
+    /**
+     * Computes the approximate distance between two locations.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @return distance between two locations.
+     */
+    public static Distance distanceBetween(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
+<span class="fc" id="L285">        return new Distance(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude),</span>
+                DistanceUnit.METER);
+    }
+
+    /**
+     * Computes the approximate distance between two locations.
+     *
+     * @param startLatitude  the starting latitude.
+     * @param startLongitude the starting longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param result         instance where distance between two locations is stored.
+     * @return provided result instance.
+     */
+    public static Distance distanceBetween(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude, final Distance result) {
+<span class="fc" id="L302">        result.setValue(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude));</span>
+<span class="fc" id="L303">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L304">        return result;</span>
+    }
+
+
+    /**
+     * Contains distance and bearing.
+     */
+<span class="fc" id="L311">    public static class BearingDistance {</span>
+        /**
+         * Starting latitude (degrees).
+         */
+        private double startLatitude;
+
+        /**
+         * Starting longitude (degrees).
+         */
+        private double startLongitude;
+
+        /**
+         * Ending latitude (degrees).
+         */
+        private double endLatitude;
+
+        /**
+         * Ending longitude (degrees).
+         */
+        private double endLongitude;
+
+        /**
+         * Distance (meters).
+         */
+<span class="fc" id="L335">        private double distance = 0.0f;</span>
+
+        /**
+         * Initial bearing (degrees).
+         */
+<span class="fc" id="L340">        private double initialBearing = 0.0f;</span>
+
+        /**
+         * Final bearing (degrees).
+         */
+<span class="fc" id="L345">        private double finalBearing = 0.0f;</span>
+
+        /**
+         * Gets starting latitude expressed in degrees.
+         *
+         * @return starting latitude (degrees).
+         */
+        public double getStartLatitude() {
+<span class="fc" id="L353">            return startLatitude;</span>
+        }
+
+        /**
+         * Gets starting longitude expressed in degrees.
+         *
+         * @return starting longitude (degrees).
+         */
+        public double getStartLongitude() {
+<span class="fc" id="L362">            return startLongitude;</span>
+        }
+
+        /**
+         * Gets ending latitude expressed in degrees.
+         *
+         * @return ending latitude (degrees).
+         */
+        public double getEndLatitude() {
+<span class="fc" id="L371">            return endLatitude;</span>
+        }
+
+        /**
+         * Gets ending longitude expressed in degrees.
+         *
+         * @return ending longitude (degrees).
+         */
+        public double getEndLongitude() {
+<span class="fc" id="L380">            return endLongitude;</span>
+        }
+
+        /**
+         * Gets distance expressed in meters.
+         *
+         * @return distance (meters).
+         */
+        public double getDistanceMeters() {
+<span class="fc" id="L389">            return distance;</span>
+        }
+
+        /**
+         * Gets distance.
+         *
+         * @return distance.
+         */
+        public Distance getDistance() {
+<span class="fc" id="L398">            return new Distance(distance, DistanceUnit.METER);</span>
+        }
+
+        /**
+         * Gets distance.
+         *
+         * @param result instance where result value is stored in meters.
+         * @return provided distance instance.
+         */
+        public Distance getDistance(final Distance result) {
+<span class="fc" id="L408">            result.setValue(distance);</span>
+<span class="fc" id="L409">            result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L410">            return result;</span>
+        }
+
+        /**
+         * Gets initial bearing/azimuth expressed in degrees.
+         *
+         * @return initial bearing/azimuth (degrees).
+         */
+        public double getInitialBearing() {
+<span class="fc" id="L419">            return initialBearing;</span>
+        }
+
+        /**
+         * Gets final bearing/azimuth expressed in degrees.
+         *
+         * @return final bearing/azimuth (degrees).
+         */
+        public double getFinalBearing() {
+<span class="fc" id="L428">            return finalBearing;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

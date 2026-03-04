@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Accuracy2D.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation</a> &gt; <span class="el_source">Accuracy2D.java</span></div><h1>Accuracy2D.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
+import com.irurueta.geometry.Ellipse;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+
+/**
+ * Contains methods to convert covariance matrices into ellipses representing accuracy with
+ * requested confidence.
+ */
+public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt; {
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L32">    public Accuracy2D() {</span>
+<span class="fc" id="L33">        internalAccuracy = new com.irurueta.geometry.Accuracy2D();</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param covarianceMatrix covariance matrix to be set. Must be 2x2 and positive
+     *                         definite.
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to an ellipse).
+     * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
+     *                                                     symmetric and positive definite.
+     */
+<span class="fc" id="L46">    public Accuracy2D(final Matrix covarianceMatrix) throws NonSymmetricPositiveDefiniteMatrixException {</span>
+<span class="fc" id="L47">        internalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param confidence confidence of provided accuracy of an estimated position.
+     * @throws IllegalArgumentException if provided value is not within 0 and 1.
+     */
+<span class="fc" id="L56">    public Accuracy2D(final double confidence) {</span>
+<span class="fc" id="L57">        internalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);</span>
+<span class="fc" id="L58">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param covarianceMatrix covariance matrix to be set. Must be 2x2 and positive
+     *                         definite.
+     * @param confidence       confidence of provided accuracy of an estimated position.
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to an ellipse),
+     *                                                     or if provided confidence value is not within 0 and 1.
+     * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
+     *                                                     symmetric and positive definite.
+     */
+    public Accuracy2D(final Matrix covarianceMatrix, final double confidence)
+<span class="fc" id="L73">            throws NonSymmetricPositiveDefiniteMatrixException {</span>
+<span class="fc" id="L74">        internalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param internalAccuracy internal accuracy to be set.
+     */
+    Accuracy2D(final com.irurueta.geometry.Accuracy2D internalAccuracy) {
+<span class="fc" id="L83">        super(internalAccuracy);</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Converts provided covariance matrix into a 2D ellipse taking into account current
+     * confidence and standard deviation factor.
+     *
+     * @return ellipse representing accuracy of covariance matrix with current confidence and
+     * standard deviation factor.
+     * @throws NullPointerException           if covariance matrix has not been provided yet.
+     * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
+     */
+    public Ellipse toEllipse() throws InvalidRotationMatrixException {
+<span class="fc" id="L96">        return internalAccuracy.toEllipse();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
