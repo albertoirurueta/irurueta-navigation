@@ -40,7 +40,7 @@ Latest snapshot:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.1-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
 ```
