@@ -1,0 +1,9 @@
+= What's New
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+== 1.8.1
+
+- ♻️ Minimum/target Java version raised from 17 to 21. Consumers must build and run with JDK 21 or later.
+- ♻️ Updated dependencies `irurueta-numerical` and `irurueta-geometry` from 1.5.0 to 1.6.0, and `irurueta-units`
+  and `irurueta-algebra` from 1.3.2 to 1.4.0.
