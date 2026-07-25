@@ -23,3 +23,73 @@ reliability, security rating, and technical debt.
 |https://github.com/albertoirurueta/irurueta-navigation[GitHub Repository]
 |Source code, issue tracker, and CI workflow definitions.
 |===
+
+[[bibliography]]
+== Bibliography
+
+The algorithms in xref:frames.adoc[], xref:gnss.adoc[], xref:lateration.adoc[], and xref:geodesic.adoc[] are based
+on the sources below. Each page links back to the entries it uses.
+
+[[bib-groves2013]]
+Groves, P. D., _Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems_, 2nd ed., Artech
+House, 2013. The primary reference for xref:frames.adoc[] and xref:gnss.adoc[]; equation numbers cited throughout
+both pages (e.g., `(2.113)`, `(9.147)`) refer to this edition.
+
+[[bib-groves-matlab]]
+Groves, P. D., companion MATLAB scripts for the book above,
+https://github.com/ymjdz/MATLAB-Codes[github.com/ymjdz/MATLAB-Codes]. Each converter/estimator class links to the
+specific script it mirrors.
+
+[[bib-borkowski1989]]
+Borkowski, K. M., "Accurate algorithms to transform geocentric to geodetic coordinates," _Bulletin Géodésique_,
+vol. 63, no. 1, pp. 50-56, 1989. Origin of the closed-form ECEF-to-geodetic solution referenced as Appendix C,
+equations `(C.29)-(C.38)`, of <<bib-groves2013,Groves, 2013>> (that appendix ships only on the book's companion DVD, not in
+the print/PDF edition; xref:frames.adoc[] documents the algorithm from this repository's own worked-out
+implementation instead of the unavailable appendix text).
+
+[[bib-karney2013]]
+Karney, C. F. F., "Algorithms for geodesics," _Journal of Geodesy_, vol. 87, pp. 43-55, 2013,
+https://doi.org/10.1007/s00190-012-0578-z[doi:10.1007/s00190-012-0578-z] (see also the
+https://geographiclib.sourceforge.io/geod-addenda.html[addenda]). The core reference for xref:geodesic.adoc[].
+
+[[bib-karney2011]]
+Karney, C. F. F., "Geodesics on an ellipsoid of revolution," Feb. 2011,
+https://arxiv.org/abs/1102.1215v1[arXiv:1102.1215v1].
+
+[[bib-geographiclib]]
+Karney, C. F. F., GeographicLib, https://geographiclib.sourceforge.io[geographiclib.sourceforge.io] (project
+page: https://sourceforge.net/projects/geographiclib/[sourceforge.net/projects/geographiclib]). The
+`com.irurueta.navigation.geodesic` package is a Java port of this library.
+
+[[bib-shewchuk1997]]
+Shewchuk, J. R., "Adaptive Precision Floating-Point Arithmetic and Fast Robust Geometric Predicates," _Discrete &
+Computational Geometry_, vol. 18, no. 3, pp. 305-363, 1997,
+https://doi.org/10.1007/PL00009321[doi:10.1007/PL00009321]. Basis for `Accumulator`'s extended-precision running
+sum, used by `PolygonArea`.
+
+[[bib-goldberg1991]]
+Goldberg, D., "What Every Computer Scientist Should Know About Floating-Point Arithmetic," _ACM Computing
+Surveys_, vol. 23, no. 1, pp. 5-48, 1991, https://doi.org/10.1145/103162.103163[doi:10.1145/103162.103163].
+Basis (Theorem 4) for `GeoMath.log1p`.
+
+[[bib-higham2002]]
+Higham, N. J., _Accuracy and Stability of Numerical Algorithms_, 2nd ed., SIAM, 2002. Further reference for
+`GeoMath.log1p`.
+
+[[bib-moler1983]]
+Moler, C., and D. Morrison, "Replacing Square Roots by Pythagorean Sums," _IBM Journal of Research and
+Development_, vol. 27, no. 6, pp. 577-581, 1983, https://doi.org/10.1147/rd.276.0577[doi:10.1147/rd.276.0577].
+Alternative method noted in `GeoMath.hypot`.
+
+[[bib-dubrulle1983]]
+Dubrulle, A. A., "A Class of Numerical Methods for the Computation of Pythagorean Sums," _IBM Journal of Research
+and Development_, vol. 27, no. 6, pp. 582-589, 1983, https://doi.org/10.1147/rd.276.0582[doi:10.1147/rd.276.0582].
+Alternative method noted in `GeoMath.hypot`.
+
+[[bib-lemmingapex]]
+lemmingapex, trilateration, https://github.com/lemmingapex/trilateration[github.com/lemmingapex/trilateration].
+Base implementation referenced by the linear and non-linear solvers in xref:lateration.adoc[].
+
+[[bib-hereman-murphy]]
+Hereman, W., and W. S. Murphy Jr., "Determination of a Position in Three Dimensions Using Trilateration and
+Approximate Distances." Background for the inhomogeneous-linear lateration solver in xref:lateration.adoc[].

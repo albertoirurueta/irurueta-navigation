@@ -26,6 +26,7 @@ antora:
         start_on_load: true
 asciidoc:
   attributes:
+    stem: latexmath
     mathjax-tex-tags: ams
     mathjax-tex-packages: ams
   extensions:

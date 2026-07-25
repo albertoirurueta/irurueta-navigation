@@ -1,0 +1,153 @@
+= Geodesic
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+The `com.irurueta.navigation.geodesic` package is a Java port of
+xref:reference.adoc#bib-geographiclib[GeographicLib], C.F.F. Karney's library for exact geodesic calculations on
+an ellipsoid of revolution (WGS84 by default). Unlike xref:frames.adoc[] and xref:gnss.adoc[], it is **not**
+based on xref:reference.adoc#bib-groves2013[Groves, 2013] — its algorithms follow
+xref:reference.adoc#bib-karney2013[Karney, 2013] and xref:reference.adoc#bib-karney2011[Karney, 2011]. See
+xref:reference.adoc#bibliography[the bibliography] for full citations.
+
+== What a geodesic is
+
+A geodesic is the shortest path between two points on a curved surface — the ellipsoid analogue of a straight
+line, or of a great-circle arc on a sphere. `Geodesic` computes two classic problems:
+
+[cols="1,3",options="header"]
+|===
+|Problem |Given / find
+
+|**Direct**
+|Given a start point stem:[(lat_1, lon_1)], an initial azimuth stem:[azi_1], and a distance stem:[s_{12}] — find the end
+point stem:[(lat_2, lon_2)] and the azimuth on arrival, stem:[azi_2].
+
+|**Inverse**
+|Given two points stem:[(lat_1, lon_1)] and stem:[(lat_2, lon_2)] — find the geodesic distance stem:[s_{12}] and the
+azimuths stem:[azi_1], stem:[azi_2] at each end.
+|===
+
+Both problems are solved to better than 15 nm of accuracy (see Sec. 9 of
+xref:reference.adoc#bib-karney2011[Karney, 2011]) using series expansions in the ellipsoid flattening stem:[f], and
+both are exposed as `Geodesic.direct(...)`/`Geodesic.arcDirect(...)` and `Geodesic.inverse(...)`, returning a
+`GeodesicData` with:
+
+[cols="1,3",options="header"]
+|===
+|Field |Meaning
+
+|`s12`
+|Distance between the two points (m).
+
+|`azi1` / `azi2`
+|Azimuth (bearing, clockwise from north) at the first/second point.
+
+|`a12`
+|Arc length between the points, in degrees, on the auxiliary sphere.
+
+|`m12`
+|Reduced length: how far a geodesic starting parallel to this one, a unit distance away, diverges after
+traveling stem:[s_{12}].
+
+|`M12` / `M21`
+|Geodesic scale: how the separation between nearby geodesics grows/shrinks along the path, seen from each end.
+
+|`S12`
+|Area between the geodesic and the equator, used by `PolygonArea` to compute the area of a geodesic polygon.
+|===
+
+[source,java]
+----
+var geod = Geodesic.WGS84;
+
+// Direct problem: from Barcelona, heading NE, for 500 km
+var direct = geod.direct(41.3851, 2.1734, 45.0, 500_000.0);
+var lat2 = direct.getLat2();
+var lon2 = direct.getLon2();
+var azi2 = direct.getAzi2();
+
+// Inverse problem: distance and bearing between Barcelona and Paris
+var inverse = geod.inverse(41.3851, 2.1734, 48.8566, 2.3522);
+var distanceMeters = inverse.getS12();
+var initialBearing = inverse.getAzi1();
+----
+
+== Stepping along a geodesic: `GeodesicLine`
+
+Computing many points along the *same* geodesic (e.g., to draw a route) by repeatedly calling `direct`/`inverse`
+recomputes shared setup on every call. `Geodesic.line(lat1, lon1, azi1)` (or `directLine`/`inverseLine`, which
+also fix the total distance/arc) instead returns a `GeodesicLine` object that captures the starting point and
+azimuth once, so subsequent `position(distance)`/`arcPosition(arc)` calls are cheap:
+
+[source,java]
+----
+var line = geod.line(41.3851, 2.1734, 45.0);
+for (var s = 0.0; s <= 500_000.0; s += 50_000.0) {
+    var point = line.position(s);
+    System.out.println(point.getLat2() + ", " + point.getLon2());
+}
+----
+
+== Polygon perimeter and area: `PolygonArea`
+
+`PolygonArea` accumulates a sequence of vertices (`addPoint`) or edges (`addEdge`, given azimuth + distance) and
+computes the polygon's perimeter and area on the ellipsoid via `compute()`, following Section 6 of
+xref:reference.adoc#bib-karney2013[Karney, 2013]. Internally it sums each edge's `S12` contribution using
+`Accumulator`, an extended-precision (~106-bit) running sum based on
+xref:reference.adoc#bib-shewchuk1997[Shewchuk, 1997], which keeps the area accurate even for polygons with many
+closely-spaced vertices.
+
+[source,java]
+----
+var polygon = new PolygonArea(Geodesic.WGS84, false);
+polygon.addPoint(41.3851, 2.1734);
+polygon.addPoint(41.4036, 2.1744);
+polygon.addPoint(41.3947, 2.1900);
+
+PolygonResult result = polygon.compute();
+var perimeterMeters = result.getPerimeter();
+var areaSquareMeters = result.getArea();
+----
+
+== Gnomonic projection
+
+`Gnomonic` projects points from the ellipsoid onto a plane tangent at a chosen center point, such that every
+geodesic through the center maps to a straight line — useful for great-circle-style route planning on a flat
+map. It is derived from the geodesic reduced length and scale (Section 8 of
+xref:reference.adoc#bib-karney2013[Karney, 2013]).
+
+[source,java]
+----
+var gnomonic = new Gnomonic(Geodesic.WGS84);
+GnomonicData projected = gnomonic.forward(41.3851, 2.1734, 48.8566, 2.3522);
+var x = projected.getX();
+var y = projected.getY();
+
+GnomonicData backToLatLon = gnomonic.reverse(41.3851, 2.1734, x, y);
+----
+
+== Numerical building blocks
+
+Two supporting classes underpin the precision of the algorithms above and are themselves independently cited:
+
+* `GeoMath` provides careful floating-point primitives (`hypot`, `log1p`, etc.) that avoid cancellation error,
+  following xref:reference.adoc#bib-goldberg1991[Goldberg, 1991] and
+  xref:reference.adoc#bib-higham2002[Higham, 2002], with an alternative hypot method noted from
+  xref:reference.adoc#bib-moler1983[Moler & Morrison, 1983] and
+  xref:reference.adoc#bib-dubrulle1983[Dubrulle, 1983].
+* `Accumulator` implements the extended-precision running sum from
+  xref:reference.adoc#bib-shewchuk1997[Shewchuk, 1997], used by `PolygonArea` so that area computations over
+  many edges don't accumulate floating-point error.
+
+== References
+
+* xref:reference.adoc#bib-karney2013[Karney, 2013]
+* xref:reference.adoc#bib-karney2011[Karney, 2011]
+* xref:reference.adoc#bib-geographiclib[GeographicLib]
+* xref:reference.adoc#bib-shewchuk1997[Shewchuk, 1997]
+* xref:reference.adoc#bib-goldberg1991[Goldberg, 1991]
+* xref:reference.adoc#bib-higham2002[Higham, 2002]
+* xref:reference.adoc#bib-moler1983[Moler & Morrison, 1983]
+* xref:reference.adoc#bib-dubrulle1983[Dubrulle, 1983]
+
+See xref:reference.adoc#bibliography[the full bibliography] for details.

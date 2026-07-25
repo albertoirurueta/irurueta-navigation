@@ -17,21 +17,21 @@ composable building blocks rather than a single monolithic solver, so each piece
 
 == Core concepts
 
-`gnss`:: Position, velocity, and clock-offset estimation from GNSS pseudorange and pseudorange-rate measurements,
-via both a raw least-squares estimator (`GNSSLeastSquaresPositionAndVelocityEstimator`) and a Kalman-filtered
-estimator (`GNSSKalmanFilteredEstimator`) that smooths those estimates over time. The approach follows
-"Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems."
+xref:gnss.adoc[`gnss`]:: Position, velocity, and clock-offset estimation from GNSS pseudorange and pseudorange-rate
+measurements, via both a raw least-squares estimator (`GNSSLeastSquaresPositionAndVelocityEstimator`) and a
+Kalman-filtered estimator (`GNSSKalmanFilteredEstimator`) that smooths those estimates over time. The approach
+follows "Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems."
 
-`frames`:: Navigation reference frames — Earth-Centered Inertial (ECI), Earth-Centered Earth-Fixed (ECEF), and
-North-East-Down (NED) — with position/velocity/attitude representations and converters between every frame pair
-(`frames.converters`).
+xref:frames.adoc[`frames`]:: Navigation reference frames — Earth-Centered Inertial (ECI), Earth-Centered
+Earth-Fixed (ECEF), and North-East-Down (NED) — with position/velocity/attitude representations and converters
+between every frame pair (`frames.converters`).
 
-`lateration`:: Trilateration: recovering a position from a set of distance measurements, by intersecting circles
-(2D) or spheres (3D). Includes linear and nonlinear least-squares solvers plus robust variants (RANSAC, PROSAC,
-LMedS, MSAC) for measurements containing outliers.
+xref:lateration.adoc[`lateration`]:: Trilateration: recovering a position from a set of distance measurements, by
+intersecting circles (2D) or spheres (3D). Includes linear and nonlinear least-squares solvers plus robust
+variants (RANSAC, PROSAC, LMedS, MSAC) for measurements containing outliers.
 
-`geodesic`:: Geodesic calculations on the WGS84 ellipsoid — distances, bearings, direct/inverse geodetic problems
-— built on GeographicLib.
+xref:geodesic.adoc[`geodesic`]:: Geodesic calculations on the WGS84 ellipsoid — distances, bearings,
+direct/inverse geodetic problems — built on GeographicLib.
 
 == The central pattern: least squares + Kalman filtering
 
@@ -51,5 +51,7 @@ flowchart LR
 == Where to go next
 
 * xref:installation.adoc[] — add irurueta-navigation as a dependency to your project.
-* xref:reference.adoc[] — links to the generated Javadoc, test, coverage, and code-quality reports, and the
-  project's SonarCloud dashboard.
+* xref:frames.adoc[], xref:gnss.adoc[], xref:lateration.adoc[], xref:geodesic.adoc[] — equations, algorithms, and
+  code examples for each package.
+* xref:reference.adoc[] — links to the generated Javadoc, test, coverage, and code-quality reports, the project's
+  SonarCloud dashboard, and the full bibliography.
