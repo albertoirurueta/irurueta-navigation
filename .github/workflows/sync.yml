@@ -1,0 +1,117 @@
+name: Sync
+
+# After a release is published from master, open a pull request that merges it back into
+# develop and bumps the development snapshot version, so develop never has to wait for a
+# manual sync branch.
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Open sync PR from the released branch into develop
+    runs-on: ubuntu-latest
+    if: github.event.release.target_commitish == 'master'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Compute versions and branch names
+        id: versions
+        run: |
+          set -euo pipefail
+          RELEASE_VERSION="${{ github.event.release.tag_name }}"
+          RELEASE_VERSION="${RELEASE_VERSION#v}"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$RELEASE_VERSION"
+          if [ -z "${MAJOR:-}" ] || [ -z "${MINOR:-}" ] || [ -z "${PATCH:-}" ]; then
+            echo "::error::Release tag '$RELEASE_VERSION' is not in X.Y.Z form; cannot compute the next snapshot."
+            exit 1
+          fi
+
+          NEXT_MINOR=$((MINOR + 1))
+          NEXT_SNAPSHOT="${MAJOR}.${NEXT_MINOR}.0-SNAPSHOT"
+          SYNC_BRANCH="sync_${MAJOR}.${NEXT_MINOR}.0"
+
+          echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "next_snapshot=$NEXT_SNAPSHOT" >> "$GITHUB_OUTPUT"
+          echo "sync_branch=$SYNC_BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if this release was already synced
+        id: guard
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin "${{ steps.versions.outputs.sync_branch }}" >/dev/null 2>&1; then
+            echo "::notice::${{ steps.versions.outputs.sync_branch }} already exists on origin; skipping."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure git identity
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create sync branch from develop
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          git fetch origin develop master
+          git checkout -b "${{ steps.versions.outputs.sync_branch }}" "origin/develop"
+
+      - name: Merge the released branch into the sync branch
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          git merge --no-ff --no-edit \
+            -m "Merge master (${{ steps.versions.outputs.release_version }}) into develop" \
+            "origin/master"
+
+      - name: Set up Python
+        if: steps.guard.outputs.exists == 'false'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Bump the development snapshot version
+        if: steps.guard.outputs.exists == 'false'
+        env:
+          RELEASE_VERSION: ${{ steps.versions.outputs.release_version }}
+          NEXT_SNAPSHOT: ${{ steps.versions.outputs.next_snapshot }}
+        run: python3 .github/scripts/sync_versions.py
+
+      - name: Commit the version bump
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          git add pom.xml README.md docs/antora.yml docs/modules/ROOT/pages
+          git diff --cached --quiet || git commit -m "Sync ${{ steps.versions.outputs.next_snapshot }}"
+
+      - name: Push sync branch
+        if: steps.guard.outputs.exists == 'false'
+        run: git push origin "${{ steps.versions.outputs.sync_branch }}"
+
+      - name: Ensure the sync label exists
+        if: steps.guard.outputs.exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create sync --description "Sync pull request from a release branch back into develop" --color 0e8a16 \
+            || gh label list --search sync >/dev/null
+
+      - name: Open pull request into develop
+        if: steps.guard.outputs.exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base develop \
+            --head "${{ steps.versions.outputs.sync_branch }}" \
+            --title "Sync ${{ steps.versions.outputs.next_snapshot }}" \
+            --body "Merges \`master\` back into \`develop\` after releasing \`${{ steps.versions.outputs.release_version }}\`, and bumps the development snapshot version to \`${{ steps.versions.outputs.next_snapshot }}\` in \`pom.xml\`, \`README.md\`, and the Antora docs." \
+            --label sync

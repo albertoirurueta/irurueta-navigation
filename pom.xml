@@ -78,10 +78,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <github.global.server>github</github.global.server>
         <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
+        <sonar.organization>albertoirurueta-github</sonar.organization>
+        <sonar.projectKey>albertoirurueta_irurueta-navigation</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <profiles>
@@ -284,6 +288,12 @@
                     <publishingServerId>central</publishingServerId>
                     <autoPublish>true</autoPublish>
                 </configuration>
+            </plugin>
+            <!-- SonarCloud analysis -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.1.0.4751</version>
             </plugin>
         </plugins>
     </build>

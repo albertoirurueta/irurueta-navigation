@@ -1,0 +1,55 @@
+= Irurueta Navigation
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+irurueta-navigation is a Java library for GNSS/INS navigation: estimating position, velocity, and attitude from
+satellite and inertial measurements, and working with the coordinate frames and geodetic calculations that
+navigation algorithms depend on.
+
+== Why it exists
+
+Combining satellite (GNSS) and inertial (INS) measurements into a single, reliable position/velocity/attitude
+estimate requires a fair amount of supporting machinery: reference frame definitions and conversions, geodetic
+math on an ellipsoidal Earth, robust position solvers that tolerate noisy or outlier measurements, and a
+recursive estimator that fuses everything over time. irurueta-navigation packages that machinery as a set of
+composable building blocks rather than a single monolithic solver, so each piece can be used independently
+(e.g. just the trilateration solvers, or just the frame conversions) or combined into a full navigation pipeline.
+
+== Core concepts
+
+`gnss`:: Position, velocity, and clock-offset estimation from GNSS pseudorange and pseudorange-rate measurements,
+via both a raw least-squares estimator (`GNSSLeastSquaresPositionAndVelocityEstimator`) and a Kalman-filtered
+estimator (`GNSSKalmanFilteredEstimator`) that smooths those estimates over time. The approach follows
+"Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems."
+
+`frames`:: Navigation reference frames — Earth-Centered Inertial (ECI), Earth-Centered Earth-Fixed (ECEF), and
+North-East-Down (NED) — with position/velocity/attitude representations and converters between every frame pair
+(`frames.converters`).
+
+`lateration`:: Trilateration: recovering a position from a set of distance measurements, by intersecting circles
+(2D) or spheres (3D). Includes linear and nonlinear least-squares solvers plus robust variants (RANSAC, PROSAC,
+LMedS, MSAC) for measurements containing outliers.
+
+`geodesic`:: Geodesic calculations on the WGS84 ellipsoid — distances, bearings, direct/inverse geodetic problems
+— built on GeographicLib.
+
+== The central pattern: least squares + Kalman filtering
+
+The library's main GNSS estimator follows a pattern common across its estimators: a least-squares step turns raw
+measurements into a position/velocity estimate, and a Kalman filter step fuses that estimate with the previous
+state estimate over time, smoothing out measurement noise and predicting forward between updates.
+
+[mermaid]
+....
+flowchart LR
+    A[Satellite measurements\npseudorange / pseudorange-rate] --> B[Least-squares estimation\nGNSSLeastSquaresPositionAndVelocityEstimator]
+    B --> C[Kalman filter update\nGNSSKalmanFilteredEstimator]
+    C --> D[Estimated state\nposition, velocity, clock offset/drift]
+    D -.previous state.-> C
+....
+
+== Where to go next
+
+* xref:installation.adoc[] — add irurueta-navigation as a dependency to your project.
+* xref:reference.adoc[] — links to the generated Javadoc, test, coverage, and code-quality reports, and the
+  project's SonarCloud dashboard.
