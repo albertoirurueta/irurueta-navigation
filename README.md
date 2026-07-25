@@ -28,8 +28,8 @@ A GNSS/INS navigation library
 | --- | --- |
 | Language | Java 21 |
 | Build tool | Maven |
-| Current development version | 1.8.1-SNAPSHOT |
-| Latest release | 1.7.1 |
+| Current development version | 1.9.0-SNAPSHOT |
+| Latest release | 1.8.1 |
 | License | Apache License, Version 2.0 |
 | CI | GitHub Actions — `develop.yml` (build, test, SonarCloud scan, Antora + Maven site docs, snapshot deploy) and `master.yml` (same pipeline on release, deploying to Maven Central) |
 | Quality | SonarCloud, JaCoCo coverage, Checkstyle, SpotBugs, PMD |
@@ -50,7 +50,7 @@ Latest release:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
-    <version>1.7.1</version>
+    <version>1.8.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -60,7 +60,7 @@ Latest snapshot:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
 ```

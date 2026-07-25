@@ -7,7 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-No user-facing changes yet — only a version bump to `1.8.1-SNAPSHOT` on `develop`.
+## [1.8.1] - 2026-07-25
+
+### Changed
+
+- Minimum/target Java version raised from 17 to 21. Consumers must build and run with JDK 21 or later.
+- Updated dependencies `irurueta-numerical` and `irurueta-geometry` from 1.5.0 to 1.6.0, and `irurueta-units` and
+  `irurueta-algebra` from 1.3.2 to 1.4.0.
 
 ## [1.7.1] - 2026-03-04
 
@@ -129,7 +135,8 @@ Initial public release. The library shipped with:
 - **Supporting utilities**: geodesic calculations (Karney's algorithms), accuracy classes (`Accuracy`,
   `Accuracy2D`, `Accuracy3D`), and location utilities.
 
-[Unreleased]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.7.1...develop
+[Unreleased]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.8.1...HEAD
+[1.8.1]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.7.1...1.8.1
 [1.7.1]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.6.0...1.7.1
 [1.6.0]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.5.2...1.6.0
 [1.5.2]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.5.1...1.5.2
