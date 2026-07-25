@@ -23,7 +23,7 @@ irurueta-navigation is published to Maven Central. Add the dependency to your pr
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
-    <version>1.8.0-SNAPSHOT</version>
+    <version>1.8.1-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
 ----

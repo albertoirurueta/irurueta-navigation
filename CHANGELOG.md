@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-No user-facing changes yet — only a version bump to `1.8.0-SNAPSHOT` on `develop`.
+No user-facing changes yet — only a version bump to `1.8.1-SNAPSHOT` on `develop`.
 
 ## [1.7.1] - 2026-03-04
 
