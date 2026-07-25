@@ -1,0 +1,172 @@
+= GNSS
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+The `com.irurueta.navigation.gnss` package estimates a receiver's position, velocity, and clock offset/drift from
+GNSS pseudo-range and pseudo-range-rate measurements, following
+xref:reference.adoc#bib-groves2013[Groves, 2013] (each class also mirrors a script from
+xref:reference.adoc#bib-groves-matlab[Groves' companion MATLAB code]). It also includes generators that
+synthesize satellite orbits, measurements, and error biases for testing and simulation. See
+xref:reference.adoc#bibliography[the bibliography] for full citations.
+
+== The estimation pipeline
+
+[mermaid]
+....
+flowchart LR
+    A["Satellite ECEF position/velocity\nSatelliteECEFPositionAndVelocityGenerator"] --> B["Pseudo-range /\npseudo-range-rate measurements\nGNSSMeasurementsGenerator, GNSSBiasesGenerator"]
+    B --> C["Least-squares position/velocity\nGNSSLeastSquaresPositionAndVelocityEstimator"]
+    C --> D["Kalman filter update\nGNSSKalmanEpochEstimator"]
+    D --> E["Estimated state\nposition, velocity, clock offset/drift\nGNSSEstimation / GNSSKalmanState"]
+    E -. previous state .-> D
+....
+
+`GNSSKalmanFilteredEstimator` wraps the last two boxes: on the first epoch it seeds the filter from
+`GNSSLeastSquaresPositionAndVelocityEstimator` (via `GNSSKalmanInitializer`), then feeds every subsequent epoch's
+measurements through `GNSSKalmanEpochEstimator`.
+
+== Least-squares position, velocity, clock offset, and drift
+
+`GNSSLeastSquaresPositionAndVelocityEstimator` solves for position + clock offset and, separately, velocity +
+clock drift, each by unweighted iterated least squares. For each satellite measurement, the range prediction
+first rotates the satellite's ECEF position into the frame at signal-reception time to compensate for Earth
+rotation during the signal's transit — the small-angle approximation of (8.36):
+
+[stem]
+++++
+C^e_I(t_{st}) \approx
+\begin{pmatrix}
+1 & \omega_{ie} r/c & 0 \\
+-\omega_{ie} r/c & 1 & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+\qquad \text{(8.36)}
+++++
+
+giving the corrected range (8.35) and the ECEF line-of-sight unit vector (8.41):
+
+[stem]
+++++
+r^a_s = \left\| C^e_I(t_{st})\, r^e_{es}(t_{st}) - r^e_{ea}(t_{sa}) \right\|
+\qquad
+u^e_{as} = \frac{C^e_I(t_{st})\, r^e_{es}(t_{st}) - r^e_{ea}(t_{sa})}{r^a_s}
+\qquad \text{(8.35), (8.41)}
+++++
+
+The predicted pseudo-range (position/clock-offset solve) or pseudo-range rate (velocity/clock-drift solve) and
+the corresponding row of the measurement matrix — (9.143) and (9.144) in
+xref:reference.adoc#bib-groves2013[Groves, 2013] — are then assembled for every satellite, and each iteration
+solves the unweighted least-squares update (9.35)/(9.141):
+
+[stem]
+++++
+\hat{x} = \hat{x}^- + \left(H^T H\right)^{-1} H^T \, \delta z
+++++
+
+where stem:[\delta z] is the vector of measured-minus-predicted pseudo-ranges (or rates). The solve repeats until
+the state update falls below `CONVERGENCE_THRESHOLD`.
+
+[source,java]
+----
+var estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements);
+var estimation = estimator.estimate();
+
+var x = estimation.getX();
+var y = estimation.getY();
+var z = estimation.getZ();
+var clockOffset = estimation.getClockOffset();
+----
+
+== Kalman-filtered estimation
+
+`GNSSKalmanEpochEstimator` implements one epoch of the GNSS extended Kalman filter over an 8-element state
+(ECEF position, velocity, clock offset, clock drift). Propagation uses the transition matrix (9.147)/(9.150) —
+a constant-velocity, constant-clock-drift model over the propagation interval stem:[\tau_s] — and the general
+Kalman propagation equations (3.14)/(3.15):
+
+[stem]
+++++
+\hat{x}_k^- = \Phi_{k-1}\hat{x}_{k-1}^+
+\qquad
+P_k^- = \Phi_{k-1} P_{k-1}^+ \Phi_{k-1}^T + Q_{k-1}
+\qquad \text{(3.14), (3.15)}
+++++
+
+with the system noise covariance stem:[Q_{k-1}] built from the acceleration and clock-noise power spectral
+densities in `GNSSKalmanConfig`, following (9.152). The measurement update follows the same predicted
+pseudo-range/pseudo-range-rate and measurement-matrix construction as the least-squares estimator — (9.163),
+(9.165) — then applies the standard Kalman gain, innovation, state, and covariance updates:
+
+[stem]
+++++
+K_k = P_k^- H_k^T \left(H_k P_k^- H_k^T + R_k\right)^{-1}
+\qquad \text{(3.21)}
+++++
+
+[stem]
+++++
+\delta z_k^- = z_k - h(\hat{x}_k^-, t_k)
+\qquad \text{(3.88)}
+++++
+
+[stem]
+++++
+\hat{x}_k^+ = \hat{x}_k^- + K_k \delta z_k^-
+\qquad
+P_k^+ = (I - K_k H_k) P_k^-
+\qquad \text{(3.24), (3.25)}
+++++
+
+`GNSSKalmanFilteredEstimator` drives this across epochs, and `GNSSKalmanInitializer` seeds the very first
+state/covariance pair from a least-squares solution.
+
+[source,java]
+----
+var kalmanConfig = new GNSSKalmanConfig(
+        initialPositionUncertainty, initialVelocityUncertainty, initialClockOffsetUncertainty,
+        initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD, clockPhasePSD);
+
+var estimator = new GNSSKalmanFilteredEstimator(kalmanConfig, epochInterval, listener);
+estimator.updateMeasurements(measurements, timestamp);
+
+var state = estimator.getState(); // GNSSKalmanState: GNSSEstimation + error covariance
+----
+
+== Synthesizing satellites, measurements, and biases
+
+Three generator classes produce synthetic data for testing and simulation, all driven by a `GNSSConfig`
+(number of satellites, orbital radius, inclination, mask angle, error standard deviations, and so on):
+
+`SatelliteECEFPositionAndVelocityGenerator` places each satellite on a circular orbit. The orbital angular rate
+follows Kepler's third law (8.8), and the satellite's position/velocity in the (rotating) orbital plane —
+(8.14), (8.25) — is rotated into ECEF axes by the longitude of the ascending node (8.16) and orbital
+inclination — (8.19) for position, (8.26) for velocity:
+
+[stem]
+++++
+\omega_{is} = \sqrt{\mu / r_{os}^3} \qquad \text{(8.8)}
+++++
+
+`GNSSMeasurementsGenerator` turns true satellite/user positions and velocities into pseudo-ranges and
+pseudo-range rates, applying the same transit-time rotation (8.36), range (8.35), range-rate (8.44), and
+elevation-angle (8.57) relations used by the estimators above, then adding the biases from `GNSSBiasesGenerator`.
+
+`GNSSBiasesGenerator` samples signal-in-space, ionosphere, and troposphere range errors as Gaussian noise whose
+standard deviation grows as the satellite's elevation angle drops toward the horizon — (9.79)/(9.80) scale the
+zenith error standard deviation by stem:[1/\sqrt{1 - k \cos^2\theta}], with stem:[k = 0.899] (ionosphere) or
+stem:[k = 0.998] (troposphere) and stem:[\theta] the elevation from (8.57).
+
+[source,java]
+----
+var satellites = SatelliteECEFPositionAndVelocityGenerator.generateSatellitesPositionAndVelocity(time, config);
+
+var measurements = GNSSMeasurementsGenerator.generateMeasurements(
+        time, satellites, userPositionAndVelocity, config, random);
+----
+
+== References
+
+* xref:reference.adoc#bib-groves2013[Groves, 2013]
+* xref:reference.adoc#bib-groves-matlab[Groves' companion MATLAB code]
+
+See xref:reference.adoc#bibliography[the full bibliography] for details.

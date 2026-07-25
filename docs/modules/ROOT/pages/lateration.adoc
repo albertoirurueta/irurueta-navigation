@@ -1,0 +1,165 @@
+= Lateration
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+The `com.irurueta.navigation.lateration` package recovers a position from a set of known reference positions and
+their (possibly noisy, possibly outlier-contaminated) distances to an unknown point — the classic trilateration
+problem, solved here for both 2D (intersecting circles) and 3D (intersecting spheres). Unlike
+xref:frames.adoc[] and xref:gnss.adoc[], this package is not based on
+xref:reference.adoc#bib-groves2013[Groves, 2013]; the linear solvers are based on
+xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
+xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy], as documented in the classes' own Javadoc and inline
+derivations. See xref:reference.adoc#bibliography[the bibliography] for full citations.
+
+== Class hierarchy
+
+There are two independent hierarchies rooted at `Point<?>` (2D `Point2D` or 3D `Point3D`): the non-robust
+solvers, which assume every measurement is valid, and the robust solvers, which detect and discard outliers.
+The robust hierarchy does **not** extend the non-robust one — it *composes* a homogeneous-linear, an
+inhomogeneous-linear, and a non-linear solver internally and drives them from within its own estimation loop.
+
+[mermaid]
+....
+flowchart TB
+    LS["LaterationSolver&lt;P&gt;\n(abstract base: positions[], distances[], listener)"]
+    LS --> HL["HomogeneousLinearLeastSquaresLaterationSolver&lt;P&gt;\n(abstract, SVD-based)"]
+    LS --> IL["InhomogeneousLinearLeastSquaresLaterationSolver&lt;P&gt;\n(abstract, direct linear solve)"]
+    LS --> NL["NonLinearLeastSquaresLaterationSolver&lt;P&gt;\n(abstract, Levenberg-Marquardt)"]
+
+    HL --> HL2D["HomogeneousLinearLeastSquaresLateration2DSolver"]
+    HL --> HL3D["HomogeneousLinearLeastSquaresLateration3DSolver"]
+    IL --> IL2D["InhomogeneousLinearLeastSquaresLateration2DSolver"]
+    IL --> IL3D["InhomogeneousLinearLeastSquaresLateration3DSolver"]
+    NL --> NL2D["NonLinearLeastSquaresLateration2DSolver"]
+    NL --> NL3D["NonLinearLeastSquaresLateration3DSolver"]
+
+    RS["RobustLaterationSolver&lt;P&gt;\n(abstract, independent hierarchy)"]
+    RS --> R2D["RobustLateration2DSolver\n(composes IL2D / HL2D / NL2D internally)"]
+    RS --> R3D["RobustLateration3DSolver\n(composes IL3D / HL3D / NL3D internally)"]
+    R2D --> RANSAC2D["RANSACRobustLateration2DSolver"]
+    R2D --> LMEDS2D["LMedSRobustLateration2DSolver"]
+    R2D --> MSAC2D["MSACRobustLateration2DSolver"]
+    R2D --> PROSAC2D["PROSACRobustLateration2DSolver"]
+    R2D --> PROMEDS2D["PROMedSRobustLateration2DSolver\n(library default)"]
+....
+
+The same five robust variants (RANSAC, LMedS, MSAC, PROSAC, PROMedS) exist under `RobustLateration3DSolver`.
+`RobustLateration2DSolver.create(...)`/`RobustLateration3DSolver.create(...)` are factory methods that dispatch
+to the right subclass given a `RobustEstimatorMethod`.
+
+== Homogeneous linear solver
+
+`HomogeneousLinearLeastSquaresLaterationSolver` linearizes the circle/sphere equations by treating the unknown
+position as a homogeneous coordinate. For circles centered at stem:[(c_{ix}, c_{iy})] with radius stem:[r_i] (the
+known distances), subtracting the first circle's equation from every other one cancels the quadratic
+stem:[x^2+y^2] term:
+
+[stem]
+++++
+2(c_{1x}-c_{ix})x + 2(c_{1y}-c_{iy})y = r_i^2 - r_1^2 + c_{1x}^2 + c_{1y}^2 - c_{ix}^2 - c_{iy}^2
+++++
+
+Substituting the homogeneous coordinates stem:[(x,y) = (x'/w', y'/w')] turns this into a homogeneous linear system
+stem:[Av = 0] in stem:[v=(x',y',w')] (or stem:[(x',y',z',w')] in 3D), solved via the SVD of stem:[A] — the estimated position
+is the last column of stem:[V], normalized by its stem:[w'] component. At least 3 positions are required in 2D
+(4 in 3D).
+
+[source,java]
+----
+var solver = new HomogeneousLinearLeastSquaresLateration2DSolver(positions, distances);
+solver.solve();
+Point2D estimatedPosition = solver.getEstimatedPosition();
+----
+
+== Inhomogeneous linear solver
+
+`InhomogeneousLinearLeastSquaresLaterationSolver` instead picks the first position as a reference and subtracts
+its equation from every other one directly in inhomogeneous coordinates. For positions stem:[i \neq 1]:
+
+[stem]
+++++
+(x-x_1)(x_i-x_1) + (y-y_1)(y_i-y_1) = \tfrac{1}{2}\left(r_1^2 - r_i^2 + d_{i1}^2\right), \qquad d_{i1} = \lVert p_i - p_1 \rVert
+++++
+
+giving a well-conditioned linear system stem:[A(x-x_1, y-y_1)^T = b] with one fewer unknown than the homogeneous
+formulation and no SVD needed — following
+xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
+xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]. This is the default preliminary solver used by the
+robust hierarchy (`RobustLaterationSolver.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = false`).
+
+[source,java]
+----
+var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances);
+solver.solve();
+Point2D estimatedPosition = solver.getEstimatedPosition();
+----
+
+== Non-linear refinement
+
+`NonLinearLeastSquaresLaterationSolver` refines an initial position estimate (typically from one of the linear
+solvers above) by minimizing the sum of squared residuals between measured and predicted distances using
+Levenberg-Marquardt (`LevenbergMarquardtMultiDimensionFitter`). Because it fits the *true* nonlinear distance
+function rather than a linearized version, it can also estimate the covariance of the resulting position and a
+chi-square goodness-of-fit statistic.
+
+[source,java]
+----
+var solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances);
+solver.setInitialPosition(coarseEstimate); // e.g., from the inhomogeneous linear solver
+solver.solve();
+Point2D refined = solver.getEstimatedPosition();
+Matrix covariance = solver.getCovariance();
+----
+
+== Robust solvers
+
+`RobustLateration2DSolver`/`RobustLateration3DSolver` handle measurements that may include outliers (e.g., a
+non-line-of-sight ranging measurement). Internally, each maintains its own homogeneous-linear, inhomogeneous-
+linear, and non-linear solver instances, and the robust estimation loop (RANSAC/LMedS/MSAC/PROSAC/PROMedS,
+selected by subclass) drives them as follows for each random sample:
+
+1. Solve the sampled subset with the linear solver (inhomogeneous by default,
+   `DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = false`) to get a coarse preliminary position.
+2. Optionally refine that preliminary position with the non-linear solver
+   (`DEFAULT_REFINE_PRELIMINARY_SOLUTIONS = true`).
+3. Once the robust estimator converges on an inlier set, optionally refine the final result again with the
+   non-linear solver over just the inliers (`DEFAULT_REFINE_RESULT = true`), optionally keeping its covariance
+   (`DEFAULT_KEEP_COVARIANCE = true`).
+
+[cols="1,3",options="header"]
+|===
+|Method |When to prefer it
+
+|`RANSACRobustLateration{2D,3D}Solver`
+|Fast, general-purpose outlier rejection; good default when the inlier ratio is roughly known.
+
+|`LMedSRobustLateration{2D,3D}Solver`
+|No noise-threshold tuning required (uses the median residual); more sensitive to a very high outlier fraction.
+
+|`MSACRobustLateration{2D,3D}Solver`
+|RANSAC variant with a smoother cost function; often converges with fewer iterations.
+
+|`PROSACRobustLateration{2D,3D}Solver`
+|Like RANSAC, but samples using a quality/prior ranking of the measurements, converging faster when such a
+ranking is available.
+
+|`PROMedSRobustLateration{2D,3D}Solver`
+|LMedS with PROSAC-style prior-guided sampling. **Library default**
+(`RobustLaterationSolver.DEFAULT_ROBUST_METHOD`).
+|===
+
+[source,java]
+----
+var solver = RobustLateration2DSolver.create(
+        positions, distances, RobustEstimatorMethod.PROMEDS);
+solver.setConfidence(0.99);
+solver.setMaxIterations(5000);
+Point2D estimatedPosition = solver.solve();
+----
+
+== References
+
+* xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration]
+* xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]
+
+See xref:reference.adoc#bibliography[the full bibliography] for details.
