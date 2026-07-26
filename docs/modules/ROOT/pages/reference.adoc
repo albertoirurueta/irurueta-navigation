@@ -97,3 +97,13 @@ Base implementation referenced by the linear and non-linear solvers in xref:late
 [[bib-hereman-murphy]]
 Hereman, W., and W. S. Murphy Jr., "Determination of a Position in Three Dimensions Using Trilateration and
 Approximate Distances." Background for the inhomogeneous-linear lateration solver in xref:lateration.adoc[].
+
+[[bib-wikipedia-trilateration]]
+Wikipedia contributors, "Trilateration," _Wikipedia, The Free Encyclopedia_,
+https://en.wikipedia.org/wiki/Trilateration[en.wikipedia.org/wiki/Trilateration]. General background on the
+trilateration/multilateration/triangulation distinction used in the xref:lateration.adoc[] overview.
+
+[[bib-gisgeography-trilateration]]
+GIS Geography, "Trilateration vs Triangulation: How GPS Receivers Work,"
+https://gisgeography.com/trilateration-triangulation-gps/[gisgeography.com/trilateration-triangulation-gps].
+Accessible explanation of how GPS applies trilateration, referenced in the xref:lateration.adoc[] overview.

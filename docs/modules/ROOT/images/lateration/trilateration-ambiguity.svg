@@ -1,0 +1,30 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="400" height="300" fill="#ffffff"/>
+
+  <text x="10" y="20" fill="#4a5568" font-size="12">Two circles alone leave two candidate points; a third circle picks one</text>
+
+  <!-- Circle A -->
+  <circle cx="120" cy="150" r="100" fill="none" stroke="#2b6cb0" stroke-width="1.5"/>
+  <circle cx="120" cy="150" r="3.5" fill="#2b6cb0"/>
+  <text x="98" y="172" fill="#2b6cb0" font-size="13" font-weight="bold">A</text>
+
+  <!-- Circle B -->
+  <circle cx="280" cy="150" r="100" fill="none" stroke="#c05621" stroke-width="1.5"/>
+  <circle cx="280" cy="150" r="3.5" fill="#c05621"/>
+  <text x="286" y="172" fill="#c05621" font-size="13" font-weight="bold">B</text>
+
+  <!-- Circle C (resolves ambiguity) -->
+  <circle cx="200" cy="240" r="150" fill="none" stroke="#2f855a" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <circle cx="200" cy="240" r="3.5" fill="#2f855a"/>
+  <text x="206" y="262" fill="#2f855a" font-size="13" font-weight="bold">C</text>
+
+  <!-- Candidate P1 (kept) -->
+  <circle cx="200" cy="90" r="5.5" fill="#1a202c"/>
+  <text x="208" y="86" fill="#1a202c" font-size="12" font-weight="bold">P&#8321;</text>
+  <text x="208" y="101" fill="#4a5568" font-size="10.5">consistent with C &#8594; kept</text>
+
+  <!-- Candidate P2 (discarded) -->
+  <circle cx="200" cy="210" r="5.5" fill="#a0aec0"/>
+  <text x="208" y="206" fill="#a0aec0" font-size="12" font-weight="bold">P&#8322;</text>
+  <text x="208" y="221" fill="#a0aec0" font-size="10.5">off circle C &#8594; discarded</text>
+</svg>
