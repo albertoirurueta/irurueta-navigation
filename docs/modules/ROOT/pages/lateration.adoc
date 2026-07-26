@@ -11,6 +11,57 @@ xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
 xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy], as documented in the classes' own Javadoc and inline
 derivations. See xref:reference.adoc#bibliography[the bibliography] for full citations.
 
+== What lateration is
+
+**Lateration** (trilateration when exactly three distances are used, multilateration when more are used) locates
+a point using only *distance* measurements to a set of known reference points — no angles involved. This is the
+key distinction from **triangulation**, which locates a point from *angle* (bearing) measurements taken at known
+points instead (xref:reference.adoc#bib-wikipedia-trilateration[Wikipedia, "Trilateration"];
+xref:reference.adoc#bib-gisgeography-trilateration[GIS Geography]). GPS is the most familiar example: each
+satellite broadcasts its own position, the receiver measures its distance to each satellite (from radio signal
+travel time), and the receiver's position is wherever those distances are simultaneously satisfied — no antenna
+pointing or angle sensing is involved.
+
+image::lateration/trilateration-vs-triangulation.svg[Trilateration uses only distance measurements; triangulation uses only angle measurements,width=650]
+
+In the plane, a single distance measurement to a reference point A only constrains the unknown position to lie
+somewhere on a circle centered at A (all points a fixed distance from A). Two distances narrow this down to the
+(typically two) intersection points of two circles; a third distance to a non-collinear reference point
+resolves the remaining ambiguity down to a single point:
+
+image::lateration/trilateration-2d.svg[Three circles centered at known anchors A, B, C intersecting at the estimated position P,width=500]
+
+For a set of stem:[n] known 2D positions stem:[(c_{ix}, c_{iy})] and their measured distances stem:[r_i] to the
+unknown point stem:[(x, y)], the raw (unlinearized) system that lateration solves is simply "distance from the
+unknown point to each anchor equals the corresponding measurement":
+
+[stem]
+++++
+(x - c_{ix})^2 + (y - c_{iy})^2 = r_i^2, \qquad i = 1, \ldots, n
+++++
+
+and analogously in 3D, replacing circles with spheres and adding a stem:[z] coordinate:
+
+[stem]
+++++
+(x - c_{ix})^2 + (y - c_{iy})^2 + (z - c_{iz})^2 = r_i^2, \qquad i = 1, \ldots, n
+++++
+
+Each individual equation is nonlinear (quadratic) in the unknown position, and with exactly the minimum number
+of measurements (3 in 2D, 4 in 3D — one more than the number of dimensions, since one measurement is used as a
+reference when linearizing, see below) the system can have two solutions rather than one, unless the reference
+positions and the geometry rule one out:
+
+image::lateration/trilateration-ambiguity.svg[Two circles alone leave two candidate positions; a third circle resolves the ambiguity,width=500]
+
+In practice, measured distances are noisy (and occasionally wrong outright, e.g., a reflected or blocked
+signal), so real systems use *more* measurements than the strict minimum and fit the *best* position rather
+than solving the minimal system exactly — which is exactly what the rest of this page's solver hierarchy does:
+linearize the system above to get a fast closed-form estimate (xref:lateration.adoc#_homogeneous_linear_solver[homogeneous]
+and xref:lateration.adoc#_inhomogeneous_linear_solver[inhomogeneous] solvers), optionally refine it against the
+true nonlinear equations (xref:lateration.adoc#_non_linear_refinement[non-linear refinement]), and optionally
+reject outlier measurements along the way (xref:lateration.adoc#_robust_solvers[robust solvers]).
+
 == Class hierarchy
 
 There are two independent hierarchies rooted at `Point<?>` (2D `Point2D` or 3D `Point3D`): the non-robust
@@ -161,5 +212,7 @@ Point2D estimatedPosition = solver.solve();
 
 * xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration]
 * xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]
+* xref:reference.adoc#bib-wikipedia-trilateration[Wikipedia, "Trilateration"]
+* xref:reference.adoc#bib-gisgeography-trilateration[GIS Geography]
 
 See xref:reference.adoc#bibliography[the full bibliography] for details.
