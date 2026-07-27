@@ -1,6 +1,6 @@
 ---
 name: iru-dotnet-code-one-task-group
-description: Implement one bucket of .NET/C# tasks from a plan's task group end-to-end — captures a single pre-change quality baseline for the whole bucket, runs `iru-dotnet-code-one-task` once per task (in parallel agents when the group is marked parallelizable) to implement each one and its tests, then validates the entire bucket once: license headers, XML doc comments, scoped tests, an 80% coverage check, a full-suite run, and a code-quality regression check against that one baseline. Checks off each task/sub-task's box in `implementation_plan.md` and notifies the user as each phase completes — task implementation first, then group validation — rather than waiting until the whole bucket is done. If group validation surfaces a regression traceable to a specific task, that task's implementation is revised and the affected checks re-run, instead of re-validating the whole bucket per task. Invoke as `/iru-dotnet-code-one-task-group <bucket text>`, passing every task/sub-task in the bucket, each with its own text, plus the group's `Parallelizable` verdict and any relevant "Current code state" context. Equivalent to `iru-java-code-one-task-group` for .NET/C# projects; used by `iru-code-one-task-group`, which invokes this once per plan group for its .NET-tagged tasks.
+description: Implement one bucket of .NET/C# tasks from a plan's task group end-to-end — captures a single pre-change quality baseline for the whole bucket, runs `iru-dotnet-code-one-task` once per task (in parallel agents when the group is marked parallelizable) to implement each one and its tests, then validates the entire bucket once: license headers, XML doc comments, scoped tests, an 80% coverage check, a full-suite run, and a code-quality regression check against that one baseline. `iru-dotnet-code-one-task` itself checks off each task/sub-task's box in `implementation_plan.md` the moment that task finishes (with a "group validation pending" note), so an interrupted run doesn't re-attempt already-finished tasks; this skill backfills any checkbox that didn't land — a rare concurrent-write race when several tasks finish at nearly the same moment — and replaces each task's pending note with the final coverage/quality outcome once group validation passes, notifying the user as each phase completes rather than waiting until the whole bucket is done. If group validation surfaces a regression traceable to a specific task, that task's implementation is revised and the affected checks re-run, instead of re-validating the whole bucket per task. Invoke as `/iru-dotnet-code-one-task-group <bucket text>`, passing every task/sub-task in the bucket, each with its own text, plus the group's `Parallelizable` verdict and any relevant "Current code state" context. Equivalent to `iru-java-code-one-task-group` for .NET/C# projects; used by `iru-code-one-task-group`, which invokes this once per plan group for its .NET-tagged tasks.
 model: sonnet
 allowed-tools: Read Edit Write Bash(dotnet *) Bash(git status *) Bash(git diff *) Bash(git log *) Bash(find *) Bash(grep *) Bash(ls *) Skill Agent
 ---
@@ -40,9 +40,10 @@ writes/updates its tests, nothing more (license headers, doc comments, and all v
   Agent({
     description: "Implement <task N> via dotnet-code-one-task",
     subagent_type: "iru-isolated-skill-executor",
-    prompt: "Invoke Skill({skill: \"dotnet-code-one-task\", args: \"<the task's full text, including its
-      sub-tasks and any relevant Current code state context>\"}). Report back: the files touched, the tests
-      added/updated, and whether the task stopped on a blocker instead of finishing.",
+    prompt: "Invoke Skill({skill: \"dotnet-code-one-task\", args: \"<the task's full text, including its exact
+      implementation_plan.md checkbox line(s) for itself and its sub-tasks, its sub-tasks' own text, and any
+      relevant Current code state context>\"}). Report back: the files touched, the tests added/updated, and
+      whether the task stopped on a blocker instead of finishing.",
     run_in_background: false
   })
   ```
@@ -50,12 +51,14 @@ writes/updates its tests, nothing more (license headers, doc comments, and all v
   finish before starting the next — the plan marked this bucket non-parallel because its tasks have a real
   ordering dependency (e.g. one task's code depends on another's, or two tasks would touch the same file).
 
-As each task's agent reports back (whether run in parallel or sequentially), immediately check off that task's
-own checkbox (and its sub-tasks') in `implementation_plan.md`, add a short note naming the files touched, and
-notify the user that this specific task's implementation and tests landed — but note in that same line that
-group-wide validation is still pending, e.g. `- [x] Task 2. **Implement `SimpleWidget`** — implemented, tests
-added; group validation pending.` This is what makes progress visible per task as it happens, even though full
-validation is deferred to Step 3/4.
+`iru-dotnet-code-one-task` already checks off that task's own checkbox (and its sub-tasks') in
+`implementation_plan.md` itself, with a "group validation pending" note, before it reports back — e.g. `- [x]
+Task 2. **Implement `SimpleWidget`** — implemented, tests added; group validation pending.` As each task's agent
+reports back (whether run in parallel or sequentially), re-read `implementation_plan.md` and confirm that box is
+actually checked; if it isn't (a rare concurrent-write race when two tasks in a parallel bucket finished at
+nearly the same moment and one edit clobbered the other), flip it yourself now, using the same note. Notify the
+user that this specific task's implementation and tests landed. This is what makes progress visible per task as
+it happens, even though full validation is deferred to Step 3/4.
 
 If a task's agent reports it stopped on a blocker, record it and skip validating that specific task's code in
 Steps 3–4 below (there's nothing finished to validate) — surface the blocker in this skill's own Step 5 report
@@ -127,6 +130,8 @@ not run Step 3's validation against a task that never finished implementing.
 Hand control back to the caller (`iru-code-one-task-group`) with a summary covering the whole bucket: per task, the
 files touched, tests added/updated, coverage achieved, and code-quality outcome — including whether a new issue
 was left in place as unavoidable and why, whether license-header generation was skipped by the user, and which
-task(s), if any, stopped on a blocker (with enough detail for the caller to surface it further up). This skill
-has already handled `implementation_plan.md`'s checkboxes and the user-facing progress notifications itself
-(Steps 2 and 4) — the caller does not need to redo that bookkeeping for this bucket.
+task(s), if any, stopped on a blocker (with enough detail for the caller to surface it further up).
+`implementation_plan.md`'s checkboxes are already checked (by `iru-dotnet-code-one-task` itself, backfilled here
+in Step 2 if needed) and finalized with their validation outcome (Step 4), and the user-facing progress
+notifications have already gone out (Steps 2 and 4) — the caller does not need to redo that bookkeeping for this
+bucket.
