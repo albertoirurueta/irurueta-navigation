@@ -2,6 +2,9 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+:javadoc-base: https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation/gnss
+:github-base: https://github.com/albertoirurueta/irurueta-navigation/blob/master/src/main/java/com/irurueta/navigation/gnss
+
 The `com.irurueta.navigation.gnss` package estimates a receiver's position, velocity, and clock offset/drift from
 GNSS pseudo-range and pseudo-range-rate measurements, following
 xref:reference.adoc#bib-groves2013[Groves, 2013] (each class also mirrors a script from
@@ -77,6 +80,10 @@ var z = estimation.getZ();
 var clockOffset = estimation.getClockOffset();
 ----
 
+_API reference:_ `GNSSLeastSquaresPositionAndVelocityEstimator`
+(link:{javadoc-base}/GNSSLeastSquaresPositionAndVelocityEstimator.html[javadoc],
+link:{github-base}/GNSSLeastSquaresPositionAndVelocityEstimator.java[source])
+
 == Kalman-filtered estimation
 
 `GNSSKalmanEpochEstimator` implements one epoch of the GNSS extended Kalman filter over an 8-element state
@@ -132,6 +139,11 @@ estimator.updateMeasurements(measurements, timestamp);
 var state = estimator.getState(); // GNSSKalmanState: GNSSEstimation + error covariance
 ----
 
+_API reference:_ `GNSSKalmanConfig` (link:{javadoc-base}/GNSSKalmanConfig.html[javadoc], link:{github-base}/GNSSKalmanConfig.java[source]) +
+`GNSSKalmanFilteredEstimator` (link:{javadoc-base}/GNSSKalmanFilteredEstimator.html[javadoc],
+link:{github-base}/GNSSKalmanFilteredEstimator.java[source]) +
+`GNSSKalmanState` (link:{javadoc-base}/GNSSKalmanState.html[javadoc], link:{github-base}/GNSSKalmanState.java[source])
+
 == Synthesizing satellites, measurements, and biases
 
 Three generator classes produce synthetic data for testing and simulation, all driven by a `GNSSConfig`
@@ -163,6 +175,12 @@ var satellites = SatelliteECEFPositionAndVelocityGenerator.generateSatellitesPos
 var measurements = GNSSMeasurementsGenerator.generateMeasurements(
         time, satellites, userPositionAndVelocity, config, random);
 ----
+
+_API reference:_ `SatelliteECEFPositionAndVelocityGenerator`
+(link:{javadoc-base}/SatelliteECEFPositionAndVelocityGenerator.html[javadoc],
+link:{github-base}/SatelliteECEFPositionAndVelocityGenerator.java[source]) +
+`GNSSMeasurementsGenerator` (link:{javadoc-base}/GNSSMeasurementsGenerator.html[javadoc],
+link:{github-base}/GNSSMeasurementsGenerator.java[source])
 
 == References
 

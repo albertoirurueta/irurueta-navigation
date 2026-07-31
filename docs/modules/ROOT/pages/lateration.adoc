@@ -2,6 +2,9 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+:javadoc-base: https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation/lateration
+:github-base: https://github.com/albertoirurueta/irurueta-navigation/blob/master/src/main/java/com/irurueta/navigation/lateration
+
 The `com.irurueta.navigation.lateration` package recovers a position from a set of known reference positions and
 their (possibly noisy, possibly outlier-contaminated) distances to an unknown point — the classic trilateration
 problem, solved here for both 2D (intersecting circles) and 3D (intersecting spheres). Unlike
@@ -122,6 +125,10 @@ solver.solve();
 Point2D estimatedPosition = solver.getEstimatedPosition();
 ----
 
+_API reference:_ `HomogeneousLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/HomogeneousLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/HomogeneousLinearLeastSquaresLateration2DSolver.java[source])
+
 == Inhomogeneous linear solver
 
 `InhomogeneousLinearLeastSquaresLaterationSolver` instead picks the first position as a reference and subtracts
@@ -145,6 +152,10 @@ solver.solve();
 Point2D estimatedPosition = solver.getEstimatedPosition();
 ----
 
+_API reference:_ `InhomogeneousLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/InhomogeneousLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/InhomogeneousLinearLeastSquaresLateration2DSolver.java[source])
+
 == Non-linear refinement
 
 `NonLinearLeastSquaresLaterationSolver` refines an initial position estimate (typically from one of the linear
@@ -161,6 +172,10 @@ solver.solve();
 Point2D refined = solver.getEstimatedPosition();
 Matrix covariance = solver.getCovariance();
 ----
+
+_API reference:_ `NonLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/NonLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/NonLinearLeastSquaresLateration2DSolver.java[source])
 
 == Robust solvers
 
@@ -207,6 +222,9 @@ solver.setConfidence(0.99);
 solver.setMaxIterations(5000);
 Point2D estimatedPosition = solver.solve();
 ----
+
+_API reference:_ `RobustLateration2DSolver` (link:{javadoc-base}/RobustLateration2DSolver.html[javadoc],
+link:{github-base}/RobustLateration2DSolver.java[source])
 
 == References
 

@@ -2,6 +2,9 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+:javadoc-base: https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation
+:github-base: https://github.com/albertoirurueta/irurueta-navigation/blob/master/src/main/java/com/irurueta/navigation
+
 The `com.irurueta.navigation.frames` package (and its `frames.converters` sub-package) models the reference
 frames used throughout navigation mathematics — Earth-Centered Inertial (ECI), Earth-Centered Earth-Fixed (ECEF),
 North-East-Down (NED), and body frames — plus the converters that translate a position/velocity/attitude
@@ -87,6 +90,10 @@ var yaw = c.getYawEulerAngle();
 
 var inverse = c.inverseAndReturnNew(); // NED -> body
 ----
+
+_API reference:_ `CoordinateTransformation` (link:{javadoc-base}/frames/CoordinateTransformation.html[javadoc],
+link:{github-base}/frames/CoordinateTransformation.java[source]) +
+`FrameType` (link:{javadoc-base}/frames/FrameType.html[javadoc], link:{github-base}/frames/FrameType.java[source])
 
 `CoordinateTransformation.ecefToNedMatrix(latitude, longitude)` builds the ECEF-to-NED rotation directly from
 geodetic latitude stem:[L_b] and longitude stem:[\lambda_b] using (2.150):
@@ -181,6 +188,11 @@ var longitude = ned.getLongitude();
 var height = ned.getHeight();
 ----
 
+_API reference:_ `ECEFFrame` (link:{javadoc-base}/frames/ECEFFrame.html[javadoc], link:{github-base}/frames/ECEFFrame.java[source]) +
+`NEDFrame` (link:{javadoc-base}/frames/NEDFrame.html[javadoc], link:{github-base}/frames/NEDFrame.java[source]) +
+`ECEFtoNEDFrameConverter` (link:{javadoc-base}/frames/converters/ECEFtoNEDFrameConverter.html[javadoc],
+link:{github-base}/frames/converters/ECEFtoNEDFrameConverter.java[source])
+
 === NED to ECEF: Cartesian position from curvilinear position
 
 The reverse direction is direct, not iterative. The meridian radius of curvature (used for the north-south rate
@@ -214,6 +226,11 @@ var y = ecef.getY();
 var z = ecef.getZ();
 ----
 
+_API reference:_ `NEDFrame` (link:{javadoc-base}/frames/NEDFrame.html[javadoc], link:{github-base}/frames/NEDFrame.java[source]) +
+`NEDtoECEFFrameConverter` (link:{javadoc-base}/frames/converters/NEDtoECEFFrameConverter.html[javadoc],
+link:{github-base}/frames/converters/NEDtoECEFFrameConverter.java[source]) +
+`ECEFFrame` (link:{javadoc-base}/frames/ECEFFrame.html[javadoc], link:{github-base}/frames/ECEFFrame.java[source])
+
 === ECEF and ECI: accounting for Earth rotation
 
 ECI and ECEF share the same origin and z-axis, differing only by the Earth's rotation angle
@@ -238,6 +255,11 @@ var eci = new ECIFrame(x, y, z, vx, vy, vz);
 var propagationInterval = new Time(1.0, TimeUnit.SECOND);
 var ecef = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(eci, propagationInterval);
 ----
+
+_API reference:_ `ECIFrame` (link:{javadoc-base}/frames/ECIFrame.html[javadoc], link:{github-base}/frames/ECIFrame.java[source]) +
+`ECItoECEFFrameConverter` (link:{javadoc-base}/frames/converters/ECItoECEFFrameConverter.html[javadoc],
+link:{github-base}/frames/converters/ECItoECEFFrameConverter.java[source]) +
+`ECEFFrame` (link:{javadoc-base}/frames/ECEFFrame.html[javadoc], link:{github-base}/frames/ECEFFrame.java[source])
 
 == An original diagram: frame axes at a glance
 

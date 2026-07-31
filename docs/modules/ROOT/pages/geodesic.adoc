@@ -2,6 +2,9 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+:javadoc-base: https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation/geodesic
+:github-base: https://github.com/albertoirurueta/irurueta-navigation/blob/master/src/main/java/com/irurueta/navigation/geodesic
+
 The `com.irurueta.navigation.geodesic` package is a Java port of
 xref:reference.adoc#bib-geographiclib[GeographicLib], C.F.F. Karney's library for exact geodesic calculations on
 an ellipsoid of revolution (WGS84 by default). Unlike xref:frames.adoc[] and xref:gnss.adoc[], it is **not**
@@ -72,6 +75,8 @@ var distanceMeters = inverse.getS12();
 var initialBearing = inverse.getAzi1();
 ----
 
+_API reference:_ `Geodesic` (link:{javadoc-base}/Geodesic.html[javadoc], link:{github-base}/Geodesic.java[source])
+
 == Stepping along a geodesic: `GeodesicLine`
 
 Computing many points along the *same* geodesic (e.g., to draw a route) by repeatedly calling `direct`/`inverse`
@@ -87,6 +92,9 @@ for (var s = 0.0; s <= 500_000.0; s += 50_000.0) {
     System.out.println(point.getLat2() + ", " + point.getLon2());
 }
 ----
+
+_API reference:_ `Geodesic` (link:{javadoc-base}/Geodesic.html[javadoc], link:{github-base}/Geodesic.java[source]) +
+`GeodesicLine` (link:{javadoc-base}/GeodesicLine.html[javadoc], link:{github-base}/GeodesicLine.java[source])
 
 == Polygon perimeter and area: `PolygonArea`
 
@@ -109,6 +117,10 @@ var perimeterMeters = result.getPerimeter();
 var areaSquareMeters = result.getArea();
 ----
 
+_API reference:_ `PolygonArea` (link:{javadoc-base}/PolygonArea.html[javadoc], link:{github-base}/PolygonArea.java[source]) +
+`PolygonResult` (link:{javadoc-base}/PolygonResult.html[javadoc], link:{github-base}/PolygonResult.java[source]) +
+`Geodesic` (link:{javadoc-base}/Geodesic.html[javadoc], link:{github-base}/Geodesic.java[source])
+
 == Gnomonic projection
 
 `Gnomonic` projects points from the ellipsoid onto a plane tangent at a chosen center point, such that every
@@ -125,6 +137,10 @@ var y = projected.getY();
 
 GnomonicData backToLatLon = gnomonic.reverse(41.3851, 2.1734, x, y);
 ----
+
+_API reference:_ `Gnomonic` (link:{javadoc-base}/Gnomonic.html[javadoc], link:{github-base}/Gnomonic.java[source]) +
+`GnomonicData` (link:{javadoc-base}/GnomonicData.html[javadoc], link:{github-base}/GnomonicData.java[source]) +
+`Geodesic` (link:{javadoc-base}/Geodesic.html[javadoc], link:{github-base}/Geodesic.java[source])
 
 == Numerical building blocks
 
