@@ -1,4 +1,6 @@
 = Frames
+:description: Reference frames for GNSS/INS navigation in irurueta-navigation: ECI, ECEF, and NED frames, attitude via coordinate transformation matrices, and converters between every frame pair.
+:keywords: navigation reference frames, ECEF, ECI, NED, coordinate transformation matrix, attitude, frame converters, ECEFFrame, NEDFrame, ECIFrame, geodetic coordinates, Earth-Centered Earth-Fixed, Earth-Centered Inertial, North-East-Down
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

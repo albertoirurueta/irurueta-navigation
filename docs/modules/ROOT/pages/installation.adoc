@@ -1,4 +1,6 @@
 = Installation
+:description: How to add irurueta-navigation as a Maven dependency, including the latest release and snapshot coordinates and the required Java version.
+:keywords: irurueta-navigation installation, Maven dependency, Maven Central, Sonatype snapshots, Java 21, GNSS library setup
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

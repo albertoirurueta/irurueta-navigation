@@ -1,4 +1,6 @@
 = Reference
+:description: Links to irurueta-navigation's generated Javadoc, JaCoCo coverage, Surefire test, and SonarCloud reports, plus the full bibliography behind its GNSS, frames, lateration, and geodesic algorithms.
+:keywords: irurueta-navigation reference, Javadoc, JaCoCo coverage report, Surefire test report, SonarCloud, bibliography, Groves Principles of GNSS, GeographicLib, Karney geodesics
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

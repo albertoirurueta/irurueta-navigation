@@ -1,4 +1,6 @@
 = Geodesic
+:description: Geodesic calculations on the WGS84 ellipsoid in irurueta-navigation: distances, bearings, direct and inverse geodetic problems, polygon area/perimeter, and gnomonic projection, ported from GeographicLib.
+:keywords: geodesic calculations, WGS84 ellipsoid, GeographicLib, direct geodetic problem, inverse geodetic problem, GeodesicLine, PolygonArea, gnomonic projection, ellipsoid of revolution, geodesy, distance and bearing
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

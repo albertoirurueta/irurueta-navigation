@@ -1,4 +1,6 @@
 = GNSS
+:description: GNSS position, velocity, and clock offset/drift estimation in irurueta-navigation, from least-squares and Kalman-filtered estimators to satellite, measurement, and bias generators for simulation and testing.
+:keywords: GNSS, GPS, pseudorange, pseudorange-rate, least-squares estimation, Kalman filter, position and velocity estimation, clock offset, clock drift, satellite orbit simulation, GNSSLeastSquaresPositionAndVelocityEstimator, GNSSKalmanFilteredEstimator
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

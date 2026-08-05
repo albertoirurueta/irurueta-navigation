@@ -1,4 +1,6 @@
 = Lateration
+:description: Trilateration in irurueta-navigation: recovering a 2D or 3D position from distance measurements using linear and non-linear least-squares solvers, plus robust variants (RANSAC, PROSAC, LMedS, MSAC) for outlier-contaminated data.
+:keywords: trilateration, lateration, multilateration, position estimation, linear least squares, non-linear least squares, robust estimation, RANSAC, PROSAC, LMedS, MSAC, outlier rejection, RobustLateration2DSolver, RobustLateration3DSolver
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
