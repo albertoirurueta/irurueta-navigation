@@ -114,8 +114,8 @@ stem:[x^2+y^2] term:
 ++++
 
 Substituting the homogeneous coordinates stem:[(x,y) = (x'/w', y'/w')] turns this into a homogeneous linear system
-stem:[Av = 0] in stem:[v=(x',y',w')] (or stem:[(x',y',z',w')] in 3D), solved via the SVD of stem:[A] — the estimated position
-is the last column of stem:[V], normalized by its stem:[w'] component. At least 3 positions are required in 2D
+stem:[\mathbf{A}\mathbf{v} = 0] in stem:[\mathbf{v}=(x',y',w')] (or stem:[(x',y',z',w')] in 3D), solved via the SVD of stem:[\mathbf{A}] — the estimated position
+is the last column of stem:[\mathbf{V}], normalized by its stem:[w'] component. At least 3 positions are required in 2D
 (4 in 3D).
 
 [source,java]
@@ -136,10 +136,10 @@ its equation from every other one directly in inhomogeneous coordinates. For pos
 
 [stem]
 ++++
-(x-x_1)(x_i-x_1) + (y-y_1)(y_i-y_1) = \tfrac{1}{2}\left(r_1^2 - r_i^2 + d_{i1}^2\right), \qquad d_{i1} = \lVert p_i - p_1 \rVert
+(x-x_1)(x_i-x_1) + (y-y_1)(y_i-y_1) = \tfrac{1}{2}\left(r_1^2 - r_i^2 + d_{i1}^2\right), \qquad d_{i1} = \lVert \mathbf{p}_i - \mathbf{p}_1 \rVert
 ++++
 
-giving a well-conditioned linear system stem:[A(x-x_1, y-y_1)^T = b] with one fewer unknown than the homogeneous
+giving a well-conditioned linear system stem:[\mathbf{A}(x-x_1, y-y_1)^T = \mathbf{b}] with one fewer unknown than the homogeneous
 formulation and no SVD needed — following
 xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
 xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]. This is the default preliminary solver used by the
