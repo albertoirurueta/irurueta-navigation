@@ -37,7 +37,7 @@ rotation during the signal's transit — the small-angle approximation of (8.36)
 
 [stem]
 ++++
-C^e_I(t_{st}) \approx
+\mathbf{C}^e_I(t_{st}) \approx
 \begin{pmatrix}
 1 & \omega_{ie} r/c & 0 \\
 -\omega_{ie} r/c & 1 & 0 \\
@@ -50,9 +50,9 @@ giving the corrected range (8.35) and the ECEF line-of-sight unit vector (8.41):
 
 [stem]
 ++++
-r^a_s = \left\| C^e_I(t_{st})\, r^e_{es}(t_{st}) - r^e_{ea}(t_{sa}) \right\|
+r^a_s = \left\| \mathbf{C}^e_I(t_{st})\, \mathbf{r}^e_{es}(t_{st}) - \mathbf{r}^e_{ea}(t_{sa}) \right\|
 \qquad
-u^e_{as} = \frac{C^e_I(t_{st})\, r^e_{es}(t_{st}) - r^e_{ea}(t_{sa})}{r^a_s}
+\mathbf{u}^e_{as} = \frac{\mathbf{C}^e_I(t_{st})\, \mathbf{r}^e_{es}(t_{st}) - \mathbf{r}^e_{ea}(t_{sa})}{r^a_s}
 \qquad \text{(8.35), (8.41)}
 ++++
 
@@ -63,10 +63,10 @@ solves the unweighted least-squares update (9.35)/(9.141):
 
 [stem]
 ++++
-\hat{x} = \hat{x}^- + \left(H^T H\right)^{-1} H^T \, \delta z
+\mathbf{\hat{x}} = \mathbf{\hat{x}}^- + \left(\mathbf{H}^T \mathbf{H}\right)^{-1} \mathbf{H}^T \, \delta \mathbf{z}
 ++++
 
-where stem:[\delta z] is the vector of measured-minus-predicted pseudo-ranges (or rates). The solve repeats until
+where stem:[\delta \mathbf{z}] is the vector of measured-minus-predicted pseudo-ranges (or rates). The solve repeats until
 the state update falls below `CONVERGENCE_THRESHOLD`.
 
 [source,java]
@@ -93,34 +93,34 @@ Kalman propagation equations (3.14)/(3.15):
 
 [stem]
 ++++
-\hat{x}_k^- = \Phi_{k-1}\hat{x}_{k-1}^+
+\mathbf{\hat{x}}_k^- = \boldsymbol{\Phi}_{k-1}\mathbf{\hat{x}}_{k-1}^+
 \qquad
-P_k^- = \Phi_{k-1} P_{k-1}^+ \Phi_{k-1}^T + Q_{k-1}
+\mathbf{P}_k^- = \boldsymbol{\Phi}_{k-1} \mathbf{P}_{k-1}^+ \boldsymbol{\Phi}_{k-1}^T + \mathbf{Q}_{k-1}
 \qquad \text{(3.14), (3.15)}
 ++++
 
-with the system noise covariance stem:[Q_{k-1}] built from the acceleration and clock-noise power spectral
+with the system noise covariance stem:[\mathbf{Q}_{k-1}] built from the acceleration and clock-noise power spectral
 densities in `GNSSKalmanConfig`, following (9.152). The measurement update follows the same predicted
 pseudo-range/pseudo-range-rate and measurement-matrix construction as the least-squares estimator — (9.163),
 (9.165) — then applies the standard Kalman gain, innovation, state, and covariance updates:
 
 [stem]
 ++++
-K_k = P_k^- H_k^T \left(H_k P_k^- H_k^T + R_k\right)^{-1}
+\mathbf{K}_k = \mathbf{P}_k^- \mathbf{H}_k^T \left(\mathbf{H}_k \mathbf{P}_k^- \mathbf{H}_k^T + \mathbf{R}_k\right)^{-1}
 \qquad \text{(3.21)}
 ++++
 
 [stem]
 ++++
-\delta z_k^- = z_k - h(\hat{x}_k^-, t_k)
+\delta \mathbf{z}_k^- = \mathbf{z}_k - \mathbf{h}(\mathbf{\hat{x}}_k^-, t_k)
 \qquad \text{(3.88)}
 ++++
 
 [stem]
 ++++
-\hat{x}_k^+ = \hat{x}_k^- + K_k \delta z_k^-
+\mathbf{\hat{x}}_k^+ = \mathbf{\hat{x}}_k^- + \mathbf{K}_k \delta \mathbf{z}_k^-
 \qquad
-P_k^+ = (I - K_k H_k) P_k^-
+\mathbf{P}_k^+ = (\mathbf{I} - \mathbf{K}_k \mathbf{H}_k) \mathbf{P}_k^-
 \qquad \text{(3.24), (3.25)}
 ++++
 

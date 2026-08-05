@@ -47,20 +47,20 @@ doesn't need to be carried along.
 
 == Attitude: the coordinate transformation matrix
 
-`CoordinateTransformation` holds the 3x3 rotation matrix, stem:[C^\alpha_\beta], that transforms a vector's resolving
+`CoordinateTransformation` holds the 3x3 rotation matrix, stem:[\mathbf{C}^\alpha_\beta], that transforms a vector's resolving
 axes from frame stem:[\alpha] to frame stem:[\beta]:
 
 [stem]
 ++++
-x^\beta = C^\alpha_\beta x^\alpha
+\mathbf{x}^\beta = \mathbf{C}^\alpha_\beta \mathbf{x}^\alpha
 ++++
 
-Because it is orthonormal, its inverse is simply its transpose, stem:[C^\beta_\alpha = (C^\alpha_\beta)^T]
+Because it is orthonormal, its inverse is simply its transpose, stem:[\mathbf{C}^\beta_\alpha = (\mathbf{C}^\alpha_\beta)^T]
 (`CoordinateTransformation.inverse()`), and successive rotations compose by matrix multiplication:
 
 [stem]
 ++++
-C^\alpha_\gamma = C^\beta_\gamma C^\alpha_\beta \qquad \text{(2.15)}
+\mathbf{C}^\alpha_\gamma = \mathbf{C}^\beta_\gamma \mathbf{C}^\alpha_\beta \qquad \text{(2.15)}
 ++++
 
 `CoordinateTransformation.setEulerAngles(roll, pitch, yaw)` builds the matrix from Euler angles stem:[(\phi,
@@ -68,7 +68,7 @@ C^\alpha_\gamma = C^\beta_\gamma C^\alpha_\beta \qquad \text{(2.15)}
 
 [stem]
 ++++
-C^\beta_\alpha =
+\mathbf{C}^\beta_\alpha =
 \begin{pmatrix}
 \cos\theta\cos\psi & \cos\theta\sin\psi & -\sin\theta \\
 -\cos\phi\sin\psi + \sin\phi\sin\theta\cos\psi & \cos\phi\cos\psi + \sin\phi\sin\theta\sin\psi & \sin\phi\cos\theta \\
@@ -100,7 +100,7 @@ geodetic latitude stem:[L_b] and longitude stem:[\lambda_b] using (2.150):
 
 [stem]
 ++++
-C^e_n =
+\mathbf{C}^e_n =
 \begin{pmatrix}
 -\sin L_b \cos\lambda_b & -\sin L_b \sin\lambda_b & \cos L_b \\
 -\sin\lambda_b & \cos\lambda_b & 0 \\
@@ -176,7 +176,7 @@ L_b &= \operatorname{sign}(z^e_{eb}) \arctan\!\left(\frac{1-t^2}{2t\sqrt{1-e^2}}
 
 with height recovered from stem:[t] and stem:[\beta]. Longitude is simply
 stem:[\lambda_b = \operatorname{atan2}(y^e_{eb}, x^e_{eb})] — the same relation as in (2.113). Velocity is then
-rotated with (2.73), stem:[v^n_{eb} = C^e_n v^e_{eb}], and attitude with (2.15), stem:[C^b_n = C^e_n C^b_e].
+rotated with (2.73), stem:[\mathbf{v}^n_{eb} = \mathbf{C}^e_n \mathbf{v}^e_{eb}], and attitude with (2.15), stem:[\mathbf{C}^b_n = \mathbf{C}^e_n \mathbf{C}^b_e].
 
 [source,java]
 ----
@@ -239,7 +239,7 @@ stem:[\omega_{ie}(t - t_0)] accumulated over the propagation interval.
 
 [stem]
 ++++
-C^i_e =
+\mathbf{C}^i_e =
 \begin{pmatrix}
 \cos\omega_{ie}\Delta t & \sin\omega_{ie}\Delta t & 0 \\
 -\sin\omega_{ie}\Delta t & \cos\omega_{ie}\Delta t & 0 \\
@@ -247,7 +247,7 @@ C^i_e =
 \end{pmatrix}
 ++++
 
-and position transforms with (2.146), stem:[r^e_{eb} = C^i_e\, r^i_{ib}] (and its inverse for ECI stem:[\to] ECEF).
+and position transforms with (2.146), stem:[\mathbf{r}^e_{eb} = \mathbf{C}^i_e\, \mathbf{r}^i_{ib}] (and its inverse for ECI stem:[\to] ECEF).
 
 [source,java]
 ----
