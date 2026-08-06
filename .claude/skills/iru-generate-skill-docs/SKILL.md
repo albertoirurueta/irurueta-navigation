@@ -157,6 +157,18 @@ order:
 Match the AsciiDoc conventions already used on this page (table `[cols=...]` syntax, `xref:` link style,
 any existing AI-generated-content disclaimer note — keep it on every page you touch or create).
 
+Give the page (or refresh it, if already present) SEO document attributes right after the `= AI Catalog`
+title line, with **no blank line between the title and the attributes** — a blank line ends the AsciiDoc
+document header, and Antora's default UI only reads `:description:`/`:keywords:` into the page's
+`<meta name="description">`/`<meta name="keywords">` tags when they're real header attributes, not body
+text:
+- `:description:` — a single plain-text line (no markup, no xrefs), 120-155 characters, summarizing what
+  this catalog actually is right now (grounded in Step 1's opening paragraph and the current skill/agent
+  count from Step 2).
+- `:keywords:` — 6-10 lowercase comma-separated terms grounded in the actual current catalog: "claude code
+  skills", "claude code agents", the purpose-group names from Step 5, and the languages/platforms this
+  catalog's skills actually cover (e.g. java, dotnet, github, jira — only ones truly present).
+
 ## Step 8 — Write one detail page per skill and per documented agent
 
 Create (or update, if re-running after a skill/agent changed) `docs/modules/ROOT/pages/skills/<name>.adoc`
@@ -164,8 +176,17 @@ for every skill, and `docs/modules/ROOT/pages/agents/<name>.adoc` for every cust
 `docs/modules/ROOT/pages/agents/overview.adoc` covering all built-in agent types together, if there is no
 `.claude/agents/` directory to give each one its own natural page. Give every page this shape:
 
-1. `= <Title>` heading, then the repository's existing AI-generated-content disclaimer note if one is used
-   elsewhere in this docs module.
+1. `= <Title>` heading, immediately followed — **no blank line in between**, since a blank line ends the
+   AsciiDoc document header and Antora's default UI only picks up `:description:`/`:keywords:` as page
+   metadata (`<meta name="description">`/`<meta name="keywords">`) when they're real header attributes — by:
+   - `:description:` — a single plain-text line (no markup, no backticks, no xrefs), 120-155 characters,
+     a concrete summary of what this specific skill/agent does, grounded in Step 3's expanded purpose.
+     Distinct per page; never reused boilerplate.
+   - `:keywords:` — 6-10 lowercase comma-separated terms grounded in this page's actual content: the
+     skill/agent's own name, "claude code skill" or "claude code agent", the specific technology/domain it
+     actually mentions, and 2-3 action-oriented phrases describing what it does.
+   Then the repository's existing AI-generated-content disclaimer note if one is used elsewhere in this
+   docs module.
 2. A short intro paragraph (the expanded purpose from Step 3).
 3. `== Purpose` — the fuller explanation of what problem this skill/agent solves and how it fits the catalog.
 4. `== Purpose group` — an `xref:index.adoc#group-<slug>[]` link to its Step 5 group (skills only).
@@ -203,6 +224,33 @@ if any agent pages exist, an "Agents" heading (matching whatever nesting style `
 elsewhere in this module). Preserve the order and content of existing entries; remove entries only for pages
 Step 8 determined no longer exist.
 
+## Step 9b — Angle brackets in Mermaid labels
+
+Applies to every `[mermaid]` block written in Steps 7 and 8. Placeholder names are written `<timestamp>`,
+`<task-id>`, `<key>` and so on throughout this catalog's prose — but inside a Mermaid **node or edge label**
+that spelling is silently destroyed, and the failure is invisible in the build:
+
+- An AsciiDoc literal block (`....`) escapes `<` to `&lt;` in the HTML, and Asciidoctor passes an entity
+  reference already in the source (`&lt;`) straight through unchanged. Both spellings therefore reach the
+  browser as `&lt;…&gt;`, and `textContent` hands Mermaid a literal `<timestamp>`.
+- Mermaid renders labels as HTML (`htmlLabels`, on by default), so `<timestamp>` is parsed as an unknown tag
+  and **dropped from the diagram entirely** — `meeting-<timestamp>/meeting.md` renders as
+  `meeting-/meeting.md`. Setting `htmlLabels: false` does not help; the text is lost either way.
+
+So write the placeholder **double-escaped** in the AsciiDoc source — `&amp;lt;timestamp&amp;gt;` — which
+reaches Mermaid as `&lt;timestamp&gt;` and renders as the intended `<timestamp>`:
+
+```
+F --> G["Create meeting-&amp;lt;timestamp&amp;gt;/meeting.md\n(Summary + Full transcription)"]
+```
+
+Do **not** use Mermaid's `#60;`/`#62;` entity codes for this. They work in `["…"]` and `{"…"}` nodes but throw
+`Invalid character` in the stadium (`(["…"])`) and subroutine (`[["…"]]`) shapes this catalog's diagrams use,
+which kills the whole diagram. Rewording the label to avoid angle brackets altogether is also fine.
+
+Only label *text* is affected. Never touch link syntax — `-->`, `-.->`, `==>`, `<-->` are Mermaid operators and
+must stay literal. `\n` inside a label is fine and does produce a line break.
+
 ## Step 10 — Verify the site builds
 
 From the docs module directory:
@@ -214,6 +262,11 @@ npx antora <playbook-file>
 Fix any broken `xref:` (a typo'd skill/agent name, a page created under the wrong path), malformed table, or
 invalid Mermaid syntax before finishing — don't report success against a build that actually failed or
 warned about content this skill just wrote.
+
+A clean Antora build proves nothing about the diagrams: the extension emits the block as a `<div class="mermaid">`
+and the browser renders it, so a diagram that throws a syntax error or quietly drops a swallowed label still
+builds without a single warning. Check the diagrams themselves — grep the `[mermaid]` blocks just written for
+raw `<…>` placeholders per Step 9b, and confirm each one still says what it should.
 
 ## Step 11 — Report
 
