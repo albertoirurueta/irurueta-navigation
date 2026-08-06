@@ -35,7 +35,7 @@ lines, one per line, e.g.:
 
 ```
 integration-branch: develop
-java-version: 17
+java-version: 21
 publishing-server-id: central
 extras-profile-id: build-extras
 sign-profile-id: sign
@@ -58,7 +58,11 @@ a real answer, not guessed. If `pom.xml` is missing and the user chose to contin
   `groupId`/`artifactId`/`version` weren't already supplied from `pom.xml` — `version` is always read here, since
   it isn't known yet at the point `iru-setup-java-library-repository` collects its own Step 1 fields.
 - **Java version** (skip if supplied via `args`): read `maven.compiler.source`/`maven.compiler.target` (or
-  `maven.compiler.release`) from `pom.xml` properties.
+  `maven.compiler.release`) from `pom.xml` properties. If `pom.xml` declares none of them (or there's no `pom.xml`
+  and the user chose to continue anyway), ask the user, offering `21` as the default — this catalog's default Java
+  version for new repositories, and the one `iru-setup-java-library` writes into a generated `pom.xml`. Whenever
+  the value found in `pom.xml` differs from `21`, use what `pom.xml` says (CI must build what the project actually
+  targets) and note the difference in Step 8's report.
 - **Central/Nexus publishing plugin** (skip the `publishing-server-id` half if supplied via `args`): grep
   `pom.xml` for `central-publishing-maven-plugin` (the current Sonatype Central Publishing Portal plugin) or
   `nexus-staging-maven-plugin` (the older OSSRH plugin). Record the `publishingServerId`/`serverId` value it
@@ -244,7 +248,7 @@ jobs:
 Notes on placeholders that are genuinely project-specific and must come from Step 1, not from these templates:
 
 - `<integration-branch>`: the branch `develop.yml` triggers on (e.g. `develop`).
-- `<java-version>`: e.g. `17`.
+- `<java-version>`: e.g. `21` (this catalog's default for new repositories).
 - `<publishing-server-id>`: the id shared by the Central/Nexus plugin config and the settings file's `<server>`.
 - `<sign-profile-id>` / `<extras-profile-id>`: the two profile ids found in Step 1.
 - `<settings-file>`: the Maven settings XML path used for the deploy step (Step 6 creates it if absent).

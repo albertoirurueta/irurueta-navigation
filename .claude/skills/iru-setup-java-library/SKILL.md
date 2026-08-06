@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-library
-description: Generate a `pom.xml` at the repository root for a new Java library — asks for groupId, artifactId, version (default `1.0.0-SNAPSHOT`), the library's base Java package, license, developer name/email/organizationUrl, and whether to wire up a SonarQube/SonarCloud scan via the `sonar-maven-plugin`, then infers repository name/URL/SCM/inception year from the current git repository — and scaffolds the standard Maven source layout (`src/main/java/<package>`, `src/main/resources/<package>`, `src/test/java/<package>`) for that package. Invoke as `/iru-setup-java-library`. Ships with an explicit example `pom.xml` (derived from a real repository's pom, genericized) embedded in this skill file: test-only dependencies limited to junit-jupiter, junit-platform-launcher, mockito-core, and mockito-junit-jupiter, the same `sign`/`build-extras` profiles with the same plugins and versions, and a `groovy-maven-plugin` build-info step whose output path is rewired to the given library package. If `pom.xml` already exists, asks the user whether to stop or continue to regenerate it from the example. Accepts pre-resolved inputs via `args` (`key: value` lines) so an orchestrating skill like `iru-setup-java-library-repository` can supply them without re-prompting. Use whenever a new Java/Maven library repository needs its `pom.xml` and base folder structure bootstrapped from this house template, instead of hand-writing it.
+description: Generate a `pom.xml` at the repository root for a new Java library — asks for groupId, artifactId, version (default `1.0.0-SNAPSHOT`), the Java version the library targets (default `21`), the library's base Java package, license, developer name/email/organizationUrl, and whether to wire up a SonarQube/SonarCloud scan via the `sonar-maven-plugin`, then infers repository name/URL/SCM/inception year from the current git repository — and scaffolds the standard Maven source layout (`src/main/java/<package>`, `src/main/resources/<package>`, `src/test/java/<package>`) for that package. Invoke as `/iru-setup-java-library`. Ships with an explicit example `pom.xml` (derived from a real repository's pom, genericized) embedded in this skill file: test-only dependencies limited to junit-jupiter, junit-platform-launcher, mockito-core, and mockito-junit-jupiter, the same `sign`/`build-extras` profiles with the same plugins and versions, and a `groovy-maven-plugin` build-info step whose output path is rewired to the given library package. If `pom.xml` already exists, asks the user whether to stop or continue to regenerate it from the example. Accepts pre-resolved inputs via `args` (`key: value` lines) so an orchestrating skill like `iru-setup-java-library-repository` can supply them without re-prompting. Use whenever a new Java/Maven library repository needs its `pom.xml` and base folder structure bootstrapped from this house template, instead of hand-writing it.
 model: haiku
 ---
 
@@ -22,6 +22,7 @@ applying its own defaults) and passes them through `args` as `key: value` lines,
 groupId: com.example
 artifactId: my-library
 package: com.example.mylibrary
+java-version: 21
 developer-name: Jane Doe
 developer-email: jane@example.com
 organization-url: https://github.com/jane
@@ -29,8 +30,8 @@ license: Apache License 2.0
 ```
 
 Parse any such lines from `args` now. Every field found here is resolved — skip asking about it in Step 2. Only
-fields genuinely missing from `args` (including `version`, which callers typically leave for this skill's own
-default) still need a question. If `args` is absent or doesn't look like this format, treat everything as unset
+fields genuinely missing from `args` (including `version` and `java-version`, which callers typically leave for
+this skill's own defaults) still need a question. If `args` is absent or doesn't look like this format, treat everything as unset
 and ask normally.
 
 ## Step 1 — Check for an existing `pom.xml`
@@ -40,8 +41,9 @@ and ask normally.
   stop (leave the existing file untouched) or continue (regenerate it from this skill's example).
   - **Stop**: report that `pom.xml` already exists and end here — make no changes.
   - **Continue**: before asking the questions in Step 2, read the existing `pom.xml` and use its current
-    `groupId`, `artifactId`, `version`, `description`, license, developer, and main source package as the
-    *defaults* you offer the user for each question that Step 0 didn't already resolve — a value supplied via
+    `groupId`, `artifactId`, `version`, `description`, license, developer, main source package, and Java version
+    (`maven.compiler.source`/`maven.compiler.target`/`maven.compiler.release`) as the *defaults* you offer the
+    user for each question that Step 0 didn't already resolve — a value supplied via
     `args` always wins over a value merely found in the existing file, since it reflects what the caller (or the
     user, just now) explicitly asked for. Tell the user up front that regenerating from the template replaces the
     whole file — any dependencies or plugins beyond the four test dependencies and the standard profiles/plugins
@@ -56,6 +58,12 @@ existing file):
 - **groupId** — e.g. `com.example`.
 - **artifactId** — e.g. `my-library`.
 - **version** — default `1.0.0-SNAPSHOT` if the user doesn't give one.
+- **Java version** — the language level the library targets, written to
+  `maven.compiler.source`/`maven.compiler.target` in Step 4's template. Default `21` if the user doesn't give one;
+  offer that default explicitly rather than asking open-endedly. Keep it consistent with whatever
+  `iru-setup-java-github-workflows` sets up the CI pipeline to build against (same `21` default there), and note the
+  chosen value in Step 8's report so the user can spot a mismatch if that skill was already run with a different
+  one.
 - **Library package** — the base Java package for the library's main source (e.g. `com.example.mylibrary`). This
   need not equal `groupId`; ask for it explicitly. Used in Step 3's `src/main/java/<package>` layout and in the
   `groovy-maven-plugin` step of Step 5.
@@ -175,8 +183,9 @@ only substitute `<placeholder>` values using Steps 2–3.
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <!-- <java-version> from Step 2 — `21` unless the user or the calling skill asked for something else -->
+    <maven.compiler.source><java-version></maven.compiler.source>
+    <maven.compiler.target><java-version></maven.compiler.target>
     <github.global.server>github</github.global.server>
     <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
     <!-- Omit these four sonar.* properties if the user opted out of SonarCloud/SonarQube in Step 2 -->
@@ -477,6 +486,9 @@ Substitute every placeholder using Steps 2–3:
 - `<license-name>` / `<license-url>` — from Step 2's license choice; if "No license" was chosen, remove the entire
   `<licenses>...</licenses>` block rather than leaving empty placeholder tags.
 - `<library-package-path>` — the library package from Step 2, with `.` replaced by `/`.
+- `<java-version>` — the Java version from Step 2 (`21` unless overridden), substituted into both
+  `maven.compiler.source` and `maven.compiler.target`. Drop the explanatory comment above them from the written
+  file — it's guidance for filling the template, not part of the generated `pom.xml`.
 - `<sonar-organization>` / `<sonar-project-key>` / `<sonar-host-url>` — from Step 2's SonarCloud/SonarQube answer;
   if the user opted out, remove the four `sonar.*` properties and the `sonar-maven-plugin` plugin entry entirely
   rather than leaving empty placeholder tags.
@@ -515,7 +527,9 @@ src/test/java/<library-package-path>/
 
 ## Step 8 — Report and warn
 
-Summarize what was generated: the resolved groupId/artifactId/version, the license chosen (or "none"), the
+Summarize what was generated: the resolved groupId/artifactId/version, the Java version written to
+`maven.compiler.source`/`maven.compiler.target` (flagging it explicitly if it isn't `21`, so a mismatch with the CI
+pipeline `iru-setup-java-github-workflows` generates is easy to spot), the license chosen (or "none"), the
 SonarCloud/SonarQube choice from Step 2 (and its resolved `sonar.organization`/`sonar.projectKey`/`sonar.host.url`,
 or that it was omitted), the repository info inferred in Step 3, and which of the three source folders from Step 7
 were created versus already present. Remind the user that empty directories won't show up in `git status` until

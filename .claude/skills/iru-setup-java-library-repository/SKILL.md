@@ -56,11 +56,15 @@ Ask the user directly, presenting each with its default so a plain "yes"/blank r
 | Maven settings file | `mvnsettings.xml` |
 
 These map directly onto `iru-setup-java-github-workflows`'s own six placeholders — same names, same defaults — so
-there's nothing to translate before Step 4.
+there's nothing to translate before Step 4. The Java version additionally feeds `iru-setup-java-library` in Step 3
+(as its `java-version` arg, whose default is the same `21`), so `pom.xml`'s `maven.compiler.source`/`target` and
+the JDK the workflows set up always agree.
 
 ## Step 3 — Run `iru-setup-java-library`
 
-Format Step 1's answers as `key: value` lines and invoke via `iru-isolated-skill-executor`:
+Format Step 1's answers — plus the Java version from Step 2, so `pom.xml`'s compiler level and the CI pipeline
+Step 6 generates can't end up targeting different Java versions — as `key: value` lines and invoke via
+`iru-isolated-skill-executor`:
 
 ```
 Agent({
@@ -68,7 +72,8 @@ Agent({
   subagent_type: "iru-isolated-skill-executor",
   prompt: "Invoke Skill({skill: \"setup-java-library\", args: \"groupId: <group-id>\\nartifactId: <artifact-id>\\n
     package: <base-package>\\ndeveloper-name: <developer-name>\\ndeveloper-email: <developer-email>\\n
-    organization-url: <organization-url>\\nlicense: <license-name, or 'none'>\"}). Report back: whether pom.xml
+    organization-url: <organization-url>\\nlicense: <license-name, or 'none'>\\n
+    java-version: <java-version>\"}). Report back: whether pom.xml
     and the source folders were created fresh or already existed (and, if so, whether the user chose to stop),
     and any value it resolved on its own (e.g. version, repository info) worth noting in the final summary.",
   run_in_background: false
