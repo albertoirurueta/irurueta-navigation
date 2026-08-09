@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot
-description: End-to-end bootstrap for a brand-new Spring Boot service repository built on DDD + hexagonal architecture as a Maven multi-module reactor (`boot`, `application`, `domain`, `infrastructure/*`, `api/*`). Collects the project's identity (groupId, artifactId, base Java package), the target cloud (AWS or Google Cloud), the concurrency model (reactive/blocking/both), and every technology choice (databases + index/migration tooling, caches, security, Kafka via Spring Cloud Stream + AVRO, REST/gRPC servers and clients, the API mocking tool backing those clients in tests — Microcks or WireMock — logging, metrics, tracing, Spring AI, dynamic configuration), resolving the latest Spring Boot version and validating every dependency id against the live Spring Initializr metadata API (`https://start.spring.io/metadata/client`) rather than a hardcoded list. Records all of it in a `springboot-stack.yml` manifest, then orchestrates `iru-setup-java-springboot-pom` (root reactor pom with Javadoc/Checkstyle/PMD/SpotBugs/Surefire/Failsafe/JaCoCo/JXR/site/groovy build-info/Sonar plugins), `iru-setup-java-springboot-modules` (module tree, ports/adapters skeleton, configuration), `iru-setup-java-springboot-apis` (the `apis/` spec tree plus OpenAPI/protobuf/AVRO code generation), `iru-setup-java-springboot-testcontainers` (docker compose + Testcontainers integration-test harness), `iru-setup-java-springboot-platform` (OpenTofu deployment), `iru-setup-java-springboot-github-workflows` (test/publish, deploy and undeploy workflows), and `iru-update-java-springboot-documentation` (Antora site with Mermaid + Kroki and the full template page set). Enforces Java 21 as a minimum. Invoke as `/iru-setup-java-springboot`. Use when starting a new Spring Boot microservice from nothing and you want the whole hexagonal reactor, CI/CD, infrastructure-as-code, and documentation scaffold in one pass, instead of running the sub-skills separately and re-answering the same questions each time.
+description: End-to-end bootstrap for a brand-new Spring Boot service repository built on DDD + hexagonal architecture as a Maven multi-module reactor (`boot`, `application`, `domain`, `infrastructure/*`, `api/*`). Collects the project's identity (groupId, artifactId, base Java package), the target cloud (AWS or Google Cloud), the concurrency model (reactive/blocking/both), and every technology choice (databases + index/migration tooling, caches, security, Kafka via Spring Cloud Stream + AVRO, REST/gRPC/GraphQL servers and clients, the API mocking tool backing those clients in tests — Microcks or WireMock — logging, metrics, tracing, Spring AI, dynamic configuration), resolving the latest Spring Boot version and validating every dependency id against the live Spring Initializr metadata API (`https://start.spring.io/metadata/client`) rather than a hardcoded list. Records all of it in a `springboot-stack.yml` manifest, then orchestrates `iru-setup-java-springboot-pom` (root reactor pom with Javadoc/Checkstyle/PMD/SpotBugs/Surefire/Failsafe/JaCoCo/JXR/site/groovy build-info/Sonar plugins), `iru-setup-java-springboot-modules` (module tree, ports/adapters skeleton, configuration), `iru-setup-java-springboot-apis` (the `apis/` spec tree plus OpenAPI/protobuf/GraphQL-SDL/AVRO code generation and AsyncAPI documentation generation), `iru-setup-java-springboot-testcontainers` (docker compose + Testcontainers integration-test harness), `iru-setup-java-springboot-platform` (OpenTofu deployment), `iru-setup-java-springboot-github-workflows` (test/publish, deploy and undeploy workflows), and `iru-update-java-springboot-documentation` (Antora site with Mermaid + Kroki and the full template page set). Enforces Java 21 as a minimum. Invoke as `/iru-setup-java-springboot`. Use when starting a new Spring Boot microservice from nothing and you want the whole hexagonal reactor, CI/CD, infrastructure-as-code, and documentation scaffold in one pass, instead of running the sub-skills separately and re-answering the same questions each time.
 model: sonnet
 ---
 
@@ -41,17 +41,20 @@ The architecture is not negotiable — it is what this skill exists to impose:
 | `api/` | `<a>-api` | `pom` | — (aggregator) |
 | `api/rest-server/` | `<a>-api-rest-server` | `jar` | `application`, `domain` |
 | `api/grpc-server/` | `<a>-api-grpc-server` | `jar` | `application`, `domain` |
+| `api/graphql-server/` | `<a>-api-graphql-server` | `jar` | `application`, `domain` |
 | `api/consumers/` | `<a>-api-consumers` | `jar` | `application`, `domain` |
 | `boot/` | `<a>-boot` | `jar` | every other module |
 | `coverage/` | `<a>-coverage` | `pom` | every other module (test-scope, aggregation only) |
 
 Only the modules the user's technology choices actually call for are created — a project with no gRPC gets no
-`api/grpc-server/`, a project with no Kafka gets no `infrastructure/producers/` or `api/consumers/`. `domain`,
-`application`, `boot`, and `coverage` are always created.
+`api/grpc-server/`, no GraphQL gets no `api/graphql-server/`, and no Kafka gets no `infrastructure/producers/` or
+`api/consumers/`. `domain`, `application`, `boot`, and `coverage` are always created.
 
 `apis/` at the repository root is **not** a Maven module — it holds the API contracts
-(`apis/rest-server/`, `apis/grpc-server/`, `apis/rest-client/<name>/`, `apis/grpc-client/<name>/`,
-`apis/messaging/`) that the code-generation plugins read. See `iru-setup-java-springboot-apis`.
+(`apis/rest-server/`, `apis/grpc-server/`, `apis/graphql-server/`, `apis/rest-client/<name>/`,
+`apis/grpc-client/<name>/`, `apis/graphql-client/<name>/`, `apis/messaging/` — AVRO schemas *and* the AsyncAPI
+specification describing the topics that carry them) that the code-generation and documentation generators read.
+See `iru-setup-java-springboot-apis`.
 
 ## Step 0 — Check the repository is a safe starting point
 
@@ -241,6 +244,10 @@ events.
 - ids: `cloud-stream`, `kafka`. Add `kafka-streams` only if the user says they need stateful stream processing.
 - AVRO is the message format. `avro-maven-plugin` generates Java classes from the schemas in `apis/messaging/` —
   configured by `iru-setup-java-springboot-apis`.
+- The same directory also holds an **AsyncAPI specification** describing the topics, their direction, and which
+  message each carries — the messaging equivalent of the OpenAPI spec. It is documentation only (no Java is
+  generated from it), rendered to HTML on every build by `@asyncapi/html-template` and published to GitHub Pages
+  alongside the REST and gRPC pages.
 - Creates the `infrastructure/producers/` module (outbound) and/or the `api/consumers/` module (inbound) — ask
   which directions this service needs; at least one must be true.
 - Testcontainers needs both a **Kafka broker** image and a **Confluent Schema Registry** image, since AVRO
@@ -264,7 +271,30 @@ Needed to serve requests over gRPC.
 - Contract-first: protobuf definitions live in `apis/grpc-server/`, and `protobuf-maven-plugin` generates the
   service base classes and messages into `api/grpc-server/`, plus HTML documentation via `protoc-gen-doc`.
 
-### 4g — Clients (multi-select, may be none)
+### 4g — GraphQL server (yes/no)
+
+Needed to serve requests over a GraphQL API — one endpoint whose clients choose the fields they want, instead of
+one endpoint per resource shape.
+
+- ids: `graphql`, **plus a transport starter**: `web` (blocking) or `webflux` (reactive), matching
+  `stack.concurrency`. This pairing is not optional and is the easiest thing to get wrong here:
+  `spring-boot-starter-graphql` brings the GraphQL engine and `spring-graphql`, but **no HTTP transport at all** —
+  Initializr's `graphql` id alone resolves to `spring-boot-starter-graphql` and `spring-boot-starter-graphql-test`
+  and nothing else. Without `web` or `webflux` the application starts and serves no `/graphql` endpoint, which
+  looks like a routing bug rather than a missing dependency. If REST (4e) is also enabled, the transport starter is
+  already there and isn't added twice.
+- Also add `validation`, as for REST — the generated input types carry Bean Validation annotations.
+- Creates the `api/graphql-server/` module.
+- Contract-first: SDL schema files live in `apis/graphql-server/`, and `graphql-codegen-maven-plugin` generates the
+  resolver interfaces and model types into `api/graphql-server/`. As with REST, the generator owns the interfaces
+  and the hand-written `@Controller` implements them.
+- **The SDL is needed twice**: once at build time by the generator, and once at *runtime* by Spring for GraphQL,
+  which loads the schema from `classpath:graphql/**/` (`.graphqls`/`.gqls`) to wire and validate the resolvers. The
+  contract lives outside the module, so the build copies it onto the classpath —
+  `iru-setup-java-springboot-apis` sets that up. A service whose generated code compiles but whose SDL never
+  reached the classpath fails at startup complaining the schema is empty.
+
+### 4h — Clients (multi-select, may be none)
 
 - **REST clients** — needed to call other services' REST APIs. Ask for the **name of each** client (one per
   downstream service, e.g. `payments`, `inventory`); each becomes an
@@ -275,25 +305,41 @@ Needed to serve requests over gRPC.
   `infrastructure/clients/<name>/` module and an `apis/grpc-client/<name>/` spec directory, with
   `protobuf-maven-plugin` generating the stubs.
   - ids: `spring-grpc-client`.
+- **GraphQL clients** — needed to call other services' GraphQL APIs. Ask for the **name of each**; each becomes an
+  `infrastructure/clients/<name>/` module and an `apis/graphql-client/<name>/` SDL directory, with
+  `graphql-codegen-maven-plugin` generating the request/response and projection classes.
+  - ids: `graphql` (the same starter as 4g — it carries `HttpGraphQlClient`/`HttpSyncGraphQlClient`, so a service
+    that only *consumes* GraphQL still needs it), plus the transport starter for `stack.concurrency` if 4e or 4g
+    hasn't already added one.
+  - Unlike the REST and gRPC client generators, this one needs a **runtime dependency** alongside the generated
+    code — `io.github.kobylynskyi:graphql-java-codegen`, matching the plugin version, which supplies the
+    `GraphQLRequest`/`GraphQLResponseProjection` base classes the generated classes extend. Without it the module
+    generates fine and then fails to compile.
 
-**If — and only if — at least one client of either kind was named**, ask which API mocking tool the docker compose
+A single downstream service reached over more than one protocol keeps **one** `infrastructure/clients/<name>/`
+module with a generator execution per protocol — the module is named after the service, not the transport.
+
+**If — and only if — at least one client of any kind was named**, ask which API mocking tool the docker compose
 stack should run, using `AskUserQuestion`. Integration tests must never call a real downstream service: that
 couples this repository's CI to someone else's uptime and makes error-path coverage impossible. Both tools are
-driven by the contracts in `apis/rest-client/<name>/` and `apis/grpc-client/<name>/`, so neither introduces a
-second description of the downstream API. Preselect the default by what was chosen above:
+driven by the contracts in `apis/rest-client/<name>/`, `apis/grpc-client/<name>/` and
+`apis/graphql-client/<name>/`, so neither introduces a second description of the downstream API. Preselect the
+default by what was chosen above:
 
-- **Microcks** — the default whenever **any gRPC client** exists, with or without REST clients. It mocks gRPC and
-  REST from the same contracts in one container, consuming the `.proto` and the OpenAPI spec directly, and can
-  later verify the real downstream service against those same contracts.
-- **WireMock** — the default when the service has **REST clients only** and no gRPC is expected. Lighter, faster
-  to start, with a finer-grained stub DSL for delays and faults. Mention when offering it that a
-  `wiremock-grpc-extension` exists, so it isn't a dead end if gRPC arrives later — it just adds a
-  descriptor-set build step at that point.
+- **Microcks** — the default whenever **any gRPC or GraphQL client** exists, with or without REST clients. It mocks
+  REST, gRPC and GraphQL from the same contracts in one container, consuming the OpenAPI spec, the `.proto` and the
+  SDL directly, and can later verify the real downstream service against those same contracts.
+- **WireMock** — the default when the service has **REST clients only**. Lighter, faster to start, with a
+  finer-grained stub DSL for delays and faults. Mention when offering it that a `wiremock-grpc-extension` exists,
+  so it isn't a dead end if gRPC arrives later — it just adds a descriptor-set build step at that point. For
+  GraphQL it is a weaker fit: every operation is a `POST /graphql`, so stubs have to match on the request body
+  rather than on the path, and the SDL isn't consumed at all — the mock and the contract stop being connected,
+  which is the property this whole arrangement exists to preserve.
 
 Record the answer as `stack.apiMock`. `iru-setup-java-springboot-testcontainers` adds the container and points
 every client's base URL at it; if no client was named, set `stack.apiMock: none` and no mock is added.
 
-### 4h — Observability (ask each; recommend all three)
+### 4i — Observability (ask each; recommend all three)
 
 - **Logging** — needed to get log traces into a centralized server; by default they only go to the local console.
   Add the logging starter and configure structured (JSON) output for deployed profiles while keeping
@@ -310,7 +356,7 @@ every client's base URL at it; if no client was named, set `stack.apiMock: none`
   - ids: `distributed-tracing`, `opentelemetry`. (In Boot 4 these resolve to
     `spring-boot-starter-opentelemetry`.)
 
-### 4i — Spring AI (yes/no)
+### 4j — Spring AI (yes/no)
 
 Used to integrate with LLMs — building "agentic" services or MCP servers/clients.
 
@@ -341,7 +387,7 @@ If yes:
    - Tell the user that if a token has ever been committed, rotating it at the provider is the only real fix, and
      `/iru-check-security` can scan the repository for accidentally committed secrets.
 
-### 4j — Dynamic configuration (`AskUserQuestion`, exactly one)
+### 4k — Dynamic configuration (`AskUserQuestion`, exactly one)
 
 Needed to change service behaviour while it is running, with no restart and no redeployment. Default the
 recommendation from Step 3's platform choice:
@@ -365,7 +411,7 @@ Whichever is chosen, every dynamically reloadable property must be bound in the
 refresh is picked up without a restart — and every one of them belongs in the documentation's configuration table
 with its "dynamically changeable" column set accordingly.
 
-### 4k — Anything else from Initializr
+### 4l — Anything else from Initializr
 
 Show the user that the remaining groups in Step 1's catalogue are available (Developer Tools, Template Engines,
 Spring Cloud Discovery/Routing/Circuit Breaker, Ops, Testing, …) and offer to add any by id or name. Warn that
@@ -432,8 +478,10 @@ stack:
     schemaRegistryImage: confluentinc/cp-schema-registry:8.0.0
   restServer: true
   grpcServer: false
+  graphqlServer: false
   restClients: [payments]
   grpcClients: []
+  graphqlClients: []
   apiMock: wiremock              # microcks | wiremock | none — required whenever any client is listed
   apiMockImage: wiremock/wiremock:3.13.1
   logging: true

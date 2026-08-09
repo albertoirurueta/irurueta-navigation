@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-modules
-description: Scaffold the source tree of a DDD/hexagonal Spring Boot service whose Maven reactor already exists — the package layout for every module, the ports (interfaces) that `domain` defines, a worked adapter skeleton per `infrastructure`/`api` module (repository adapter with MapStruct mapping, refreshable `@ConfigurationProperties` beans, REST/gRPC/Kafka entry points, Kafka producer, metrics publisher), the `@SpringBootApplication` class and component-scan wiring in `boot`, `application.yml` plus per-profile overrides (including structured logging, actuator/Prometheus exposure, and the dynamic-configuration binding the stack selected), the database migration/changelog directory for each engine's tooling (Mongock, Liquibase and its Couchbase/MongoDB/Neo4j extensions, or Flyway), and an ArchUnit test that fails the build when the hexagonal dependency direction is violated. Reads `springboot-stack.yml` for every decision and writes no version numbers. Invoke as `/iru-setup-java-springboot-modules`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use after `iru-setup-java-springboot-pom` has created the poms, whenever a Spring Boot service needs its hexagonal source skeleton and runtime configuration generated instead of hand-writing the ports, adapters, and profile files module by module.
+description: Scaffold the source tree of a DDD/hexagonal Spring Boot service whose Maven reactor already exists — the package layout for every module, the ports (interfaces) that `domain` defines, a worked adapter skeleton per `infrastructure`/`api` module (repository adapter with MapStruct mapping, refreshable `@ConfigurationProperties` beans, REST/gRPC/GraphQL/Kafka entry points, Kafka producer, metrics publisher), the `@SpringBootApplication` class and component-scan wiring in `boot`, `application.yml` plus per-profile overrides (including structured logging, actuator/Prometheus exposure, and the dynamic-configuration binding the stack selected), the database migration/changelog directory for each engine's tooling (Mongock, Liquibase and its Couchbase/MongoDB/Neo4j extensions, or Flyway), and an ArchUnit test that fails the build when the hexagonal dependency direction is violated. Reads `springboot-stack.yml` for every decision and writes no version numbers. Invoke as `/iru-setup-java-springboot-modules`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use after `iru-setup-java-springboot-pom` has created the poms, whenever a Spring Boot service needs its hexagonal source skeleton and runtime configuration generated instead of hand-writing the ports, adapters, and profile files module by module.
 model: sonnet
 ---
 
@@ -53,6 +53,7 @@ Create `src/main/java`, `src/main/resources`, and `src/test/java` under each mod
 | `infrastructure/metrics` | `<base>.infrastructure.metrics` | `adapter/`, `config/` |
 | `api/rest-server` | `<base>.api.rest` | `controller/` (implementing the generated interfaces), `mapper/` (DTO ↔ domain), `error/` (`@RestControllerAdvice`) |
 | `api/grpc-server` | `<base>.api.grpc` | `service/` (extending the generated base classes), `mapper/`, `error/` |
+| `api/graphql-server` | `<base>.api.graphql` | `controller/` (implementing the generated resolver interfaces), `mapper/`, `error/` (a `DataFetcherExceptionResolver`), `config/` (query depth/complexity limits) |
 | `api/consumers` | `<base>.api.consumers` | `consumer/` (the `Consumer<Message<...>>` beans), `mapper/` (AVRO → domain) |
 | `boot` | `<base>` | `<Name>Application`, `config/` (composition-root `@Configuration`) |
 
@@ -77,7 +78,9 @@ Write, adapted to the actual stack:
     interface with two implementations racing to be the primary bean.
   - `<Aggregate>EventPublisher` — if `stack.messaging.directions` includes `produce`. Takes domain events, knows
     nothing about Kafka, topics, or AVRO.
-  - `<Name>Client` — one per entry in `stack.restClients`/`stack.grpcClients`, expressed in domain types only.
+  - `<Name>Client` — one per downstream service named in `stack.restClients`/`stack.grpcClients`/
+    `stack.graphqlClients`, expressed in domain types only. One port per *service*, not per protocol: which
+    transport reaches it is an adapter detail the domain must not encode.
   - `MetricsPublisher` — if `stack.metrics`. Methods named for what is being measured
     (`recordOrderAccepted(OrderType)`), not for Micrometer primitives, so the domain never mentions counters or
     gauges.
@@ -215,6 +218,12 @@ Note explicitly in the report that AVRO schema evolution rules (backward/forward
 the schema registry's compatibility setting, and that this must be configured in the registry itself — the
 scaffold can't do it.
 
+Every `destination` and `group` chosen here has a second home: the AsyncAPI specification in `apis/messaging/`
+(`iru-setup-java-springboot-apis`) declares one channel per topic, keyed by the same destination name, and that
+file is what the published messaging documentation is generated from. Report the destinations and groups you set
+so they can be reconciled with it — a binding whose topic doesn't appear as an AsyncAPI channel is a topic nobody
+outside this repository can discover.
+
 ## Step 8 — `infrastructure/metrics`
 
 Only if `stack.metrics`. Implement the domain's `MetricsPublisher` port over Micrometer's `MeterRegistry`:
@@ -228,7 +237,7 @@ Only if `stack.metrics`. Implement the domain's `MetricsPublisher` port over Mic
 - Emit the list of metrics created (name, type, tags, meaning) in Step 11's report so
   `iru-update-java-springboot-documentation` can seed the metrics table.
 
-## Step 9 — `api/rest-server`, `api/grpc-server`
+## Step 9 — `api/rest-server`, `api/grpc-server`, `api/graphql-server`
 
 - **REST**: controllers implementing the **generated** interfaces from `apis/rest-server/`, a MapStruct mapper
   between generated DTOs and domain types, and a `@RestControllerAdvice` mapping each domain exception to a
@@ -237,6 +246,19 @@ Only if `stack.metrics`. Implement the domain's `MetricsPublisher` port over Mic
 - **gRPC**: services extending the generated base classes from `apis/grpc-server/`, mappers, and an exception
   handler translating domain exceptions to `StatusRuntimeException` with the right `Status.Code` plus error
   details.
+- **GraphQL**: `@Controller` classes implementing the **generated** resolver interfaces from
+  `apis/graphql-server/`, annotating each method `@QueryMapping`/`@MutationMapping`/`@SchemaMapping`; MapStruct
+  mappers between the generated model types and domain types; and a `DataFetcherExceptionResolver` translating
+  domain exceptions into GraphQL errors with a stable `extensions.classification` — GraphQL answers `200 OK` with
+  an `errors` array rather than an HTTP status, so exception mapping is entirely the application's job and there
+  is no framework default that means anything to a client.
+  - Add a `config/` class with `MaxQueryDepthInstrumentation` and `MaxQueryComplexityInstrumentation` beans.
+    Unlike REST, where the URL bounds the work a request can ask for, a GraphQL query can nest arbitrarily deep;
+    with no limit configured a single request can walk the object graph until the service falls over. Report the
+    numbers chosen as a starting point to tune.
+  - **Avoid the N+1 trap in the worked example.** A field resolver that loads a related aggregate per parent
+    object issues one query per row; batch it with a `@BatchMapping` method or a `DataLoader`. Write the example
+    the batched way, because whichever shape is scaffolded is the one that gets copied.
 - If `stack.security.enabled`, add the security configuration here (not in `boot`): a `SecurityFilterChain` (or
   `SecurityWebFilterChain` for WebFlux) with the JWT resource-server configuration and per-endpoint
   authorization rules. Deny by default and permit explicitly — including for the actuator endpoints, where

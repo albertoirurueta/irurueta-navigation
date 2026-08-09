@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-github-workflows
-description: Create the GitHub Actions workflows for a Spring Boot service repository — a build workflow (`build.yml`) that runs on pushes to the integration and main branches and on pull requests, executing unit tests via Surefire and Testcontainers-backed integration tests via Failsafe, Checkstyle/PMD/SpotBugs static analysis, aggregated JaCoCo coverage, a SonarCloud/SonarQube scan via `mvn sonar:sonar`, the Antora documentation build, and the OpenAPI/protobuf generated API documentation, publishing all of it to GitHub Pages; a `deploy.yml` that builds and pushes the container image, authenticates to AWS or Google Cloud via keyless OIDC, and applies the OpenTofu configuration for a chosen environment behind a GitHub Environment approval gate; and an `undeploy.yml` that scales the service to zero or destroys an environment's infrastructure, guarded by a typed-confirmation input and a protected environment. Derives the pipeline from `springboot-stack.yml` and the actual reactor/`infra/` layout on disk, lists every required repository secret and environment, and never writes a credential into a workflow file. Invoke as `/iru-setup-java-springboot-github-workflows`, or with `args` (`stack-file:`, `integration-branch:` lines) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service needs its CI/CD pipeline bootstrapped instead of hand-writing the YAML for testing, analysis, documentation publishing, deployment, and teardown.
+description: Create the GitHub Actions workflows for a Spring Boot service repository — a build workflow (`build.yml`) that runs on pushes to the integration and main branches and on pull requests, executing unit tests via Surefire and Testcontainers-backed integration tests via Failsafe, Checkstyle/PMD/SpotBugs static analysis, aggregated JaCoCo coverage, a SonarCloud/SonarQube scan via `mvn sonar:sonar`, the Antora documentation build, and the generated API documentation — OpenAPI, protobuf, the AsyncAPI HTML produced by `@asyncapi/html-template`, and the GraphQL reference produced by `spectaql` and `graphql-voyager` — publishing all of it to GitHub Pages; a `deploy.yml` that builds and pushes the container image, authenticates to AWS or Google Cloud via keyless OIDC, and applies the OpenTofu configuration for a chosen environment behind a GitHub Environment approval gate; and an `undeploy.yml` that scales the service to zero or destroys an environment's infrastructure, guarded by a typed-confirmation input and a protected environment. Derives the pipeline from `springboot-stack.yml` and the actual reactor/`infra/` layout on disk, lists every required repository secret and environment, and never writes a credential into a workflow file. Invoke as `/iru-setup-java-springboot-github-workflows`, or with `args` (`stack-file:`, `integration-branch:` lines) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service needs its CI/CD pipeline bootstrapped instead of hand-writing the YAML for testing, analysis, documentation publishing, deployment, and teardown.
 model: sonnet
 ---
 
@@ -42,6 +42,13 @@ actually on disk — the workflows must match reality, not the manifest's intent
 - Whether `docs/antora.yml` and `docs/antora-playbook.yml` exist, and which extensions `docs/package.json` lists
   (the install step must match — including `asciidoctor-kroki` if the docs use Kroki).
 - Where the API documentation generators write (`*/target/generated-docs/...`), from the module poms.
+- Whether `apis/graphql-server/` holds an SDL and an `apis/graphql-server/docs/package.json`, and whether that
+  toolchain includes `graphql-voyager` as well as `spectaql` — the docs job's GraphQL step must match what's
+  actually pinned there, and its `package-lock.json` must be committed for `npm ci`.
+- Whether `apis/messaging/` holds an AsyncAPI specification and an `apis/messaging/docs/package.json`
+  (set up by `iru-setup-java-springboot-apis`). If so, the docs job must also produce the AsyncAPI HTML; note
+  whether `apis/messaging/docs/package-lock.json` is committed, since that decides `npm ci` versus `npm install`,
+  and which module's pom carries the `frontend-maven-plugin` executions.
 - Whether `infra/envs/<env>/` directories exist and which environments they define. If `infra/` doesn't exist,
   still generate `deploy.yml`/`undeploy.yml` but mark the OpenTofu steps as requiring
   `/iru-setup-java-springboot-platform` first, and say so in the report.
@@ -140,17 +147,62 @@ jobs:
           java-version: <java-version>
           cache: maven
 
-      - name: Generate API documentation and the Maven site
-        # generate-resources runs the OpenAPI html2 and protoc-gen-doc executions;
-        # `site` produces the Javadoc/Surefire/JaCoCo/Checkstyle/PMD/SpotBugs/JXR reports.
-        run: |
-          mvn -B -ntp clean generate-resources
-          mvn -B -ntp site -DskipTests -Djacoco.skip
-
       - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          # Every npm toolchain in the repository: the Antora site, the AsyncAPI
+          # generators, and the GraphQL ones. Omit any path the repository doesn't have.
+          cache-dependency-path: |
+            docs/package-lock.json
+            apis/messaging/docs/package-lock.json
+            apis/graphql-server/docs/package-lock.json
+
+      - name: Generate API documentation and the Maven site
+        # generate-resources runs the OpenAPI html2 and protoc-gen-doc executions;
+        # `site` produces the Javadoc/Surefire/JaCoCo/Checkstyle/PMD/SpotBugs/JXR reports.
+        # The npm-driven generators (AsyncAPI, GraphQL) are skipped here and run as their
+        # own steps below, so this job doesn't generate them twice; the `build` job above
+        # still exercises the frontend-maven-plugin wiring, because `mvn clean verify`
+        # passes through generate-resources like any other build.
+        run: |
+          mvn -B -ntp clean generate-resources -Dasyncapi.docs.skip=true -Dgraphql.docs.skip=true
+          mvn -B -ntp site -DskipTests -Djacoco.skip
+
+      - name: Generate AsyncAPI documentation
+        # The official AsyncAPI HTML generator, run against the committed toolchain in
+        # apis/messaging/docs — see iru-setup-java-springboot-apis.
+        if: hashFiles('apis/messaging/docs/package.json') != ''
+        working-directory: apis/messaging/docs
+        env:
+          # Committed file with analyticsEnabled=false, so the CLI reports nothing anywhere.
+          ASYNCAPI_METRICS_CONFIG_PATH: .asyncapi-analytics
+        run: |
+          npm ci --no-audit --no-fund
+          out="$GITHUB_WORKSPACE/target/generated-docs/messaging"
+          for spec in ../*-async-api-v*.yaml; do
+            v="$(basename "$spec" .yaml | sed -e 's/.*-async-api-//')"     # v1, v2, ...
+            npx asyncapi validate "$spec"
+            npx asyncapi generate fromTemplate "$spec" @asyncapi/html-template \
+              -o "$out/$v" --force-write -p singleFile=true
+          done
+
+      - name: Generate GraphQL documentation
+        # SpectaQL renders the static reference from the SDL; the small build-voyager.mjs
+        # script renders the interactive schema graph beside it. Both read the SDL directly,
+        # so neither needs a running service or an introspection endpoint in CI.
+        if: hashFiles('apis/graphql-server/docs/package.json') != ''
+        working-directory: apis/graphql-server/docs
+        run: |
+          npm ci --no-audit --no-fund
+          out="$GITHUB_WORKSPACE/target/generated-docs/graphql-server"
+          for sdl in ../*-v*.graphqls; do
+            v="$(basename "$sdl" .graphqls | sed -e 's/.*-\(v[0-9]*\)$/\1/')"      # v1, v2, ...
+            npx spectaql "spectaql-$v.yml" --target-dir "$out/$v"
+            # Drop this line if the Voyager schema graph wasn't wanted.
+            node build-voyager.mjs "$sdl" "$out/$v/voyager" "GraphQL schema $v"
+          done
 
       - name: Install Antora
         working-directory: docs
@@ -165,12 +217,17 @@ jobs:
           touch ./docs/build/site/.nojekyll
           cp -r ./docs/build/site ./doc
           cp -r ./target/site ./doc/mvn-site
-          # Generated API documentation, published alongside so the Antora pages can link to it.
+          # Generated API documentation, published alongside so the Antora pages can link to
+          # it. Every generator in the repository writes under some `target/generated-docs`
+          # — the OpenAPI html2 and protoc-gen-doc executions into their module's, the
+          # AsyncAPI step above into the root one — so copying the *contents* of each such
+          # directory merges rest-server/, grpc-server/ and messaging/ under ./doc/api
+          # without needing to know which module produced which. The result is
+          # doc/api/rest-server/v1/, doc/api/grpc-server/v1/, doc/api/messaging/v1/.
           mkdir -p ./doc/api
-          for d in $(find . -type d -path '*/target/generated-docs/*' -mindepth 3); do
-            dest="./doc/api/$(echo "$d" | sed -e 's#.*/generated-docs/##')"
-            mkdir -p "$dest" && cp -r "$d"/. "$dest"/
-          done
+          while IFS= read -r root; do
+            cp -r "$root"/. ./doc/api/
+          done < <(find . -type d -path '*/target/generated-docs')
 
       - name: Deploy to GitHub Pages
         if: success()
@@ -187,6 +244,24 @@ explicit `npm i` list `iru-setup-antora` uses, **including `asciidoctor-kroki`**
 Kroki-diagram page will fail the build. The `mvn site` invocation at the reactor root aggregates every module's
 reports; verify the aggregate actually lands in `./target/site` for this reactor (a multi-module `site` sometimes
 needs `site:stage`) and use whichever path is real.
+
+If the repository has no `apis/messaging/`, drop the AsyncAPI step, the `-Dasyncapi.docs.skip=true` flag, and the
+second `cache-dependency-path` entry entirely rather than leaving dead YAML behind. If it does:
+
+- The step is guarded by `hashFiles(...) != ''` as well, so the workflow survives someone deleting the messaging
+  contracts without a workflow edit.
+- The same `apis/messaging/docs/package-lock.json` caveat applies: without a committed lock file `npm ci` fails
+  outright — commit it, or fall back to `npm install`, and say which in the report.
+- The loop over `../*-async-api-v*.yaml` picks up `v2` automatically when it's added, so a new contract version
+  needs no workflow change. Keep the filename convention and the loop in step with each other.
+- The published layout ends up as `doc/api/messaging/v1/index.html` and
+  `doc/api/graphql-server/v1/index.html` (with the Voyager graph at
+  `doc/api/graphql-server/v1/voyager/index.html`), next to `doc/api/rest-server/v1/` and
+  `doc/api/grpc-server/v1/`. Those are the URLs the Antora API pages link to, so changing them means updating
+  `/iru-update-java-springboot-documentation`'s output too.
+- Voyager's page loads `voyager.standalone.js` and `voyager.css` by **relative** path, so those two files must be
+  copied alongside `index.html`. The merge step's directory copy preserves that automatically; a merge step
+  rewritten to copy only `index.html` files would silently produce a blank graph.
 
 ## Step 2 — `deploy.yml`
 
@@ -430,6 +505,17 @@ Report these as a table; this skill cannot create them.
 - Confirm the Maven commands actually work locally first (`mvn -B -ntp clean verify`, `mvn -B -ntp site
   -DskipTests -Djacoco.skip`, `mvn -B -ntp generate-resources`) — delegate to `iru-gate-runner` for a compact
   result. A workflow whose commands were never run locally is a guess.
+- If the GraphQL step was added, run its commands locally too (`npm ci` in `apis/graphql-server/docs`, then
+  `spectaql` and `build-voyager.mjs`) and **open both pages in a browser**. SpectaQL's output is server-rendered so
+  a wrong SDL path fails loudly, but Voyager renders client-side: a bad introspection payload or a missing
+  `voyager.standalone.js` gives a blank page with only a console error, and the workflow reports success.
+- If the AsyncAPI step was added, run its commands locally too (`npm ci` in `apis/messaging/docs`, then
+  `asyncapi validate` and `asyncapi generate fromTemplate`) and confirm an `index.html` is produced with the AVRO
+  field names in it. `asyncapi validate` exits 1 on a malformed document, a `$ref` to a missing `.avsc`, or an
+  `.avsc` that isn't valid AVRO — so it is a real gate, not decoration — while an out-of-date `asyncapi:` version
+  is only reported as information and exits 0, so a new specification release won't break the pipeline. Note that
+  `npm ci` here has failed before on an unpublished transitive dependency of the CLI, so a green run on your
+  machine with a warm cache isn't proof CI will install cleanly.
 - Do **not** trigger `deploy.yml` or `undeploy.yml` as a test. Recommend instead: a dry run of `build.yml` by
   pushing to a throwaway branch with the trigger temporarily widened, and a first `deploy.yml` run against `dev`
   only, watched to completion.
@@ -438,7 +524,9 @@ Report these as a table; this skill cannot create them.
 
 Summarize: which workflow files were created or updated; the branch names and Java version resolved; whether the
 Sonar step was included, omitted, or needs pom changes; whether the docs job's Antora install matches
-`docs/package.json` (including Kroki); which environments `deploy.yml`/`undeploy.yml` offer and where they came
+`docs/package.json` (including Kroki); whether the AsyncAPI and GraphQL documentation steps were included and what
+they publish under `doc/api/messaging/` and `doc/api/graphql-server/` (and whether the Voyager graph was part of
+it); which environments `deploy.yml`/`undeploy.yml` offer and where they came
 from; the container-image build approach chosen; the full secrets/variables/environments table from Step 4; and any
 gap — missing `infra/`, missing Sonar config, missing GitHub Environments, a container stack too large for a
 standard runner.

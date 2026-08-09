@@ -1,6 +1,6 @@
 ---
 name: iru-update-java-springboot-documentation
-description: Set up and keep current the Antora documentation site for a DDD/hexagonal Spring Boot service — bootstraps the site via `iru-setup-antora` if absent, adds the Kroki extension alongside Mermaid, and creates or refreshes the service's full page set from the codebase as it actually is: service overview, service architecture (with dependency diagrams and the reactive-versus-blocking rationale), one section per use case (flow diagram, dependencies touched, exceptions raised), the database model (entities, fields, types, indexes, mandatory fields, constraints, relationships, plus generated diagrams), REST/gRPC/messaging API pages derived from the contracts in `apis/` (versions, entities and fields with descriptions and constraints, deprecations, endpoints with methods/paths/headers/authorization and every documented error, links to the generated OpenAPI and protobuf HTML), a configuration property table (default, dynamically-changeable, criticality flags), and a metrics table (type, tags, meaning). Reads `springboot-stack.yml`, the module sources, the `apis/` contracts, and the `@ConfigurationProperties`/Micrometer code rather than inventing content, and marks anything it cannot derive as an explicit TODO instead of filling it with plausible prose. Idempotent — safe to re-run after any change, and intended to be re-run as part of the normal change cycle. Invoke as `/iru-update-java-springboot-documentation` to cover the whole service, or `/iru-update-java-springboot-documentation <page-or-area>` to refresh one page. Use whenever a Spring Boot service's documentation needs creating or bringing back in line with its code, instead of hand-maintaining nine interdependent pages.
+description: Set up and keep current the Antora documentation site for a DDD/hexagonal Spring Boot service — bootstraps the site via `iru-setup-antora` if absent, adds the Kroki extension alongside Mermaid, and creates or refreshes the service's full page set from the codebase as it actually is: service overview, service architecture (with dependency diagrams and the reactive-versus-blocking rationale), one section per use case (flow diagram, dependencies touched, exceptions raised), the database model (entities, fields, types, indexes, mandatory fields, constraints, relationships, plus generated diagrams), REST/gRPC/GraphQL/messaging API pages derived from the contracts in `apis/` (versions, entities and fields with descriptions and constraints, deprecations, endpoints with methods/paths/headers/authorization and every documented error, and a prominent link from each API page to its own generated reference published on GitHub Pages — OpenAPI HTML from `apis/rest.adoc`, protobuf HTML from `apis/grpc.adoc`, AsyncAPI HTML from `apis/messaging.adoc`, and the SpectaQL reference plus optional Voyager schema graph from `apis/graphql.adoc` — resolved through a single `api-docs-url` attribute in `docs/antora.yml`), a configuration property table (default, dynamically-changeable, criticality flags), and a metrics table (type, tags, meaning). Reads `springboot-stack.yml`, the module sources, the `apis/` contracts, and the `@ConfigurationProperties`/Micrometer code rather than inventing content, and marks anything it cannot derive as an explicit TODO instead of filling it with plausible prose. Idempotent — safe to re-run after any change, and intended to be re-run as part of the normal change cycle. Invoke as `/iru-update-java-springboot-documentation` to cover the whole service, or `/iru-update-java-springboot-documentation <page-or-area>` to refresh one page. Use whenever a Spring Boot service's documentation needs creating or bringing back in line with its code, instead of hand-maintaining ten interdependent pages.
 model: sonnet
 ---
 
@@ -21,8 +21,8 @@ re-checks it.
 ## Step 0 — Resolve scope and read the ground truth
 
 Parse the argument: absent means every page; a page name or area (`architecture`, `use-cases`,
-`database-model`, `apis/rest`, `apis/grpc`, `apis/messaging`, `configuration`, `metrics`, `overview`) means just
-that one.
+`database-model`, `apis/rest`, `apis/grpc`, `apis/graphql`, `apis/messaging`, `configuration`, `metrics`,
+`overview`) means just that one.
 
 Read `springboot-stack.yml` for the declared stack. Treat it as **intent**, not truth: the code is truth. Where
 they disagree (a database in the manifest with no adapter module, an adapter for something the manifest doesn't
@@ -39,7 +39,8 @@ into this context, and reading directly only the specific files it identifies:
 | Database model | `infrastructure/database/*/entity/*`, the Spring Data repositories, the migration files (Mongock change units, Liquibase changelogs, Flyway scripts) — the migrations are where indexes and constraints actually live |
 | REST API | `apis/rest-server/*.yaml` and the `@RestControllerAdvice` exception mapping |
 | gRPC API | `apis/grpc-server/*.proto` and the gRPC exception handler |
-| Messaging API | `apis/messaging/*.avsc` plus the `spring.cloud.stream.bindings.*` configuration (topic names live there, not in the schemas) |
+| GraphQL API | `apis/graphql-server/*.graphqls` and the `DataFetcherExceptionResolver`, plus the `@Controller` classes — the SDL says what is exposed, the controllers say what is actually resolved |
+| Messaging API | `apis/messaging/*-async-api-v*.yaml` (channels, directions, messages) and `apis/messaging/*.avsc` (payload fields), cross-checked against the `spring.cloud.stream.bindings.*` configuration — the bindings are what the service actually does, the AsyncAPI file is what it claims to do |
 | Configuration | every `@ConfigurationProperties` class, every `application*.yml`, and which of them carry `@RefreshScope` |
 | Metrics | `infrastructure/metrics/*` — every meter name, its type, and its tag keys |
 
@@ -81,6 +82,20 @@ page describes the data layout of a real system.
 Verify both work by building the site in Step 12; a Kroki block with the extension missing silently renders as a
 literal code block rather than failing, which is easy to miss.
 
+Also add the `api-docs-url` attribute to **`docs/antora.yml`** (the component descriptor, not the playbook — the
+playbook block above is for build-time extension settings, while this is a content attribute the pages
+reference). Steps 7–9 all link to their generated reference through it:
+
+```yaml
+# docs/antora.yml — alongside name/version/title/nav
+asciidoc:
+  attributes:
+    api-docs-url: 'https://<owner>.github.io/<repo>/api'
+```
+
+Step 7 explains how to resolve the value and what each link path is. If the repository has no `apis/` directory at
+all, skip the attribute — there are no API pages to link from.
+
 ## Step 2 — Page set and navigation
 
 Create under `docs/modules/ROOT/pages/`, and add each to `nav.adoc` preserving existing entries:
@@ -92,6 +107,7 @@ use-cases.adoc
 database-model.adoc
 apis/rest.adoc
 apis/grpc.adoc
+apis/graphql.adoc
 apis/messaging.adoc
 configuration.adoc
 metrics.adoc
@@ -118,7 +134,9 @@ What the service is for and what it offers. Short — a page someone reads in a 
 - One paragraph on purpose, in domain terms.
 - What it offers: the capabilities, as a list, derived from the use cases and the API contracts.
 - What it depends on, at one line each.
-- Where to go next: links to the other pages, plus the generated API documentation on GitHub Pages.
+- Where to go next: links to the other pages, plus the generated API references on GitHub Pages — the same
+  `{api-docs-url}/...` links Steps 7–9 use, gathered here so the overview is a working index of everything the
+  service publishes.
 
 Mark `TODO:` for the business purpose if `README.md` and the pom description don't state it — that's a question
 for the service's owner, not something to infer from class names.
@@ -235,6 +253,80 @@ Note the migration tool in use and where its changelogs live, so a reader knows 
 
 ## Step 7 — `apis/rest.adoc`
 
+### Linking to the generated reference — applies to Steps 7, 8, 8a and 9 alike
+
+**Every API page must link to its generated reference, and each page links to its own.** The REST page links to
+the OpenAPI HTML, the gRPC page to the protobuf HTML, the messaging page to the AsyncAPI HTML. These are the
+pages `iru-setup-java-springboot-apis` generates into `target/generated-docs/` and the build workflow publishes to
+GitHub Pages next to this site. Without the link, the two halves of the API documentation — the prose that explains
+and the reference that enumerates — sit on the same site with nothing connecting them, and the reader who needs the
+exhaustive field list never finds it.
+
+Put the link **near the top of the page**, right after the intro and before the version summary, not buried at the
+bottom: someone opening `apis/rest.adoc` to integrate against the service wants the reference in the first screen.
+
+The generated HTML is **not Antora content**, so `xref:` cannot reach it — an `xref:` to it fails the build or
+silently resolves to nothing. It has to be a URL. Define the base once as an attribute in `docs/antora.yml` so all
+three pages share it and a domain change is a single edit:
+
+```yaml
+# docs/antora.yml
+asciidoc:
+  attributes:
+    api-docs-url: 'https://<owner>.github.io/<repo>/api'
+```
+
+Resolve that value rather than guessing it:
+
+- `gh api repos/{owner}/{repo}/pages --jq .html_url` is authoritative when Pages is already configured — it
+  accounts for a custom domain, which a URL derived from the remote won't.
+- Otherwise derive `https://<owner>.github.io/<repo>` from `git remote get-url origin`, and check for a `CNAME`
+  file in the published output or a configured custom domain before settling on it.
+- If GitHub Pages isn't set up yet, still write the attribute with the derived URL, and say in the report that the
+  links stay dead until Pages is enabled and the build workflow has run once on the main branch.
+
+Then link per contract version — `v1` and `v2` each get their own line, since each generates its own page:
+
+```adoc
+{api-docs-url}/rest-server/v1/index.html[OpenAPI v1 reference^]
+{api-docs-url}/grpc-server/v1/index.html[Protobuf v1 reference^]
+{api-docs-url}/messaging/v1/index.html[AsyncAPI v1 reference^]
+```
+
+GraphQL publishes **two** references rather than one, because `graphql-codegen-maven-plugin` generates code and the
+documentation comes from a separate npm toolchain (`iru-setup-java-springboot-apis` Step 3b):
+
+```adoc
+{api-docs-url}/graphql-server/v1/index.html[GraphQL v1 reference^]
+{api-docs-url}/graphql-server/v1/voyager/index.html[GraphQL v1 schema graph^]
+```
+
+The Voyager graph is optional, so **check `apis/graphql-server/docs/package.json` for `graphql-voyager` before
+linking it** — a link to a page that was never generated is worse than no link. If the whole GraphQL documentation
+toolchain is absent, link the SDL in the repository instead and name SpectaQL in the report as the way to add a
+reference; don't invent the URL either way.
+
+Whatever the toolchain, also say where a reader can reach the **live** schema if the service enables
+`spring.graphql.schema.printer.enabled` or the GraphiQL endpoint (`spring.graphql.graphiql.enabled`), noting that
+those are normally on in `local`/`dev` profiles only.
+
+The trailing `^` opens the reference in a new tab, so the reader doesn't lose their place in the prose.
+
+**Confirm those paths against the repository rather than copying them.** They must match two things that can drift:
+the `output`/`-o` directories configured in the module poms' documentation executions, and the `Merge documentation`
+step in `.github/workflows/build.yml` that decides where under `doc/api/` each one lands. If the workflow publishes
+somewhere else, the workflow wins — fix the link, and note the discrepancy in the report.
+
+Alongside each generated-reference link, link the **source contract** in the repository too (a `blob` URL to
+`apis/rest-server/<spec>.yaml`, `apis/grpc-server/<file>.proto`, or `apis/messaging/<file>.yaml`). The generated
+page is the readable form; the contract is the authoritative one, and a reader filing a bug needs to point at it.
+
+One caveat that the build will not catch for you: if `api-docs-url` is undefined, Antora logs
+`skipping reference to missing attribute: api-docs-url`, leaves the literal `{api-docs-url}/...[...]` text in the
+rendered page, and **still exits 0**. Step 12 checks for exactly this.
+
+### Page content
+
 Derived from every spec in `apis/rest-server/`, one section per version:
 
 - **Version summary** — what functionality each version provides, and the status of each (current, deprecated,
@@ -252,9 +344,10 @@ Derived from every spec in `apis/rest-server/`, one section per version:
   - **every error response**: HTTP status, the error body schema, and what causes it. Cross-check against the
     `@RestControllerAdvice` mapping so an exception the code can throw but the spec doesn't document shows up as a
     gap.
-- A link to the generated OpenAPI HTML on GitHub Pages (`<pages-url>/api/rest-server/v1/`), and a link to the spec
-  file in the repository. Don't duplicate the whole reference here — this page explains, the generated docs
-  enumerate.
+- The generated-reference and contract links described above: one
+  `{api-docs-url}/rest-server/<version>/index.html[OpenAPI <version> reference^]` per spec in `apis/rest-server/`,
+  plus a link to each spec file in the repository. Don't duplicate the whole reference here — this page explains,
+  the generated docs enumerate.
 
 ## Step 8 — `apis/grpc.adoc`
 
@@ -269,21 +362,79 @@ Same shape, from `apis/grpc-server/*.proto`:
   metadata/headers; whether authorization is required and how (typically a JWT in the `authorization` metadata
   key); and every error: gRPC `Status.Code`, the error detail payload, and its cause — cross-checked against the
   gRPC exception handler.
-- A link to the generated protobuf HTML on GitHub Pages and to the `.proto` file.
+- The generated-reference and contract links, per the shared rules in Step 7: one
+  `{api-docs-url}/grpc-server/<version>/index.html[Protobuf <version> reference^]` per `package <service>.vN`, plus
+  a link to each `.proto` file in the repository. This is the `protoc-gen-doc` output — if Step 3's survey of
+  `apis/grpc-server`'s pom shows the documentation execution fell back to a `docker run pseudomuto/protoc-gen-doc`
+  step, or isn't wired at all, say so on the page instead of linking to a reference that was never generated.
 - The field-numbering and `reserved` discipline, so a reader knows how to evolve the contract safely.
+
+## Step 8a — `apis/graphql.adoc`
+
+From `apis/graphql-server/*.graphqls`, cross-checked against the `@Controller` classes in `api/graphql-server` and
+the `spring.graphql.*` configuration. The page must cover three things: the **data models**, the **operations**, and
+the **endpoints** they are reached through.
+
+- **Endpoints** — the section a REST-trained reader most needs, because there is normally exactly one. State the
+  HTTP endpoint (`spring.graphql.path`, default `/graphql`) and that every query and mutation is a `POST` to it;
+  the WebSocket path for subscriptions (`spring.graphql.websocket.path`) if any `Subscription` field exists, or say
+  plainly that subscriptions aren't served; the GraphiQL explorer path (`spring.graphql.graphiql.path`, default
+  `/graphiql`) **and in which profiles it is enabled**, since leaving it on in production exposes the whole schema;
+  the SSE/multipart path if configured; and the authentication expected on each. Read every one of these from the
+  `application*.yml` files rather than quoting the defaults — a service that moved its path and a page that says
+  `/graphql` is worse than no page.
+- **Version summary** per SDL file, following the same convention as the other pages. Note that GraphQL carries no
+  version in the request, so which schema a client gets is decided by the endpoint it calls — say explicitly how
+  versions are separated here (separate endpoints, or a single evolving schema with deprecations).
+- **Data models** — per `type`, `input`, `interface`, `union` and `enum`: what it represents, then a field table with
+  **description, type, nullable, deprecated (with the `@deprecated` reason), and arguments**. GraphQL's `!` is the
+  non-null marker: read it as the mandatory column rather than inventing one.
+- **Operations** — per `Query`, `Mutation` and `Subscription` field: what it does, its arguments and their
+  constraints, what it returns, whether authorization is required and of what kind, and which use case backs it.
+  Cross-check every field against the controllers: **a field in the SDL that no `@Controller` method resolves is a
+  finding**, not a documentation gap — it returns `null` at runtime. (`spring.graphql.schema.inspection` reports
+  exactly this at startup; say whether it's enabled.)
+- **Errors** — GraphQL answers `200 OK` with an `errors` array, so document the `extensions.classification` values
+  the `DataFetcherExceptionResolver` produces and what causes each. A reader who expects HTTP status codes will
+  otherwise assume every response succeeded.
+- **Limits** — the configured query depth and complexity limits, and the paginated fields, since those are what a
+  client must design its queries around. If no limits are configured, say so plainly: it's an availability risk,
+  not a blank cell.
+- The generated-reference links described in Step 7: the SpectaQL reference, the Voyager schema graph if it was
+  generated, the SDL in the repository, and the live-schema pointer where one exists.
 
 ## Step 9 — `apis/messaging.adoc`
 
-From `apis/messaging/*.avsc` plus the Spring Cloud Stream bindings:
+From the AsyncAPI specification (`apis/messaging/*-async-api-v*.yaml`), the AVRO schemas
+(`apis/messaging/*.avsc`), and the Spring Cloud Stream bindings. The AsyncAPI file already states the topics,
+directions, and messages, so most of this page is a transcription of it — but it is a hand-written contract, so
+**verify it against the bindings rather than trusting it**, and report any channel it declares that no binding
+implements (or vice versa) as a finding about the repository.
+
+Note when reading it that an AsyncAPI 3 operation's `action` is written from this service's point of view — `send`
+is a message it produces, `receive` one it consumes — and that the topic name is the channel's `address`, not the
+channel key. If the document is an older 2.x one, its `publish`/`subscribe` mean the *opposite* of the intuitive
+reading (`subscribe` is what the service sends); documenting the arrows backwards is the easiest mistake to make on
+this page.
 
 - **Topic summary** — every topic the service produces to or consumes from, its purpose, direction, the consumer
-  group used, and the DLQ topic if configured. Topic names come from the bindings configuration, not the schemas.
+  group used, and the DLQ topic if configured. Topic names come from the bindings configuration and should match
+  the AsyncAPI channel keys; say so if they don't.
 - **Version summary per topic** — what each schema version provides, and which are still in flight.
 - **Messages** — per AVRO record: what event it represents and when it's emitted; then per field: description,
   type, mandatory (a field with no default is mandatory), deprecated (with reason), constraints, and its default.
 - The registry's compatibility mode and the subject naming strategy in use, since those determine what schema
   change is legal.
 - Which use case produces or consumes each message, linking to `use-cases.adoc`.
+- The generated-reference and contract links, per the shared rules in Step 7: one
+  `{api-docs-url}/messaging/<version>/index.html[AsyncAPI <version> reference^]` per
+  `apis/messaging/*-async-api-v*.yaml`, plus a link to each AsyncAPI file and to the `.avsc` schemas it references.
+  Both parts matter here: the generated page renders the AVRO payloads inline (the AsyncAPI document `$ref`s the
+  `.avsc` files), so it is the only place a reader sees topics and payload fields together.
+
+As with the REST and gRPC pages, don't restate what the generated HTML already shows well. What justifies this
+page is everything the generator can't know: consumer groups, DLQ topics, which use case produces or consumes each
+message, and the registry's compatibility mode.
 
 ## Step 10 — `configuration.adoc`
 
@@ -340,7 +491,18 @@ Then verify what the build won't catch:
 
 - **Every Mermaid and Kroki diagram actually rendered** — open the built HTML and check. A Kroki block with a
   syntax error, or with the extension unregistered, renders as a literal code block without failing the build.
-- Links to the generated OpenAPI/protobuf HTML use the real GitHub Pages path the build workflow publishes to.
+- **Each of `apis/rest.adoc`, `apis/grpc.adoc` and `apis/messaging.adoc` that exists carries its generated-reference
+  link, and the link resolved.** Two distinct checks, because neither fails the build:
+  - Grep the build log for `skipping reference to missing attribute: api-docs-url`. Antora logs that warning,
+    leaves the literal `{api-docs-url}/...` text in the page, and still exits 0 — so the page looks finished and
+    ships a visibly broken link.
+  - Grep the built HTML (`docs/build/site/**/apis/*.html`) for the expected `href` on each page. An `<a href>`
+    containing `{api-docs-url}` means the attribute never resolved; no matching `<a>` at all means the link was
+    never written.
+- The link targets match where the build workflow actually publishes (`doc/api/rest-server/…`,
+  `doc/api/grpc-server/…`, `doc/api/messaging/…`), cross-checked against `.github/workflows/build.yml` rather than
+  assumed. If Pages has already published at least once, fetching one of the URLs is the definitive check; a 404
+  before the first main-branch build is expected, not a defect.
 - No page contains an invented fact where a `TODO:` belongs. Re-read the architecture and use-case pages
   specifically with that question in mind — they're where invention creeps in.
 
@@ -350,6 +512,11 @@ Summarize:
 
 - Pages created, pages updated, pages omitted (and why).
 - Whether Kroki had to be installed and the playbook amended.
+- The `api-docs-url` value resolved, how it was resolved (the Pages API, the git remote, or a custom domain), and
+  the generated-reference link written on each API page. Call out explicitly any API page whose reference isn't
+  generated at all — a gRPC documentation execution that was never wired, or messaging documentation missing
+  because the AsyncAPI step was skipped — and whether GitHub Pages has published yet, since until it has, every one
+  of these links 404s.
 - **Every `TODO:` written, grouped by page**, so the user has a concrete list of what only a human can supply. This
   is the most useful part of the report — present it as a list, not a count.
 - **Every discrepancy found between the code and the manifest, the spec and the security configuration, or the

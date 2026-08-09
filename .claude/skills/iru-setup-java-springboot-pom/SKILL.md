@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-pom
-description: Generate the Maven reactor for a DDD/hexagonal Spring Boot service — the root `pom.xml` (the single place every dependency and plugin version is declared) plus one `pom.xml` per module (`domain`, `application`, `infrastructure/database/<engine>`, `infrastructure/configuration`, `infrastructure/clients/<name>`, `infrastructure/producers`, `infrastructure/metrics`, `api/rest-server`, `api/grpc-server`, `api/consumers`, `boot`, `coverage`). Enforces Java 21 as a minimum via `maven.compiler.release`, `java.version`, and a `maven-enforcer-plugin` `requireJavaVersion` rule, and enforces the hexagonal dependency direction per module with `banned-dependencies`. Wires the full report/quality plugin set — Javadoc, Checkstyle, PMD, SpotBugs, Surefire, Failsafe, JaCoCo (per module plus a `report-aggregate` in `coverage`), JXR, Maven Site, `groovy-maven-plugin` for `build-info.properties`, and `sonar-maven-plugin` — with generated sources excluded from every analysis. Reads its inputs from the `springboot-stack.yml` manifest and from the reference pom fetched from the Spring Initializr API, so starter artifact names and BOM imports come from the API rather than from memory. Invoke as `/iru-setup-java-springboot-pom` (it reads `springboot-stack.yml` from the repository root), or with `args` (`stack-file:` / `initializr-pom:` lines) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service's multi-module Maven reactor needs generating or regenerating from the recorded stack, instead of hand-writing a dozen interdependent poms.
+description: Generate the Maven reactor for a DDD/hexagonal Spring Boot service — the root `pom.xml` (the single place every dependency and plugin version is declared) plus one `pom.xml` per module (`domain`, `application`, `infrastructure/database/<engine>`, `infrastructure/configuration`, `infrastructure/clients/<name>`, `infrastructure/producers`, `infrastructure/metrics`, `api/rest-server`, `api/grpc-server`, `api/graphql-server`, `api/consumers`, `boot`, `coverage`). Enforces Java 21 as a minimum via `maven.compiler.release`, `java.version`, and a `maven-enforcer-plugin` `requireJavaVersion` rule, and enforces the hexagonal dependency direction per module with `banned-dependencies`. Wires the full report/quality plugin set — Javadoc, Checkstyle, PMD, SpotBugs, Surefire, Failsafe, JaCoCo (per module plus a `report-aggregate` in `coverage`), JXR, Maven Site, `groovy-maven-plugin` for `build-info.properties`, and `sonar-maven-plugin` — with generated sources excluded from every analysis. Reads its inputs from the `springboot-stack.yml` manifest and from the reference pom fetched from the Spring Initializr API, so starter artifact names and BOM imports come from the API rather than from memory. Invoke as `/iru-setup-java-springboot-pom` (it reads `springboot-stack.yml` from the repository root), or with `args` (`stack-file:` / `initializr-pom:` lines) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service's multi-module Maven reactor needs generating or regenerating from the recorded stack, instead of hand-writing a dozen interdependent poms.
 model: sonnet
 ---
 
@@ -148,6 +148,16 @@ Substitute `<placeholders>` from the manifest. Include only the `<module>` entri
     <openapi-generator-maven-plugin.version><latest></openapi-generator-maven-plugin.version>
     <protobuf-maven-plugin.version><from-reference-pom-or-latest></protobuf-maven-plugin.version>
     <avro-maven-plugin.version><latest></avro-maven-plugin.version>
+    <!-- GraphQL SDL -> Java. The same version is ALSO used for the io.github.kobylynskyi:graphql-java-codegen
+         runtime dependency that generated GraphQL *client* code extends; keep the two in lockstep. -->
+    <graphql-codegen-maven-plugin.version><latest></graphql-codegen-maven-plugin.version>
+    <!-- Runs the AsyncAPI documentation generators (npm-based) from the Maven build; see
+         iru-setup-java-springboot-apis. Needed when messaging and/or a GraphQL server is enabled. -->
+    <frontend-maven-plugin.version><latest></frontend-maven-plugin.version>
+    <!-- Escape hatches for the two npm-driven documentation steps, so an offline build can opt out.
+         CI must leave both false or the published documentation silently goes stale. -->
+    <asyncapi.docs.skip>false</asyncapi.docs.skip>
+    <graphql.docs.skip>false</graphql.docs.skip>
 
     <!-- Analysis and coverage settings -->
     <checkstyle.config.location>${maven.multiModuleProjectDirectory}/checkstyle.xml</checkstyle.config.location>
@@ -240,6 +250,16 @@ Substitute `<placeholders>` from the manifest. Include only the `<module>` entri
           <groupId>org.apache.avro</groupId>
           <artifactId>avro-maven-plugin</artifactId>
           <version>${avro-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.github.kobylynskyi</groupId>
+          <artifactId>graphql-codegen-maven-plugin</artifactId>
+          <version>${graphql-codegen-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.eirslett</groupId>
+          <artifactId>frontend-maven-plugin</artifactId>
+          <version>${frontend-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.springframework.boot</groupId>
@@ -525,11 +545,12 @@ so the hexagonal boundaries are enforced by the classpath and not merely by conv
 | `application` | `<a>-domain`. Optionally `spring-context`/`spring-tx` if use cases need `@Service`/`@Transactional`; prefer keeping even this out and wiring in `boot` when practical. |
 | `infrastructure/database/<engine>` | `<a>-domain` plus that engine's Spring Data starter and driver, plus its migration tooling (Mongock, Liquibase + the relevant extension, or Flyway) and its Testcontainers module (`test` scope). One engine per module — never two. |
 | `infrastructure/configuration` | `<a>-domain`, `spring-boot-starter` (for `@ConfigurationProperties`), `spring-boot-configuration-processor`, and the dynamic-configuration starter the manifest names (Spring Cloud Kubernetes Config, AWS Secrets Manager, or Spring Cloud Config Client + Bus). |
-| `infrastructure/clients/<name>` | `<a>-domain` plus the HTTP client starter (`spring-restclient`/`spring-webclient`) for a REST client, or the gRPC client starter for a gRPC one. Also the OpenAPI or protobuf generator plugin execution for that client's own spec, and — at `test` scope — the Testcontainers module for whichever API mock `stack.apiMock` names (`io.github.microcks:microcks-testcontainers` or the WireMock Testcontainers module), so this module's own `*IT` can start just the mock instead of the whole compose stack. |
+| `infrastructure/clients/<name>` | `<a>-domain` plus the HTTP client starter (`spring-restclient`/`spring-webclient`) for a REST client, the gRPC client starter for a gRPC one, or `spring-boot-starter-graphql` (for `HttpGraphQlClient`/`HttpSyncGraphQlClient`) **and** `io.github.kobylynskyi:graphql-java-codegen` at compile scope for a GraphQL one — that last artifact supplies the base classes the generated request/projection classes extend, and without it the module generates and then fails to compile. A downstream service reached over more than one protocol keeps one module with one generator execution per protocol. Also the OpenAPI, protobuf or GraphQL generator plugin execution for that client's own contract, and — at `test` scope — the Testcontainers module for whichever API mock `stack.apiMock` names (`io.github.microcks:microcks-testcontainers` or the WireMock Testcontainers module), so this module's own `*IT` can start just the mock instead of the whole compose stack. |
 | `infrastructure/producers` | `<a>-domain`, `spring-cloud-stream`, `spring-cloud-stream-binder-kafka`, the AVRO serializer (`io.confluent:kafka-avro-serializer`) and `org.apache.avro:avro`, plus the AVRO generator plugin execution. |
 | `infrastructure/metrics` | `<a>-domain`, `spring-boot-starter-actuator`, `micrometer-registry-prometheus` (and `micrometer-registry-otlp` if selected). |
 | `api/rest-server` | `<a>-application`, `<a>-domain`, `spring-boot-starter-webmvc`/`-webflux` (whatever the reference pom names), `spring-boot-starter-validation`, plus the OpenAPI generator execution for `apis/rest-server/`. Add the Spring Security starters here if the service authorizes incoming HTTP. |
 | `api/grpc-server` | `<a>-application`, `<a>-domain`, the gRPC server starter, plus the protobuf generator execution for `apis/grpc-server/`. |
+| `api/graphql-server` | `<a>-application`, `<a>-domain`, `spring-boot-starter-graphql`, **and** the web transport starter the reference pom names for `stack.concurrency` (`spring-boot-starter-webmvc`/`-web` or `-webflux`) — the GraphQL starter carries no HTTP transport of its own — plus `spring-boot-starter-validation`, `spring-boot-starter-graphql-test` at `test` scope, the `graphql-codegen-maven-plugin` execution for `apis/graphql-server/`, the `maven-resources-plugin` execution that copies the SDL to `target/classes/graphql/` for runtime schema loading, and the `frontend-maven-plugin` executions that generate the SpectaQL reference (and optional Voyager schema graph) into `target/generated-docs/graphql-server/`. |
 | `api/consumers` | `<a>-application`, `<a>-domain`, `spring-cloud-stream`, the Kafka binder, the AVRO serializer, plus the AVRO generator execution. |
 | `boot` | Every other module, `spring-boot-starter`, the Spring AI starters if any, and anything Step 0 couldn't place. This is the only module with `spring-boot-maven-plugin` and the only one that produces an executable artifact. |
 | `coverage` | Every other module at `test` scope, for JaCoCo `report-aggregate` only. No sources of its own. |

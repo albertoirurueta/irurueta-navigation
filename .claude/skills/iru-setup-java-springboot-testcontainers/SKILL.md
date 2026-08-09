@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-testcontainers
-description: Set up the local-execution and integration-test infrastructure for a Spring Boot service — a `compose.yaml` at the repository root with one pinned service per technology the stack uses (MongoDB, Couchbase, PostgreSQL/pgvector, MariaDB, Elasticsearch, Neo4j, Qdrant, Redis, Kafka, Confluent Schema Registry) plus Prometheus and Grafana for viewing metrics during local development, and a Testcontainers integration-test harness that launches that same compose file via `ComposeContainer` so integration tests and local runs share one definition of the environment. Whenever the service has REST or gRPC clients, also adds an API mocking service to that same compose stack, driven by the contracts already in `apis/rest-client/<name>/` and `apis/grpc-client/<name>/` — Microcks (the default when any gRPC client exists, since it mocks gRPC and REST from the same contracts in one container) or WireMock (the default when the service has REST clients only, with its gRPC extension noted as the upgrade path) — so integration tests never call a real downstream service. Writes the shared `*IT` base class, the `@DynamicPropertySource`/`ServiceConnection` wiring that points Spring at the started containers and each client's base URL at the mock, health-check-based readiness gating, and the Maven Failsafe/JaCoCo hookup, and verifies the whole thing by running `mvn verify`. Also wires Spring Boot's own `spring-boot-docker-compose` support so `local` runs start the stack automatically. Reads `springboot-stack.yml` for which services are needed and their pinned image tags. Invoke as `/iru-setup-java-springboot-testcontainers`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service needs reproducible integration tests and a runnable local environment instead of hand-wiring containers per test class.
+description: Set up the local-execution and integration-test infrastructure for a Spring Boot service — a `compose.yaml` at the repository root with one pinned service per technology the stack uses (MongoDB, Couchbase, PostgreSQL/pgvector, MariaDB, Elasticsearch, Neo4j, Qdrant, Redis, Kafka, Confluent Schema Registry) plus Prometheus and Grafana for viewing metrics during local development, and a Testcontainers integration-test harness that launches that same compose file via `ComposeContainer` so integration tests and local runs share one definition of the environment. Whenever the service has REST, gRPC or GraphQL clients, also adds an API mocking service to that same compose stack, driven by the contracts already in `apis/rest-client/<name>/`, `apis/grpc-client/<name>/` and `apis/graphql-client/<name>/` — Microcks (the default when any gRPC client exists, since it mocks gRPC and REST from the same contracts in one container) or WireMock (the default when the service has REST clients only, with its gRPC extension noted as the upgrade path) — so integration tests never call a real downstream service. Writes the shared `*IT` base class, the `@DynamicPropertySource`/`ServiceConnection` wiring that points Spring at the started containers and each client's base URL at the mock, health-check-based readiness gating, and the Maven Failsafe/JaCoCo hookup, and verifies the whole thing by running `mvn verify`. Also wires Spring Boot's own `spring-boot-docker-compose` support so `local` runs start the stack automatically. Reads `springboot-stack.yml` for which services are needed and their pinned image tags. Invoke as `/iru-setup-java-springboot-testcontainers`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service needs reproducible integration tests and a runnable local environment instead of hand-wiring containers per test class.
 model: sonnet
 ---
 
@@ -33,14 +33,14 @@ services needed:
 | `messaging.enabled` | `schema-registry` | `confluentinc/cp-schema-registry:<tag>` | 8081 |
 | `metrics: true` | `prometheus` | `prom/prometheus:<tag>` | 9090 |
 | `metrics: true` | `grafana` | `grafana/grafana:<tag>` | 3000 |
-| `restClients` and/or `grpcClients` non-empty | `microcks` **or** `wiremock` (see below) | `quay.io/microcks/microcks-uber:<tag>` / `wiremock/wiremock:<tag>` | 8080 (+ 9090 for Microcks gRPC) |
+| `restClients`, `grpcClients` and/or `graphqlClients` non-empty | `microcks` **or** `wiremock` (see below) | `quay.io/microcks/microcks-uber:<tag>` / `wiremock/wiremock:<tag>` | 8080 (+ 9090 for Microcks gRPC) |
 
 `caches` containing `caffeine` needs no container — it's in-process. Note that in the report so its absence
 doesn't look like an omission.
 
 ### Choosing the API mocking tool
 
-If `stack.restClients` and `stack.grpcClients` are both empty, there is nothing downstream to mock — skip every
+If `stack.restClients`, `stack.grpcClients` and `stack.graphqlClients` are all empty, there is nothing downstream to mock — skip every
 mock-related part of this skill and say so in the report. Otherwise the stack needs exactly one mock service,
 because an integration test that calls a real downstream service is not an integration test of this service: it
 is slow, it fails when someone else deploys, and it can't reproduce the error responses the adapter is supposed
@@ -51,8 +51,8 @@ Read `stack.apiMock` from the manifest if it's recorded there and use it without
 
 | Situation | Default | Why |
 |---|---|---|
-| Any gRPC client (alone, or gRPC + REST) | **Microcks** | It mocks gRPC and REST from the same contracts in one container, consuming the `.proto` and the OpenAPI spec directly with no descriptor build step. One tool covering both protocols is worth more than any per-protocol advantage. |
-| REST clients only, no gRPC expected | **WireMock** | Far lighter and faster to start, and its stub DSL gives finer per-test control over responses, delays, and faults. Note when offering it that a `wiremock-grpc-extension` exists, so choosing WireMock is not a dead end if gRPC arrives later — it just costs a descriptor-set build step then. |
+| Any gRPC or GraphQL client (alone, or alongside REST) | **Microcks** | It mocks REST, gRPC and GraphQL from the same contracts in one container, consuming the OpenAPI spec, the `.proto` and the SDL directly with no descriptor build step. One tool covering every protocol is worth more than any per-protocol advantage. |
+| REST clients only | **WireMock** | Far lighter and faster to start, and its stub DSL gives finer per-test control over responses, delays, and faults. Note when offering it that a `wiremock-grpc-extension` exists, so choosing WireMock is not a dead end if gRPC arrives later — it just costs a descriptor-set build step then. GraphQL is the weaker case: every operation is one `POST /graphql`, so stubs match on request body rather than path and the SDL is never read by the mock, leaving contract and mock free to drift. |
 
 Present both options either way and let the user override — a team already running Microcks for contract testing
 elsewhere should keep using it even for a REST-only service. Write the answer back to the manifest as
@@ -148,6 +148,7 @@ microcks:
   volumes:
     - ./apis/rest-client:/apis/rest-client:ro
     - ./apis/grpc-client:/apis/grpc-client:ro
+    - ./apis/graphql-client:/apis/graphql-client:ro    # omit any directory the stack doesn't have
   healthcheck:
     test: ["CMD", "curl", "-sf", "http://localhost:8080/api/health"]
 ```
@@ -161,8 +162,13 @@ artifact must not create a second copy.
 
 Microcks addresses a mock by service name and version taken from the contract itself: REST mocks live under
 `/rest/<Service+Name>/<version>/<path>`, gRPC mocks answer on port 9090 for the fully-qualified service in the
-`.proto`. Derive those URLs from the contracts, don't invent them, and say in the report exactly what each
-client's base URL becomes.
+`.proto`, and GraphQL mocks are served over the REST-style path for the schema's service name. Derive those URLs
+from the contracts, don't invent them, and say in the report exactly what each client's base URL becomes.
+
+A GraphQL SDL, like a `.proto`, carries no examples of its own — Microcks needs a companion examples artifact next
+to the schema in `apis/graphql-client/<name>/` naming each operation and its response. Check the pinned version's
+supported formats rather than assuming, and report any GraphQL client left with no examples: it mocks nothing, and
+the failure shows up as an integration test reading an empty `data` object far from its cause.
 
 **WireMock** — mount its root and the contracts:
 
