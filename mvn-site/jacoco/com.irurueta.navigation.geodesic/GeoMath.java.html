@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GeoMath.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">GeoMath.java</span></div><h1>GeoMath.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * Defines mathematical functions and constants.
+ * Based on net.sf.geographiclib library.
+ */
+public class GeoMath {
+
+    /**
+     * Number of binary digits in the fraction of double precision number.
+     * This is equivalent to C++'s {@code numeric_limits&lt;double&gt;::digits}.
+     */
+    public static final int DIGITS = 53;
+
+    /**
+     * Equivalent to C++'s {@code numeric_limits&lt;double&gt;::epsilon()}. This is equal to
+     * 0.5^(DIGITS - 1).
+     */
+<span class="fc" id="L34">    public static final double EPSILON = Math.ulp(1.0);</span>
+
+    /**
+     * Equivalent to C++'s {@code numeric_limits&lt;double&gt;::min()}. This is equal to 0.5^1022.
+     */
+    public static final double MIN = Double.MIN_NORMAL;
+
+    /**
+     * Constructor.
+     * Prevents instantiation.
+     */
+    private GeoMath() {
+    }
+
+    /**
+     * Square a number.
+     *
+     * @param x the argument.
+     * @return &lt;i&gt;x&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt;.
+     */
+    public static double sq(final double x) {
+<span class="fc" id="L55">        return x * x;</span>
+    }
+
+    /**
+     * The hypotenuse function avoiding underflow and overflow. This is equivalent
+     * to {@link Math#hypot(double, double)}.
+     *
+     * @param x the first argument.
+     * @param y the second argument.
+     * @return sqrt(&lt;i&gt;x&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; + &lt;i&gt;y&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt;).
+     */
+    public static double hypot(double x, double y) {
+<span class="fc" id="L67">        x = Math.abs(x);</span>
+<span class="fc" id="L68">        y = Math.abs(y);</span>
+
+<span class="fc" id="L70">        final var a = Math.max(x, y);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        final var b = Math.min(x, y) / (a != 0 ? a : 1);</span>
+<span class="fc" id="L72">        return a * Math.sqrt(1 + b * b);</span>
+        // For an alternative method see
+        // C. Moler and D. Morrisin (1983) https://doi.org/10.1147/rd.276.0577
+        // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
+    }
+
+    /**
+     * log(1 + &lt;i&gt;x&lt;/i&gt;) accurate near &lt;i&gt;x&lt;/i&gt; = 0. This is equivalent to {@link Math#log1p(double)}.
+     * &lt;p&gt;
+     * This is taken from D.Goldberg,
+     * &lt;a href=&quot;https://doi.org/10.1145/103162.103163&quot;&gt;What every computer scientist should
+     * know about floating-point arithmetic&lt;/a&gt; (1991),
+     * Theorem 4. See also, N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd Edition
+     * (SIAM, 2002), Answer to Problem 1.5, p 528.
+     * &lt;/p&gt;
+     *
+     * @param x the argument.
+     * @return log(1 + &lt;i&gt;x&lt;/i&gt;).
+     */
+    public static double log1p(final double x) {
+<span class="fc" id="L92">        final var y = 1 + x;</span>
+<span class="fc" id="L93">        final var z = y - 1;</span>
+        // Here's the explanation for this magic: y = 1 + z, exactly, and z approx x, thus log(y)/z
+        // (which is nearly constant near z = 0) returns a good approximation to the true log(1 + x)/x.
+        // The multiplication of x * (log(y)/z) introduces little additional error.
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        return z == 0 ? x : x * Math.log(y) / z;</span>
+    }
+
+    /**
+     * The inverse hyperbolic tangent function. This is defined in terms of {@link GeoMath#log1p(double)} in order
+     * to maintain accuracy near &lt;i&gt;x&lt;/i&gt; = 0.
+     * In addition, the odd parity of the function is enforced.
+     *
+     * @param x the argument.
+     * @return atanh(&lt;i&gt;x&lt;/i&gt;).
+     */
+    public static double atanh(final double x) {
+        // Enforce odd parity
+<span class="fc" id="L110">        var y = Math.abs(x);</span>
+<span class="fc" id="L111">        y = Math.log1p(2 * y / (1 - y)) / 2;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        return x &lt; 0 ? -y : y;</span>
+    }
+
+    /**
+     * Copy the sign. This is equivalent to {@link Math#copySign(double, double)}
+     *
+     * @param x gives the magnitude of the result.
+     * @param y gives the sign of the result.
+     * @return value with the magnitude of &lt;i&gt;x&lt;/i&gt; and with the sign of &lt;i&gt;y&lt;/i&gt;.
+     */
+    public static double copysign(final double x, final double y) {
+<span class="fc bfc" id="L123" title="All 4 branches covered.">        return Math.abs(x) * (y &lt; 0 || y == 0 ? -1 : 1);</span>
+    }
+
+    /**
+     * The cube root function. This is equivalent to {@link Math#cbrt(double)}.
+     *
+     * @param x the argument.
+     * @return the real cube root of &lt;i&gt;x&lt;/i&gt;.
+     */
+    public static double cbrt(final double x) {
+        // Return the real cube root
+<span class="fc" id="L134">        final var y = Math.pow(Math.abs(x), 1 / 3.0);</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        return x &lt; 0 ? -y : y;</span>
+    }
+
+    /**
+     * Normalizes sinus and cosine.
+     *
+     * @param sinx sinus of x.
+     * @param cosx cosine of x.
+     * @return normalized values.
+     * @throws IllegalArgumentException if provided sinus and cosine values have zero
+     *                                  norm.
+     */
+    public static Pair norm(final double sinx, final double cosx) {
+<span class="fc" id="L148">        final var r = hypot(sinx, cosx);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (r == 0.0) {</span>
+<span class="fc" id="L150">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L153">        return new Pair(sinx / r, cosx / r);</span>
+    }
+
+    /**
+     * The error-free sum of two numbers.
+     * See D.E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+     *
+     * @param u the first number in the sum.
+     * @param v the second number in the sum.
+     * @return Pair(&lt;i&gt;s&lt;/i&gt;, &lt;i&gt;t&lt;/i&gt;) with &lt;i&gt;s&lt;/i&gt; = round(&lt;i&gt;u&lt;/i&gt; +
+     * &lt;i&gt;v&lt;/i&gt;) and &lt;i&gt;t&lt;/i&gt; = &lt;i&gt;u&lt;/i&gt; + &lt;i&gt;v&lt;/i&gt; - &lt;i&gt;s&lt;/i&gt;.
+     */
+    public static Pair sum(final double u, final double v) {
+<span class="fc" id="L166">        final var s = u + v;</span>
+<span class="fc" id="L167">        var up = s - v;</span>
+<span class="fc" id="L168">        var vpp = s - up;</span>
+<span class="fc" id="L169">        up -= u;</span>
+<span class="fc" id="L170">        vpp -= v;</span>
+<span class="fc" id="L171">        final var t = -(up + vpp);</span>
+        // u + v = s + t = round(u + v) + t
+<span class="fc" id="L173">        return new Pair(s, t);</span>
+    }
+
+    /**
+     * Evaluate a polynomial.
+     * &lt;p&gt;
+     * Evaluate &lt;i&gt;y&lt;/i&gt; = &amp;sum;&lt;sub&gt;&lt;i&gt;n&lt;/i&gt;=0..&lt;i&gt;n&lt;/i&gt;&lt;/sub&gt;
+     * &lt;i&gt;p&lt;/i&gt;&lt;sub&gt;&lt;i&gt;s&lt;/i&gt;+&lt;i&gt;n&lt;/i&gt;&lt;/sub&gt;
+     * &lt;i&gt;x&lt;/i&gt;&lt;sup&gt;&lt;i&gt;n&lt;/i&gt;&amp;minus;&lt;i&gt;n&lt;/i&gt;&lt;/sup&gt;.
+     * Return 0 if &lt;i&gt;n&lt;/i&gt; &amp;lt; 0.
+     * Return &lt;i&gt;p&lt;/i&gt;&lt;sub&gt;&lt;i&gt;s&lt;/i&gt;&lt;/sub&gt;, if &lt;i&gt;n&lt;/i&gt; = 0 (even if &lt;i&gt;x&lt;/i&gt; is
+     * infinite or a nan). The evaluation uses Horner's method.
+     * This is equivalent to {@link com.irurueta.numerical.polynomials.Polynomial#evaluate(double)}.
+     *
+     * @param n the order of the polynomial.
+     * @param p the coefficient array (of size &lt;i&gt;n&lt;/i&gt; + &lt;i&gt;s&lt;/i&gt; + 1 or more).
+     * @param s starting index of the array.
+     * @param x the variable.
+     * @return the value of the polynomial.
+     */
+    public static double polyval(int n, final double[] p, int s, final double x) {
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        var y = n &lt; 0 ? 0 : p[s++];</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        while (--n &gt;= 0) {</span>
+<span class="fc" id="L196">            y = y * x + p[s++];</span>
+        }
+<span class="fc" id="L198">        return y;</span>
+    }
+
+    /**
+     * Makes the smallest gap in x = 1 / 16 - nextafter(1/16, 0) = 1/2^57 for reals = 0.7 pm on the earth if x is an
+     * angle in degrees. (This is about 1000 times more resolution than we get with angles around 90 degrees.). We use
+     * this to avoid having to deal with near singular cases when x is non-zero but tiny (e.g. 1.0e-200). This converts
+     * -0 to +0; however tiny negative numbers get converted to -0.
+     *
+     * @param x value to be converted
+     * @return rounded value.
+     */
+    public static double angRound(final double x) {
+<span class="fc" id="L211">        final var z = 1 / 16.0;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (x == 0) {</span>
+<span class="fc" id="L213">            return 0;</span>
+        }
+
+<span class="fc" id="L216">        var y = Math.abs(x);</span>
+        // The compiler mustn't &quot;simplify&quot; z - (z - y) to y
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        y = y &lt; z ? z - (z - y) : y;</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">        return x &lt; 0 ? -y : y;</span>
+    }
+
+    /**
+     * Normalizes an angle (restricted input range).
+     * The range of &lt;i&gt;x&lt;/i&gt; is unrestricted.
+     *
+     * @param x the angle in degrees.
+     * @return the angle reduced to the range [&amp;minus;180&amp;deg;, 180&amp;deg;).
+     */
+    public static double angNormalize(double x) {
+<span class="fc" id="L230">        x = x % 360.0;</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (x &lt;= -180) {</span>
+<span class="fc" id="L232">            return x + 360;</span>
+        } else {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            return x &lt;= 180 ? x : x - 360;</span>
+        }
+    }
+
+    /**
+     * Normalizes latitude.
+     *
+     * @param x the angle in degrees.
+     * @return x if it is in the range [&amp;minus;90&amp;deg;, 90&amp;deg;], otherwise return NaN.
+     */
+    public static double latFix(final double x) {
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        return Math.abs(x) &gt; 90 ? Double.NaN : x;</span>
+    }
+
+    /**
+     * The exact difference of two angles reduced to (&amp;minus;180&amp;deg;, 180&amp;deg;].
+     * This computes &lt;i&gt;z&lt;/i&gt; = &lt;i&gt;y&lt;/i&gt; &amp;minus; &lt;i&gt;x&lt;/i&gt; exactly, reduced to (&amp;minus;180&amp;deg;, 180&amp;deg;]; and then sets
+     * &lt;i&gt;z&lt;/i&gt; = &lt;i&gt;d&lt;/i&gt; + &lt;i&gt;e&lt;/i&gt; where &lt;i&gt;d&lt;/i&gt; is the nearest representable number to &lt;i&gt;z&lt;/i&gt; and &lt;i&gt;e&lt;/i&gt; is the
+     * truncation error. If &lt;i&gt;d&lt;/i&gt; = &amp;minus;180, then &lt;i&gt;e&lt;/i&gt; &amp;gt; 0; If &lt;i&gt;d&lt;/i&gt; = 180, then &lt;i&gt;e&lt;/i&gt; &amp;le; 0.
+     *
+     * @param x the first angle in degrees.
+     * @param y the second angle in degrees.
+     * @return Pair(&lt;i&gt;d&lt;/i&gt;, &lt;i&gt;e&lt;/i&gt;) with &lt;i&gt;d&lt;/i&gt; being the rounded difference and &lt;i&gt;e&lt;/i&gt; being the error.
+     */
+    public static Pair angDiff(final double x, final double y) {
+        //noinspection all
+<span class="fc" id="L260">        final var r = sum(angNormalize(-x), angNormalize(y));</span>
+<span class="fc" id="L261">        final var d = angNormalize(r.getFirst());</span>
+<span class="fc" id="L262">        final var t = r.getSecond();</span>
+
+<span class="fc bfc" id="L264" title="All 4 branches covered.">        return sum(d == 180 &amp;&amp; t &gt; 0 ? -180 : d, t);</span>
+    }
+
+    /**
+     * Evaluate the sine and cosine function with the argument in degrees.
+     * The results obey exactly the elementary properties of the trigonometric functions, e.g.
+     * sin 9&amp;deg; = cos 81&amp;deg; = &amp;minus; sin 123456789&amp;deg;.
+     *
+     * @param x in degrees.
+     * @return Pair(&lt;i&gt;s&lt;/i&gt;, &lt;i&gt;t&lt;/i&gt;) with &lt;i&gt;s&lt;/i&gt; = sin(&lt;i&gt;x&lt;/i&gt; and &lt;i&gt;c&lt;/i&gt; = cos(&lt;i&gt;x&lt;/i&gt;).
+     */
+    public static Pair sincosd(final double x) {
+        // In order to minimize round-off errors, this function exactly reduces the argument to the range [-45, 45]
+        // before converting it to radians.
+<span class="fc" id="L278">        var r = x % 360.0;</span>
+<span class="fc" id="L279">        final var q = (int) Math.floor(r / 90 + 0.5);</span>
+<span class="fc" id="L280">        r -= 90 * q;</span>
+        // now abs(r) &lt;= 45
+<span class="fc" id="L282">        r = Math.toRadians(r);</span>
+        // Possibly could call the gnu extension sincos
+<span class="fc" id="L284">        final var s = Math.sin(r);</span>
+<span class="fc" id="L285">        final var c = Math.cos(r);</span>
+        double sinx;
+        double cosx;
+<span class="fc bfc" id="L288" title="All 4 branches covered.">        switch (q &amp; 3) {</span>
+            case 0 -&gt; {
+<span class="fc" id="L290">                sinx = s;</span>
+<span class="fc" id="L291">                cosx = c;</span>
+<span class="fc" id="L292">            }</span>
+            case 1 -&gt; {
+<span class="fc" id="L294">                sinx = c;</span>
+<span class="fc" id="L295">                cosx = -s;</span>
+<span class="fc" id="L296">            }</span>
+            case 2 -&gt; {
+<span class="fc" id="L298">                sinx = -s;</span>
+<span class="fc" id="L299">                cosx = -c;</span>
+<span class="fc" id="L300">            }</span>
+            default -&gt; {
+                //case 3
+<span class="fc" id="L303">                sinx = -c;</span>
+<span class="fc" id="L304">                cosx = s;</span>
+            }
+        }
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (x != 0) {</span>
+<span class="fc" id="L308">            sinx += 0.0;</span>
+<span class="fc" id="L309">            cosx += 0.0;</span>
+        }
+<span class="fc" id="L311">        return new Pair(sinx, cosx);</span>
+    }
+
+    /**
+     * Evaluate the atan2 function with the result in degrees.
+     * The result is in the range (&amp;minus;180&amp;deg; 180&amp;deg;]. N.B.,
+     * atan2d(&amp;plusmn;0, &amp;minus;1) = +180&amp;deg;; atan2d(&amp;minus;&amp;epsilon;,&amp;minus;1) = &amp;minus;180&amp;deg;, for &amp;epsilon;
+     * positive and tiny; atan2d(&amp;plusmn;0, 1) = +plusmn;0&amp;deg;.
+     *
+     * @param y the sine of the angle.
+     * @param x the cosine of the angle.
+     * @return atan2(&lt;i&gt;y&lt;/i&gt;, &lt;i&gt;x&lt;/i&gt;) in degrees.
+     */
+    public static double atan2d(double y, double x) {
+        // In order to minimize round-off errors, this function rearranges the arguments so that result of atan2 is in
+        // the range [-pi/4, pi/4] before converting it to degrees and mapping the result to the correct quadrant.
+<span class="fc" id="L327">        var q = 0;</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        if (Math.abs(y) &gt; Math.abs(x)) {</span>
+<span class="fc" id="L329">            final var t = x;</span>
+            //noinspection all
+<span class="fc" id="L331">            x = y;</span>
+<span class="fc" id="L332">            y = t;</span>
+<span class="fc" id="L333">            q = 2;</span>
+        }
+<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (x &lt; 0) {</span>
+<span class="fc" id="L336">            x = -x;</span>
+<span class="fc" id="L337">            ++q;</span>
+        }
+        // here x &gt;= 0 and x &gt;= abs(y), so angle is in [-pi/4, pi/4]
+<span class="fc" id="L340">        var ang = Math.toDegrees(Math.atan2(y, x));</span>
+<span class="fc bfc" id="L341" title="All 4 branches covered.">        switch (q) {</span>
+            // Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y =
+            // -0.
+            // If need be, include case 0: ang = 0 + ang; break
+            // and handle mpfr as in angRound.
+            case 1:
+<span class="fc bfc" id="L347" title="All 2 branches covered.">                ang = (y &gt;= 0 ? 180 : -180) - ang;</span>
+<span class="fc" id="L348">                break;</span>
+            case 2:
+<span class="fc" id="L350">                ang = 90 - ang;</span>
+<span class="fc" id="L351">                break;</span>
+            case 3:
+<span class="fc" id="L353">                ang = -90 + ang;</span>
+<span class="fc" id="L354">                break;</span>
+            default:
+                break;
+        }
+<span class="fc" id="L358">        return ang;</span>
+    }
+
+    /**
+     * Test for finiteness.
+     *
+     * @param x the argument.
+     * @return true if number is finite, false if NaN or infinite.
+     */
+    public static boolean isFinite(final double x) {
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        return Math.abs(x) &lt;= Double.MAX_VALUE;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

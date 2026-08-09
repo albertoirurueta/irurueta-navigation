@@ -1,0 +1,44 @@
+<svg viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="500" height="260" fill="#ffffff"/>
+
+  <!-- Divider -->
+  <line x1="250" y1="10" x2="250" y2="250" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- LEFT: Trilateration (distances) -->
+  <text x="45" y="24" fill="#1a202c" font-size="13" font-weight="bold">Trilateration: distances</text>
+
+  <circle cx="80" cy="170" r="65" fill="none" stroke="#2b6cb0" stroke-width="1.5"/>
+  <circle cx="80" cy="170" r="3.5" fill="#2b6cb0"/>
+  <text x="62" y="192" fill="#2b6cb0" font-size="12" font-weight="bold">A</text>
+  <line x1="80" y1="170" x2="130" y2="129" stroke="#2b6cb0" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <circle cx="180" cy="170" r="65" fill="none" stroke="#c05621" stroke-width="1.5"/>
+  <circle cx="180" cy="170" r="3.5" fill="#c05621"/>
+  <text x="186" y="192" fill="#c05621" font-size="12" font-weight="bold">B</text>
+  <line x1="180" y1="170" x2="130" y2="129" stroke="#c05621" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <circle cx="130" cy="129" r="5" fill="#1a202c"/>
+  <text x="138" y="125" fill="#1a202c" font-size="12" font-weight="bold">P</text>
+  <text x="10" y="245" fill="#4a5568" font-size="10.5">no angles measured — only ranges r&#8321;, r&#8322;, ...</text>
+
+  <!-- RIGHT: Triangulation (angles) -->
+  <text x="320" y="24" fill="#1a202c" font-size="13" font-weight="bold">Triangulation: angles</text>
+
+  <circle cx="300" cy="190" r="3.5" fill="#2b6cb0"/>
+  <text x="282" y="212" fill="#2b6cb0" font-size="12" font-weight="bold">A</text>
+  <line x1="300" y1="190" x2="410" y2="190" stroke="#cbd5e0" stroke-width="1"/>
+  <line x1="300" y1="190" x2="390" y2="110" stroke="#2b6cb0" stroke-width="1.5"/>
+  <path d="M 340 190 A 40 40 0 0 0 332 165" fill="none" stroke="#2b6cb0" stroke-width="1"/>
+  <text x="345" y="178" fill="#2b6cb0" font-size="10.5">&#952;&#8321;</text>
+
+  <circle cx="430" cy="190" r="3.5" fill="#c05621"/>
+  <text x="436" y="212" fill="#c05621" font-size="12" font-weight="bold">B</text>
+  <line x1="430" y1="190" x2="320" y2="190" stroke="#cbd5e0" stroke-width="1"/>
+  <line x1="430" y1="190" x2="390" y2="110" stroke="#c05621" stroke-width="1.5"/>
+  <path d="M 390 190 A 40 40 0 0 1 398 165" fill="none" stroke="#c05621" stroke-width="1"/>
+  <text x="393" y="178" fill="#c05621" font-size="10.5">&#952;&#8322;</text>
+
+  <circle cx="390" cy="110" r="5" fill="#1a202c"/>
+  <text x="398" y="106" fill="#1a202c" font-size="12" font-weight="bold">P</text>
+  <text x="270" y="245" fill="#4a5568" font-size="10.5">no distances measured — only bearings &#952;&#8321;, &#952;&#8322;, ...</text>
+</svg>

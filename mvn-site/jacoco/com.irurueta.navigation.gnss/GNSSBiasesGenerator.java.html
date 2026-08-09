@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSBiasesGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSBiasesGenerator.java</span></div><h1>GNSSBiasesGenerator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.NEDPosition;
+import com.irurueta.navigation.frames.NEDVelocity;
+import com.irurueta.navigation.frames.converters.ECEFtoNEDPositionVelocityConverter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Generates the GNSS range errors due to signal in space, ionosphere and troposphere
+ * errors based on the elevation angles.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
+ * &lt;/a&gt;
+ */
+public class GNSSBiasesGenerator {
+
+    /**
+     * Ionosphere factor.
+     */
+    private static final double IONO_FACTOR = 0.899;
+
+    /**
+     * Troposphere factor.
+     */
+    private static final double TROPO_FACTOR = 0.998;
+
+    /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSBiasesGenerator() {
+    }
+
+    /**
+     * Generates biases.
+     *
+     * @param satellitePositions ECEF satellite positions expressed in meters (m).
+     * @param userPosition       ECEF user position expressed in meters (m).
+     * @param config             GNSS configuration.
+     * @param random             random number generator.
+     * @return list of generated biases for each provided satellite position.
+     */
+    public static List&lt;Double&gt; generateBiases(
+            final List&lt;ECEFPosition&gt; satellitePositions, final ECEFPosition userPosition, final GNSSConfig config,
+            final Random random) {
+<span class="fc" id="L69">        final var result = new ArrayList&lt;Double&gt;();</span>
+<span class="fc" id="L70">        generateBiases(satellitePositions, userPosition, config, random, result);</span>
+<span class="fc" id="L71">        return result;</span>
+    }
+
+    /**
+     * Generates biases.
+     *
+     * @param satellitePositions ECEF satellite positions expressed in meters (m).
+     * @param userPosition       ECEF user position expressed in meters (m).
+     * @param config             GNSS configuration.
+     * @param random             random number generator.
+     * @param result             instance where generated biases for each
+     *                           provided satellite position will be stored.
+     */
+    public static void generateBiases(
+            final List&lt;ECEFPosition&gt; satellitePositions, final ECEFPosition userPosition, final GNSSConfig config,
+            final Random random, final List&lt;Double&gt; result) {
+        // Calculate NED user position
+<span class="fc" id="L88">        final var userNedPosition = new NEDPosition();</span>
+<span class="fc" id="L89">        final var userNedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L90">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
+<span class="fc" id="L91">                userPosition.getX(), userPosition.getY(), userPosition.getZ(), 0.0, 0.0, 0.0,</span>
+                userNedPosition, userNedVelocity);
+<span class="fc" id="L93">        generate(satellitePositions, userPosition, userNedPosition.getLatitude(), userNedPosition.getLongitude(),</span>
+                config, random, result);
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Generates biases.
+     *
+     * @param satellitePosition ECEF satellite positions expressed in meters (m).
+     * @param userPosition      ECEF user position expressed in meters (m).
+     * @param config            GNSS configuration.
+     * @param random            random number generator.
+     * @return generated bias for provided satellite position.
+     */
+    public static double generateBias(final ECEFPosition satellitePosition, final ECEFPosition userPosition,
+                                      final GNSSConfig config, final Random random) {
+        // Calculate NED user position
+<span class="fc" id="L109">        final var userNedPosition = new NEDPosition();</span>
+<span class="fc" id="L110">        final var userNedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L111">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
+<span class="fc" id="L112">                userPosition.getX(), userPosition.getY(), userPosition.getZ(), 0.0, 0.0, 0.0,</span>
+                userNedPosition, userNedVelocity);
+<span class="fc" id="L114">        final var userLatitude = userNedPosition.getLatitude();</span>
+<span class="fc" id="L115">        final var userLongitude = userNedPosition.getLongitude();</span>
+
+        // Calculate ECEF to NED coordinate transformation matrix
+<span class="fc" id="L118">        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
+<span class="fc" id="L119">        return generate(satellitePosition, userPosition, config, cen, random);</span>
+    }
+
+    /**
+     * Generates biases.
+     *
+     * @param satellitePositions ECEF satellite positions expressed in meters (m).
+     * @param userPosition       ECEF user position expressed in meters (m).
+     * @param userLatitude       user latitude expressed in radians (rad).
+     * @param userLongitude      user longitude expressed in radians (rad).
+     * @param config             GNSS configuration.
+     * @param random             random number generator.
+     * @param result             instance where generated biases for each
+     *                           provided satellite position will be stored.
+     */
+    private static void generate(
+            final List&lt;ECEFPosition&gt; satellitePositions, final ECEFPosition userPosition,
+            final double userLatitude, final double userLongitude, final GNSSConfig config, final Random random,
+            final List&lt;Double&gt; result) {
+<span class="fc" id="L138">        result.clear();</span>
+
+        // Calculate ECEF to NED coordinate transformation matrix
+<span class="fc" id="L141">        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
+
+        // Loop satellites
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        for (final var satellitePosition : satellitePositions) {</span>
+<span class="fc" id="L145">            result.add(generate(satellitePosition, userPosition, config, cen, random));</span>
+<span class="fc" id="L146">        }</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Generates bias.
+     *
+     * @param satellitePosition ECEF satellite position expressed in meters (m).
+     * @param userPosition      ECEF user position expressed in meters (m).
+     * @param config            GNSS configuration.
+     * @param cen               ECEF to NED coordinate transformation matrix.
+     * @param random            random number generator.
+     * @return generated bias provided satellite position.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    private static double generate(final ECEFPosition satellitePosition, final ECEFPosition userPosition,
+                                   final GNSSConfig config, final Matrix cen, final Random random) {
+
+        // Determine ECEF line-of-sight vector using (8.41)
+<span class="fc" id="L164">        final var deltaRx = satellitePosition.getX() - userPosition.getX();</span>
+<span class="fc" id="L165">        final var deltaRy = satellitePosition.getY() - userPosition.getY();</span>
+<span class="fc" id="L166">        final var deltaRz = satellitePosition.getZ() - userPosition.getZ();</span>
+
+<span class="fc" id="L168">        final var deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
+
+<span class="fc" id="L170">        final var uaseX = deltaRx / deltaRNorm;</span>
+<span class="fc" id="L171">        final var uaseY = deltaRy / deltaRNorm;</span>
+<span class="fc" id="L172">        final var uaseZ = deltaRz / deltaRNorm;</span>
+
+        // Convert line of sight vector to NED using (8.39) and determine
+        // elevation using (8.57)
+<span class="fc" id="L176">        final var cen1 = cen.getElementAt(2, 0);</span>
+<span class="fc" id="L177">        final var cen2 = cen.getElementAt(2, 1);</span>
+<span class="fc" id="L178">        final var cen3 = cen.getElementAt(2, 2);</span>
+
+<span class="fc" id="L180">        var elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
+
+        // Limit the minimum elevation angle to the masking angle
+<span class="fc" id="L183">        elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));</span>
+
+        // Calculate ionosphere and troposphere error SDs using (9.79) and (9.80)
+<span class="fc" id="L186">        final var cosElevation = Math.cos(elevation);</span>
+<span class="fc" id="L187">        final var cosElevation2 = cosElevation * cosElevation;</span>
+<span class="fc" id="L188">        final var ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0 - IONO_FACTOR * cosElevation2);</span>
+<span class="fc" id="L189">        final var tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0 - TROPO_FACTOR * cosElevation2);</span>
+
+        // Determine range bias
+<span class="fc" id="L192">        return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()</span>
+<span class="fc" id="L193">                + tropSD * random.nextGaussian();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

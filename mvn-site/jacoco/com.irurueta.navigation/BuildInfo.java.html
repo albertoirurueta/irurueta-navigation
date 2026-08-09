@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuildInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation</a> &gt; <span class="el_source">BuildInfo.java</span></div><h1>BuildInfo.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation;
+
+import java.lang.ref.SoftReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Contains build data of this library.
+ */
+public class BuildInfo {
+
+    /**
+     * This class logger.
+     */
+<span class="fc" id="L34">    private static final Logger LOGGER = Logger.getLogger(BuildInfo.class.getName());</span>
+
+    /**
+     * Properties file that contains build data.
+     * Build data is stored in this file, which is modified each time that compilation is
+     * run in the CI server.
+     */
+    private static final String BUILD_INFO_PROPERTIES = &quot;build-info.properties&quot;;
+
+    /**
+     * Key to obtain build timestamp from properties file.
+     */
+    private static final String BUILD_TIMESTAMP_KEY = &quot;BUILD_TIMESTAMP&quot;;
+
+    /**
+     * Key to obtain groupID of this library from properties file.
+     */
+    private static final String GROUP_ID_KEY = &quot;GROUP_ID&quot;;
+
+    /**
+     * Key to obtain artifactId of this library from properties file.
+     */
+    private static final String ARTIFACT_ID_KEY = &quot;ARTIFACT_ID&quot;;
+
+    /**
+     * Key to obtain version of this library from properties file.
+     */
+    private static final String VERSION_KEY = &quot;VERSION&quot;;
+
+    /**
+     * Key to obtain build number from properties file.
+     */
+    private static final String BUILD_NUMBER_KEY = &quot;BUILD_NUMBER&quot;;
+
+    /**
+     * Key to obtain build commit from properties file.
+     */
+    private static final String COMMIT_KEY = &quot;COMMIT&quot;;
+
+    /**
+     * Key to obtain build branch from properties file.
+     */
+    private static final String BRANCH_KEY = &quot;BRANCH&quot;;
+
+    /**
+     * Format for build timestamp.
+     */
+    private static final String TIMESTAMP_FORMAT = &quot;yy-MM-dd HH:mm:ss&quot;;
+
+    /**
+     * Singleton stored in a soft reference (to keep it cached in memory unless
+     * memory is claimed).
+     */
+    private static SoftReference&lt;BuildInfo&gt; reference;
+
+    /**
+     * Build timestamp.
+     */
+    private Date buildTimestamp;
+
+    /**
+     * GroupId of this library.
+     */
+    private String groupId;
+
+    /**
+     * ArtifactId of this library.
+     */
+    private String artifactId;
+
+    /**
+     * Version of this library.
+     */
+    private String version;
+
+    /**
+     * Build number.
+     */
+    private String buildNumber;
+
+    /**
+     * Build commit.
+     */
+    private String commit;
+
+    /**
+     * Build branch.
+     */
+    private String branch;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L127">    private BuildInfo() {</span>
+        // loads properties file data.
+<span class="fc" id="L129">        try (final var stream = BuildInfo.class.getResourceAsStream(BUILD_INFO_PROPERTIES)) {</span>
+<span class="fc" id="L130">            final var props = new Properties();</span>
+<span class="fc" id="L131">            props.load(stream);</span>
+
+<span class="fc" id="L133">            final var buildTimestampString = props.getProperty(BUILD_TIMESTAMP_KEY);</span>
+<span class="fc" id="L134">            final var format = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.ENGLISH);</span>
+<span class="fc" id="L135">            buildTimestamp = format.parse(buildTimestampString);</span>
+
+<span class="fc" id="L137">            groupId = props.getProperty(GROUP_ID_KEY);</span>
+<span class="fc" id="L138">            artifactId = props.getProperty(ARTIFACT_ID_KEY);</span>
+<span class="fc" id="L139">            version = props.getProperty(VERSION_KEY);</span>
+<span class="fc" id="L140">            buildNumber = props.getProperty(BUILD_NUMBER_KEY);</span>
+<span class="fc" id="L141">            commit = props.getProperty(COMMIT_KEY);</span>
+<span class="fc" id="L142">            branch = props.getProperty(BRANCH_KEY);</span>
+<span class="nc" id="L143">        } catch (final Exception e) {</span>
+<span class="nc" id="L144">            LOGGER.log(Level.WARNING, &quot;Failed to load build info&quot;, e);</span>
+<span class="fc" id="L145">        }</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Obtains singleton instance.
+     *
+     * @return singleton instance.
+     */
+    public static synchronized BuildInfo getInstance() {
+        BuildInfo info;
+<span class="pc bpc" id="L155" title="1 of 4 branches missed.">        if (reference == null || (info = reference.get()) == null) {</span>
+<span class="fc" id="L156">            info = new BuildInfo();</span>
+<span class="fc" id="L157">            reference = new SoftReference&lt;&gt;(info);</span>
+        }
+
+<span class="fc" id="L160">        return info;</span>
+    }
+
+    /**
+     * Obtains build timestamp.
+     *
+     * @return build timestamp.
+     */
+    public Date getBuildTimestamp() {
+<span class="fc" id="L169">        return (Date) buildTimestamp.clone();</span>
+    }
+
+    /**
+     * Obtains groupId of this library.
+     *
+     * @return groupId of this library.
+     */
+    public String getGroupId() {
+<span class="fc" id="L178">        return groupId;</span>
+    }
+
+    /**
+     * Obtains artifactId of this library.
+     *
+     * @return artifactId of this library.
+     */
+    public String getArtifactId() {
+<span class="fc" id="L187">        return artifactId;</span>
+    }
+
+    /**
+     * Obtains version of this library.
+     *
+     * @return version of this library.
+     */
+    public String getVersion() {
+<span class="fc" id="L196">        return version;</span>
+    }
+
+    /**
+     * Obtains build number.
+     *
+     * @return build number.
+     */
+    public String getBuildNumber() {
+<span class="fc" id="L205">        return buildNumber;</span>
+    }
+
+    /**
+     * Obtains build commit.
+     *
+     * @return build commit.
+     */
+    public String getCommit() {
+<span class="fc" id="L214">        return commit;</span>
+    }
+
+    /**
+     * Obtains build branch.
+     *
+     * @return build branch.
+     */
+    public String getBranch() {
+<span class="fc" id="L223">        return branch;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

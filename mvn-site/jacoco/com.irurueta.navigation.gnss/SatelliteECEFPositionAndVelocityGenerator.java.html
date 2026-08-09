@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SatelliteECEFPositionAndVelocityGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">SatelliteECEFPositionAndVelocityGenerator.java</span></div><h1>SatelliteECEFPositionAndVelocityGenerator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.navigation.geodesic.Constants;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+/**
+ * Computes satellites positions and velocities.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/Satellite_positions_and_velocities.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Satellite_positions_and_velocities.m
+ * &lt;/a&gt;
+ */
+public class SatelliteECEFPositionAndVelocityGenerator {
+
+    /**
+     * WGS84 Earth gravitational constant expressed in m^3 * s^-2
+     */
+    public static final double EARTH_GRAVITATIONAL_CONSTANT = Constants.EARTH_GRAVITATIONAL_CONSTANT;
+
+    /**
+     * Earth rotation rate expressed in radians per second (rad/s).
+     */
+    public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
+
+    /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private SatelliteECEFPositionAndVelocityGenerator() {
+    }
+
+    /**
+     * Generates positions and velocities of satellites based on provided configuration.
+     *
+     * @param time   current time expressed in seconds (s).
+     * @param config GNSS configuration.
+     * @return collection containing position and velocities of satellites.
+     */
+    public static Collection&lt;ECEFPositionAndVelocity&gt; generateSatellitesPositionAndVelocity(
+            final double time, final GNSSConfig config) {
+<span class="fc" id="L59">        final var result = new ArrayList&lt;ECEFPositionAndVelocity&gt;();</span>
+<span class="fc" id="L60">        generateSatellitesPositionAndVelocity(time, config, result);</span>
+<span class="fc" id="L61">        return result;</span>
+    }
+
+    /**
+     * Generates positions and velocities of satellites based on provided configuration.
+     *
+     * @param time   current time expressed in seconds (s).
+     * @param config GNSS configuration.
+     * @param result instance where computed positions and velocities of satellites will be stored.
+     */
+    public static void generateSatellitesPositionAndVelocity(
+            final double time, final GNSSConfig config, final Collection&lt;ECEFPositionAndVelocity&gt; result) {
+<span class="fc" id="L73">        result.clear();</span>
+
+<span class="fc" id="L75">        final var numSatellites = config.getNumberOfSatellites();</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (var j = 0; j &lt; numSatellites; j++) {</span>
+<span class="fc" id="L77">            final var satellitePositionAndVelocity = new ECEFPositionAndVelocity();</span>
+<span class="fc" id="L78">            generateSatellitePositionAndVelocity(time, config, j, satellitePositionAndVelocity);</span>
+<span class="fc" id="L79">            result.add(satellitePositionAndVelocity);</span>
+        }
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Generates position and velocity of a single satellite based on provided configuration.
+     *
+     * @param time   current time expressed in seconds (s).
+     * @param config GNSS configuration.
+     * @param j      number of satellite whose position and velocity must be computed.
+     * @return computed satellite position and velocity.
+     */
+    public static ECEFPositionAndVelocity generateSatellitePositionAndVelocity(final double time,
+                                                                               final GNSSConfig config,
+                                                                               final int j) {
+<span class="fc" id="L94">        final var result = new ECEFPositionAndVelocity();</span>
+<span class="fc" id="L95">        generateSatellitePositionAndVelocity(time, config, j, result);</span>
+<span class="fc" id="L96">        return result;</span>
+    }
+
+    /**
+     * Generates position and velocity of a single satellite based on provided configuration.
+     *
+     * @param time   current time expressed in seconds (s).
+     * @param config GNSS configuration.
+     * @param j      number of satellite whose position and velocity must be computed.
+     * @param result instance where computed satellite position and velocity will be stored.
+     */
+    public static void generateSatellitePositionAndVelocity(final double time, final GNSSConfig config,
+                                                            final int j, final ECEFPositionAndVelocity result) {
+
+        // Convert inclination angle to radians.
+<span class="fc" id="L111">        final var inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());</span>
+
+        // Determine orbital angular rate using (8.8)
+<span class="fc" id="L114">        final var orbitalRadius = config.getOrbitalRadiusOfSatellites();</span>
+<span class="fc" id="L115">        final var orbitalRadius3 = orbitalRadius * orbitalRadius * orbitalRadius;</span>
+<span class="fc" id="L116">        final var omegaIs = Math.sqrt(EARTH_GRAVITATIONAL_CONSTANT / orbitalRadius3);</span>
+
+        // determine constellation time
+<span class="fc" id="L119">        final var constTime = time + config.getConstellationTimingOffset();</span>
+
+        // (Corrected) argument of latitude
+<span class="fc" id="L122">        final var uOsO = 2.0 * Math.PI * j / config.getNumberOfSatellites() + omegaIs * constTime;</span>
+
+        // Satellite position in the orbital frame from (8.14)
+<span class="fc" id="L125">        final var cosUoso = Math.cos(uOsO);</span>
+<span class="fc" id="L126">        final var sinUoso = Math.sin(uOsO);</span>
+<span class="fc" id="L127">        final var rOsO1 = orbitalRadius * cosUoso;</span>
+<span class="fc" id="L128">        final var rOsO2 = orbitalRadius * sinUoso;</span>
+
+        // longitude of the ascending node from (8.16)
+<span class="fc" id="L131">        final var constDeltaLambdaRadians = Math.toRadians(config.getConstellationLongitudeOffsetDegrees());</span>
+<span class="fc" id="L132">        final var omega = (Math.PI * ((j + 1) % 6) / 3.0 + constDeltaLambdaRadians) - EARTH_ROTATION_RATE * constTime;</span>
+
+        // ECEF satellite position from (8.19)
+<span class="fc" id="L135">        final var cosOmega = Math.cos(omega);</span>
+<span class="fc" id="L136">        final var sinOmega = Math.sin(omega);</span>
+<span class="fc" id="L137">        final var cosInclination = Math.cos(inclinationRadians);</span>
+<span class="fc" id="L138">        final var sinInclination = Math.sin(inclinationRadians);</span>
+
+<span class="fc" id="L140">        final var satelliteX = rOsO1 * cosOmega - rOsO2 * cosInclination * sinOmega;</span>
+<span class="fc" id="L141">        final var satelliteY = rOsO1 * sinOmega + rOsO2 * cosInclination * cosOmega;</span>
+<span class="fc" id="L142">        final var satelliteZ = rOsO2 * sinInclination;</span>
+
+        // Satellite velocity in the orbital frame from (8.25), noting that with a circular orbit rOsO is
+        // constant and the time derivative of uOsO is omegaIs.
+<span class="fc" id="L146">        final var tmp = orbitalRadius * omegaIs;</span>
+<span class="fc" id="L147">        final var vOsO1 = -tmp * sinUoso;</span>
+<span class="fc" id="L148">        final var vOsO2 = tmp * cosUoso;</span>
+
+        // ECEF satellite velocity from (8.26)
+<span class="fc" id="L151">        final var satelliteVx = vOsO1 * cosOmega - vOsO2 * cosInclination * sinOmega + EARTH_ROTATION_RATE * satelliteY;</span>
+<span class="fc" id="L152">        final var satelliteVy = vOsO1 * sinOmega + vOsO2 * cosInclination * cosOmega - EARTH_ROTATION_RATE * satelliteX;</span>
+<span class="fc" id="L153">        final var satelliteVz = vOsO2 * sinInclination;</span>
+
+<span class="fc" id="L155">        result.setPositionCoordinates(satelliteX, satelliteY, satelliteZ);</span>
+<span class="fc" id="L156">        result.setVelocityCoordinates(satelliteVx, satelliteVy, satelliteVz);</span>
+<span class="fc" id="L157">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

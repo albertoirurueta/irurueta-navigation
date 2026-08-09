@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GNSSMeasurement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.gnss</a> &gt; <span class="el_source">GNSSMeasurement.java</span></div><h1>GNSSMeasurement.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains GNSS measurement data of a satellite.
+ */
+public class GNSSMeasurement implements Serializable, Cloneable {
+
+    /**
+     * Pseudo-range measurement expressed in meters (m).
+     */
+    private double pseudoRange;
+
+    /**
+     * Pseudo-range rate measurement expressed in meters per second (m/s).
+     */
+    private double pseudoRate;
+
+    /**
+     * X coordinate of satellite ECEF position expressed in meters (m).
+     */
+    private double x;
+
+    /**
+     * Y coordinate of satellite ECEF position expressed in meters (m).
+     */
+    private double y;
+
+    /**
+     * Z coordinate of satellite ECEF position expressed in meters (m).
+     */
+    private double z;
+
+    /**
+     * X coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    private double vx;
+
+    /**
+     * Y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    private double vy;
+
+    /**
+     * Z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    private double vz;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L80">    public GNSSMeasurement() {</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement expressed in meters (m).
+     * @param pseudoRate  pseudo-range rate measurement expressed in meters per second (m/s).
+     * @param x           x coordinate of satellite ECEF position expressed in meters (m).
+     * @param y           y coordinate of satellite ECEF position expressed in meters (m).
+     * @param z           z coordinate of satellite ECEF position expressed in meters (m).
+     * @param vx          x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     * @param vy          y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     * @param vz          z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
+                           final double x, final double y, final double z,
+<span class="fc" id="L97">                           final double vx, final double vy, final double vz) {</span>
+<span class="fc" id="L98">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L99">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L100">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L101">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement.
+     * @param pseudoRate  pseudo-range rate measurement.
+     * @param x           x coordinate of satellite ECEF position.
+     * @param y           y coordinate of satellite ECEF position.
+     * @param z           z coordinate of satellite ECEF position.
+     * @param vx          x coordinate of satellite ECEF velocity.
+     * @param vy          y coordinate of satellite ECEF velocity.
+     * @param vz          z coordinate of satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
+                           final Distance x, final Distance y, final Distance z,
+<span class="fc" id="L118">                           final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L119">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L120">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L121">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L122">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement.
+     * @param pseudoRate  pseudo-range rate measurement.
+     * @param position    satellite ECEF position expressed in meters (m).
+     * @param vx          x coordinate of satellite ECEF velocity.
+     * @param vy          y coordinate of satellite ECEF velocity.
+     * @param vz          z coordinate of satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate, final Point3D position,
+<span class="fc" id="L136">                           final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L137">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L138">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L139">        setPosition(position);</span>
+<span class="fc" id="L140">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L141">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement expressed in meters (m).
+     * @param pseudoRate  pseudo-range rate measurement expressed in meters per second (m/s).
+     * @param position    satellite ECEF position.
+     * @param velocity    satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate, final ECEFPosition position,
+<span class="fc" id="L152">                           final ECEFVelocity velocity) {</span>
+<span class="fc" id="L153">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L154">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L155">        setEcefPosition(position);</span>
+<span class="fc" id="L156">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L157">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange         pseudo-range measurement expressed in meters (m).
+     * @param pseudoRate          pseudo-range rate measurement expressed in meters per second (m/s).
+     * @param positionAndVelocity satellite ECEF position and velocity.
+     */
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
+<span class="fc" id="L167">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
+<span class="fc" id="L168">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L169">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L170">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement.
+     * @param pseudoRate  pseudo-range rate measurement.
+     * @param position    satellite ECEF position.
+     * @param velocity    satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate, final ECEFPosition position,
+<span class="fc" id="L182">                           final ECEFVelocity velocity) {</span>
+<span class="fc" id="L183">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L184">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L185">        setEcefPosition(position);</span>
+<span class="fc" id="L186">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L187">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange         pseudo-range measurement.
+     * @param pseudoRate          pseudo-range rate measurement.
+     * @param positionAndVelocity satellite ECEF position and velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
+<span class="fc" id="L197">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
+<span class="fc" id="L198">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L199">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L200">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L201">    }</span>
+
+    /**
+     * Copy constructor.
+     *
+     * @param input input instance to copy data from.
+     */
+<span class="fc" id="L208">    public GNSSMeasurement(final GNSSMeasurement input) {</span>
+<span class="fc" id="L209">        copyFrom(input);</span>
+<span class="fc" id="L210">    }</span>
+
+    /**
+     * Gets pseudo-range measurement expressed in meters (m).
+     *
+     * @return pseudo-range measurement expressed in meters (m).
+     */
+    public double getPseudoRange() {
+<span class="fc" id="L218">        return pseudoRange;</span>
+    }
+
+    /**
+     * Sets pseudo-range measurement expressed in meters (m).
+     *
+     * @param pseudoRange pseudo-range measurement expressed in meters (m).
+     */
+    public void setPseudoRange(final double pseudoRange) {
+<span class="fc" id="L227">        this.pseudoRange = pseudoRange;</span>
+<span class="fc" id="L228">    }</span>
+
+    /**
+     * Gets pseudo-range measurement.
+     *
+     * @param result instance where pseudo-range measurement will be stored.
+     */
+    public void getPseudoRangeDistance(final Distance result) {
+<span class="fc" id="L236">        result.setValue(pseudoRange);</span>
+<span class="fc" id="L237">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L238">    }</span>
+
+    /**
+     * Gets pseudo-range measurement.
+     *
+     * @return pseudo-range measurement.
+     */
+    public Distance getPseudoRangeDistance() {
+<span class="fc" id="L246">        return new Distance(pseudoRange, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets pseudo-range measurement.
+     *
+     * @param pseudoRange pseudo-range measurement.
+     */
+    public void setPseudoRangeDistance(final Distance pseudoRange) {
+<span class="fc" id="L255">        this.pseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(), pseudoRange.getUnit(),</span>
+                DistanceUnit.METER);
+<span class="fc" id="L257">    }</span>
+
+    /**
+     * Gets pseudo-range rate measurement expressed in meters per second (m/s).
+     *
+     * @return pseudo-range rate measurement expressed in meters per second (m/s).
+     */
+    public double getPseudoRate() {
+<span class="fc" id="L265">        return pseudoRate;</span>
+    }
+
+    /**
+     * Sets pseudo-range rate measurement expressed in meters per second (m/s).
+     *
+     * @param pseudoRate pseudo-range rate measurement expressed in meters per second (m/s).
+     */
+    public void setPseudoRate(final double pseudoRate) {
+<span class="fc" id="L274">        this.pseudoRate = pseudoRate;</span>
+<span class="fc" id="L275">    }</span>
+
+    /**
+     * Gets pseudo-range rate measurement.
+     *
+     * @param result instance where pseudo-range rate measurement will be stored.
+     */
+    public void getPseudoRateSpeed(final Speed result) {
+<span class="fc" id="L283">        result.setValue(pseudoRate);</span>
+<span class="fc" id="L284">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L285">    }</span>
+
+    /**
+     * Gets pseudo-range rate measurement.
+     *
+     * @return pseudo-range rate measurement.
+     */
+    public Speed getPseudoRateSpeed() {
+<span class="fc" id="L293">        return new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets pseudo-range rate measurement.
+     *
+     * @param pseudoRate pseudo-range rate measurement.
+     */
+    public void setPseudoRateSpeed(final Speed pseudoRate) {
+<span class="fc" id="L302">        this.pseudoRate = SpeedConverter.convert(pseudoRate.getValue().doubleValue(), pseudoRate.getUnit(),</span>
+                SpeedUnit.METERS_PER_SECOND);
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @return x coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public double getX() {
+<span class="fc" id="L312">        return x;</span>
+    }
+
+    /**
+     * Sets x coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @param x x coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public void setX(final double x) {
+<span class="fc" id="L321">        this.x = x;</span>
+<span class="fc" id="L322">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF position.
+     *
+     * @param result instance where x coordinate of satellite ECEF position will be
+     *               stored.
+     */
+    public void getDistanceX(final Distance result) {
+<span class="fc" id="L331">        result.setValue(x);</span>
+<span class="fc" id="L332">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L333">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF position.
+     *
+     * @return x coordinate of satellite ECEF position.
+     */
+    public Distance getDistanceX() {
+<span class="fc" id="L341">        return new Distance(x, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets x coordinate of satellite ECEF position.
+     *
+     * @param x x coordinate of satellite ECEF position.
+     */
+    public void setDistanceX(final Distance x) {
+<span class="fc" id="L350">        this.x = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L351">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @return y coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public double getY() {
+<span class="fc" id="L359">        return y;</span>
+    }
+
+    /**
+     * Sets y coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @param y y coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public void setY(final double y) {
+<span class="fc" id="L368">        this.y = y;</span>
+<span class="fc" id="L369">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF position.
+     *
+     * @param result instance where y coordinate of satellite ECEF position will be
+     *               stored.
+     */
+    public void getDistanceY(final Distance result) {
+<span class="fc" id="L378">        result.setValue(y);</span>
+<span class="fc" id="L379">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L380">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF position.
+     *
+     * @return y coordinate of satellite ECEF position.
+     */
+    public Distance getDistanceY() {
+<span class="fc" id="L388">        return new Distance(y, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets y coordinate of satellite ECEF position.
+     *
+     * @param y y coordinate of satellite ECEF position.
+     */
+    public void setDistanceY(final Distance y) {
+<span class="fc" id="L397">        this.y = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L398">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @return z coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public double getZ() {
+<span class="fc" id="L406">        return z;</span>
+    }
+
+    /**
+     * Sets z coordinate of satellite ECEF position expressed in meters (m).
+     *
+     * @param z z coordinate of satellite ECEF position expressed in meters (m).
+     */
+    public void setZ(final double z) {
+<span class="fc" id="L415">        this.z = z;</span>
+<span class="fc" id="L416">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF position.
+     *
+     * @param result instance where z coordinate of satellite ECEF position will be
+     *               stored.
+     */
+    public void getDistanceZ(final Distance result) {
+<span class="fc" id="L425">        result.setValue(z);</span>
+<span class="fc" id="L426">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L427">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF position.
+     *
+     * @return z coordinate of satellite ECEF position.
+     */
+    public Distance getDistanceZ() {
+<span class="fc" id="L435">        return new Distance(z, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets z coordinate of satellite ECEF position.
+     *
+     * @param z z coordinate of satellite ECEF position.
+     */
+    public void setDistanceZ(final Distance z) {
+<span class="fc" id="L444">        this.z = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L445">    }</span>
+
+    /**
+     * Sets coordinates of satellite ECEF position expressed in meters (m).
+     *
+     * @param x x coordinate.
+     * @param y y coordinate.
+     * @param z z coordinate.
+     */
+    public void setPositionCoordinates(final double x, final double y, final double z) {
+<span class="fc" id="L455">        this.x = x;</span>
+<span class="fc" id="L456">        this.y = y;</span>
+<span class="fc" id="L457">        this.z = z;</span>
+<span class="fc" id="L458">    }</span>
+
+    /**
+     * Sets coordinates of satellite ECEF position.
+     *
+     * @param x x coordinate.
+     * @param y y coordinate.
+     * @param z z coordinate.
+     */
+    public void setPositionCoordinates(final Distance x, final Distance y, final Distance z) {
+<span class="fc" id="L468">        setDistanceX(x);</span>
+<span class="fc" id="L469">        setDistanceY(y);</span>
+<span class="fc" id="L470">        setDistanceZ(z);</span>
+<span class="fc" id="L471">    }</span>
+
+    /**
+     * Gets satellite ECEF position expressed in meters (m).
+     *
+     * @param result instance where satellite ECEF position will be stored.
+     */
+    public void getPosition(final Point3D result) {
+<span class="fc" id="L479">        result.setInhomogeneousCoordinates(x, y, z);</span>
+<span class="fc" id="L480">    }</span>
+
+    /**
+     * Gets satellite ECEF position expressed in meters (m).
+     *
+     * @return ECEF position of satellite.
+     */
+    public Point3D getPosition() {
+<span class="fc" id="L488">        return new InhomogeneousPoint3D(x, y, z);</span>
+    }
+
+    /**
+     * Sets ECEF position of satellite expressed in meters (m).
+     *
+     * @param position ECEF position of satellite.
+     */
+    public void setPosition(final Point3D position) {
+<span class="fc" id="L497">        x = position.getInhomX();</span>
+<span class="fc" id="L498">        y = position.getInhomY();</span>
+<span class="fc" id="L499">        z = position.getInhomZ();</span>
+<span class="fc" id="L500">    }</span>
+
+    /**
+     * Gets ECEF position of satellite.
+     *
+     * @param result instance where ECEF position of satellite will be stored.
+     */
+    public void getEcefPosition(final ECEFPosition result) {
+<span class="fc" id="L508">        result.setCoordinates(x, y, z);</span>
+<span class="fc" id="L509">    }</span>
+
+    /**
+     * Gets ECEF position of satellite.
+     *
+     * @return ECEF position of satellite.
+     */
+    public ECEFPosition getEcefPosition() {
+<span class="fc" id="L517">        return new ECEFPosition(x, y, z);</span>
+    }
+
+    /**
+     * Sets ECEF position of satellite.
+     *
+     * @param ecefPosition ECEF position of satellite.
+     */
+    public void setEcefPosition(final ECEFPosition ecefPosition) {
+<span class="fc" id="L526">        x = ecefPosition.getX();</span>
+<span class="fc" id="L527">        y = ecefPosition.getY();</span>
+<span class="fc" id="L528">        z = ecefPosition.getZ();</span>
+<span class="fc" id="L529">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @return x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public double getVx() {
+<span class="fc" id="L537">        return vx;</span>
+    }
+
+    /**
+     * Sets x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @param vx x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public void setVx(final double vx) {
+<span class="fc" id="L546">        this.vx = vx;</span>
+<span class="fc" id="L547">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF velocity.
+     *
+     * @param result instance where x coordinate of satellite ECEF velocity will
+     *               be stored.
+     */
+    public void getSpeedX(final Speed result) {
+<span class="fc" id="L556">        result.setValue(vx);</span>
+<span class="fc" id="L557">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L558">    }</span>
+
+    /**
+     * Gets x coordinate of satellite ECEF velocity.
+     *
+     * @return x coordinate of satellite ECEF velocity.
+     */
+    public Speed getSpeedX() {
+<span class="fc" id="L566">        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets x coordinate of satellite ECEF velocity.
+     *
+     * @param speedX x coordinate of satellite ECEF velocity.
+     */
+    public void setSpeedX(final Speed speedX) {
+<span class="fc" id="L575">        vx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L576">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @return y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public double getVy() {
+<span class="fc" id="L584">        return vy;</span>
+    }
+
+    /**
+     * Sets y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @param vy y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public void setVy(final double vy) {
+<span class="fc" id="L593">        this.vy = vy;</span>
+<span class="fc" id="L594">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF velocity.
+     *
+     * @param result instance where y coordinate of satellite ECEF velocity will
+     *               be stored.
+     */
+    public void getSpeedY(final Speed result) {
+<span class="fc" id="L603">        result.setValue(vy);</span>
+<span class="fc" id="L604">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L605">    }</span>
+
+    /**
+     * Gets y coordinate of satellite ECEF velocity.
+     *
+     * @return y coordinate of satellite ECEF velocity.
+     */
+    public Speed getSpeedY() {
+<span class="fc" id="L613">        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets y coordinate of satellite ECEF velocity.
+     *
+     * @param speedY y coordinate of satellite ECEF velocity.
+     */
+    public void setSpeedY(final Speed speedY) {
+<span class="fc" id="L622">        vy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L623">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @return z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public double getVz() {
+<span class="fc" id="L631">        return vz;</span>
+    }
+
+    /**
+     * Sets z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     *
+     * @param vz z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
+     */
+    public void setVz(final double vz) {
+<span class="fc" id="L640">        this.vz = vz;</span>
+<span class="fc" id="L641">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF velocity.
+     *
+     * @param result z coordinate of satellite ECEF velocity.
+     */
+    public void getSpeedZ(final Speed result) {
+<span class="fc" id="L649">        result.setValue(vz);</span>
+<span class="fc" id="L650">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L651">    }</span>
+
+    /**
+     * Gets z coordinate of satellite ECEF velocity.
+     *
+     * @return z coordinate of satellite ECEF velocity.
+     */
+    public Speed getSpeedZ() {
+<span class="fc" id="L659">        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets z coordinate of satellite ECEF velocity.
+     *
+     * @param speedZ z coordinate of satellite ECEF velocity.
+     */
+    public void setSpeedZ(final Speed speedZ) {
+<span class="fc" id="L668">        vz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L669">    }</span>
+
+    /**
+     * Sets ECEF coordinates of satellite velocity expressed in meters per second (m/s).
+     *
+     * @param vx x coordinate of satellite ECEF velocity.
+     * @param vy y coordinate of satellite ECEF velocity.
+     * @param vz z coordinate of satellite ECEF velocity.
+     */
+    public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
+<span class="fc" id="L679">        this.vx = vx;</span>
+<span class="fc" id="L680">        this.vy = vy;</span>
+<span class="fc" id="L681">        this.vz = vz;</span>
+<span class="fc" id="L682">    }</span>
+
+    /**
+     * Sets ECEF coordinates of satellite velocity.
+     *
+     * @param speedX x coordinate of satellite ECEF velocity.
+     * @param speedY y coordinate of satellite ECEF velocity.
+     * @param speedZ z coordinate of satellite ECEF velocity.
+     */
+    public void setVelocityCoordinates(final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L692">        setSpeedX(speedX);</span>
+<span class="fc" id="L693">        setSpeedY(speedY);</span>
+<span class="fc" id="L694">        setSpeedZ(speedZ);</span>
+<span class="fc" id="L695">    }</span>
+
+    /**
+     * Gets ECEF velocity of satellite.
+     *
+     * @param result instance where ECEF velocity of satellite will be stored.
+     */
+    public void getEcefVelocity(final ECEFVelocity result) {
+<span class="fc" id="L703">        result.setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L704">    }</span>
+
+    /**
+     * Gets ECEF velocity of satellite.
+     *
+     * @return ECEF velocity of satellite.
+     */
+    public ECEFVelocity getEcefVelocity() {
+<span class="fc" id="L712">        return new ECEFVelocity(vx, vy, vz);</span>
+    }
+
+    /**
+     * Sets ECEF velocity of satellite.
+     *
+     * @param ecefVelocity ECEF velocity of satellite.
+     */
+    public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
+<span class="fc" id="L721">        vx = ecefVelocity.getVx();</span>
+<span class="fc" id="L722">        vy = ecefVelocity.getVy();</span>
+<span class="fc" id="L723">        vz = ecefVelocity.getVz();</span>
+<span class="fc" id="L724">    }</span>
+
+    /**
+     * Gets ECEF position and velocity of satellite.
+     *
+     * @param result instance where position and velocity will be stored.
+     */
+    public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
+<span class="fc" id="L732">        result.setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L733">        result.setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L734">    }</span>
+
+    /**
+     * Gets ECEF position and velocity of satellite.
+     *
+     * @return ECEF position and velocity of satellite.
+     */
+    public ECEFPositionAndVelocity getPositionAndVelocity() {
+<span class="fc" id="L742">        return new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);</span>
+    }
+
+    /**
+     * Sets ECEF position and velocity of satellite.
+     *
+     * @param positionAndVelocity ECEF position and velocity of satellite.
+     */
+    public void setPositionAndVelocity(final ECEFPositionAndVelocity positionAndVelocity) {
+<span class="fc" id="L751">        x = positionAndVelocity.getX();</span>
+<span class="fc" id="L752">        y = positionAndVelocity.getY();</span>
+<span class="fc" id="L753">        z = positionAndVelocity.getZ();</span>
+
+<span class="fc" id="L755">        vx = positionAndVelocity.getVx();</span>
+<span class="fc" id="L756">        vy = positionAndVelocity.getVy();</span>
+<span class="fc" id="L757">        vz = positionAndVelocity.getVz();</span>
+<span class="fc" id="L758">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final GNSSMeasurement output) {
+<span class="fc" id="L766">        output.pseudoRange = pseudoRange;</span>
+<span class="fc" id="L767">        output.pseudoRate = pseudoRate;</span>
+
+<span class="fc" id="L769">        output.x = x;</span>
+<span class="fc" id="L770">        output.y = y;</span>
+<span class="fc" id="L771">        output.z = z;</span>
+
+<span class="fc" id="L773">        output.vx = vx;</span>
+<span class="fc" id="L774">        output.vy = vy;</span>
+<span class="fc" id="L775">        output.vz = vz;</span>
+<span class="fc" id="L776">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final GNSSMeasurement input) {
+<span class="fc" id="L784">        pseudoRange = input.pseudoRange;</span>
+<span class="fc" id="L785">        pseudoRate = input.pseudoRate;</span>
+
+<span class="fc" id="L787">        x = input.x;</span>
+<span class="fc" id="L788">        y = input.y;</span>
+<span class="fc" id="L789">        z = input.z;</span>
+
+<span class="fc" id="L791">        vx = input.vx;</span>
+<span class="fc" id="L792">        vy = input.vy;</span>
+<span class="fc" id="L793">        vz = input.vz;</span>
+<span class="fc" id="L794">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L804">        return Objects.hash(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);</span>
+    }
+
+    /**
+     * Checks if provided object is a GNSSMeasurement having exactly the same contents
+     * as this instance.
+     *
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L816" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L817">            return true;</span>
+        }
+<span class="pc bpc" id="L819" title="1 of 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L820">            return false;</span>
+        }
+
+<span class="fc" id="L823">        final var other = (GNSSMeasurement) obj;</span>
+<span class="fc" id="L824">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final GNSSMeasurement other) {
+<span class="fc" id="L834">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed for values.
+     * @return true if both instances are considered to be equal (up to provided threshold),
+     * false otherwise.
+     */
+    public boolean equals(final GNSSMeasurement other, final double threshold) {
+<span class="fc bfc" id="L847" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L848">            return false;</span>
+        }
+
+<span class="fc bfc" id="L851" title="All 2 branches covered.">        return Math.abs(pseudoRange - other.pseudoRange) &lt;= threshold</span>
+<span class="pc bpc" id="L852" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(pseudoRate - other.pseudoRate) &lt;= threshold</span>
+<span class="pc bpc" id="L853" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(x - other.x) &lt;= threshold</span>
+<span class="pc bpc" id="L854" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(y - other.y) &lt;= threshold</span>
+<span class="pc bpc" id="L855" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(z - other.z) &lt;= threshold</span>
+<span class="pc bpc" id="L856" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vx - other.vx) &lt;= threshold</span>
+<span class="pc bpc" id="L857" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vy - other.vy) &lt;= threshold</span>
+<span class="pc bpc" id="L858" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vz - other.vz) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L869">        final var result = (GNSSMeasurement) super.clone();</span>
+<span class="fc" id="L870">        copyTo(result);</span>
+<span class="fc" id="L871">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
