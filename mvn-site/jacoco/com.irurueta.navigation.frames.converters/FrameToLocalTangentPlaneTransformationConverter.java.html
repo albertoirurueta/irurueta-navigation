@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FrameToLocalTangentPlaneTransformationConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames.converters</a> &gt; <span class="el_source">FrameToLocalTangentPlaneTransformationConverter.java</span></div><h1>FrameToLocalTangentPlaneTransformationConverter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames.converters;
+
+import com.irurueta.geometry.EuclideanTransformation3D;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+import com.irurueta.geometry.Quaternion;
+import com.irurueta.geometry.Rotation3D;
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.FrameType;
+import com.irurueta.navigation.frames.NEDFrame;
+
+/**
+ * Converts current frame into a 3D rotation and translation change respect
+ * an initial frame.
+ */
+<span class="fc" id="L31">public class FrameToLocalTangentPlaneTransformationConverter {</span>
+
+    /**
+     * Reference rotation to be reused for efficiency purposes.
+     */
+<span class="fc" id="L36">    private final Quaternion refQ = new Quaternion();</span>
+
+    /**
+     * Coordinate transformation to be reused for efficiency purposes.
+     */
+<span class="fc" id="L41">    private final CoordinateTransformation c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);</span>
+
+    /**
+     * Current ECEF frame to be reused for efficiency purposes.
+     */
+<span class="fc" id="L46">    private final ECEFFrame currentEcefFrame = new ECEFFrame();</span>
+
+    /**
+     * Reference frame to be reused for efficiency purposes.
+     */
+<span class="fc" id="L51">    private final ECEFFrame referenceEcefFrame = new ECEFFrame();</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into the
+     * amount of translation and rotation that relates both frames.
+     *
+     * @param currentFrame      current frame.
+     * @param referenceFrame    reference frame.
+     * @param translationResult instance where estimated translation change will be stored.
+     * @param rotationResult    instance where estimated rotation change will be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final ECEFFrame currentFrame, final ECEFFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (translationResult.length != EuclideanTransformation3D.NUM_TRANSLATION_COORDS) {</span>
+<span class="nc" id="L68">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L71">        final var refX = referenceFrame.getX();</span>
+<span class="fc" id="L72">        final var refY = referenceFrame.getY();</span>
+<span class="fc" id="L73">        final var refZ = referenceFrame.getZ();</span>
+
+<span class="fc" id="L75">        final var x = currentFrame.getX();</span>
+<span class="fc" id="L76">        final var y = currentFrame.getY();</span>
+<span class="fc" id="L77">        final var z = currentFrame.getZ();</span>
+
+<span class="fc" id="L79">        translationResult[0] = x - refX;</span>
+<span class="fc" id="L80">        translationResult[1] = y - refY;</span>
+<span class="fc" id="L81">        translationResult[2] = z - refZ;</span>
+
+<span class="fc" id="L83">        referenceFrame.getCoordinateTransformation(c);</span>
+<span class="fc" id="L84">        c.asRotation(refQ);</span>
+<span class="fc" id="L85">        refQ.inverse();</span>
+
+<span class="fc" id="L87">        currentFrame.getCoordinateTransformation(c);</span>
+<span class="fc" id="L88">        c.asRotation(rotationResult);</span>
+
+<span class="fc" id="L90">        rotationResult.combine(refQ);</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @param result         instance where estimated 3D Euclidean transformation will
+     *                       be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final ECEFFrame currentFrame, final ECEFFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L106">        var translation = result.getTranslation();</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (translation == null) {</span>
+<span class="nc" id="L108">            translation = new double[EuclideanTransformation3D.NUM_TRANSLATION_COORDS];</span>
+        }
+
+<span class="fc" id="L111">        var rotation = result.getRotation();</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (rotation == null) {</span>
+<span class="nc" id="L113">            rotation = new Quaternion();</span>
+        }
+
+<span class="fc" id="L116">        convert(currentFrame, referenceFrame, translation, rotation);</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into the
+     * amount of translation and rotation that relates both frames.
+     *
+     * @param currentFrame      current frame.
+     * @param referenceFrame    reference frame.
+     * @param translationResult instance where estimated translation change will be stored.
+     * @param rotationResult    instance where estimated rotation change will be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final NEDFrame currentFrame, final ECEFFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+<span class="fc" id="L132">        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, currentEcefFrame);</span>
+<span class="fc" id="L133">        convert(currentEcefFrame, referenceFrame, translationResult, rotationResult);</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @param result         instance where estimated 3D Euclidean transformation will
+     *                       be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final NEDFrame currentFrame, final ECEFFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L149">        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, currentEcefFrame);</span>
+<span class="fc" id="L150">        convert(currentEcefFrame, referenceFrame, result);</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into the
+     * amount of translation and rotation that relates both frames.
+     *
+     * @param currentFrame      current frame.
+     * @param referenceFrame    reference frame.
+     * @param translationResult instance where estimated translation change will be stored.
+     * @param rotationResult    instance where estimated rotation change will be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final ECEFFrame currentFrame, final NEDFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+<span class="fc" id="L166">        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);</span>
+<span class="fc" id="L167">        convert(currentFrame, referenceEcefFrame, translationResult, rotationResult);</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @param result         instance where estimated 3D Euclidean transformation will
+     *                       be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final ECEFFrame currentFrame, final NEDFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L183">        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);</span>
+<span class="fc" id="L184">        convert(currentFrame, referenceEcefFrame, result);</span>
+<span class="fc" id="L185">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into the
+     * amount of translation and rotation that relates both frames.
+     *
+     * @param currentFrame      current frame.
+     * @param referenceFrame    reference frame.
+     * @param translationResult instance where estimated translation change will be stored.
+     * @param rotationResult    instance where estimated rotation change will be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final NEDFrame currentFrame, final NEDFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+<span class="fc" id="L200">        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);</span>
+<span class="fc" id="L201">        convert(currentFrame, referenceEcefFrame, translationResult, rotationResult);</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @param result         instance where estimated 3D Euclidean transformation will
+     *                       be stored.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public void convert(final NEDFrame currentFrame, final NEDFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L217">        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);</span>
+<span class="fc" id="L218">        convert(currentFrame, referenceEcefFrame, result);</span>
+<span class="fc" id="L219">    }</span>
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @return estimated 3D euclidean transformation.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public EuclideanTransformation3D convertAndReturn(
+            final ECEFFrame currentFrame, final ECEFFrame referenceFrame) throws InvalidRotationMatrixException {
+<span class="fc" id="L233">        final var result = new EuclideanTransformation3D();</span>
+<span class="fc" id="L234">        convert(currentFrame, referenceFrame, result);</span>
+<span class="fc" id="L235">        return result;</span>
+    }
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @return estimated 3D euclidean transformation.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public EuclideanTransformation3D convertAndReturn(
+            final NEDFrame currentFrame, final ECEFFrame referenceFrame) throws InvalidRotationMatrixException {
+<span class="fc" id="L250">        final var result = new EuclideanTransformation3D();</span>
+<span class="fc" id="L251">        convert(currentFrame, referenceFrame, result);</span>
+<span class="fc" id="L252">        return result;</span>
+    }
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @return estimated 3D euclidean transformation.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public EuclideanTransformation3D convertAndReturn(
+            final ECEFFrame currentFrame, final NEDFrame referenceFrame) throws InvalidRotationMatrixException {
+<span class="fc" id="L267">        final var result = new EuclideanTransformation3D();</span>
+<span class="fc" id="L268">        convert(currentFrame, referenceFrame, result);</span>
+<span class="fc" id="L269">        return result;</span>
+    }
+
+    /**
+     * Converts provided current frame respect to provided reference frame into a
+     * 3D Euclidean transformation that relates both frames.
+     *
+     * @param currentFrame   current frame.
+     * @param referenceFrame reference frame.
+     * @return estimated 3D euclidean transformation.
+     * @throws InvalidRotationMatrixException if either current or reference frame contains
+     *                                        numerically unstable rotation values.
+     */
+    public EuclideanTransformation3D convertAndReturn(
+            final NEDFrame currentFrame, final NEDFrame referenceFrame) throws InvalidRotationMatrixException {
+<span class="fc" id="L284">        final var result = new EuclideanTransformation3D();</span>
+<span class="fc" id="L285">        convert(currentFrame, referenceFrame, result);</span>
+<span class="fc" id="L286">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

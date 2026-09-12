@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NEDVelocity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">NEDVelocity.java</span></div><h1>NEDVelocity.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains body velocity with respect Earth, resolved about north, east and down an expressed in meters per second
+ * (m/s).
+ */
+public class NEDVelocity implements Serializable, Cloneable {
+    /**
+     * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along North axis.
+     */
+    private double vn;
+
+    /**
+     * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along East axis.
+     */
+    private double ve;
+
+    /**
+     * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along Down axis.
+     */
+    private double vd;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L51">    public NEDVelocity() {</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param vn North velocity coordinate value expressed in meters per second (m/s).
+     * @param ve East velocity coordinate value expressed in meters per second (m/s).
+     * @param vd Down velocity coordinate value expressed in meters per second (m/s).
+     */
+<span class="fc" id="L61">    public NEDVelocity(final double vn, final double ve, final double vd) {</span>
+<span class="fc" id="L62">        setCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param vn North velocity coordinate value.
+     * @param ve East velocity coordinate value.
+     * @param vd Down velocity coordinate value.
+     */
+<span class="fc" id="L72">    public NEDVelocity(final Speed vn, final Speed ve, final Speed vd) {</span>
+<span class="fc" id="L73">        setCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input Body velocity to copy data from.
+     */
+<span class="fc" id="L81">    public NEDVelocity(final NEDVelocity input) {</span>
+<span class="fc" id="L82">        copyFrom(input);</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @return North velocity coordinate value.
+     */
+    public double getVn() {
+<span class="fc" id="L92">        return vn;</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @param vn North velocity coordinate value.
+     */
+    public void setVn(final double vn) {
+<span class="fc" id="L102">        this.vn = vn;</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @return East velocity coordinate value.
+     */
+    public double getVe() {
+<span class="fc" id="L112">        return ve;</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @param ve East velocity coordinate value.
+     */
+    public void setVe(final double ve) {
+<span class="fc" id="L122">        this.ve = ve;</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @return Down velocity coordinate value.
+     */
+    public double getVd() {
+<span class="fc" id="L132">        return vd;</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @param vd Down velocity coordinate value.
+     */
+    public void setVd(final double vd) {
+<span class="fc" id="L142">        this.vd = vd;</span>
+<span class="fc" id="L143">    }</span>
+
+    /**
+     * Sets velocity coordinates of body frame expressed in meters per second (m/s) resolved along North, East, Down
+     * axes.
+     *
+     * @param vn North velocity coordinate value.
+     * @param ve East velocity coordinate value.
+     * @param vd Down velocity coordinate value.
+     */
+    public void setCoordinates(final double vn, final double ve, final double vd) {
+<span class="fc" id="L154">        this.vn = vn;</span>
+<span class="fc" id="L155">        this.ve = ve;</span>
+<span class="fc" id="L156">        this.vd = vd;</span>
+<span class="fc" id="L157">    }</span>
+
+    /**
+     * Gets norm of velocity expressed in meters per second (m/s), which represents
+     * the speed of the body.
+     *
+     * @return norm of velocity expressed in meters per second (m/s).
+     */
+    public double getNorm() {
+<span class="fc" id="L166">        return Math.sqrt(vn * vn + ve * ve + vd * vd);</span>
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @param result velocity norm.
+     */
+    public void getNormAsSpeed(final Speed result) {
+<span class="fc" id="L175">        result.setValue(getNorm());</span>
+<span class="fc" id="L176">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @return velocity norm.
+     */
+    public Speed getNormAsSpeed() {
+<span class="fc" id="L185">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @param result instance where North velocity coordinate will be stored.
+     */
+    public void getSpeedN(final Speed result) {
+<span class="fc" id="L195">        result.setValue(vn);</span>
+<span class="fc" id="L196">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @return North velocity coordinate.
+     */
+    public Speed getSpeedN() {
+<span class="fc" id="L206">        return new Speed(vn, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @param speedN North velocity coordinate to be set.
+     */
+    public void setSpeedN(final Speed speedN) {
+<span class="fc" id="L216">        vn = SpeedConverter.convert(speedN.getValue().doubleValue(), speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L217">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @param result instance where East velocity coordinate will be stored.
+     */
+    public void getSpeedE(final Speed result) {
+<span class="fc" id="L226">        result.setValue(ve);</span>
+<span class="fc" id="L227">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L228">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @return East velocity coordinate.
+     */
+    public Speed getSpeedE() {
+<span class="fc" id="L237">        return new Speed(ve, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @param speedE East velocity coordinate to be set.
+     */
+    public void setSpeedE(final Speed speedE) {
+<span class="fc" id="L247">        ve = SpeedConverter.convert(speedE.getValue().doubleValue(), speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @param result instance where Down velocity coordinate will be stored.
+     */
+    public void getSpeedD(final Speed result) {
+<span class="fc" id="L257">        result.setValue(vd);</span>
+<span class="fc" id="L258">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L259">    }</span>
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @return Down velocity coordinate.
+     */
+    public Speed getSpeedD() {
+<span class="fc" id="L268">        return new Speed(vd, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @param speedD Down velocity coordinate to be set.
+     */
+    public void setSpeedD(final Speed speedD) {
+<span class="fc" id="L278">        vd = SpeedConverter.convert(speedD.getValue().doubleValue(), speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L279">    }</span>
+
+    /**
+     * Sets velocity coordinates of body frame resolved along North, East, Down
+     * axes.
+     *
+     * @param speedN North velocity coordinate.
+     * @param speedE East velocity coordinate.
+     * @param speedD Down velocity coordinate.
+     */
+    public void setCoordinates(final Speed speedN, final Speed speedE, final Speed speedD) {
+<span class="fc" id="L290">        setSpeedN(speedN);</span>
+<span class="fc" id="L291">        setSpeedE(speedE);</span>
+<span class="fc" id="L292">        setSpeedD(speedD);</span>
+<span class="fc" id="L293">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final NEDVelocity output) {
+<span class="fc" id="L301">        output.vn = vn;</span>
+<span class="fc" id="L302">        output.ve = ve;</span>
+<span class="fc" id="L303">        output.vd = vd;</span>
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final NEDVelocity input) {
+<span class="fc" id="L312">        vn = input.vn;</span>
+<span class="fc" id="L313">        ve = input.ve;</span>
+<span class="fc" id="L314">        vd = input.vd;</span>
+<span class="fc" id="L315">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L325">        return Objects.hash(vn, ve, vd);</span>
+    }
+
+    /**
+     * Checks if provided object is a BodyVelocity having exactly the same contents as
+     * this instance.
+     *
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L338">            return false;</span>
+        }
+<span class="fc bfc" id="L340" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L341">            return true;</span>
+        }
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">        if (!(obj instanceof NEDVelocity other)) {</span>
+<span class="nc" id="L344">            return false;</span>
+        }
+
+<span class="fc" id="L347">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final NEDVelocity other) {
+<span class="fc" id="L357">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between velocity coordinates.
+     * @return true if both instances are considered to be equal (up to provided threshold), false otherwise.
+     */
+    public boolean equals(final NEDVelocity other, final double threshold) {
+<span class="fc bfc" id="L369" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L370">            return false;</span>
+        }
+
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        return Math.abs(vn - other.vn) &lt;= threshold</span>
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(ve - other.ve) &lt;= threshold</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vd - other.vd) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L386">        final var result = (NEDVelocity) super.clone();</span>
+<span class="fc" id="L387">        copyTo(result);</span>
+<span class="fc" id="L388">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

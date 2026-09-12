@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GnomonicData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">GnomonicData.java</span></div><h1>GnomonicData.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * The results of gnomonic projection.
+ * &lt;p&gt;
+ * This is used to return the results for a gnomonic projection of a point
+ * (&lt;i&gt;lat&lt;/i&gt;, &lt;i&gt;lon&lt;/i&gt;) given a center point of projection (&lt;i&gt;lat0&lt;/i&gt;,
+ * &lt;i&gt;lon0&lt;/i&gt;). The returned GnomonicData objects always include the
+ * parameters provided to
+ * {@link Gnomonic#forward} and {@link Gnomonic#reverse}
+ * and it always includes the fields &lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;, &lt;i&gt;azi&lt;/i&gt;, and
+ * &lt;i&gt;rk&lt;/i&gt;.
+ */
+public class GnomonicData {
+
+    /**
+     * Latitude of center point of projection (degrees).
+     */
+    private double lat0;
+
+    /**
+     * Longitude of center point of projection (degrees).
+     */
+    private double lon0;
+
+    /**
+     * Latitude of point (degrees).
+     */
+    private double lat;
+
+    /**
+     * Longitude of point (degrees).
+     */
+    private double lon;
+
+    /**
+     * Easting of point (meters).
+     */
+    private double x;
+
+    /**
+     * Northing of point (meters).
+     */
+    private double y;
+
+    /**
+     * Azimuth of geodesic at point (degrees).
+     */
+    private double azi;
+
+    /**
+     * Reciprocal of azimuthal scale at point.
+     */
+    private double rk;
+
+    /**
+     * Initialize all the fields to Double.NaN.
+     */
+    @SuppressWarnings(&quot;WeakerAccess&quot;)
+<span class="fc" id="L75">    public GnomonicData() {</span>
+<span class="fc" id="L76">        lat0 = lon0 = lat = lon = x = y = azi = rk = Double.NaN;</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Constructor initializing all the fields for gnomonic projection of a
+     * point (&lt;i&gt;lat&lt;/i&gt;, &lt;i&gt;lon&lt;/i&gt;) given a center point of projection
+     * (&lt;i&gt;lat0&lt;/i&gt;, &lt;i&gt;lon0&lt;/i&gt;).
+     *
+     * @param lat0 latitude of center point of projection (degrees).
+     * @param lon0 longitude of center point of projection (degrees).
+     * @param lat  latitude of point (degrees).
+     * @param lon  longitude of point (degrees).
+     * @param x    easting of point (meters).
+     * @param y    northing of point (meters).
+     * @param azi  azimuth of geodesic at point (degrees).
+     * @param rk   reciprocal of azimuthal scale at point.
+     */
+    public GnomonicData(
+            final double lat0, final double lon0, final double lat, final double lon,
+<span class="fc" id="L95">            final double x, final double y, final double azi, final double rk) {</span>
+<span class="fc" id="L96">        this.lat0 = lat0;</span>
+<span class="fc" id="L97">        this.lon0 = lon0;</span>
+<span class="fc" id="L98">        this.lat = lat;</span>
+<span class="fc" id="L99">        this.lon = lon;</span>
+<span class="fc" id="L100">        this.x = x;</span>
+<span class="fc" id="L101">        this.y = y;</span>
+<span class="fc" id="L102">        this.azi = azi;</span>
+<span class="fc" id="L103">        this.rk = rk;</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Gets latitude of center point of projection (degrees).
+     *
+     * @return latitude of center point of projection.
+     */
+    public double getLat0() {
+<span class="fc" id="L112">        return lat0;</span>
+    }
+
+    /**
+     * Sets latitude of center point of projection (degrees).
+     *
+     * @param lat0 latitude of center point of projection.
+     */
+    public void setLat0(final double lat0) {
+<span class="fc" id="L121">        this.lat0 = lat0;</span>
+<span class="fc" id="L122">    }</span>
+
+    /**
+     * Gets longitude of center point of projection (degrees).
+     *
+     * @return longitude of center point of projection.
+     */
+    public double getLon0() {
+<span class="fc" id="L130">        return lon0;</span>
+    }
+
+    /**
+     * Sets longitude of center point of projection (degrees).
+     *
+     * @param lon0 longitude of center point of projection.
+     */
+    public void setLon0(final double lon0) {
+<span class="fc" id="L139">        this.lon0 = lon0;</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Gets latitude of point (degrees).
+     *
+     * @return latitude of point.
+     */
+    public double getLat() {
+<span class="fc" id="L148">        return lat;</span>
+    }
+
+    /**
+     * Sets latitude of point (degrees).
+     *
+     * @param lat latitude of point.
+     */
+    public void setLat(final double lat) {
+<span class="fc" id="L157">        this.lat = lat;</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * Gets longitude of point (degrees).
+     *
+     * @return longitude of point.
+     */
+    public double getLon() {
+<span class="fc" id="L166">        return lon;</span>
+    }
+
+    /**
+     * Sets longitude of point (degrees).
+     *
+     * @param lon longitude of point.
+     */
+    public void setLon(final double lon) {
+<span class="fc" id="L175">        this.lon = lon;</span>
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * Gets easting of point (meters).
+     *
+     * @return easting of point.
+     */
+    public double getX() {
+<span class="fc" id="L184">        return x;</span>
+    }
+
+    /**
+     * Sets easting of point (meters).
+     *
+     * @param x easting of point.
+     */
+    public void setX(final double x) {
+<span class="fc" id="L193">        this.x = x;</span>
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Gets northing of point (meters).
+     *
+     * @return northing of point.
+     */
+    public double getY() {
+<span class="fc" id="L202">        return y;</span>
+    }
+
+    /**
+     * Sets northing of point (meters).
+     *
+     * @param y northing of point.
+     */
+    public void setY(final double y) {
+<span class="fc" id="L211">        this.y = y;</span>
+<span class="fc" id="L212">    }</span>
+
+    /**
+     * Gets azimuth of geodesic at point (degrees).
+     *
+     * @return azimuth of geodesic at point.
+     */
+    public double getAzi() {
+<span class="fc" id="L220">        return azi;</span>
+    }
+
+    /**
+     * Sets azimuth of geodesic at point (degrees).
+     *
+     * @param azi azimuth of geodesic at point.
+     */
+    public void setAzi(final double azi) {
+<span class="fc" id="L229">        this.azi = azi;</span>
+<span class="fc" id="L230">    }</span>
+
+    /**
+     * Gets reciprocal of azimuthal scale at point.
+     *
+     * @return reciprocal of azimuthal scale at point.
+     */
+    public double getRk() {
+<span class="fc" id="L238">        return rk;</span>
+    }
+
+    /**
+     * Sets reciprocal of azimuthal scale at point.
+     *
+     * @param rk reciprocal of azimuthal scale at point.
+     */
+    public void setRk(final double rk) {
+<span class="fc" id="L247">        this.rk = rk;</span>
+<span class="fc" id="L248">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

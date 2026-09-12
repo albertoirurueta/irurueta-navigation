@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Irurueta Navigation :: Irurueta Navigation</title>
+    <meta name="description" content="irurueta-navigation is a Java library for GNSS/INS navigation, providing position, velocity, and attitude estimation from satellite and inertial measurements, coordinate frame conversions, trilateration, and geodesic calculations.">
+    <meta name="keywords" content="irurueta-navigation, Java navigation library, GNSS, INS, GPS, position estimation, velocity estimation, attitude estimation, Kalman filter, trilateration, geodesic, coordinate frames, ECEF, ECI, NED">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" type="image/svg+xml" href="../../_/img/logo.svg">
+  </head>
+  <body class="article">
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({"startOnLoad":true}); </script><header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../.."><img src="../../_/img/logo.svg" alt="Irurueta Navigation" class="navbar-brand-logo">Irurueta Navigation</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs" autofocus>
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu" style="display: none;">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="irurueta-navigation" data-version="1.8.1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Irurueta Navigation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Irurueta Navigation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="whats-new.html">What&#8217;s New</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="frames.html">Frames</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gnss.html">GNSS</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lateration.html">Lateration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="geodesic.html">Geodesic</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Irurueta Navigation</span>
+    <span class="version">1.8.1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Irurueta Navigation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.8.1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Irurueta Navigation</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/albertoirurueta/irurueta-navigation/edit/develop/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Irurueta Navigation</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This documentation was generated with the assistance of AI. Please report any inaccuracies.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>irurueta-navigation is a Java library for GNSS/INS navigation: estimating position, velocity, and attitude from
+satellite and inertial measurements, and working with the coordinate frames and geodetic calculations that
+navigation algorithms depend on.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_it_exists"><a class="anchor" href="#_why_it_exists"></a>Why it exists</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Combining satellite (GNSS) and inertial (INS) measurements into a single, reliable position/velocity/attitude
+estimate requires a fair amount of supporting machinery: reference frame definitions and conversions, geodetic
+math on an ellipsoidal Earth, robust position solvers that tolerate noisy or outlier measurements, and a
+recursive estimator that fuses everything over time. irurueta-navigation packages that machinery as a set of
+composable building blocks rather than a single monolithic solver, so each piece can be used independently
+(e.g. just the trilateration solvers, or just the frame conversions) or combined into a full navigation pipeline.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_core_concepts"><a class="anchor" href="#_core_concepts"></a>Core concepts</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="gnss.html" class="xref page"><code>gnss</code></a></dt>
+<dd>
+<p>Position, velocity, and clock-offset estimation from GNSS pseudorange and pseudorange-rate
+measurements, via both a raw least-squares estimator (<code>GNSSLeastSquaresPositionAndVelocityEstimator</code>) and a
+Kalman-filtered estimator (<code>GNSSKalmanFilteredEstimator</code>) that smooths those estimates over time. The approach
+follows "Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems."</p>
+</dd>
+<dt class="hdlist1"><a href="frames.html" class="xref page"><code>frames</code></a></dt>
+<dd>
+<p>Navigation reference frames — Earth-Centered Inertial (ECI), Earth-Centered
+Earth-Fixed (ECEF), and North-East-Down (NED) — with position/velocity/attitude representations and converters
+between every frame pair (<code>frames.converters</code>).</p>
+</dd>
+<dt class="hdlist1"><a href="lateration.html" class="xref page"><code>lateration</code></a></dt>
+<dd>
+<p>Trilateration: recovering a position from a set of distance measurements, by
+intersecting circles (2D) or spheres (3D). Includes linear and nonlinear least-squares solvers plus robust
+variants (RANSAC, PROSAC, LMedS, MSAC) for measurements containing outliers.</p>
+</dd>
+<dt class="hdlist1"><a href="geodesic.html" class="xref page"><code>geodesic</code></a></dt>
+<dd>
+<p>Geodesic calculations on the WGS84 ellipsoid — distances, bearings,
+direct/inverse geodetic problems — built on GeographicLib.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_central_pattern_least_squares_kalman_filtering"><a class="anchor" href="#_the_central_pattern_least_squares_kalman_filtering"></a>The central pattern: least squares + Kalman filtering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The library&#8217;s main GNSS estimator follows a pattern common across its estimators: a least-squares step turns raw
+measurements into a position/velocity estimate, and a Kalman filter step fuses that estimate with the previous
+state estimate over time, smoothing out measurement noise and predicting forward between updates.</p>
+</div>
+<div class="imageblock"><div class="mermaid content" style=" ">flowchart LR
+    A[Satellite measurements\npseudorange / pseudorange-rate] --> B[Least-squares estimation\nGNSSLeastSquaresPositionAndVelocityEstimator]
+    B --> C[Kalman filter update\nGNSSKalmanFilteredEstimator]
+    C --> D[Estimated state\nposition, velocity, clock offset/drift]
+    D -.previous state.-> C</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_where_to_go_next"><a class="anchor" href="#_where_to_go_next"></a>Where to go next</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="installation.html" class="xref page">Installation</a> — add irurueta-navigation as a dependency to your project.</p>
+</li>
+<li>
+<p><a href="frames.html" class="xref page">Frames</a>, <a href="gnss.html" class="xref page">GNSS</a>, <a href="lateration.html" class="xref page">Lateration</a>, <a href="geodesic.html" class="xref page">Geodesic</a> — equations, algorithms, and
+code examples for each package.</p>
+</li>
+<li>
+<p><a href="reference.html" class="xref page">Reference</a> — links to the generated Javadoc, test, coverage, and code-quality reports, the project&#8217;s
+SonarCloud dashboard, and the full bibliography.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Made with ♥ from <strong>BCN</strong></p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

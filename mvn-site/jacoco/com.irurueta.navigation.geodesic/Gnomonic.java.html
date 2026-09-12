@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gnomonic.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">Gnomonic.java</span></div><h1>Gnomonic.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * Gnomonic projection.
+ * Gnomonic projection centered at an arbitrary position &lt;i&gt;C&lt;/i&gt; on the ellipsoid. This projection
+ * is derived in Section 8 of
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         C. F. F. Karney, &lt;a href=&quot;https://doi.org/10.1007/s00190-012-0578-z&quot;&gt;Algorithms for
+ *         geodesics&lt;/a&gt;, J. Geodesy &lt;b&gt;87&lt;/b&gt;, 43&amp;ndash;55 (2013);
+ *         DOI: &lt;a href=&quot;https://doi.org/10.1007/s00190-012-0578-z&quot;&gt;10.1007/s00190-012-0578-z&lt;/a&gt;;
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * The gnomonic projection of a point &lt;i&gt;P&lt;/i&gt; on the ellipsoid is defined as follows: compute the
+ * geodesic line from &lt;i&gt;C&lt;/i&gt; to &lt;i&gt;P&lt;/i&gt;; compute the reduced length &lt;i&gt;m12&lt;/i&gt;, geodesic scale
+ * &lt;i&gt;M12&lt;/i&gt;, and &amp;rho; = &lt;i&gt;m12&lt;/i&gt;/&lt;i&gt;M12&lt;/i&gt;; finally, this gives the coordinates &lt;i&gt;x&lt;/i&gt; and
+ * &lt;i&gt;y&lt;/i&gt; of &lt;i&gt;P&lt;/i&gt; in gnomonic projection with &lt;i&gt;x&lt;/i&gt; = &amp;rho; sin &lt;i&gt;azi1&lt;/i&gt;; &lt;i&gt;y&lt;/i&gt; = &amp;rho;
+ * cos &lt;i&gt;azi1&lt;/i&gt;, where &lt;i&gt;azi1&lt;/i&gt; is the azimuth of the geodesic at &lt;i&gt;C&lt;/i&gt;. The method
+ * {@link Gnomonic#forward(double, double, double, double)} performs the forward projection and
+ * {@link Gnomonic#reverse(double, double, double, double)} is the inverse of the projection. The
+ * methods also return the azimuth &lt;i&gt;azi&lt;/i&gt; of the geodesic at &lt;i&gt;P&lt;/i&gt; and reciprocal scale
+ * &lt;i&gt;rk&lt;/i&gt; in the azimuthal direction. The scale in the radial direction is 1/&lt;i&gt;rk&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt;.
+ * For a sphere, &amp;rho; reduces to &lt;i&gt;a&lt;/i&gt; tan (&lt;i&gt;s12&lt;/i&gt;/&lt;i&gt;a&lt;/i&gt;), where &lt;i&gt;s12&lt;/i&gt; is the length
+ * of the geodesic from &lt;i&gt;C&lt;/i&gt; to &lt;i&gt;P&lt;/i&gt;, and the gnomonic projection has the property that all
+ * geodesics appear as straight lines. For an ellipsoid, this property holds only for geodesics
+ * interesting the centers. However, geodesic segments close to the center are approximately straight.
+ * Consider a geodesic segment of length &lt;i&gt;1&lt;/i&gt;. Let &lt;i&gt;T&lt;/i&gt; be the point on the geodesic
+ * (extended if necessary) closest to &lt;i&gt;C&lt;/i&gt;, the center of the projection, and &lt;i&gt;t&lt;/i&gt;, be the
+ * distance &lt;i&gt;CT&lt;/i&gt;. To the lowest order, the maximum deviation (as a true distance) of the corresponding
+ * gnomonic line segment (i.e., with the same end points) from the geodesic is
+ * (&lt;i&gt;K&lt;/i&gt;(&lt;i&gt;T&lt;/i&gt; &amp;minus; &lt;i&gt;K&lt;/i&gt;(&lt;i&gt;C&lt;/i&gt;))
+ * &lt;i&gt;l&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; &lt;i&gt;t&lt;/i&gt; / 32.
+ * where &lt;i&gt;K&lt;/i&gt; is the Gaussian curvature.
+ * This result applies for any surface. For an ellipsoid of revolution, consider all geodesics whose end
+ * points are within a distance &lt;i&gt;r&lt;/i&gt; of &lt;i&gt;C&lt;/i&gt;. For a given &lt;i&gt;r&lt;/i&gt;, the deviation is maximum
+ * when the latitude of &lt;i&gt;C&lt;/i&gt; is 46&amp;deg;, when endpoints are a distance &lt;i&gt;r&lt;/i&gt; away, and when
+ * their azimuths from the center are &amp;plusmn; 45&amp;deg; or &amp;plusmn; 135&amp;deg;. To the lowest order in
+ * &lt;i&gt;r&lt;/i&gt; and the flattening &lt;i&gt;f&lt;/i&gt;, the deviation is &lt;i&gt;f&lt;/i&gt; (&lt;i&gt;r&lt;/i&gt;/2&lt;i&gt;a&lt;/i&gt;)&lt;sup&gt;3&lt;/sup&gt;
+ * &lt;i&gt;r&lt;/i&gt;.
+ * &lt;b&gt;CAUTION:&lt;/b&gt; The definition of this projection for a sphere is standard. However, there is no
+ * standard for how it should be extended to an ellipsoid.
+ * The choices are:
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         Declare that the projection is undefined for an ellipsoid.
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         Project to a tangent plane from the center of the ellipsoid. This causes great ellipses to
+ *         appear as straight lines in the projection; i.e., it generalizes the spherical great circle
+ *         to a great ellipse. This was proposed independently by Bowring and Williams in 1997.
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         Project to the conformal sphere with the constant of integration chosen so that the values
+ *         of the latitude match for the center point and perform a central projection onto the plane
+ *         tangent to the conformal sphere at the center point. This causes normal section through the
+ *         center point to appear as straight lines in the projection; i.e., it generalizes the
+ *         spherical great circle to a normal section. This was proposed by I. G. Letoval'tsev,
+ *         Generalization of the gnomonic projection for a spheroid and the principal geodetic
+ *         problems involved in the alignment of surface routes, Geodesy and Aerophotography(5),
+ *         271&amp;ndash;275 (1963)
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         The projection given here. This causes geodesics close to the center point to appear as
+ *         straight lines in the projection; i.e., it generalizes the spherical great circle to a
+ *         geodesic.
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * Example of use:
+ * &lt;pre&gt;
+ * // Example of using the Gnomonic.java class
+ * import com.irurueta.navigation.geodesic.Geodesic;
+ * import com.irurueta.navigation.geodesic.Gnomonic;
+ * import com.irurueta.navigation.geodesic.GnomonicData;
+ * public class ExampleGnomonic {
+ *   public static void main(String[] args) {
+ *     Geodesic geod = Geodesic.WGS84;
+ *     double lat0 = 48 + 50 / 60.0, lon0 = 2 + 20 / 60.0; // Paris
+ *     Gnomonic gnom = new Gnomonic(geod);
+ *     {
+ *       // Sample forward calculation
+ *       double lat = 50.9, lon = 1.8; // Calais
+ *       GnomonicData proj = gnom.Forward(lat0, lon0, lat, lon);
+ *       System.out.println(proj.x + &amp;quot; &amp;quot; + proj.y);
+ *     }
+ *     {
+ *       // Sample reverse calculation
+ *       double x = -38e3, y = 230e3;
+ *       GnomonicData proj = gnom.Reverse(lat0, lon0, x, y);
+ *       System.out.println(proj.lat + &amp;quot; &amp;quot; + proj.lon);
+ *     }
+ *   }
+ * }
+ * &lt;/pre&gt;
+ */
+public class Gnomonic {
+<span class="fc" id="L111">    private static final double EPS = 0.01 * Math.sqrt(GeoMath.EPSILON);</span>
+    private static final int NUMIT = 10;
+
+    /**
+     * Earth geodesic.
+     */
+    private final Geodesic earth;
+
+    /**
+     * Major equatorial Earth radius.
+     */
+    private final double a;
+
+    /**
+     * Earth flattening.
+     */
+    private final double f;
+
+    /**
+     * Constructor for Gnomonic.
+     *
+     * @param earth the {@link Geodesic} object to use for geodesic calculations.
+     */
+<span class="fc" id="L134">    public Gnomonic(final Geodesic earth) {</span>
+<span class="fc" id="L135">        this.earth = earth;</span>
+<span class="fc" id="L136">        a = this.earth.getMajorRadius();</span>
+<span class="fc" id="L137">        f = this.earth.getFlattening();</span>
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * Forward projection, from geographic to gnomonic.
+     * &lt;i&gt;lat0&lt;/i&gt; and &lt;i&gt;lat&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;] and &lt;i&gt;lon0&lt;/i&gt;
+     * and &lt;i&gt;lon&lt;/i&gt; should be in the range [&amp;minus;540&amp;deg;, 540&amp;deg;). The scale of the projection
+     * is 1/&lt;i&gt;rk&lt;sup&gt;2&lt;/sup&gt;&lt;/i&gt; in the &quot;radial&quot; direction, &lt;i&gt;azi&lt;/i&gt; clockwise from true north,
+     * and is 1/&lt;i&gt;rk&lt;/i&gt; in the direction perpendicular to this. If the point lies &quot;over the
+     * horizon&quot;, i.e., if &lt;i&gt;rk&lt;/i&gt; &amp;le; 0, then NaNs are returned for &lt;i&gt;x&lt;/i&gt; and &lt;i&gt;y&lt;/i&gt; (the
+     * correct values are returned for &lt;i&gt;azi&lt;/i&gt; and &lt;i&gt;rk&lt;/i&gt;). A call to forward followed by a
+     * call to reverse will return the original (&lt;i&gt;lat&lt;/i&gt;, &lt;i&gt;lon&lt;/i&gt;) (to within roundoff)
+     * provided the point in not over the horizon.
+     *
+     * @param lat0 latitude of center point of projection (degrees).
+     * @param lon0 longitude of center point of projection (degrees).
+     * @param lat  latitude of point (degrees).
+     * @param lon  longitude of point (degrees).
+     * @return {@link GnomonicData} object with the following fields:
+     * &lt;i&gt;lat0&lt;/i&gt;, &lt;i&gt;lon0&lt;/i&gt;, &lt;i&gt;lat&lt;/i&gt;, &lt;i&gt;lon&lt;/i&gt;, &lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;, &lt;i&gt;azi&lt;/i&gt;, &lt;i&gt;rk&lt;/i&gt;.
+     */
+    public GnomonicData forward(final double lat0, final double lon0, final double lat, final double lon) {
+<span class="fc" id="L159">        final var inv = earth.inverse(lat0, lon0, lat, lon,</span>
+                GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE | GeodesicMask.REDUCED_LENGTH);
+<span class="fc" id="L161">        final var fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN, inv.getAzi2(),</span>
+<span class="fc" id="L162">                inv.getScaleM12());</span>
+
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (inv.getScaleM12() &gt; 0) {</span>
+<span class="fc" id="L165">            final var rho = inv.getM12() / inv.getScaleM12();</span>
+<span class="fc" id="L166">            final var p = GeoMath.sincosd(inv.getAzi1());</span>
+<span class="fc" id="L167">            fwd.setX(rho * p.getFirst());</span>
+<span class="fc" id="L168">            fwd.setY(rho * p.getSecond());</span>
+        }
+
+<span class="fc" id="L171">        return fwd;</span>
+    }
+
+    /**
+     * Reverse projection, from gnomonic to geographic.
+     * &lt;i&gt;lat&lt;/i&gt; will be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;] and &lt;i&gt;lon&lt;/i&gt; will be in the
+     * range (&amp;minus;180&amp;deg;, 180&amp;deg;]. The scale of the projection is 1/&lt;i&gt;rk&lt;sup&gt;2&lt;/sup&gt;&lt;/i&gt;
+     * in the &quot;radial&quot; direction, &lt;i&gt;azi&lt;/i&gt; clockwise from true north, and is 1/&lt;i&gt;rk&lt;/i&gt; in the
+     * direction perpendicular to this. Even though all inputs should return a valid &lt;i&gt;lat&lt;/i&gt;
+     * and &lt;i&gt;lon&lt;/i&gt;, it's possible that the procedure fails to converge for very large &lt;i&gt;x&lt;/i&gt;
+     * or &lt;i&gt;y&lt;/i&gt;; in this case NaNs are returned for very large &lt;i&gt;x&lt;/i&gt; or &lt;i&gt;y&lt;/i&gt;; in this
+     * case NaNs are returned for all the output arguments. A call to reverse followed by a call
+     * to forward will return the original (&lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;) (to round-off).
+     *
+     * @param lat0 latitude of center point of projection (degrees). &lt;i&gt;lat0&lt;/i&gt; should be in the
+     *             range [&amp;minus;90&amp;deg;, 90&amp;deg;]
+     * @param lon0 longitude of center point of projection (degrees). &lt;i&gt;lon0&lt;/i&gt; should be in the
+     *             range [&amp;minus;540&amp;deg;, 540&amp;deg;).
+     * @param x    easting of point (meters).
+     * @param y    northing of point (meters).
+     * @return {@link GnomonicData} object with the following fields:
+     * &lt;i&gt;lat0&lt;/i&gt;, &lt;i&gt;lon0&lt;/i&gt;, &lt;i&gt;lat&lt;/i&gt;, &lt;i&gt;lon&lt;/i&gt;, &lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;,
+     * &lt;i&gt;azi&lt;/i&gt;, &lt;i&gt;rk&lt;/i&gt;.
+     */
+    public GnomonicData reverse(final double lat0, final double lon0, final double x, final double y) {
+<span class="fc" id="L196">        final var rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN, Double.NaN);</span>
+
+        //noinspection all
+<span class="fc" id="L199">        final var azi0 = GeoMath.atan2d(x, y);</span>
+<span class="fc" id="L200">        var rho = Math.hypot(x, y);</span>
+<span class="fc" id="L201">        var s = a * Math.atan(rho / a);</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        final var little = rho &lt;= a;</span>
+
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (!little) {</span>
+<span class="nc" id="L205">            rho = 1 / rho;</span>
+        }
+
+<span class="fc" id="L208">        final var line = earth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE</span>
+                | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCED_LENGTH
+                | GeodesicMask.GEODESIC_SCALE);
+
+<span class="fc" id="L212">        var count = NUMIT;</span>
+<span class="fc" id="L213">        var trip = 0;</span>
+<span class="fc" id="L214">        GeodesicData pos = null;</span>
+
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        while (count-- &gt; 0) {</span>
+<span class="fc" id="L217">            pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH</span>
+                    | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
+
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            if (trip &gt; 0) {</span>
+<span class="fc" id="L221">                break;</span>
+            }
+
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            final var ds = little</span>
+<span class="fc" id="L225">                    ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12()</span>
+<span class="pc" id="L226">                    : (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();</span>
+<span class="fc" id="L227">            s -= ds;</span>
+
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">            if (Math.abs(ds) &lt;= EPS * a) {</span>
+<span class="fc" id="L230">                trip++;</span>
+            }
+<span class="fc" id="L232">        }</span>
+
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">        if (trip == 0) {</span>
+<span class="nc" id="L235">            return rev;</span>
+        }
+
+<span class="fc" id="L238">        rev.setLat(pos.getLat2());</span>
+<span class="fc" id="L239">        rev.setLon(pos.getLon2());</span>
+<span class="fc" id="L240">        rev.setAzi(pos.getAzi2());</span>
+<span class="fc" id="L241">        rev.setRk(pos.getScaleM12());</span>
+
+<span class="fc" id="L243">        return rev;</span>
+    }
+
+    /**
+     * Gets the equatorial radius of the ellipsoid (meters). This is the value inherited from the
+     * Geodesic object used in the constructor.
+     *
+     * @return &lt;i&gt;a&lt;/i&gt; the equatorial radius of the ellipsoid (meters).
+     */
+    public double getMajorRadius() {
+<span class="fc" id="L253">        return a;</span>
+    }
+
+    /**
+     * Gets the flattening of the ellipsoid.
+     *
+     * @return &lt;i&gt;f&lt;/i&gt; the flattening of the ellipsoid. This is the value inherited from the
+     * Geodesic object used in the constructor.
+     */
+    public double getFlattening() {
+<span class="fc" id="L263">        return f;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

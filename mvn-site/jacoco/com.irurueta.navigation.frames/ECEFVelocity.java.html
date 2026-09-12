@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECEFVelocity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">ECEFVelocity.java</span></div><h1>ECEFVelocity.java</h1><pre class="source lang-java linenums">package com.irurueta.navigation.frames;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains body velocity with respect Earth, resolved about ECEF frame
+ * and expressed in meters per second (m/s).
+ */
+public class ECEFVelocity implements Serializable, Cloneable {
+
+    /**
+     * Number of components.
+     */
+    public static final int COMPONENTS = 3;
+
+    /**
+     * X coordinate of velocity of body frame expressed in meters per second (m/s) with
+     * respect ECEF frame, resolved along the corresponding frame axes.
+     */
+    private double vx;
+
+    /**
+     * Y coordinate of velocity of body frame expressed in meters per second (m/s) with
+     * respect ECEF frame, resolved along the corresponding frame axes.
+     */
+    private double vy;
+
+    /**
+     * Z coordinate of velocity of body frame expressed in meters per second (m/s) with
+     * respect ECEF frame, resolved along the corresponding frame axes.
+     */
+    private double vz;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L44">    public ECEFVelocity() {</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param vx x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vy y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     */
+<span class="fc" id="L57">    public ECEFVelocity(final double vx, final double vy, final double vz) {</span>
+<span class="fc" id="L58">        setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param vx x coordinate of velocity of body frame and resolved along ECEF-frame
+     *           axes.
+     * @param vy y coordinate of velocity of body frame and resolved along ECEF-frame
+     *           axes.
+     * @param vz z coordinate of velocity of body frame and resolved along ECEF-frame
+     *           axes.
+     */
+<span class="fc" id="L71">    public ECEFVelocity(final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L72">        setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input Body velocity to copy data from.
+     */
+<span class="fc" id="L80">    public ECEFVelocity(final ECEFVelocity input) {</span>
+<span class="fc" id="L81">        copyFrom(input);</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Gets x coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @return x coordinate of velocity.
+     */
+    public double getVx() {
+<span class="fc" id="L91">        return vx;</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @param vx x coordinate of velocity.
+     */
+    public void setVx(final double vx) {
+<span class="fc" id="L101">        this.vx = vx;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Gets y coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @return y coordinate of velocity.
+     */
+    public double getVy() {
+<span class="fc" id="L111">        return vy;</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @param vy y coordinate of velocity.
+     */
+    public void setVy(final double vy) {
+<span class="fc" id="L121">        this.vy = vy;</span>
+<span class="fc" id="L122">    }</span>
+
+    /**
+     * Gets z coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @return z coordinate of velocity.
+     */
+    public double getVz() {
+<span class="fc" id="L131">        return vz;</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @param vz z coordinate of velocity.
+     */
+    public void setVz(final double vz) {
+<span class="fc" id="L141">        this.vz = vz;</span>
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Sets velocity coordinates of body frame expressed in meters per second (m/s)
+     * resolved along ECEF-frame axes.
+     *
+     * @param vx x coordinate of velocity.
+     * @param vy y coordinate of velocity.
+     * @param vz z coordinate of velocity.
+     */
+    public void setCoordinates(final double vx, final double vy, final double vz) {
+<span class="fc" id="L153">        this.vx = vx;</span>
+<span class="fc" id="L154">        this.vy = vy;</span>
+<span class="fc" id="L155">        this.vz = vz;</span>
+<span class="fc" id="L156">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of velocity of body frame resolved along ECEF-frame
+     * axes.
+     *
+     * @param result instance where cartesian x coordinate of velocity will be stored.
+     */
+    public void getSpeedX(final Speed result) {
+<span class="fc" id="L165">        result.setValue(vx);</span>
+<span class="fc" id="L166">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Gets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedX() {
+<span class="fc" id="L175">        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param vx x coordinate of body velocity to be set.
+     */
+    public void setVx(final Speed vx) {
+<span class="fc" id="L184">        this.vx = convertSpeed(vx);</span>
+<span class="fc" id="L185">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of velocity of body frame resolved along ECEF-frame
+     * axes.
+     *
+     * @param result instance where cartesian y coordinate of velocity will be stored.
+     */
+    public void getSpeedY(final Speed result) {
+<span class="fc" id="L194">        result.setValue(vy);</span>
+<span class="fc" id="L195">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L196">    }</span>
+
+    /**
+     * Gets y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedY() {
+<span class="fc" id="L204">        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param vy y coordinate of body velocity to be set.
+     */
+    public void setVy(final Speed vy) {
+<span class="fc" id="L213">        this.vy = convertSpeed(vy);</span>
+<span class="fc" id="L214">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of velocity of body frame resolved along ECEF-frame
+     * axes.
+     *
+     * @param result instance where cartesian z coordinate of velocity will be stored.
+     */
+    public void getSpeedZ(final Speed result) {
+<span class="fc" id="L223">        result.setValue(vz);</span>
+<span class="fc" id="L224">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * Gets z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedZ() {
+<span class="fc" id="L233">        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param vz z coordinate of body velocity to be set.
+     */
+    public void setVz(final Speed vz) {
+<span class="fc" id="L242">        this.vz = convertSpeed(vz);</span>
+<span class="fc" id="L243">    }</span>
+
+    /**
+     * Sets cartesian coordinates of body velocity resolved along ECEF-frame axes.
+     *
+     * @param vx x cartesian coordinate of body velocity.
+     * @param vy y cartesian coordinate of body velocity.
+     * @param vz z cartesian coordinate of body velocity.
+     */
+    public void setCoordinates(final Speed vx, final Speed vy, final Speed vz) {
+<span class="fc" id="L253">        setVx(vx);</span>
+<span class="fc" id="L254">        setVy(vy);</span>
+<span class="fc" id="L255">        setVz(vz);</span>
+<span class="fc" id="L256">    }</span>
+
+    /**
+     * Gets norm of velocity expressed in meters per second (m/s), which represents
+     * the speed of the body.
+     *
+     * @return norm of velocity expressed in meters per second (m/s).
+     */
+    public double getNorm() {
+<span class="fc" id="L265">        return Math.sqrt(vx * vx + vy * vy + vz * vz);</span>
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @param result velocity norm.
+     */
+    public void getNormAsSpeed(final Speed result) {
+<span class="fc" id="L274">        result.setValue(getNorm());</span>
+<span class="fc" id="L275">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L276">    }</span>
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @return velocity norm.
+     */
+    public Speed getNormAsSpeed() {
+<span class="fc" id="L284">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final ECEFVelocity output) {
+<span class="fc" id="L293">        output.vx = vx;</span>
+<span class="fc" id="L294">        output.vy = vy;</span>
+<span class="fc" id="L295">        output.vz = vz;</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final ECEFVelocity input) {
+<span class="fc" id="L304">        vx = input.vx;</span>
+<span class="fc" id="L305">        vy = input.vy;</span>
+<span class="fc" id="L306">        vz = input.vz;</span>
+<span class="fc" id="L307">    }</span>
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s)
+     * as an array.
+     *
+     * @param result array instance where velocity coordinates will
+     *               be stored in x,y,z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asArray(final double[] result) {
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (result.length != COMPONENTS) {</span>
+<span class="fc" id="L319">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L322">        result[0] = vx;</span>
+<span class="fc" id="L323">        result[1] = vy;</span>
+<span class="fc" id="L324">        result[2] = vz;</span>
+<span class="fc" id="L325">    }</span>
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as an array.
+     *
+     * @return array containing velocity coordinates in x,y,z order.
+     */
+    public double[] asArray() {
+<span class="fc" id="L333">        final var result = new double[COMPONENTS];</span>
+<span class="fc" id="L334">        asArray(result);</span>
+<span class="fc" id="L335">        return result;</span>
+    }
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as a column
+     * matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where velocity coordinates will be stored
+     *               in x,y,z order.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    public void asMatrix(final Matrix result) {
+<span class="pc bpc" id="L348" title="1 of 4 branches missed.">        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {</span>
+            try {
+<span class="fc" id="L350">                result.resize(COMPONENTS, 1);</span>
+<span class="nc" id="L351">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="fc" id="L353">            }</span>
+        }
+
+<span class="fc" id="L356">        result.setElementAtIndex(0, vx);</span>
+<span class="fc" id="L357">        result.setElementAtIndex(1, vy);</span>
+<span class="fc" id="L358">        result.setElementAtIndex(2, vz);</span>
+<span class="fc" id="L359">    }</span>
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as a column
+     * matrix.
+     *
+     * @return velocity coordinates stored in x,y,z order.
+     */
+    public Matrix asMatrix() {
+        Matrix result;
+        try {
+<span class="fc" id="L370">            result = new Matrix(COMPONENTS, 1);</span>
+<span class="fc" id="L371">            asMatrix(result);</span>
+<span class="nc" id="L372">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L374">            result = null;</span>
+<span class="fc" id="L375">        }</span>
+<span class="fc" id="L376">        return result;</span>
+    }
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in
+     * collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L388">        return Objects.hash(vx, vy, vz);</span>
+    }
+
+    /**
+     * Checks if provided object is an ECEFVelocity having exactly the same contents
+     * as this instance.
+     *
+     * @param o Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object o) {
+<span class="fc bfc" id="L400" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L401">            return true;</span>
+        }
+<span class="pc bpc" id="L403" title="1 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="fc" id="L404">            return false;</span>
+        }
+<span class="fc" id="L406">        final var other = (ECEFVelocity) o;</span>
+<span class="fc" id="L407">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final ECEFVelocity other) {
+<span class="fc" id="L417">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between velocity coordinates.
+     * @return true if both instances are considered to be equal (up to provided
+     * threshold), false otherwise.
+     */
+    public boolean equals(final ECEFVelocity other, final double threshold) {
+<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L431">            return false;</span>
+        }
+
+<span class="fc bfc" id="L434" title="All 2 branches covered.">        return Math.abs(vx - other.vx) &lt;= threshold</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vy - other.vy) &lt;= threshold</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vz - other.vz) &lt;= threshold;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L447">        final var result = (ECEFVelocity) super.clone();</span>
+<span class="fc" id="L448">        copyTo(result);</span>
+<span class="fc" id="L449">        return result;</span>
+    }
+
+    /**
+     * Converts speed instance into meters per second value.
+     *
+     * @param speed instance to be converted.
+     * @return converted value.
+     */
+    private double convertSpeed(final Speed speed) {
+<span class="fc" id="L459">        return SpeedConverter.convert(speed.getValue().doubleValue(),</span>
+<span class="fc" id="L460">                speed.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
