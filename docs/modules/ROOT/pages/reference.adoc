@@ -53,7 +53,8 @@ specific script it mirrors.
 
 [[bib-borkowski1989]]
 Borkowski, K. M., "Accurate algorithms to transform geocentric to geodetic coordinates," _Bulletin Géodésique_,
-vol. 63, no. 1, pp. 50-56, 1989, https://link.springer.com/article/10.1007/BF02520228[Springer]. Origin of the closed-form ECEF-to-geodetic solution referenced as Appendix C,
+vol. 63, no. 1, pp. 50-56, 1989,
+https://link.springer.com/article/10.1007/BF02520228[Springer]. Origin of the closed-form ECEF-to-geodetic solution referenced as Appendix C,
 equations `(C.29)-(C.38)`, of <<bib-groves2013,Groves, 2013>> (that appendix ships only on the book's companion DVD, not in
 the print/PDF edition; xref:frames.adoc[] documents the algorithm from this repository's own worked-out
 implementation instead of the unavailable appendix text).
