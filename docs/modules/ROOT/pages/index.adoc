@@ -1,4 +1,6 @@
 = Irurueta Navigation
+:description: irurueta-navigation is a Java library for GNSS/INS navigation, providing position, velocity, and attitude estimation from satellite and inertial measurements, coordinate frame conversions, trilateration, and geodesic calculations.
+:keywords: irurueta-navigation, Java navigation library, GNSS, INS, GPS, position estimation, velocity estimation, attitude estimation, Kalman filter, trilateration, geodesic, coordinate frames, ECEF, ECI, NED
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

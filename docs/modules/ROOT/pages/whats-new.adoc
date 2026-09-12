@@ -1,4 +1,6 @@
 = What's New
+:description: Release notes and changelog for irurueta-navigation, covering version-by-version changes such as Java version bumps and dependency updates.
+:keywords: irurueta-navigation changelog, release notes, what's new, version history
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

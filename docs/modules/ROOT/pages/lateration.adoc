@@ -1,6 +1,11 @@
 = Lateration
+:description: Trilateration in irurueta-navigation: recovering a 2D or 3D position from distance measurements using linear and non-linear least-squares solvers, plus robust variants (RANSAC, PROSAC, LMedS, MSAC) for outlier-contaminated data.
+:keywords: trilateration, lateration, multilateration, position estimation, linear least squares, non-linear least squares, robust estimation, RANSAC, PROSAC, LMedS, MSAC, outlier rejection, RobustLateration2DSolver, RobustLateration3DSolver
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+:javadoc-base: https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation/lateration
+:github-base: https://github.com/albertoirurueta/irurueta-navigation/blob/master/src/main/java/com/irurueta/navigation/lateration
 
 The `com.irurueta.navigation.lateration` package recovers a position from a set of known reference positions and
 their (possibly noisy, possibly outlier-contaminated) distances to an unknown point — the classic trilateration
@@ -10,6 +15,57 @@ xref:reference.adoc#bib-groves2013[Groves, 2013]; the linear solvers are based o
 xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
 xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy], as documented in the classes' own Javadoc and inline
 derivations. See xref:reference.adoc#bibliography[the bibliography] for full citations.
+
+== What lateration is
+
+**Lateration** (trilateration when exactly three distances are used, multilateration when more are used) locates
+a point using only *distance* measurements to a set of known reference points — no angles involved. This is the
+key distinction from **triangulation**, which locates a point from *angle* (bearing) measurements taken at known
+points instead (xref:reference.adoc#bib-wikipedia-trilateration[Wikipedia, "Trilateration"];
+xref:reference.adoc#bib-gisgeography-trilateration[GIS Geography]). GPS is the most familiar example: each
+satellite broadcasts its own position, the receiver measures its distance to each satellite (from radio signal
+travel time), and the receiver's position is wherever those distances are simultaneously satisfied — no antenna
+pointing or angle sensing is involved.
+
+image::lateration/trilateration-vs-triangulation.svg[Trilateration uses only distance measurements; triangulation uses only angle measurements,width=650]
+
+In the plane, a single distance measurement to a reference point A only constrains the unknown position to lie
+somewhere on a circle centered at A (all points a fixed distance from A). Two distances narrow this down to the
+(typically two) intersection points of two circles; a third distance to a non-collinear reference point
+resolves the remaining ambiguity down to a single point:
+
+image::lateration/trilateration-2d.svg[Three circles centered at known anchors A, B, C intersecting at the estimated position P,width=500]
+
+For a set of stem:[n] known 2D positions stem:[(c_{ix}, c_{iy})] and their measured distances stem:[r_i] to the
+unknown point stem:[(x, y)], the raw (unlinearized) system that lateration solves is simply "distance from the
+unknown point to each anchor equals the corresponding measurement":
+
+[stem]
+++++
+(x - c_{ix})^2 + (y - c_{iy})^2 = r_i^2, \qquad i = 1, \ldots, n
+++++
+
+and analogously in 3D, replacing circles with spheres and adding a stem:[z] coordinate:
+
+[stem]
+++++
+(x - c_{ix})^2 + (y - c_{iy})^2 + (z - c_{iz})^2 = r_i^2, \qquad i = 1, \ldots, n
+++++
+
+Each individual equation is nonlinear (quadratic) in the unknown position, and with exactly the minimum number
+of measurements (3 in 2D, 4 in 3D — one more than the number of dimensions, since one measurement is used as a
+reference when linearizing, see below) the system can have two solutions rather than one, unless the reference
+positions and the geometry rule one out:
+
+image::lateration/trilateration-ambiguity.svg[Two circles alone leave two candidate positions; a third circle resolves the ambiguity,width=500]
+
+In practice, measured distances are noisy (and occasionally wrong outright, e.g., a reflected or blocked
+signal), so real systems use *more* measurements than the strict minimum and fit the *best* position rather
+than solving the minimal system exactly — which is exactly what the rest of this page's solver hierarchy does:
+linearize the system above to get a fast closed-form estimate (xref:lateration.adoc#_homogeneous_linear_solver[homogeneous]
+and xref:lateration.adoc#_inhomogeneous_linear_solver[inhomogeneous] solvers), optionally refine it against the
+true nonlinear equations (xref:lateration.adoc#_non_linear_refinement[non-linear refinement]), and optionally
+reject outlier measurements along the way (xref:lateration.adoc#_robust_solvers[robust solvers]).
 
 == Class hierarchy
 
@@ -60,8 +116,8 @@ stem:[x^2+y^2] term:
 ++++
 
 Substituting the homogeneous coordinates stem:[(x,y) = (x'/w', y'/w')] turns this into a homogeneous linear system
-stem:[Av = 0] in stem:[v=(x',y',w')] (or stem:[(x',y',z',w')] in 3D), solved via the SVD of stem:[A] — the estimated position
-is the last column of stem:[V], normalized by its stem:[w'] component. At least 3 positions are required in 2D
+stem:[\mathbf{A}\mathbf{v} = 0] in stem:[\mathbf{v}=(x',y',w')] (or stem:[(x',y',z',w')] in 3D), solved via the SVD of stem:[\mathbf{A}] — the estimated position
+is the last column of stem:[\mathbf{V}], normalized by its stem:[w'] component. At least 3 positions are required in 2D
 (4 in 3D).
 
 [source,java]
@@ -71,6 +127,10 @@ solver.solve();
 Point2D estimatedPosition = solver.getEstimatedPosition();
 ----
 
+_API reference:_ `HomogeneousLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/HomogeneousLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/HomogeneousLinearLeastSquaresLateration2DSolver.java[source])
+
 == Inhomogeneous linear solver
 
 `InhomogeneousLinearLeastSquaresLaterationSolver` instead picks the first position as a reference and subtracts
@@ -78,10 +138,10 @@ its equation from every other one directly in inhomogeneous coordinates. For pos
 
 [stem]
 ++++
-(x-x_1)(x_i-x_1) + (y-y_1)(y_i-y_1) = \tfrac{1}{2}\left(r_1^2 - r_i^2 + d_{i1}^2\right), \qquad d_{i1} = \lVert p_i - p_1 \rVert
+(x-x_1)(x_i-x_1) + (y-y_1)(y_i-y_1) = \tfrac{1}{2}\left(r_1^2 - r_i^2 + d_{i1}^2\right), \qquad d_{i1} = \lVert \mathbf{p}_i - \mathbf{p}_1 \rVert
 ++++
 
-giving a well-conditioned linear system stem:[A(x-x_1, y-y_1)^T = b] with one fewer unknown than the homogeneous
+giving a well-conditioned linear system stem:[\mathbf{A}(x-x_1, y-y_1)^T = \mathbf{b}] with one fewer unknown than the homogeneous
 formulation and no SVD needed — following
 xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration] and
 xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]. This is the default preliminary solver used by the
@@ -93,6 +153,10 @@ var solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, di
 solver.solve();
 Point2D estimatedPosition = solver.getEstimatedPosition();
 ----
+
+_API reference:_ `InhomogeneousLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/InhomogeneousLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/InhomogeneousLinearLeastSquaresLateration2DSolver.java[source])
 
 == Non-linear refinement
 
@@ -110,6 +174,10 @@ solver.solve();
 Point2D refined = solver.getEstimatedPosition();
 Matrix covariance = solver.getCovariance();
 ----
+
+_API reference:_ `NonLinearLeastSquaresLateration2DSolver`
+(link:{javadoc-base}/NonLinearLeastSquaresLateration2DSolver.html[javadoc],
+link:{github-base}/NonLinearLeastSquaresLateration2DSolver.java[source])
 
 == Robust solvers
 
@@ -157,9 +225,14 @@ solver.setMaxIterations(5000);
 Point2D estimatedPosition = solver.solve();
 ----
 
+_API reference:_ `RobustLateration2DSolver` (link:{javadoc-base}/RobustLateration2DSolver.html[javadoc],
+link:{github-base}/RobustLateration2DSolver.java[source])
+
 == References
 
 * xref:reference.adoc#bib-lemmingapex[lemmingapex/trilateration]
 * xref:reference.adoc#bib-hereman-murphy[Hereman & Murphy]
+* xref:reference.adoc#bib-wikipedia-trilateration[Wikipedia, "Trilateration"]
+* xref:reference.adoc#bib-gisgeography-trilateration[GIS Geography]
 
 See xref:reference.adoc#bibliography[the full bibliography] for details.

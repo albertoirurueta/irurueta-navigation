@@ -1,27 +1,36 @@
 = Reference
+:description: Links to irurueta-navigation's generated Javadoc, JaCoCo coverage, Surefire test, and SonarCloud reports, plus the full bibliography behind its GNSS, frames, lateration, and geodesic algorithms.
+:keywords: irurueta-navigation reference, Javadoc, JaCoCo coverage report, Surefire test report, SonarCloud, bibliography, Groves Principles of GNSS, GeographicLib, Karney geodesics
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
-These reports are generated during the build.
+This page links to reports produced by the project build and quality tooling.
+The Maven reports are generated during Maven site execution and are available after `target/site` is copied into the documentation output as `mvn-site`.
 
 == Generated Reports
 
-[cols="1,3",options="header"]
+[cols="1,3", options="header"]
 |===
-|Report
-|Description
+| Report
+| Description
 
-|https://albertoirurueta.github.io/irurueta-navigation[Maven Site Report]
-|Aggregated project site published to GitHub Pages: Javadoc API reference, Surefire unit test report, JaCoCo
-code coverage report, Checkstyle style report, SpotBugs and PMD static analysis reports, and a cross-referenced
-source browser (JXR).
+| https://albertoirurueta.github.io/irurueta-navigation/mvn-site/apidocs/com/irurueta/navigation/package-summary.html[Javadoc]
+| API reference generated as part of Maven site execution.
 
-|https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation[SonarCloud Dashboard]
-|Continuous code quality and security analysis: bugs, code smells, coverage, duplications, maintainability,
-reliability, security rating, and technical debt.
+| https://albertoirurueta.github.io/irurueta-navigation/mvn-site/jacoco/index.html[JaCoCo]
+| Code coverage report generated during the Maven build.
 
-|https://github.com/albertoirurueta/irurueta-navigation[GitHub Repository]
-|Source code, issue tracker, and CI workflow definitions.
+| https://albertoirurueta.github.io/irurueta-navigation/mvn-site/surefire.html[Surefire]
+| Unit test execution report.
+
+| link:https://sonarcloud.io/project/overview?id=albertoirurueta_irurueta-navigation[SonarCloud]
+| Code quality, issue, and coverage information from SonarCloud.
+
+|https://albertoirurueta.github.io/irurueta-navigation/mvn-site[Maven Site]
+|Aggregation of project reports.
+
+|https://github.com/albertoirurueta/irurueta-navigation[Repository]
+|Github repository
 |===
 
 [[bibliography]]
@@ -32,7 +41,9 @@ on the sources below. Each page links back to the entries it uses.
 
 [[bib-groves2013]]
 Groves, P. D., _Principles of GNSS, Inertial, and Multi-sensor Integrated Navigation Systems_, 2nd ed., Artech
-House, 2013. The primary reference for xref:frames.adoc[] and xref:gnss.adoc[]; equation numbers cited throughout
+House, 2013,
+https://us.artechhouse.com/Principles-of-GNSS-Inertial-and-Multisensor-Integrated-Navigation-Systems-Second-Edition-P2046.aspx[Artech House].
+The primary reference for xref:frames.adoc[] and xref:gnss.adoc[]; equation numbers cited throughout
 both pages (e.g., `(2.113)`, `(9.147)`) refer to this edition.
 
 [[bib-groves-matlab]]
@@ -42,7 +53,8 @@ specific script it mirrors.
 
 [[bib-borkowski1989]]
 Borkowski, K. M., "Accurate algorithms to transform geocentric to geodetic coordinates," _Bulletin Géodésique_,
-vol. 63, no. 1, pp. 50-56, 1989. Origin of the closed-form ECEF-to-geodetic solution referenced as Appendix C,
+vol. 63, no. 1, pp. 50-56, 1989,
+https://link.springer.com/article/10.1007/BF02520228[Springer]. Origin of the closed-form ECEF-to-geodetic solution referenced as Appendix C,
 equations `(C.29)-(C.38)`, of <<bib-groves2013,Groves, 2013>> (that appendix ships only on the book's companion DVD, not in
 the print/PDF edition; xref:frames.adoc[] documents the algorithm from this repository's own worked-out
 implementation instead of the unavailable appendix text).
@@ -73,7 +85,8 @@ Surveys_, vol. 23, no. 1, pp. 5-48, 1991, https://doi.org/10.1145/103162.103163[
 Basis (Theorem 4) for `GeoMath.log1p`.
 
 [[bib-higham2002]]
-Higham, N. J., _Accuracy and Stability of Numerical Algorithms_, 2nd ed., SIAM, 2002. Further reference for
+Higham, N. J., _Accuracy and Stability of Numerical Algorithms_, 2nd ed., SIAM, 2002,
+https://epubs.siam.org/doi/book/10.1137/1.9780898718027[SIAM]. Further reference for
 `GeoMath.log1p`.
 
 [[bib-moler1983]]
@@ -92,4 +105,16 @@ Base implementation referenced by the linear and non-linear solvers in xref:late
 
 [[bib-hereman-murphy]]
 Hereman, W., and W. S. Murphy Jr., "Determination of a Position in Three Dimensions Using Trilateration and
-Approximate Distances." Background for the inhomogeneous-linear lateration solver in xref:lateration.adoc[].
+Approximate Distances,"
+https://people.mines.edu/whereman/wp-content/uploads/sites/260/2024/05/Murphy-Hereman-Trilateration-MCS-07-1995.pdf[Colorado School of Mines].
+Background for the inhomogeneous-linear lateration solver in xref:lateration.adoc[].
+
+[[bib-wikipedia-trilateration]]
+Wikipedia contributors, "Trilateration," _Wikipedia, The Free Encyclopedia_,
+https://en.wikipedia.org/wiki/Trilateration[en.wikipedia.org/wiki/Trilateration]. General background on the
+trilateration/multilateration/triangulation distinction used in the xref:lateration.adoc[] overview.
+
+[[bib-gisgeography-trilateration]]
+GIS Geography, "Trilateration vs Triangulation: How GPS Receivers Work,"
+https://gisgeography.com/trilateration-triangulation-gps/[gisgeography.com/trilateration-triangulation-gps].
+Accessible explanation of how GPS applies trilateration, referenced in the xref:lateration.adoc[] overview.
