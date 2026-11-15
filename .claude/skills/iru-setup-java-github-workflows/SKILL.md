@@ -1,22 +1,33 @@
 ---
 name: iru-setup-java-github-workflows
-description: Create or update the `develop.yml`, `main.yml`, and `sync.yml` GitHub Actions workflows for a Java/Maven library repository — build and test, run Checkstyle/PMD/SpotBugs static analysis, generate JaCoCo coverage and the Maven `site` report, run a SonarQube/SonarCloud scan via the `sonar-maven-plugin` (`mvn sonar:sonar`, so it runs under the same JDK the job already set up), build the Antora documentation site, publish both the Antora docs and the Maven site report to GitHub Pages, publish the release artifact to Maven Central, and — once a release is published — open a pull request that merges the released branch back into the integration branch and bumps the development snapshot version across `pom.xml`, `README.md`, and the Antora docs (via the companion `.github/scripts/sync_versions.py` script). Invoke as `/iru-setup-java-github-workflows`. Ships with generic example templates (derived from a real repository's workflows, genericized so they don't name any specific repository) embedded in this skill file, reusable across repositories. Creates all three workflows (and the sync script) from scratch if none exist; if any already exists, asks the user whether to stop or attempt an update using the templates as reference. Accepts the six pipeline parameters (integration branch, Java version, publishing server id, extras/sign profile ids, settings file) pre-resolved via `args` (`key: value` lines) so an orchestrating skill like `iru-setup-java-library-repository` can supply them without re-prompting. Use whenever a Java/Maven repository needs this CI/CD release pipeline bootstrapped or brought in line with this house pattern, instead of hand-writing the YAML.
-model: haiku
+description: "Invoked as /iru-setup-java-github-workflows with optional key: value args, usually by iru-setup-java-library-repository. Creates or updates the develop, main, sync and security GitHub Actions workflows plus Dependabot for a Java/Maven library: build, static analysis, JaCoCo, Sonar, docs to Pages, Maven Central publish and version sync."
+model: sonnet
 ---
 
 # Setup Java GitHub Workflows
 
-Scaffold (or update) three GitHub Actions workflows for a Java/Maven library:
+Scaffold (or update) four GitHub Actions workflows plus a Dependabot config for a Java/Maven library:
 
-- **`develop.yml`** — runs on every push to the integration branch. Build, test, static analysis, coverage, a
-  SonarQube/SonarCloud scan (via the `sonar-maven-plugin`, not a standalone `sonar-scanner` step), an Antora docs
-  build, and a publish to GitHub Pages + Maven Central.
+- **`develop.yml`** — runs on every push to the integration branch. Build, test, static analysis, coverage, an
+  optional SonarQube/SonarCloud scan (via the `sonar-maven-plugin`, not a standalone `sonar-scanner` step, gated
+  by `sonar`), an Antora docs build, a publish to GitHub Pages (or, when `pages: no`, a workflow-artifact upload
+  of the same docs), and an optional publish to Maven Central (gated by `publish`). With `ci-tests: unit` the test
+  run skips Failsafe integration tests (`-DskipITs`).
 - **`main.yml`** — the same pipeline, but triggered when a GitHub Release is published rather than on every push.
 - **`sync.yml`** — triggered when a GitHub Release is published from the stable branch. Opens a pull request into
   the integration branch that merges the released branch back in and bumps the development snapshot version in
   `pom.xml`, `README.md`, and the Antora docs, via the companion script `.github/scripts/sync_versions.py`. This
   closes the gap where a release branch's version/doc bump never makes it back into the integration branch without
   a manual follow-up.
+- **`security.yml`** — runs on every pull request and push to the integration/stable branches: a
+  `dependency-review` job (`actions/dependency-review-action@v5`), a CodeQL job (`github/codeql-action@v4` for
+  Java, with the JDK set up by `actions/setup-java@v6` using `cache: maven` so the CodeQL build doesn't re-download
+  the whole dependency tree on every run — the same major and cache setting `develop.yml`/`main.yml` use), an
+  OSV-Scanner job (the `google/osv-scanner-action` reusable workflow), and a `gitleaks` job
+  (`gitleaks/gitleaks-action@v3`) — each individually omittable via `args` (defaulting to on; see Step 1).
+- **`.github/dependabot.yml`** — grouped weekly dependency updates for the `maven` ecosystem and for
+  `github-actions` itself. Always generated (or updated) regardless of the four `security-*` `args` keys above —
+  it's baseline repository hygiene, not an optional CI job.
 
 This skill is designed for Maven projects — the templates in Step 3 assume Maven coordinates, profiles, and
 `mvn` commands. If `pom.xml` is missing at the repository root, don't stop automatically: warn the user that this
@@ -25,6 +36,8 @@ whether to stop here or continue anyway. If they choose to continue, proceed thr
 every Maven-derived placeholder in Step 3/4 (Java version, publishing server id, signing/extras profile ids,
 `mvn` commands) as an open gap to ask the user about directly, and call this out prominently again in Step 8's
 report.
+
+**Templates.** The workflow, script and Dependabot templates of Step 3 are files under this skill's `templates/` directory, not inline text. This skill has a single variant (`common`); read the template files for the workflows being written (the index at the top of Step 3 says which), each in full, and nothing else.
 
 ## Step 1 — Survey the target repository
 
@@ -42,13 +55,90 @@ sign-profile-id: sign
 settings-file: mvnsettings.xml
 group-id: com.example
 artifact-id: my-library
+open-source: yes
+publish: yes
+sonar: cloud
+sonar-organization: example-github
+sonar-project-key: example_my-library
+sonar-host-url: https://sonarcloud.io
+security-dependency-review: yes
+security-codeql: yes
+security-osv: yes
+security-gitleaks: yes
+visibility: public
+ci-tests: full
+pages: yes
+mode: new
+on-existing: ask
 ```
 
 Parse any such lines from `args` first. For each of `integration-branch`, `java-version`,
-`publishing-server-id`, `extras-profile-id`, `sign-profile-id`, `settings-file`, `group-id`, and `artifact-id`
-found there, use that value directly — skip the corresponding fact-finding bullet below entirely for it, since
-it's already resolved (and, for `group-id`/`artifact-id`, skips re-reading them from `pom.xml`). If `args` is
-absent or doesn't look like this format, treat everything as unset and gather every fact below as usual.
+`publishing-server-id`, `extras-profile-id`, `sign-profile-id`, `settings-file`, `group-id`, `artifact-id`,
+`open-source`, `publish`, `sonar` (+ `sonar-organization`/`sonar-project-key`/`sonar-host-url`), and
+`security-dependency-review`/`security-codeql`/`security-osv`/`security-gitleaks`, `visibility`, `ci-tests`,
+`pages`, `mode`, and `on-existing` found there, use that value
+directly — skip the corresponding fact-finding bullet below entirely for it, since it's already resolved (and, for
+`group-id`/`artifact-id`, skips re-reading them from `pom.xml`). If `args` is absent or doesn't look like this
+format, treat everything as unset and gather every fact below as usual.
+
+`publish` and `sonar` gate this skill's own generated content — they aren't independently re-derived from
+`pom.xml` beyond what Step 1 already surveys below (the Central/Nexus plugin and SonarQube/SonarCloud config
+bullets); if `args` doesn't supply them, fall back to whatever that survey finds (a `central-publishing-maven-plugin`
+or `nexus-staging-maven-plugin` present implies `publish: yes`; a configured `sonar-maven-plugin` implies `sonar:
+cloud` or `sonar: self-hosted` depending on `sonar.host.url`). When neither `args` nor the survey resolves
+`publish` or `sonar` (a stand-alone run against a `pom.xml` with no publishing plugin and no `sonar-maven-plugin`),
+first ask **open-source** with `AskUserQuestion` — is this repository open source? Yes / No, no default, skipped
+when `args` already carries `open-source` — because it drives the recommended default of both follow-up
+questions, the same way `iru-setup-java-library`'s own Step 4 asks them: recommend `publish: yes` when open
+source and `no` otherwise (Maven Central is for redistributable artifacts); for `sonar`, first resolve
+`visibility` and then ask it as described under "Visibility, CI test scope, and Pages" below (SonarCloud
+recommended only for a public open-source repository; otherwise **None**, with **self-hosted SonarQube** (`sonar:
+self-hosted`) as the second option) — then collect `sonar-organization`/`sonar-project-key`/
+`sonar-host-url` for `cloud`/`self-hosted` as the SonarQube/SonarCloud bullet below describes. The four
+`security-*` keys each default to `yes` when not supplied via `args` and are not otherwise
+surveyed — this skill always adds/keeps the corresponding `security.yml` job unless the user (or an orchestrator's
+`args`) explicitly opts out. `.github/dependabot.yml` has no matching opt-out key — it's always generated/updated.
+
+Ignore any other key (e.g. `ci`) — invoking this skill means CI is wanted, so it never asks whether to generate
+workflows at all. `mode` (`new`/`existing`) is informational: it doesn't skip any question — every pre-existing
+file is still handled per Step 2 — and `on-existing` (`ask` default / `keep` / `update` / `replace`) is what lets a
+scripted run skip Step 2's per-file question.
+
+**Visibility, CI test scope, and Pages (cost-aware choices).** Resolve these after `open-source` is known and
+before the `sonar` question, skipping any already supplied via `args`:
+
+1. **`visibility`** — if not in `args`: when the repository has a GitHub remote, run `gh repo view --json
+   visibility -q .visibility` (returns `PUBLIC`/`PRIVATE`/`INTERNAL`; lowercase it) and tell the user the detected
+   value; otherwise (no remote yet, `gh` unavailable, not GitHub) ask with `AskUserQuestion` — **Public** /
+   **Private** — recommending Public when `open-source: yes`, otherwise Private. If `open-source: yes` but the
+   visibility is `private`/`internal`, warn that this is contradictory (an open-source project's repository is
+   normally public, and a private repository forfeits the free-for-public pricing below) and ask which is right.
+   `internal` behaves like `private` for every decision below. State the cost facts per GitHub's current pricing
+   (tell the user to double-check their plan): standard GitHub-hosted runners are free for public repositories;
+   private/internal repositories consume the account's included minutes (2,000/month on GitHub Free, 3,000 on Pro
+   and Team, 50,000 on Enterprise Cloud), then are billed per minute — this pipeline runs on Linux runners
+   (`ubuntu-latest`), the cheapest rate (about $0.006/minute for 2-core).
+2. **`sonar`** — when it still has to be asked (see the paragraph above), reword it as "Configure SonarCloud /
+   SonarQube and send CI analysis and coverage reports to it?" and recommend **SonarCloud** only when the
+   repository is public **and** open source; otherwise state that SonarCloud (SonarQube Cloud) is free only for
+   public/open-source projects and a private project needs a paid plan, and recommend **None**, offering
+   **self-hosted SonarQube** (Community Build is free, but you run the server) as the second option.
+3. **`ci-tests`** — "Which tests should CI run?" with `AskUserQuestion` (header e.g. `CI tests`):
+   - **Unit only** (`unit`; recommended for private/internal repositories) — "Surefire `*Test` unit tests only
+     (cheaper: fewer minutes, faster feedback); Failsafe `*IT` integration tests stay local. CI adds `-DskipITs`."
+   - **Full** (`full`; recommended for public repositories) — "Surefire unit tests plus Failsafe `*IT`
+     integration tests (complete verification, uses more minutes)."
+   First check `pom.xml`: if it declares no `maven-failsafe-plugin`, or declares it without binding its
+   `integration-test`/`verify` goals (as this catalog's `iru-setup-java-library` template does), integration tests
+   don't run in CI either way — tell the user `ci-tests` has no practical effect until Failsafe executions are
+   configured, still record the answer (default `unit` for private, `full` for public, without asking when it
+   makes no difference), and say so in Step 8.
+4. **`pages`** — public repositories default to **yes** without asking (state it in Step 8's report). For
+   private/internal repositories, ask with `AskUserQuestion` (header e.g. `Pages`):
+   - **No (Recommended)** — "CI still builds the Antora docs and the Maven site report and uploads them as a
+     workflow artifact; nothing is published."
+   - **Yes** — "Requires GitHub Pro, Team, or Enterprise Cloud (not GitHub Free); the site will be PUBLIC on the
+     internet unless the organization is on Enterprise Cloud and publishes it with private access control."
 
 Gather the remaining facts before writing anything; every placeholder in Step 3's templates must be resolved from
 a real answer, not guessed. If `pom.xml` is missing and the user chose to continue anyway, skip the
@@ -63,13 +153,15 @@ a real answer, not guessed. If `pom.xml` is missing and the user chose to contin
   version for new repositories, and the one `iru-setup-java-library` writes into a generated `pom.xml`. Whenever
   the value found in `pom.xml` differs from `21`, use what `pom.xml` says (CI must build what the project actually
   targets) and note the difference in Step 8's report.
-- **Central/Nexus publishing plugin** (skip the `publishing-server-id` half if supplied via `args`): grep
-  `pom.xml` for `central-publishing-maven-plugin` (the current Sonatype Central Publishing Portal plugin) or
-  `nexus-staging-maven-plugin` (the older OSSRH plugin). Record the `publishingServerId`/`serverId` value it
-  declares (e.g. `central`) — the workflow's `setup-java` `server-id` and the Maven settings file's `<server><id>`
-  must both match this value. If neither plugin is configured, tell the user Maven Central publishing isn't
-  wired up in `pom.xml` yet and ask whether to continue anyway (the generated deploy step will need adjustment
-  once that's added).
+- **Central/Nexus publishing plugin** (skip entirely if `publish` was supplied via `args`; skip only the
+  `publishing-server-id` half if that alone was supplied): grep `pom.xml` for `central-publishing-maven-plugin`
+  (the current Sonatype Central Publishing Portal plugin) or `nexus-staging-maven-plugin` (the older OSSRH
+  plugin). If found, treat that as `publish: yes` and record the `publishingServerId`/`serverId` value it declares
+  (e.g. `central`) — the workflow's `setup-java` `server-id` and the Maven settings file's `<server><id>` must
+  both match this value. If neither plugin is configured, treat that as `publish: no` by default rather than
+  stopping — tell the user Maven Central publishing isn't wired up in `pom.xml` and ask only if they want it added
+  now (Step 5 can add it) or confirm `publish: no` is correct. When `publish: no` (from `args` or this survey),
+  the deploy step, its `setup-java` signing inputs, and `mvnsettings.xml` are all omitted — see Step 3/5/6.
 - **GPG signing profile** (skip if `sign-profile-id` supplied via `args`): find the Maven profile that binds
   `maven-gpg-plugin`'s `sign` goal. Record its profile id (e.g. `sign`).
 - **Extras profile** (skip if `extras-profile-id` supplied via `args`): find the profile — typically active by
@@ -80,19 +172,22 @@ a real answer, not guessed. If `pom.xml` is missing and the user chose to contin
   `spotbugs-maven-plugin`, and `maven-pmd-plugin` are configured under `<reporting>` — these feed the `mvn site`
   report. Not required to proceed, but note any that are missing so the user knows that section of the site report
   will be empty.
-- **SonarQube/SonarCloud config**: check `pom.xml` for the `sonar-maven-plugin`
-  (`org.sonarsource.scanner.maven:sonar-maven-plugin`) and its `sonar.organization`/`sonar.projectKey`/
-  `sonar.host.url` properties. This house pattern runs the scan via `mvn sonar:sonar` in the workflow (Step 3), so
-  the config lives in `pom.xml` itself — not a standalone `sonar-project.properties` file (that file, and the
-  `warchant/setup-sonar-scanner` action plus a separate `sonar-scanner` CLI step, are the older pattern this skill
-  no longer generates). If the plugin or properties are missing, this skill still wires up the `Run SonarCloud
-  analysis` step (Step 3), but someone must add them to `pom.xml` before it will run successfully — flag this and
-  offer to add them in Step 5 if the user can give you `sonar.organization`/`sonar.projectKey` now. If a stray
+- **SonarQube/SonarCloud config** (skip entirely if `sonar` was supplied via `args`): check `pom.xml` for the
+  `sonar-maven-plugin` (`org.sonarsource.scanner.maven:sonar-maven-plugin`) and its `sonar.organization`/
+  `sonar.projectKey`/`sonar.host.url` properties. This house pattern runs the scan via `mvn sonar:sonar` in the
+  workflow (Step 3), so the config lives in `pom.xml` itself — not a standalone `sonar-project.properties` file
+  (that file, and the `warchant/setup-sonar-scanner` action plus a separate `sonar-scanner` CLI step, are the
+  older pattern this skill no longer generates). If the plugin is present, treat that as `sonar: cloud` (when
+  `sonar.host.url` is `https://sonarcloud.io` or unset) or `sonar: self-hosted` (any other host), and this skill
+  wires up the `Run SonarCloud analysis` step (Step 3) — but if the `sonar.*` properties are incomplete, flag this
+  and offer to add them in Step 5 if the user can give you `sonar.organization`/`sonar.projectKey` now. If the
+  plugin is absent, default to `sonar: none` (omit the analysis step entirely — see Step 3) rather than generating
+  a step that can't succeed; ask the user only if they want Sonar wired up now instead. If a stray
   `sonar-project.properties` still exists from before this house pattern changed, note in Step 8 that it's now
   redundant (nothing reads it once `pom.xml` carries the same settings) and offer to remove it.
 - **Antora docs**: check for `docs/antora.yml` and `docs/antora-playbook.yml`. If either is missing, the docs step
-  in Step 3 has nothing to build against — tell the user to run the `iru-setup-antora` skill first, or confirm they'll
-  do so before merging this workflow.
+  in Step 3 has nothing to build against — tell the user to run the `iru-setup-antora` skill first (the docs step runs `npm ci` in `docs/`, so `docs/package.json` and the committed `docs/package-lock.json` are needed too), or confirm they'll
+  do so before merging this workflow. If `docs/` exists but has no lockfile (a site from the old per-package install), recommend `/iru-update-antora` instead: `actions/setup-node`'s npm cache fails the job without it.
 - **Maven settings file used for deploy** (skip if `settings-file` supplied via `args`): check for an XML file
   referenced by a `--settings` flag in any existing deploy step, defaulting to `mvnsettings.xml` at the repository
   root if none is referenced yet. If it doesn't exist, this skill creates it (Step 6).
@@ -114,144 +209,109 @@ a real answer, not guessed. If `pom.xml` is missing and the user chose to contin
   `iru-setup-readme` skill, tell the user `sync_versions.py`'s README step will need hand-adjustment once the file
   exists.
 
-## Step 2 — Decide how to proceed if workflows already exist
+## Step 2 — Announce scratch vs update, and decide per existing file
 
-Check whether `.github/workflows/develop.yml`, `.github/workflows/main.yml`, `.github/workflows/sync.yml`, and
-`.github/scripts/sync_versions.py` already exist. Treat `sync.yml` and its script as one unit for this check —
-either both exist or neither should.
+Check whether `.github/workflows/develop.yml`, `.github/workflows/main.yml`, `.github/workflows/sync.yml`,
+`.github/scripts/sync_versions.py`, `.github/workflows/security.yml`, and `.github/dependabot.yml` already exist.
+Treat `sync.yml` and its script as one unit for this check — either both exist or neither should (if only one does,
+the unit is **partial**; say so).
 
-- **None exist**: skip this step and go straight to Step 4 — create everything from scratch.
-- **Any exists**: use `AskUserQuestion` to ask whether to (a) stop here and leave everything untouched, or
-  (b) continue and attempt to update the existing file(s) using this skill's templates as reference.
-  - **Stop**: report which file(s) already exist and end here — make no changes.
-  - **Continue**: proceed to Step 4, but treat each existing file as the base to edit, not as something to
-    overwrite wholesale.
-    - For `develop.yml`/`main.yml`: preserve any step that isn't one of the eight pipeline stages this skill owns
-      (build/test, static analysis, coverage, site report, SonarQube, Antora build, GitHub Pages publish, Maven
-      Central publish) — e.g. a Slack notification step or an extra test matrix stays untouched. Only add missing
-      stages or correct outdated ones (wrong action version, wrong profile id, etc.), and don't reorder steps this
-      skill doesn't own.
+- **None exist**: tell the user this skill is **creating the CI/CD pipeline from scratch**, skip the rest of this
+  step and go straight to Step 4 — create everything from scratch.
+- **Any exists**: tell the user this skill is **updating an existing CI/CD setup**, list each file as present /
+  absent / partial, and warn that prior workflow files were found. Absent files are simply created. For each
+  existing unit (`develop.yml`, `main.yml`, `sync.yml`+`sync_versions.py`, `security.yml`,
+  `.github/dependabot.yml`), read it and compare it against this run's resolved choices, naming each concrete
+  contradiction in its question — e.g. "your current `develop.yml` runs a SonarCloud step but this run chose
+  `sonar: none`", "it deploys to GitHub Pages but you chose `pages: no`", "it runs integration tests (no
+  `-DskipITs`) but you chose `ci-tests: unit`", "it has no Maven Central deploy step but `publish: yes`".
+
+  If `on-existing` (Step 1) is `keep`, `update`, or `replace`, apply that choice to every existing unit without
+  asking (still print the warning). Otherwise ask with `AskUserQuestion`, one question per existing unit, batching
+  up to 4 questions per call (a second call for the fifth), each explaining the consequences:
+
+  - **Update (Recommended)** — "Merge: add what's missing and correct outdated parts (action versions, gated
+    steps, stale values) using this skill's template as reference; keep every custom step/job/entry this skill
+    doesn't own. You review a diff; your customizations survive, but a customized part this skill owns may be
+    rewritten."
+  - **Keep as is** — "Leave the file untouched. Nothing you customized changes, but it may stay out of date or
+    disagree with this run's choices (the mismatches named above) — the report lists each one."
+  - **Replace** — "Regenerate from this skill's template. Result matches the house pattern exactly, but every
+    customization in the file is lost (recoverable only from git history)."
+  - **Stop** — "End this skill now without changing any file" (only offered in the first question of the run;
+    choosing it ends the skill — report which file(s) already exist and make no changes).
+
+  Then, per unit:
+
+  - **Keep**: don't write that file in Step 6; record each mismatch with this run's choices for Step 8.
+  - **Replace**: write that file fresh from the filled-in template in Step 6, exactly as for a new file.
+  - **Update**: proceed to Step 4, but treat the existing file as the base to edit, not as something to overwrite
+    wholesale, and show the user a diff before writing it in Step 6:
+    - For `develop.yml`/`main.yml`: preserve any step that isn't one of the pipeline stages this skill owns
+      (build/test, static analysis, coverage, site report, optional SonarQube, Antora build, GitHub Pages
+      publish or docs-artifact upload, optional Maven Central publish) — e.g. a Slack notification step or an
+      extra test matrix stays untouched. Only add missing stages or correct outdated ones (wrong action version,
+      wrong profile id, a stage that should now be gated on/off per `publish`/`sonar`/`pages`, a missing or
+      stale `-DskipITs` per `ci-tests`, etc.), and don't reorder steps this skill doesn't own.
     - For `sync.yml`/`sync_versions.py`: preserve any file the script updates beyond `pom.xml`/`README.md`/the
       Antora docs that a prior customization added, and preserve any extra workflow step (e.g. a Slack
       notification) the same way. Only correct the pipeline stages this skill owns (branch/version computation,
       the merge, the version bump, the PR creation) or fix a stale placeholder value.
+    - For `security.yml`: preserve any job this skill doesn't own; only add/remove/update the
+      `dependency-review`/CodeQL/OSV-Scanner/gitleaks jobs per the resolved `security-*` `args` (Step 1).
+    - For `.github/dependabot.yml`: preserve any `updates:` entry for an ecosystem this skill doesn't manage
+      (e.g. `npm` for `docs/`); only add/update the `maven` and `github-actions` entries.
 
 ## Step 3 — Reference templates
 
+**Templates.** Every template below is a file under `templates/common/<path of the generated file>`, holding the exact bytes of that generated file's template. Read the files for the units being written, each in full, before filling placeholders:
+
+| Generated file | Template | Applies when |
+|---|---|---|
+| `.github/workflows/develop.yml` | `templates/common/.github/workflows/develop.yml` | always: push to the integration branch pipeline |
+| `.github/workflows/main.yml` | `templates/common/.github/workflows/main.yml` | always: same pipeline, triggered by a GitHub Release being published |
+| `.github/workflows/sync.yml` | `templates/common/.github/workflows/sync.yml` | always, written together with `sync_versions.py`: opens the sync PR back into the integration branch after a release |
+| `.github/scripts/sync_versions.py` | `templates/common/.github/scripts/sync_versions.py` | always, written together with `sync.yml`: rewrites version references after a release |
+| `.github/workflows/security.yml` | `templates/common/.github/workflows/security.yml` | always; drop each whole job whose `security-*` arg resolved to `no` |
+| `.github/dependabot.yml` | `templates/common/.github/dependabot.yml` | always, regardless of the `security-*` flags |
+
 These are genericized examples — based on a real Java/Maven repository's actual `develop.yml`/`main.yml` — showing
-the full pipeline: checkout → JDK setup with signing configured → test + coverage + site report → SonarQube scan →
-Antora docs build → merge docs with the site report → publish to GitHub Pages → deploy to Maven Central. Copy the
-structure; resolve every `<placeholder>` using Step 1's survey before writing the real files in Step 4.
+the full pipeline: checkout → JDK setup (with signing configured, when `publish: yes`) → test + coverage + site
+report → SonarQube scan (when `sonar` isn't `none`) → Antora docs build → merge docs with the site report →
+publish to GitHub Pages (or upload the merged docs as a workflow artifact when `pages: no`) → deploy to Maven
+Central (when `publish: yes`). Copy the structure; resolve every `<placeholder>` using Step 1's survey before
+writing the real files in Step 4, and drop or swap whichever blocks this repository's
+`publish`/`sonar`/`pages`/`ci-tests` values gate, per the inline comments in the templates below.
 
 ### `develop.yml` template
 
-```yaml
-name: Develop
-
-on:
-  push:
-    branches: [ <integration-branch> ]
-
-jobs:
-  build:
-    name: Build and execute tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK <java-version>
-        uses: actions/setup-java@v5
-        with:
-          distribution: adopt
-          java-version: <java-version>
-          server-id: <publishing-server-id> # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: OSSRH_USERNAME # env variable for username in deploy
-          server-password: OSSRH_PASSWORD # env variable for token in deploy
-          gpg-private-key: ${{ secrets.SIGNING_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: SIGNING_PASSWORD # env variable for GPG private key passphrase
-
-      - name: Run tests
-        run: |
-          mvn clean jacoco:prepare-agent install jacoco:report javadoc:jar source:jar -P '!<extras-profile-id>'
-          mvn site -Djacoco.skip -DskipTests -P '!<extras-profile-id>'
-
-      - name: Run SonarCloud analysis
-        env:
-          # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install Antora
-        run: |
-          mkdir docs && cd docs
-          npm i -D -E antora
-          npm i @antora/lunr-extension
-          npm i @sntke/antora-mermaid-extension
-          npm i @djencks/asciidoctor-mathjax
-
-      - name: Build Antora docs
-        run: cd docs && npx antora antora-playbook.yml
-
-      - name: Merge documentation
-        run: |
-          touch ./docs/build/site/.nojekyll
-          cp -r ./docs/build/site ./doc
-          cp -r ./target/site ./doc/mvn-site
-
-      - name: Deploy to GitHub Pages
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v5
-        with:
-          target_branch: gh-pages
-          build_dir: ./doc
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to maven central
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-        run: mvn deploy -P <sign-profile-id>,<extras-profile-id> --settings <settings-file> -DskipTests
-```
+Template: `templates/common/.github/workflows/develop.yml` — read it in full before filling placeholders
 
 ### `main.yml` template
 
 Identical pipeline; the only difference is the trigger — a GitHub Release being published instead of a push:
 
-```yaml
-name: Release
-
-on:
-  release:
-    # Runs this workflow when a new GitHub release is created
-    types: [released]
-
-jobs:
-  build:
-    name: Build and execute tests
-    runs-on: ubuntu-latest
-    steps:
-      # ... identical to every step under develop.yml's `build` job above, verbatim ...
-```
+Template: `templates/common/.github/workflows/main.yml` — read it in full before filling placeholders
 
 Notes on placeholders that are genuinely project-specific and must come from Step 1, not from these templates:
 
 - `<integration-branch>`: the branch `develop.yml` triggers on (e.g. `develop`).
 - `<java-version>`: e.g. `21` (this catalog's default for new repositories).
 - `<publishing-server-id>`: the id shared by the Central/Nexus plugin config and the settings file's `<server>`.
-- `<sign-profile-id>` / `<extras-profile-id>`: the two profile ids found in Step 1.
-- `<settings-file>`: the Maven settings XML path used for the deploy step (Step 6 creates it if absent).
+  Not needed at all when `publish: no` — the `setup-java` signing inputs and the deploy step that use it are
+  omitted entirely.
+- `<sign-profile-id>` / `<extras-profile-id>`: the two profile ids found in Step 1. When `publish: no`,
+  `<sign-profile-id>` isn't needed (the whole `Deploy to maven central` step — the only place it's used — is
+  omitted); `<extras-profile-id>` is still needed, since the plain test run always excludes it (`-P
+  '!<extras-profile-id>'`) regardless of publishing.
+- `<settings-file>`: the Maven settings XML path used for the deploy step (Step 6 creates it, only when
+  `publish: yes` — see Step 5).
+- `<skip-its>`: ` -DskipITs` (with a leading space) when `ci-tests: unit`; empty when `ci-tests: full`.
+- Pages: these templates publish by pushing to the `gh-pages` branch with the job's `GITHUB_TOKEN` — there is no
+  `pages: write`/`id-token: write` permission block to drop when `pages: no`; just swap the deploy step for the
+  artifact upload as commented. If an existing workflow being updated uses `actions/configure-pages`/
+  `upload-pages-artifact`/`deploy-pages` instead, `pages: no` replaces those three with the artifact upload and
+  drops the `pages: write`/`id-token: write` permissions only they needed.
 
 ### `sync.yml` template
 
@@ -259,125 +319,7 @@ Runs once a GitHub Release is published, provided it was published from the stab
 that merges the released branch back into the integration branch and bumps the development snapshot version via
 the companion `sync_versions.py` script (below):
 
-```yaml
-name: Sync
-
-# After a release is published from <stable-branch>, open a pull request that merges it back into
-# <integration-branch> and bumps the development snapshot version, so <integration-branch> never has to wait for a
-# manual sync branch.
-on:
-  release:
-    types: [released]
-
-permissions:
-  contents: write
-  pull-requests: write
-
-jobs:
-  sync:
-    name: Open sync PR from the released branch into <integration-branch>
-    runs-on: ubuntu-latest
-    if: github.event.release.target_commitish == '<stable-branch>'
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Compute versions and branch names
-        id: versions
-        run: |
-          set -euo pipefail
-          RELEASE_VERSION="${{ github.event.release.tag_name }}"
-          RELEASE_VERSION="${RELEASE_VERSION#v}"
-
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$RELEASE_VERSION"
-          if [ -z "${MAJOR:-}" ] || [ -z "${MINOR:-}" ] || [ -z "${PATCH:-}" ]; then
-            echo "::error::Release tag '$RELEASE_VERSION' is not in X.Y.Z form; cannot compute the next snapshot."
-            exit 1
-          fi
-
-          NEXT_MINOR=$((MINOR + 1))
-          NEXT_SNAPSHOT="${MAJOR}.${NEXT_MINOR}.0-SNAPSHOT"
-          SYNC_BRANCH="sync_${MAJOR}.${NEXT_MINOR}.0"
-
-          echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "next_snapshot=$NEXT_SNAPSHOT" >> "$GITHUB_OUTPUT"
-          echo "sync_branch=$SYNC_BRANCH" >> "$GITHUB_OUTPUT"
-
-      - name: Skip if this release was already synced
-        id: guard
-        run: |
-          set -euo pipefail
-          if git ls-remote --exit-code --heads origin "${{ steps.versions.outputs.sync_branch }}" >/dev/null 2>&1; then
-            echo "::notice::${{ steps.versions.outputs.sync_branch }} already exists on origin; skipping."
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Configure git identity
-        if: steps.guard.outputs.exists == 'false'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Create sync branch from <integration-branch>
-        if: steps.guard.outputs.exists == 'false'
-        run: |
-          git fetch origin <integration-branch> <stable-branch>
-          git checkout -b "${{ steps.versions.outputs.sync_branch }}" "origin/<integration-branch>"
-
-      - name: Merge the released branch into the sync branch
-        if: steps.guard.outputs.exists == 'false'
-        run: |
-          git merge --no-ff --no-edit \
-            -m "Merge <stable-branch> (${{ steps.versions.outputs.release_version }}) into <integration-branch>" \
-            "origin/<stable-branch>"
-
-      - name: Set up Python
-        if: steps.guard.outputs.exists == 'false'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Bump the development snapshot version
-        if: steps.guard.outputs.exists == 'false'
-        env:
-          RELEASE_VERSION: ${{ steps.versions.outputs.release_version }}
-          NEXT_SNAPSHOT: ${{ steps.versions.outputs.next_snapshot }}
-        run: python3 .github/scripts/sync_versions.py
-
-      - name: Commit the version bump
-        if: steps.guard.outputs.exists == 'false'
-        run: |
-          git add pom.xml README.md docs/antora.yml docs/modules/ROOT/pages
-          git diff --cached --quiet || git commit -m "Sync ${{ steps.versions.outputs.next_snapshot }}"
-
-      - name: Push sync branch
-        if: steps.guard.outputs.exists == 'false'
-        run: git push origin "${{ steps.versions.outputs.sync_branch }}"
-
-      - name: Ensure the sync label exists
-        if: steps.guard.outputs.exists == 'false'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh label create sync --description "Sync pull request from a release branch back into <integration-branch>" --color 0e8a16 \
-            || gh label list --search sync >/dev/null
-
-      - name: Open pull request into <integration-branch>
-        if: steps.guard.outputs.exists == 'false'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create \
-            --base <integration-branch> \
-            --head "${{ steps.versions.outputs.sync_branch }}" \
-            --title "Sync ${{ steps.versions.outputs.next_snapshot }}" \
-            --body "Merges \`<stable-branch>\` back into \`<integration-branch>\` after releasing \`${{ steps.versions.outputs.release_version }}\`, and bumps the development snapshot version to \`${{ steps.versions.outputs.next_snapshot }}\` in \`pom.xml\`, \`README.md\`, and the Antora docs." \
-            --label sync
-```
+Template: `templates/common/.github/workflows/sync.yml` — read it in full before filling placeholders
 
 Notes specific to this template:
 
@@ -402,113 +344,7 @@ from the environment and rewrites every version reference the merge step doesn't
 `<artifact-id>` and README/Antora regexes below are placeholders — resolve them from Step 1's survey of this
 repository's actual `pom.xml` artifact id and README/Antora wording before writing the real file:
 
-```python
-#!/usr/bin/env python3
-"""Rewrites version references after a release, for the Sync workflow.
-
-Reads RELEASE_VERSION and NEXT_SNAPSHOT from the environment and updates
-pom.xml, README.md, docs/antora.yml, and any Antora page that carries the
-same "Latest release" / "Latest snapshot" dependency snippets as README.md.
-
-CHANGELOG.md is intentionally left untouched: its release section and fresh
-"[Unreleased]" heading are written before the tag is published, and arrive on
-<integration-branch> via the merge that precedes this script, not by bumping
-a version string.
-"""
-import os
-import re
-import sys
-from pathlib import Path
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-
-
-def replace_dependency_snippets(text, release_version, next_snapshot):
-    """Replaces the <version> tag following a "Latest release"/"Latest snapshot" marker line."""
-    lines = text.splitlines(keepends=True)
-    pending = None
-    for i, line in enumerate(lines):
-        lower = line.strip().lower()
-        if lower.startswith("latest release"):
-            pending = release_version
-        elif lower.startswith("latest snapshot"):
-            pending = next_snapshot
-        elif pending and "<version>" in line:
-            lines[i] = re.sub(r"(<version>)[^<]*(</version>)", rf"\g<1>{pending}\g<2>", line)
-            pending = None
-    return "".join(lines)
-
-
-def update_pom(release_version, next_snapshot):
-    path = REPO_ROOT / "pom.xml"
-    text = path.read_text()
-    updated, count = re.subn(
-        r"(<artifactId><artifact-id></artifactId>\s*\n\s*<version>)[^<]*(</version>)",
-        rf"\g<1>{next_snapshot}\g<2>",
-        text,
-        count=1,
-    )
-    if count != 1:
-        sys.exit("pom.xml: could not find the <artifact-id> <version> element to bump")
-    path.write_text(updated)
-
-
-def update_readme(release_version, next_snapshot):
-    path = REPO_ROOT / "README.md"
-    text = path.read_text()
-    # Adjust these two row-label regexes to match this repository's actual README table wording
-    # (resolved in Step 1) if it differs from setup-readme's default "Current development version" /
-    # "Latest release" labels.
-    text = re.sub(
-        r"(\| Current development version \| `)[^`]*(` \|)",
-        rf"\g<1>{next_snapshot}\g<2>",
-        text,
-    )
-    text = re.sub(
-        r"(\| Latest release[^|]*\| `)[^`]*(` \|)",
-        rf"\g<1>{release_version}\g<2>",
-        text,
-    )
-    text = replace_dependency_snippets(text, release_version, next_snapshot)
-    path.write_text(text)
-
-
-def update_antora_component_version(release_version):
-    path = REPO_ROOT / "docs" / "antora.yml"
-    if not path.exists():
-        return
-    text = path.read_text()
-    updated, count = re.subn(r"(?m)^version:.*$", f"version: {release_version}", text, count=1)
-    if count == 1:
-        path.write_text(updated)
-
-
-def update_antora_pages(release_version, next_snapshot):
-    pages_dir = REPO_ROOT / "docs" / "modules" / "ROOT" / "pages"
-    if not pages_dir.exists():
-        return
-    for path in sorted(pages_dir.glob("*.adoc")):
-        text = path.read_text()
-        if "<version>" not in text:
-            continue
-        updated = replace_dependency_snippets(text, release_version, next_snapshot)
-        if updated != text:
-            path.write_text(updated)
-
-
-def main():
-    release_version = os.environ["RELEASE_VERSION"]
-    next_snapshot = os.environ["NEXT_SNAPSHOT"]
-
-    update_pom(release_version, next_snapshot)
-    update_readme(release_version, next_snapshot)
-    update_antora_component_version(release_version)
-    update_antora_pages(release_version, next_snapshot)
-
-
-if __name__ == "__main__":
-    main()
-```
+Template: `templates/common/.github/scripts/sync_versions.py` — read it in full before filling placeholders
 
 Notes specific to this template:
 
@@ -522,21 +358,63 @@ Notes specific to this template:
   snapshot — matching the convention (used by this repository's own `/iru-release`-style workflow, if present) that
   the Antora component version tracks the latest actual release.
 
+### `security.yml` template
+
+Runs on every pull request and on every push to the integration/stable branches, plus a weekly schedule so CodeQL
+and OSV-Scanner findings don't go stale between pushes. Each job below is individually omittable via the matching
+`security-*` `args` key from Step 1 (default `yes`); drop that whole job's YAML — not just its `if:` — when the
+resolved value is `no`, so a skipped-and-green job doesn't sit in the workflow forever:
+
+Template: `templates/common/.github/workflows/security.yml` — read it in full before filling placeholders
+
+Notes specific to this template:
+
+- `<stable-branch>`: same branch resolved in Step 1 for `sync.yml` (e.g. `main`).
+- The `codeql` job's `Build` step reuses the same `-P '!<extras-profile-id>'` convention as `develop.yml`'s `Run
+  tests` step — CodeQL only needs compiled classes, not the full test/coverage/site pipeline.
+- If `github.com` public-repository default CodeQL setup is simpler for this repository than a workflow-based
+  CodeQL job (e.g. the user wants GitHub to manage the CodeQL configuration itself), note that as an alternative
+  in Step 8's report instead of writing the `codeql` job — recommending the repository's Settings → Code security
+  → "CodeQL analysis" → **Set up** → **Default** — but default to the workflow job above unless the user asks for
+  that instead, since default setup can't be reviewed or customized from this repository's own files.
+- None of these four jobs need a repository secret beyond the automatically provided `GITHUB_TOKEN` — don't add
+  any of them to Step 7's secrets table.
+
+### `.github/dependabot.yml` template
+
+Always generated (or updated) regardless of the four `security-*` flags above — grouped weekly updates for the
+`maven` ecosystem (the repository's own dependencies/plugins) and for the workflows this skill itself just wrote
+(`github-actions`):
+
+Template: `templates/common/.github/dependabot.yml` — read it in full before filling placeholders
+
+If `.github/dependabot.yml` already exists with entries for other ecosystems (e.g. `npm` for `docs/`), preserve
+them — only add or update the `maven` and `github-actions` entries above (see Step 2).
+
 ## Step 4 — Fill the templates
 
 Substitute every placeholder from Step 1's survey. If any required fact wasn't resolvable there (e.g. no signing
 profile exists yet, or no Central/Nexus plugin is configured), don't invent a value — ask the user or note it as an
 open gap in Step 8's report instead of silently guessing.
 
+Also apply the `publish`/`sonar`/`security-*` gating resolved in Step 1: drop every block the templates above mark
+with an "Omit this … if …" comment when the matching value is `no`/`none`, and drop that same comment itself — it's
+guidance for filling the template, not part of the generated workflow file. Apply `pages` the same way: keep
+`Deploy to GitHub Pages` and drop `Upload documentation` when `pages: yes`, the reverse when `pages: no` (the
+Antora build and docs merge stay either way). Apply `ci-tests` via `<skip-its>`.
+
 ## Step 5 — Handle missing supporting files
 
 Before writing the workflows, make sure the files they depend on exist:
 
 - **`docs/antora.yml` / `docs/antora-playbook.yml` missing**: recommend running the `iru-setup-antora` skill now; the
-  Antora build step in the workflow will fail without them.
-- **`sonar-maven-plugin`/`sonar.*` properties missing from `pom.xml`**: ask the user for `sonar.organization` (if
-  using SonarCloud), `sonar.projectKey`, and `sonar.host.url` (default `https://sonarcloud.io` unless they run
-  self-hosted SonarQube), then add them directly to `pom.xml`. Look up the current latest
+  Antora build step in the workflow will fail without them. The workflow runs `npm ci` in `docs/`, so also keep
+  `docs/package.json` and `docs/package-lock.json` committed.
+- **`sonar-maven-plugin`/`sonar.*` properties missing from `pom.xml`, and `sonar` isn't `none`**: ask the user for
+  `sonar.organization` (if using SonarCloud), `sonar.projectKey`, and `sonar.host.url` (default
+  `https://sonarcloud.io` unless they run self-hosted SonarQube), then add them directly to `pom.xml`. Skip this
+  entirely when `sonar: none` — there's nothing to add, and the `Run SonarCloud analysis` step is omitted from the
+  workflow templates (Step 3) anyway. Look up the current latest
   `org.sonarsource.scanner.maven:sonar-maven-plugin` version from Maven Central rather than hardcoding a version
   here — this plugin releases fairly often. Add to `<properties>`:
 
@@ -565,8 +443,9 @@ Before writing the workflows, make sure the files they depend on exist:
   no explicit setting: the plugin reads `maven.compiler.source`/`maven.compiler.release` automatically, so the
   scan always tracks whatever Java version `pom.xml` already targets.
 
-- **Maven settings file (`<settings-file>` from Step 3) missing**: create it, matching the `server-id` resolved in
-  Step 1:
+- **Maven settings file (`<settings-file>` from Step 3) missing, and `publish: yes`**: create it, matching the
+  `server-id` resolved in Step 1. Skip this entirely when `publish: no` — nothing in the templates references a
+  settings file once the `Deploy to maven central` step is omitted:
 
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
@@ -604,22 +483,29 @@ Before writing the workflows, make sure the files they depend on exist:
 
 ## Step 6 — Write the workflow files
 
-Write (or, per Step 2, carefully update) `.github/workflows/develop.yml`, `.github/workflows/main.yml`, and
-`.github/workflows/sync.yml` with the filled-in templates from Step 4, plus `.github/scripts/sync_versions.py` and
-any other supporting files created in Step 5. `sync.yml` and `sync_versions.py` are written together — never write
-one without the other.
+Write (or, per Step 2, carefully update or replace — and skip any unit the user chose to keep)
+`.github/workflows/develop.yml`, `.github/workflows/main.yml`,
+`.github/workflows/sync.yml`, and `.github/workflows/security.yml` with the filled-in templates from Step 4, plus
+`.github/scripts/sync_versions.py`, `.github/dependabot.yml`, and any other supporting files created in Step 5.
+`sync.yml` and `sync_versions.py` are written together — never write one without the other. `security.yml` and
+`.github/dependabot.yml` are always written (or updated), independent of `publish`/`sonar` — only their own
+`security-*` flags (Step 1) gate individual jobs within `security.yml`, and `.github/dependabot.yml` has no gate at
+all.
 
 ## Step 7 — List required repository secrets and settings
 
 Report the secrets that must exist under the target repository's Settings → Secrets and variables → Actions —
-this skill cannot create them itself:
+this skill cannot create them itself. List only the rows that apply to what was actually generated (per
+`publish`/`sonar` from Step 1) — an omitted row is one fewer secret the user needs to go create:
 
-| Secret | Purpose |
-|---|---|
-| `SONAR_TOKEN` | Auth token for the SonarQube/SonarCloud scan, passed as `-Dsonar.token` to `mvn sonar:sonar` |
-| `OSSRH_USERNAME` / `OSSRH_PASSWORD` | Maven Central (Sonatype) publishing credentials |
-| `SIGNING_KEY` / `SIGNING_KEY_ID` / `SIGNING_PASSWORD` | GPG private key, its key id, and its passphrase, for artifact signing |
-| `SONATYPE_STAGING_PROFILE_ID` | Only needed with the legacy `nexus-staging-maven-plugin`; if the target repo uses `central-publishing-maven-plugin` this secret is unused and can be left unset or removed from the deploy step |
+| Secret | Purpose | Only needed when |
+|---|---|---|
+| `SONAR_TOKEN` | Auth token for the SonarQube/SonarCloud scan, passed as `-Dsonar.token` to `mvn sonar:sonar` | `sonar` is `cloud` or `self-hosted` |
+| `OSSRH_USERNAME` / `OSSRH_PASSWORD` | Maven Central (Sonatype) publishing credentials | `publish: yes` |
+| `SIGNING_KEY` / `SIGNING_KEY_ID` / `SIGNING_PASSWORD` | GPG private key, its key id, and its passphrase, for artifact signing | `publish: yes` |
+| `SONATYPE_STAGING_PROFILE_ID` | Only needed with the legacy `nexus-staging-maven-plugin`; if the target repo uses `central-publishing-maven-plugin` this secret is unused and can be left unset or removed from the deploy step | `publish: yes`, and only with `nexus-staging-maven-plugin` |
+
+None of `security.yml`'s four jobs need a secret beyond `GITHUB_TOKEN` (automatic) — don't add a row for them.
 
 `GITHUB_TOKEN` needs no setup — GitHub Actions provides it automatically. `sync.yml` uses it too (no extra secret),
 but also needs the repository setting under Settings → Actions → General → "Workflow permissions" set to allow
@@ -629,12 +515,37 @@ and `sync.yml` will fail silently-ish (a `gh pr create` permissions error) on th
 
 ## Step 8 — Report and warn
 
-Summarize what happened: whether the workflows (and `sync_versions.py`) were created fresh, updated in place, or
-left untouched (Step 2's stop path); whether `pom.xml`'s `sonar-maven-plugin`/`sonar.*` properties and the settings
-XML were added versus already present (and whether a stale `sonar-project.properties` was flagged for removal);
-and any open gaps noted in Steps 1/4 (missing Central plugin, missing signing profile, missing Antora setup,
-README/Antora wording that didn't match `sync_versions.py`'s default regexes, patch-level releases the minor-bump
-default doesn't handle, etc.).
+Summarize what happened: whether this run created the pipeline from scratch or updated an existing one, and, per
+unit (`develop.yml`, `main.yml`, `sync.yml`/`sync_versions.py`, `security.yml`, `.github/dependabot.yml`), the
+action taken — **created**, **updated**, **replaced**, **kept as is** (listing each mismatch with this run's
+choices found in Step 2), or untouched because of Step 2's stop path — and whether that came from the user or
+`on-existing`; whether `pom.xml`'s `sonar-maven-plugin`/`sonar.*` properties and the settings XML were added versus
+already present (and whether a stale `sonar-project.properties` was flagged for removal); and any open gaps noted
+in Steps 1/4 (missing Central plugin, missing signing profile, missing Antora setup, README/Antora wording that
+didn't match `sync_versions.py`'s default regexes, patch-level releases the minor-bump default doesn't handle,
+etc.).
+
+State explicitly what was wired versus omitted, and why:
+
+- **`publish`**: yes/no — if `yes`, the `Deploy to maven central` step, the `setup-java` signing inputs, and
+  `<settings-file>` were all generated; if `no`, all three were omitted and the corresponding `OSSRH_*`/`SIGNING_*`
+  secret rows were left out of Step 7's table.
+- **`sonar`**: `cloud`/`self-hosted`/`none` — if not `none`, the `Run SonarCloud analysis` step and `SONAR_TOKEN`
+  row were included; if `none`, both were omitted, and note whether that's because the project isn't open source
+  (SonarCloud is free only for open-source projects) or a direct user choice.
+- **`visibility`**: the resolved value and where it came from (`args`, `gh repo view`, or the user), plus the
+  Actions-minutes note for private/internal repositories (included minutes per plan, then per-minute billing —
+  per GitHub's current pricing; double-check your plan).
+- **`ci-tests`**: `unit` (Run tests appends `-DskipITs`; Failsafe `*IT` tests only run locally) or `full` — and,
+  if `pom.xml` binds no Failsafe executions, that the choice currently has no practical effect.
+- **`pages`**: `yes` (docs published to the `gh-pages` branch — defaulted without asking for a public repository)
+  or `no` (docs uploaded as the `documentation` workflow artifact; nothing published, so the README/Antora must not
+  link a github.io documentation URL — `iru-setup-readme` handles that when given `pages: no`). For a private
+  repository with `pages: yes`, repeat that Pages needs Pro/Team/Enterprise Cloud and the site is public unless
+  published with Enterprise Cloud private access control.
+- **Security block**: which of `security-dependency-review`/`security-codeql`/`security-osv`/`security-gitleaks`
+  were included in `security.yml` versus omitted per Step 1's `args`/answers, and confirm `.github/dependabot.yml`
+  was written regardless (it has no opt-out).
 
 Finish with an explicit warning: **the user must review the generated (or updated) workflow files before relying on
 them.** Branch names, profile ids, the Java version, and the Maven Central publishing setup were inferred from this

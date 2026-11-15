@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-modules
-description: Scaffold the source tree of a DDD/hexagonal Spring Boot service whose Maven reactor already exists — the package layout for every module, the ports (interfaces) that `domain` defines, a worked adapter skeleton per `infrastructure`/`api` module (repository adapter with MapStruct mapping, refreshable `@ConfigurationProperties` beans, REST/gRPC/GraphQL/Kafka entry points, Kafka producer, metrics publisher), the `@SpringBootApplication` class and component-scan wiring in `boot`, `application.yml` plus per-profile overrides (including structured logging, actuator/Prometheus exposure, and the dynamic-configuration binding the stack selected), the database migration/changelog directory for each engine's tooling (Mongock, Liquibase and its Couchbase/MongoDB/Neo4j extensions, or Flyway), and an ArchUnit test that fails the build when the hexagonal dependency direction is violated. Reads `springboot-stack.yml` for every decision and writes no version numbers. Invoke as `/iru-setup-java-springboot-modules`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use after `iru-setup-java-springboot-pom` has created the poms, whenever a Spring Boot service needs its hexagonal source skeleton and runtime configuration generated instead of hand-writing the ports, adapters, and profile files module by module.
+description: "Invoked as `/iru-setup-java-springboot-modules` (args: `stack-file`, `mode`, `on-existing`), normally by `iru-setup-java-springboot` after the pom skill. Scaffolds a hexagonal Spring Boot service's source tree: module packages, ports, adapter skeletons, boot class, `application.yml`, migrations and an ArchUnit test, for Java or Kotlin."
 model: sonnet
 ---
 
@@ -18,12 +18,26 @@ report.
 
 ## Step 0 — Resolve inputs and check the reactor exists
 
-Parse `args` for `stack-file: <path>`, defaulting to `springboot-stack.yml` at the repository root, and read it in
-full. If it's missing, stop and point the user at `/iru-setup-java-springboot`.
+Parse `args` for `key: value` lines: `stack-file: <path>`, defaulting to `springboot-stack.yml` at the repository
+root (read it in full; if it's missing, stop and point the user at `/iru-setup-java-springboot`); `mode`
+(`new`/`existing`, informational — it never means "update silently"); and `on-existing`
+(`ask`/`keep`/`update`/`replace`, default `ask`).
 
-Verify `pom.xml` exists at the root and that every module directory the manifest names has a `pom.xml`. If not,
-stop and tell the user to run `/iru-setup-java-springboot-pom` first — this skill writes sources into modules, it
-doesn't create modules.
+Read `project.language` (`java` | `kotlin`; absent ⇒ `java`) and `project.buildTool` (`maven` | `gradle`; absent
+⇒ `maven`; `gradle` only ever appears with `kotlin`). **With `language: java` (or absent) everything below applies
+exactly as written** and the "Kotlin" section is skipped. With `language: kotlin`, Steps 1–11 apply with the
+substitutions in the **Kotlin** section after Step 0 — read it before writing any file.
+
+Verify the build exists:
+
+- **Maven** — `pom.xml` at the root and a `pom.xml` in every module directory the manifest names.
+- **Gradle** — `settings.gradle.kts` at the root `include`s every module (as `:`-paths mirroring the directory tree,
+  e.g. `:infrastructure:database:postgresql`) and each module directory has a `build.gradle.kts`; the
+  `build-logic/` convention plugins and `gradle/libs.versions.toml` exist.
+
+If not, stop and tell the user to run `/iru-setup-java-springboot-pom` first — this skill writes sources into
+modules, it doesn't create modules, and it never edits a `pom.xml`, `build.gradle.kts`, `settings.gradle.kts` or
+the version catalog.
 
 Derive from the manifest:
 
@@ -35,8 +49,238 @@ Derive from the manifest:
   `Mono<T>`/`Flux<T>`; both → blocking on the inbound side and reactive on the outbound side unless the manifest
   says otherwise, and say in the report which way you resolved it.
 
-Never overwrite a `.java` file that already contains code you didn't generate. Check first, skip and report
-instead.
+Never overwrite a `.java` or `.kt` file that already contains code you didn't generate. Check first, skip and report
+instead — this rule holds whatever `on-existing` says, and **Replace** below never applies to hand-written code.
+
+Say whether this run is **scaffolding from scratch** (no sources in any module yet) or **updating an existing
+source tree** (list the modules that already have sources). Then, for each generated artifact this skill owns that
+already exists — `boot/src/main/resources/application*.yml`, the ArchUnit test, each engine's migration/changelog
+directory, the worked example (aggregate/port/adapter/use case/endpoint) — warn and, unless `on-existing` says
+otherwise, ask with `AskUserQuestion` (up to 4 per call, one question each):
+
+- **Update (Recommended)** — add what's missing (a property block for a newly added technology, a migration
+  directory for a new engine, a rule in the ArchUnit test for a new module) and correct stale values; keep
+  everything else, including your own keys and code. Your customizations survive, but a generated part this skill
+  owns may be rewritten.
+- **Keep as is** — leave it untouched; it may not reflect the current manifest (e.g. no configuration for a newly
+  added database) — Step 13 lists each gap.
+- **Replace** — regenerate from this skill's templates; customizations in that file are lost (recoverable only
+  from git history). Only offered for files that are wholly generated (profile YAML, the ArchUnit test), never for
+  a class containing hand-written logic.
+
+## Kotlin (`project.language: kotlin`)
+
+Skip this section for Java. For Kotlin, Steps 1–11 keep their structure, packages, ports, configuration files,
+migrations and report content; only the source language and the idioms below change. If
+`iru-kotlin-springboot-code-one-task` is installed, its `reference/` files (`code-style.md`, `mandatory-rules.md`,
+`testing.md`, `jpa-and-persistence.md`, `coroutines-and-webflux.md`, `hexagonal-architecture.md`) are the
+authoritative rules for every line written here — the scaffold is the first code a developer copies, so it must
+already obey them. The essentials are restated so this skill stands alone.
+
+### Substitutions
+
+| Java step says | Kotlin writes |
+|---|---|
+| `src/main/java`, `src/test/java` | `src/main/kotlin`, `src/test/kotlin` (same packages). The Maven reactor compiles both roots; never put Kotlin under `java/`. |
+| Records / Lombok `@Value` for value objects | `data class` with `val`s and invariants in `init { require(...) }`; `@JvmInline value class` for single-field ids (`OrderId`). **No Lombok** anywhere. |
+| Aggregate root | A **regular class** (never a data class): identity-based `equals`/`hashCode`, state changed only through named methods (`confirm()`), `var ... private set` for mutable state — a data class's `copy()` would let callers bypass the transitions. |
+| MapStruct mappers (`@Mapper(componentModel = "spring")`) | **Hand-written** `internal` extension functions in the same `mapper/` package, one file per aggregate (`OrderMappings.kt`: `fun OrderEntity.toDomain()`, `fun Order.toEntity()`), using named arguments. **No MapStruct, no kapt/KSP** — the build skill doesn't add them. Same for DTO ↔ domain (API modules) and domain ↔ AVRO (producers/consumers). |
+| `Optional<T>` | `T?`; Spring Data's `findById` → `findByIdOrNull(id)` (`org.springframework.data.repository.findByIdOrNull`). No `!!` anywhere. |
+| JPA `@Entity` | A regular class (never a data class) with `var` columns, `@Enumerated(EnumType.STRING)`, `LAZY` `@ManyToOne`, `equals` on the id via `Hibernate.getClass(...)`, constant `hashCode`, a `toString` that touches no association. The build's `kotlin-jpa` + `all-open` config opens it and adds the no-arg constructor — never write `open` by hand. |
+| Use case class with constructor injection | Plain Kotlin class with `private val` constructor ports and **no Spring annotation**; `boot/config/UseCaseConfiguration` declares it with `@Bean fun placeOrderUseCase(...): PlaceOrderUseCase`. `application` keeps no Spring dependency. |
+| `@Component` adapters, `@RestController`, etc. | Same annotations; dependencies as `private val` primary-constructor parameters — no `@Autowired`, no `lateinit var`. `kotlin-spring` opens them. |
+| `@ConfigurationProperties` record/class + `@RefreshScope` | An immutable `data class` bound through its constructor, annotated `@RefreshScope @Validated @ConfigurationProperties("<prefix>")`, with Jakarta constraints on the **field** target (`@field:Positive`, `@field:Size(...)`) and typed properties (`Duration`, `URI`, `BigDecimal`). Register with `@ConfigurationPropertiesScan` on the application class. **Keep `@Validated`**: `kotlin-spring` opens a class because of it, and `@RefreshScope` needs a CGLIB-proxyable (open) class — with `@RefreshScope` alone the class stays `final` and the scoped proxy can't be created. Without dynamic config (`none`), drop `@RefreshScope` only. |
+| Constants class for metric names | An `object OrderMetrics` holding `const val` names and tag keys. |
+| `Consumer<Message<...>>` bean | `@Bean fun orderPlacedConsumer(...): Consumer<Message<OrderPlaced>> = Consumer { ... }` (same binding names). |
+| `Mono`/`Flux` for `stack.concurrency: reactive` | Ports and use cases use `suspend fun` (single/optional results as `T`/`T?`) and `Flow<T>` for streams; adapters bridge with `kotlinx-coroutines-reactor` (`awaitSingleOrNull()`, `asFlow()`) or use `CoroutineCrudRepository`. `domain` then needs `kotlinx-coroutines-core` for `Flow` — if the build doesn't provide it, return `List<T>` and report the gap. Never `runBlocking`/`GlobalScope`; `@Transactional` on a `suspend fun` needs a `ReactiveTransactionManager` (blocking JPA keeps non-suspending methods). |
+| `<Name>Application` with `main` | `@SpringBootApplication @ConfigurationPropertiesScan class <Name>Application` plus top-level `fun main(args: Array<String>) { runApplication<<Name>Application>(*args) }`. |
+| Javadoc on every port | KDoc on every public declaration (`@property`, `@param`, `@return`, `@throws`), production and test. |
+| Mockito unit tests | JUnit 5 + **MockK** (`mockk<Port>()`, `every`/`verify`, `slot`/`capture`), assertions from `kotlin.test`, backtick test names, constants in a `private companion object`, data classes used as-is (never mocked). Never AssertJ, never hand-written fakes. |
+
+Every other rule still binds: named constants instead of magic numbers, LF line endings, pinned locales
+(`spring.messages.fallback-to-system-locale: false` and `spring.web.locale` in `application.yml`), `val` over
+`var`, read-only collection types in public APIs. The `application*.yml` files are identical to the Java path.
+
+### Templates (shape verified end to end — see Step 12)
+
+Domain aggregate, value object and port:
+
+```kotlin
+/** ... KDoc with @property for each constructor property ... */
+@JvmInline
+value class OrderId(val value: UUID) {
+    /** Factory for new identities. */
+    companion object {
+        /** @return a fresh [OrderId]. */
+        fun random(): OrderId = OrderId(UUID.randomUUID())
+    }
+}
+
+data class Money(val amount: BigDecimal, val currency: Currency) {
+    init {
+        require(amount.signum() >= 0) { "amount must not be negative: $amount" }
+    }
+}
+
+class Order(val id: OrderId, val customerId: String, val total: Money, status: OrderStatus = OrderStatus.PLACED) {
+    /** The current status; changes only through [confirm]. */
+    var status: OrderStatus = status
+        private set
+
+    /** @throws ConflictException if the order is already confirmed. */
+    fun confirm() {
+        if (status == OrderStatus.CONFIRMED) throw ConflictException("order ${id.value} is already confirmed")
+        status = OrderStatus.CONFIRMED
+    }
+
+    override fun equals(other: Any?): Boolean = this === other || (other is Order && id == other.id)
+    override fun hashCode(): Int = id.hashCode()
+    override fun toString(): String = "Order(id=${id.value}, status=$status)"
+}
+
+/** Persistence port for [Order]. Implementations return `null` — never throw — when an order does not exist. */
+interface OrderRepository {
+    fun save(order: Order): Order
+    fun findById(id: OrderId): Order?
+}
+```
+
+Domain exceptions as a `sealed class DomainException(message: String, cause: Throwable? = null) :
+RuntimeException(message, cause)` with `NotFoundException`, `ConflictException`, `ValidationException` subclasses
+(plus one for an unavailable downstream when the stack has clients) — `RuntimeException` so a thrown one rolls a
+transaction back, sealed so the API modules' exception mapping is an exhaustive `when`. Keep the `cause`: the client
+adapters translate transport exceptions into these, and detekt's `SwallowedException` fails the build when the
+caught exception isn't passed on.
+
+Persistence adapter and mapper (JPA shown; other engines keep the same adapter/mapper split):
+
+```kotlin
+internal fun OrderEntity.toDomain(): Order =
+    Order(id = OrderId(id), customerId = customerId, total = Money(totalAmount, Currency.getInstance(currency)),
+        status = status)
+
+internal fun Order.toEntity(): OrderEntity =
+    OrderEntity(id = id.value, customerId = customerId, totalAmount = total.amount,
+        currency = total.currency.currencyCode, status = status)
+
+@Component
+class JpaOrderRepositoryAdapter(private val repository: OrderJpaRepository) : OrderRepository {
+    @Transactional
+    override fun save(order: Order): Order = repository.save(order.toEntity()).toDomain()
+
+    @Transactional(readOnly = true)
+    override fun findById(id: OrderId): Order? = repository.findByIdOrNull(id.value)?.toDomain()
+}
+```
+
+Make each migration's column types match the entity mapping exactly — `ddl-auto: validate` fails the first `*IT`
+on, e.g., a `CHAR(3)` column mapped by a `String` (Hibernate expects `VARCHAR`).
+
+Refreshable configuration and its port adapter:
+
+```kotlin
+@RefreshScope
+@Validated
+@ConfigurationProperties("orders.ordering")
+data class OrderingProperties(
+    @field:Positive val maximumOrderTotal: BigDecimal = DEFAULT_MAXIMUM_ORDER_TOTAL,
+    @field:Size(min = CURRENCY_CODE_LENGTH, max = CURRENCY_CODE_LENGTH) val currency: String = DEFAULT_CURRENCY,
+) {
+    private companion object {
+        const val CURRENCY_CODE_LENGTH = 3
+        const val DEFAULT_CURRENCY = "EUR"
+        val DEFAULT_MAXIMUM_ORDER_TOTAL = BigDecimal("10000")
+    }
+}
+
+@Component
+class OrderingConfigurationAdapter(private val properties: OrderingProperties) : OrderingConfigurationProvider {
+    override fun maximumOrderTotal(): Money =
+        Money(properties.maximumOrderTotal, Currency.getInstance(properties.currency))
+}
+```
+
+When `stack.dynamicConfig` isn't `none`, also write `<Area>ConfigurationRefreshTest` (a `*Test` — it starts a
+Spring context but no container) in `infrastructure/configuration`'s test sources, next to a minimal test-only
+`@SpringBootApplication @ConfigurationPropertiesScan class ConfigurationTestApplication`. It proves the
+configuration is actually dynamic — the defect Step 5 warns about:
+
+```kotlin
+@SpringBootTest(properties = ["orders.ordering.maximum-order-total=100"])
+class OrderingConfigurationRefreshTest(
+    @Autowired private val provider: OrderingConfigurationProvider,
+    @Autowired private val environment: ConfigurableEnvironment,
+    @Autowired private val refresher: ContextRefresher,
+) {
+    @Test
+    fun `maximumOrderTotal reflects a refreshed property`() {
+        assertEquals(BigDecimal("100"), provider.maximumOrderTotal().amount)
+        TestPropertyValues.of("orders.ordering.maximum-order-total=$REFRESHED").applyTo(environment)
+        refresher.refresh()
+        assertEquals(BigDecimal(REFRESHED), provider.maximumOrderTotal().amount)
+    }
+
+    private companion object {
+        const val REFRESHED = "200"
+    }
+}
+```
+
+Composition root:
+
+```kotlin
+@SpringBootApplication
+@ConfigurationPropertiesScan
+class OrdersApplication
+
+fun main(args: Array<String>) {
+    runApplication<OrdersApplication>(*args)
+}
+
+@Configuration(proxyBeanMethods = false)
+class UseCaseConfiguration {
+    @Bean
+    fun placeOrderUseCase(
+        orders: OrderRepository,
+        configuration: OrderingConfigurationProvider,
+    ): PlaceOrderUseCase = PlaceOrderUseCase(orders, configuration)
+}
+```
+
+Use-case unit test:
+
+```kotlin
+class PlaceOrderUseCaseTest {
+    private val orders = mockk<OrderRepository>()
+    private val configuration = mockk<OrderingConfigurationProvider>()
+    private val useCase = PlaceOrderUseCase(orders, configuration)
+
+    @Test
+    fun `place saves the order when the total is within the maximum`() {
+        val saved = slot<Order>()
+        every { configuration.maximumOrderTotal() } returns MAXIMUM
+        every { orders.save(capture(saved)) } answers { saved.captured }
+
+        val order = useCase.place(CUSTOMER_ID, WITHIN_MAXIMUM)
+
+        assertEquals(CUSTOMER_ID, order.customerId)
+        verify(exactly = 1) { orders.save(any()) }
+    }
+
+    @Test
+    fun `place throws ValidationException when the total exceeds the maximum`() {
+        every { configuration.maximumOrderTotal() } returns MAXIMUM
+        assertFailsWith<ValidationException> { useCase.place(CUSTOMER_ID, ABOVE_MAXIMUM) }
+        verify(exactly = 0) { orders.save(any()) }
+    }
+
+    private companion object { /* CUSTOMER_ID, MAXIMUM, WITHIN_MAXIMUM, ABOVE_MAXIMUM */ }
+}
+```
+
+Also write a plain unit test for every mapper file (`OrderMappingsTest`: entity → domain → entity round trip) and
+each configuration adapter (constructing the properties data class directly). The templates above omit KDoc and
+imports for brevity; the generated files carry both.
 
 ## Step 1 — Package layout
 
@@ -58,7 +302,9 @@ Create `src/main/java`, `src/main/resources`, and `src/test/java` under each mod
 | `boot` | `<base>` | `<Name>Application`, `config/` (composition-root `@Configuration`) |
 
 `domain`'s package holds no Spring annotations at all — the enforcer rule
-`iru-setup-java-springboot-pom` added makes that a build failure, not a guideline.
+`iru-setup-java-springboot-pom` added makes that a build failure, not a guideline. On a Gradle build there is no
+enforcer: the module graph (`project(":...")` dependencies) and Step 11's ArchUnit test are the only checks, which
+is why that test is mandatory there.
 
 ## Step 2 — `domain`: the ports
 
@@ -120,9 +366,10 @@ Per engine directory in the manifest, write:
 - **Adapter** — a `@Component` implementing the `domain` port, delegating to the Spring Data repository and the
   mapper. This is the only class in the module the rest of the service can reach through the port.
 - **Migrations/index management**, per this engine's tooling from the manifest:
-  - **Mongock** — `src/main/java/<base-path>/infrastructure/database/mongodb/migration/` with one
-    `@ChangeUnit` creating the example collection's indexes, plus the `mongock.migration-scan-package`
-    property in the module's config.
+  - **Flamingock** — `src/main/java/<base-path>/infrastructure/database/mongodb/migration/` with one
+    `@Change` class creating the example collection's indexes, enabled via `@EnableFlamingock` with a
+    `@Stage(location = "<base-path>.infrastructure.database.mongodb.migration")` on the module's configuration
+    class (the equivalent of Mongock's `migration-scan-package` property).
   - **Liquibase (SQL)** — `src/main/resources/db/changelog/db.changelog-master.yaml` including a first changeset
     that creates the example table and its indexes. If PostgreSQL was chosen and vectors may be stored, add a
     changeset with `CREATE EXTENSION IF NOT EXISTS vector;` and note it needs the `pgvector` image or a
@@ -317,12 +564,120 @@ Assert at least:
 Exclude generated sources from the ArchUnit import (`ImportOption.DoNotIncludeTests` where appropriate, plus a
 location filter for `generated-sources`), or generated DTOs will fail the naming rules.
 
+**Kotlin** — the same test, in `boot/src/test/kotlin/<base-path>/architecture/HexagonalArchitectureTest.kt`. ArchUnit
+reads bytecode, so it checks Kotlin classes exactly as Java ones, and it works unchanged on Gradle (where the other
+modules arrive on `boot`'s test classpath as jars — it is the **only** package-level boundary check there). Rules are
+`@ArchTest val` properties (ArchUnit reads Kotlin's backing fields; no `@JvmField` needed). Two details that matter:
+the generators `iru-setup-java-springboot-apis` configures emit into `*.generated.*` packages, so a location filter on
+`/generated/` excludes them; and a rule over a module group the stack doesn't have (`api`, `clients`, a database)
+fails with "failed to check any classes" unless marked `.allowEmptyShould(true)`:
+
+```kotlin
+@AnalyzeClasses(
+    packages = [HexagonalArchitectureTest.BASE],
+    importOptions = [ImportOption.DoNotIncludeTests::class, HexagonalArchitectureTest.ExcludeGenerated::class],
+)
+class HexagonalArchitectureTest {
+    @ArchTest
+    val domainIsIndependent: ArchRule =
+        noClasses().that().resideInAPackage("$BASE.domain..")
+            .should().dependOnClassesThat().resideInAnyPackage(
+                "$BASE.application..", "$BASE.infrastructure..", "$BASE.api..", "$BASE.config..",
+                "org.springframework..", "jakarta.persistence..",
+            )
+
+    @ArchTest
+    val applicationDependsOnDomainOnly: ArchRule =
+        noClasses().that().resideInAPackage("$BASE.application..")
+            .should().dependOnClassesThat().resideInAnyPackage(
+                "$BASE.infrastructure..", "$BASE.api..", "$BASE.config..", "org.springframework..",
+            )
+
+    @ArchTest
+    val infrastructureDependsOnDomainOnly: ArchRule =
+        noClasses().that().resideInAPackage("$BASE.infrastructure..")
+            .should().dependOnClassesThat().resideInAnyPackage("$BASE.application..", "$BASE.api..")
+
+    // database, configuration, clients, producers, metrics never see each other ...
+    @ArchTest
+    val infrastructureAreasAreIsolated: ArchRule =
+        slices().matching("$BASE.infrastructure.(*)..").should().notDependOnEachOther()
+
+    // ... nor do two engines or two clients inside their groups
+    @ArchTest
+    val databaseEnginesAreIsolated: ArchRule =
+        slices().matching("$BASE.infrastructure.database.(*)..").should().notDependOnEachOther()
+            .allowEmptyShould(true)
+
+    @ArchTest
+    val clientsAreIsolated: ArchRule =
+        slices().matching("$BASE.infrastructure.clients.(*)..").should().notDependOnEachOther()
+            .allowEmptyShould(true)
+
+    @ArchTest
+    val apiNeverUsesInfrastructure: ArchRule =
+        noClasses().that().resideInAPackage("$BASE.api..")
+            .should().dependOnClassesThat().resideInAPackage("$BASE.infrastructure..")
+            .allowEmptyShould(true)
+
+    @ArchTest
+    val adaptersResideInInfrastructure: ArchRule =
+        classes().that().haveSimpleNameEndingWith("Adapter").should().resideInAPackage("$BASE.infrastructure..")
+
+    @ArchTest
+    val useCasesResideInApplication: ArchRule =
+        classes().that().haveSimpleNameEndingWith("UseCase").should().resideInAPackage("$BASE.application..")
+
+    @ArchTest
+    val entryPointsResideInApi: ArchRule =
+        classes().that().haveSimpleNameEndingWith("Controller").or().haveSimpleNameEndingWith("Consumer")
+            .should().resideInAPackage("$BASE.api..")
+            .allowEmptyShould(true)
+
+    @ArchTest
+    val layering: ArchRule =
+        layeredArchitecture().consideringOnlyDependenciesInLayers()
+            .layer(DOMAIN).definedBy("$BASE.domain..")
+            .layer(APPLICATION).definedBy("$BASE.application..")
+            .layer(INFRASTRUCTURE).definedBy("$BASE.infrastructure..")
+            .optionalLayer(API).definedBy("$BASE.api..")
+            .layer(BOOT).definedBy(BASE, "$BASE.config..")
+            .whereLayer(BOOT).mayNotBeAccessedByAnyLayer()
+            .whereLayer(API).mayOnlyBeAccessedByLayers(BOOT)
+            .whereLayer(INFRASTRUCTURE).mayOnlyBeAccessedByLayers(BOOT)
+            .whereLayer(APPLICATION).mayOnlyBeAccessedByLayers(API, BOOT)
+            .whereLayer(DOMAIN).mayOnlyBeAccessedByLayers(APPLICATION, INFRASTRUCTURE, API, BOOT)
+
+    /** Drops generated code (OpenAPI/protobuf/GraphQL/AVRO output lives in `*.generated.*` packages). */
+    class ExcludeGenerated : ImportOption {
+        override fun includes(location: Location): Boolean = !location.contains("/generated/")
+    }
+
+    /** Package and layer names shared by the rules. */
+    companion object {
+        /** The service's base package. */
+        const val BASE = "<base>"
+        private const val DOMAIN = "Domain"
+        private const val APPLICATION = "Application"
+        private const val INFRASTRUCTURE = "Infrastructure"
+        private const val API = "Api"
+        private const val BOOT = "Boot"
+    }
+}
+```
+
+Add `.allowEmptyShould(true)` to any other rule whose module group the manifest doesn't have, and give every rule a
+one-line KDoc in the generated file. A negative check is cheap and worth doing once: a throwaway class in one
+infrastructure module importing another's must fail `infrastructureAreasAreIsolated` (run `clean` first — a stale
+class file in `target/`/`build/` keeps failing the test after the source is deleted).
+
 ## Step 12 — Verify
 
 Delegate to the `iru-gate-runner` agent, asking for a compact result:
 
 ```bash
-mvn -q clean test          # everything compiles, unit tests and the ArchUnit test pass
+mvn -q clean test          # Maven (Java or Kotlin): everything compiles, unit tests and the ArchUnit test pass
+./gradlew clean test       # Gradle (Kotlin): same — `test` excludes **/*IT* by the build-logic convention
 ```
 
 The build must compile and the ArchUnit test must pass. If ArchUnit fails, **fix the code, not the rule** — a
@@ -330,14 +685,27 @@ relaxed rule on day one is a rule that never applies. The one exception is a rul
 (e.g. the domain legitimately uses `spring-context` annotations by the team's choice); if so, change it
 deliberately and report it as a deviation.
 
-Don't run `mvn verify` here: the `*IT` tests need the Testcontainers harness that
+Don't run `mvn verify` (or `./gradlew integrationTest`) here: the `*IT` tests need the Testcontainers harness that
 `iru-setup-java-springboot-testcontainers` sets up in the next step, so integration tests failing at this point is
 expected rather than a defect.
+
+On a first run inside `iru-setup-java-springboot` (which runs this skill before `-apis` and `-testcontainers`), two
+things can't compile yet, and both are **compile** errors in `test`, not runtime failures: the `api/*` controllers
+and `infrastructure/clients/<name>` adapters (the generated interfaces/clients they use don't exist until
+`iru-setup-java-springboot-apis` wires the generators), and every `*IT` class (its base class — `AbstractComposeIT`,
+`Abstract<Engine>IT` — is written by `iru-setup-java-springboot-testcontainers`; Gradle's `test` and Maven's
+`test-compile` compile `*IT` sources too). Then run the command for the modules that need neither (e.g.
+`./gradlew :domain:test :application:test :infrastructure:configuration:test`, Maven `-pl`), report the rest as
+"verified by the orchestrator's Step 10", and don't treat it as a failure of this skill.
 
 ## Step 13 — Report
 
 Summarize:
 
+- The language and build tool used (`java`/`kotlin`, `maven`/`gradle`) — for Kotlin, that mappers are hand-written
+  extension functions (no MapStruct/Lombok) and use cases are wired as `@Bean`s in `boot/config`.
+- Whether the source tree was scaffolded from scratch or updated, and per pre-existing artifact the action taken
+  (**created / updated / replaced / kept as is**), with each gap left in a kept file.
 - Which modules got sources, and which were skipped because they already contained hand-written code.
 - Every **port** defined in `domain` and which adapter implements it.
 - The example aggregate/use case/endpoint written, and what it's called, so the user knows exactly what to rename

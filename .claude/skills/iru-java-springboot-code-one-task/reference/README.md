@@ -9,13 +9,14 @@ front of it actually needs, instead of carrying every rule in context on every t
 | Read | When |
 |---|---|
 | `hexagonal-architecture.md` | **Always.** It decides which module the code belongs in and what that module may import. Getting this wrong is the one mistake that can't be fixed later without moving code between modules. |
-| `code-style.md` | **Always.** Records, Lombok, MapStruct-versus-manual, `final`, type inference, Javadoc. |
+| `mandatory-rules.md` | **Always.** The non-negotiable rules for production *and* test code: JUnit not AssertJ, Mockito mocks/spies not fakes, `method_whenCondition_expectedResult` test names, one `*Test`/`*IT` class per public class, `var` with type witnesses, records with defensive copies, `final` parameters, Javadoc on every member, named constants, modern collection accessors, method references, `switch` expressions, no redundant `this`, utility predicates, LF line endings — plus the Spring-only ones: pinned locales, and Lombok `@RequiredArgsConstructor`/`@Slf4j`. |
+| `code-style.md` | **Always.** Records, Lombok, MapStruct-versus-manual, `final`, type inference, public-to-private member ordering, Javadoc. |
 | `ddd-tactical-patterns.md` | The task touches `domain` — an entity, value object, aggregate, domain service, or domain event. |
 | `solid.md` | The task introduces or changes an interface, adds a branch on type, or grows an existing class's responsibilities. Also read it when a task asks for something that smells like a god-service. |
 | `distributed-patterns.md` | The task involves Kafka, a second datastore, cross-service consistency, or anything the plan describes as "eventually consistent", "projection", "outbox", "saga", or "compensating". |
 
-If a task is a one-line change inside an existing adapter, `hexagonal-architecture.md` plus `code-style.md` is
-the whole reading list. Don't read the rest speculatively.
+If a task is a one-line change inside an existing adapter, `hexagonal-architecture.md`, `mandatory-rules.md`, and
+`code-style.md` are the whole reading list. Don't read the rest speculatively.
 
 ## The three rules that override everything else
 
@@ -26,6 +27,9 @@ the whole reading list. Don't read the rest speculatively.
    `distributed-patterns.md` are there so you recognise one when the plan calls for it and implement it
    correctly — not so you introduce one on your own initiative.
 3. **Unit tests only.** This skill never runs integration tests. See the skill's own Step 6.
+
+`mandatory-rules.md` sits alongside these: where any other file here says "match the surrounding code", its
+rules are the exception — the code you write follows them even where the module's existing code doesn't.
 
 ## Sources
 

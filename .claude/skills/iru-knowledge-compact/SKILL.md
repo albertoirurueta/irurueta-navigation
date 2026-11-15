@@ -1,18 +1,6 @@
 ---
 name: iru-knowledge-compact
-description: Compact the `knowledge/` base built by `iru-knowledge-process-inbox` — sweep `knowledge/pending` and
-  `knowledge/agreements` for (a) duplicate pending tasks, removing the duplicates that have no tracker issue
-  assigned while folding any extra context they carried into the surviving task, and (b) agreements/pending tasks
-  that are already done, determined from the state of the GitHub issue (or Jira ticket) recorded on them by
-  `iru-knowledge-to-issue`/`iru-knowledge-to-jira` — deleting the pending file and checking off the matching
-  numbered item in its `agreement-<timestamp>.md` for each one that's completed. Also fixes drift between the two
-  directories (a pending file whose agreement item is already checked, an open item whose pending file is gone).
-  Invoke as `/iru-knowledge-compact`. Always shows the full set of proposed deletions/edits for confirmation
-  before touching anything, and never removes a duplicate that has an issue assigned, or one whose duplicate
-  partner also has a different issue — those are reported for a human decision instead. Stops early if
-  `knowledge/` doesn't exist yet (run `iru-knowledge-setup` and `iru-knowledge-process-inbox` first). Use
-  whenever the knowledge base has accumulated repeated action items across meetings, or its agreements no longer
-  reflect work that has actually shipped, instead of hand-auditing every pending file.
+description: "Invoke as `/iru-knowledge-compact`. Compacts `knowledge/pending` and `knowledge/agreements`: removes duplicate pending tasks that have no tracker issue, and deletes pending files and checks off agreement items whose GitHub or Jira issue is done, fixing drift between the two. Shows all proposed changes for confirmation first. Use when the knowledge base has repeated or stale items. Stops if `knowledge/` is missing."
 model: sonnet
 ---
 

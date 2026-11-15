@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-platform
-description: Generate the OpenTofu (Terraform-compatible) infrastructure-as-code that deploys a Spring Boot service to AWS or Google Cloud, derived from the technologies the service actually uses — a remote encrypted state backend, a keyless GitHub OIDC deployment role, a container registry, the compute runtime (ECS Fargate/EKS on AWS, Cloud Run/GKE Autopilot on Google Cloud) with region and replica/CPU/memory sizing as variables, and a managed instance of each database, cache, Kafka cluster, and secret store the stack needs, always preferring the cloud provider's managed offering over a self-packaged container. Also wires load balancing, DNS, TLS, secret injection from AWS Secrets Manager or Google Secret Manager, and the IAM/RBAC the service's dynamic configuration requires. Reads `springboot-stack.yml` for the technology list and the target cloud, asks only the questions IaC genuinely cannot infer (region, environments, sizing, existing versus new infrastructure, domain names), scaffolds `infra/` with reusable modules and one directory per environment, and writes explicit manual instructions for any step OpenTofu cannot perform. Never writes a credential, token, or secret value into any file. Invoke as `/iru-setup-java-springboot-platform`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use whenever a Spring Boot service needs deployable, reviewable infrastructure-as-code instead of hand-clicked cloud resources.
+description: "Invoked as `/iru-setup-java-springboot-platform` (args: `stack-file`, `mode`, `on-existing`), normally by `iru-setup-java-springboot`. Generates OpenTofu infrastructure-as-code in `infra/` to deploy a Spring Boot service to AWS or Google Cloud with managed backing services, plus rollout infrastructure when rolling deployments are enabled."
 model: sonnet
 ---
 
@@ -26,14 +26,36 @@ Generate the OpenTofu configuration that deploys this service. Five rules govern
 
 ## Step 0 — Resolve inputs
 
-Parse `args` for `stack-file: <path>`, defaulting to `springboot-stack.yml`. Read it for `stack.cloud`, the
+Parse `args` for `key: value` lines: `stack-file: <path>`, defaulting to `springboot-stack.yml`; `mode`
+(`new`/`existing`, informational — it never means "update silently"); and `on-existing`
+(`ask`/`keep`/`update`/`replace`, default `ask`). Also resolve **rolling deployments**: `deploy.rolling` in the
+manifest (`enabled`, `strategy`, `advance`, `steps`, `bakeMinutes`) — the manifest is the source of truth when
+`stack-file` is given; the `args` lines `rolling: yes|no`, `deployment-strategy:`, `advance:`, `steps:` (comma list)
+and `bake-minutes:` apply when there is no manifest block or when the caller passes them explicitly. Absent or
+`rolling: no` means **rolling disabled: nothing in this skill changes** — generate exactly the infrastructure the
+rest of this file describes and skip every "Rolling deployments" paragraph below. Read the manifest for `stack.cloud`, the
 database engines, caches, messaging, metrics/tracing, `stack.dynamicConfig`, and whether the service exposes REST
 and/or gRPC. That tells you what infrastructure is needed. It does **not** tell you the operational parameters —
 Step 1 asks those.
 
 Check whether `tofu` (or `terraform`) is on the PATH; if not, note it, write the files anyway, and skip Step 6's
-validation with an explicit note. Check for an existing `infra/` directory: if one exists, survey it and treat
-this run as gap-filling — never overwrite a `.tf` file that manages live resources, and never touch a `.tfstate`.
+validation with an explicit note. Check for an existing `infra/` directory and say whether this run is
+**generating the infrastructure code from scratch** or **updating an existing `infra/`** (list the modules and
+`envs/*` found). Never touch a `.tfstate`, whatever is chosen below. For each existing file group this skill owns
+(per module under `infra/modules/`, per environment under `infra/envs/`, the backend configuration), warn and —
+unless `on-existing` says otherwise — ask with `AskUserQuestion` (up to 4 per call, one question each):
+
+- **Update — fill gaps (Recommended)** — today's behaviour: add missing modules/resources/variables/outputs for
+  technologies newly in the manifest and correct provider/version pins this skill owns; never rewrite an existing
+  resource block that may manage live infrastructure. Customizations survive.
+- **Keep as is** — leave the group untouched; it may lack infrastructure for newly added technologies — Step 7
+  lists each gap.
+- **Replace** — regenerate the group from this skill's templates; customizations are lost (recoverable only from
+  git history), and **a regenerated resource block can produce a destructive plan against live infrastructure**
+  (renamed addresses mean destroy-and-recreate). Only offer it with that warning, ask for an explicit second
+  confirmation for any environment that has remote state, and treat an `on-existing: replace` from `args` as
+  Update for those environments (say so) — a scripted run must not be able to replace live-resource
+  configuration unattended.
 
 ## Step 1 — Ask what cannot be inferred
 
@@ -138,7 +160,7 @@ only what the stack actually needs.
 | Need | Managed service | Notes to put in the generated comments |
 |---|---|---|
 | Compute | ECS Fargate service + ALB target group, or EKS deployment | Fargate needs no capacity management |
-| MongoDB | **MongoDB Atlas** (via the `mongodbatlas` provider), not DocumentDB | DocumentDB emulates an older MongoDB wire protocol and lacks features Spring Data and Mongock use; if the user insists on staying in-account, flag the compatibility risk explicitly and test the migration tooling against it early |
+| MongoDB | **MongoDB Atlas** (via the `mongodbatlas` provider), not DocumentDB | DocumentDB emulates an older MongoDB wire protocol and lacks features Spring Data and Flamingock use; if the user insists on staying in-account, flag the compatibility risk explicitly and test the migration tooling against it early |
 | PostgreSQL | RDS or Aurora PostgreSQL | `pgvector` is available as an extension — must be enabled per database; confirm the engine version supports the needed version |
 | MariaDB | RDS MariaDB | — |
 | Couchbase | **Couchbase Capella** (its own provider) | no first-party AWS equivalent |
@@ -156,7 +178,7 @@ only what the stack actually needs.
 | Need | Managed service | Notes |
 |---|---|---|
 | Compute | Cloud Run service, or GKE Autopilot deployment | Cloud Run scales to zero — excellent for `dev`; note cold starts, and that `min-instances: 1` avoids them at a cost |
-| MongoDB | MongoDB Atlas on GCP | Firestore is not MongoDB-compatible enough for Spring Data MongoDB + Mongock |
+| MongoDB | MongoDB Atlas on GCP | Firestore is not MongoDB-compatible enough for Spring Data MongoDB + Flamingock |
 | PostgreSQL | Cloud SQL for PostgreSQL, or AlloyDB | `pgvector` supported; AlloyDB for heavier analytical load |
 | MariaDB | Cloud SQL for MySQL (MariaDB-compatible) | not a true MariaDB — flag the driver/compatibility implication |
 | Couchbase | Couchbase Capella | — |
@@ -168,6 +190,89 @@ only what the stack actually needs.
 | Secrets | Secret Manager | required by `dynamicConfig: kubernetes` (mounted) or read directly |
 | Load balancer / DNS / TLS | Global external Application Load Balancer, Cloud DNS, Google-managed certificates | Cloud Run + gRPC needs HTTP/2 end-to-end |
 | Network | VPC, Serverless VPC Access connector (Cloud Run → private database), firewall rules | a Cloud Run service **cannot** reach a private Cloud SQL/Memorystore instance without the connector — this is the most common omission |
+
+### Rolling deployments (only when rolling is enabled)
+
+Design (decided up front, see Step 7's report): **the workflow drives the shifting and the rollout state lives in the
+cloud**, so `promote.yml` is stateless — it reads the current split from the platform and sets the next one. Per
+runtime the OpenTofu configuration therefore creates the *capability* to hold two versions and to split traffic
+between them, but never the split itself: ignore the live weights/traffic/step in `lifecycle { ignore_changes }`
+so a later `tofu apply` for an unrelated change cannot reset an in-flight rollout. New versions always deploy at
+**0 % traffic**. Strategy `rolling` has no second environment: use the runtime's native rolling update
+(ECS `deployment_configuration` with `minimum_healthy_percent`/`maximum_percent` and the deployment circuit breaker
+with rollback enabled; Cloud Run's normal revision rollout; a plain Kubernetes `Deployment` with `RollingUpdate`),
+`advance: auto`, health-check gated, with the documented weaker rollback (re-deploy the previous image).
+
+Every environment's `outputs.tf` exposes (alongside the existing `service_health_url`):
+
+| Output | Meaning |
+|---|---|
+| `rollout_candidate_url` | URL of the green version at 0 % production traffic (ALB test listener / Cloud Run tag URL / preview Service) |
+| `rollout_gate` | `cloudwatch` \| `cloud-monitoring` \| `prometheus` |
+| `rollout_alarm_names` | ECS: list of CloudWatch alarm names the gate watches |
+| `rollout_target_groups` | ECS: the blue and green target group names (and ARNs for the listener) |
+| `rollout_name` | Kubernetes: the Argo `Rollout` name |
+
+**AWS — ECS Fargate** (`modules/service`):
+
+- Two target groups (`blue`, `green`) with identical health checks (`/actuator/health/readiness` on the management
+  port) and, per the gRPC note in the AWS table, the right protocol version. Two ECS services (`blue`, `green`
+  slots), each registered with its own target group, so that either slot can hold the stable version; the workflow
+  deploys the new image into the *idle* slot (image tag passed as a per-slot variable) and the other slot keeps
+  serving. The idle slot is found by reading the listener weights, never from state.
+- The ALB production listener has a weighted `forward` action with both target groups, initially 100/0
+  (`ignore_changes` on the weights), plus a **test listener** (a separate port, security-group-restricted to the
+  CI runners' egress or an allow-listed CIDR variable, or a header/path rule) that forwards 100 % to the green
+  target group — its DNS name + port is `rollout_candidate_url`. **An ALB is required**; if the service is exposed
+  through anything else (NLB only, API Gateway), flag it and stop rather than generate a canary that cannot split
+  traffic. `deployment_controller { type = "ECS" }` (rolling-update controller) on both services — the workflow, not
+  ECS, moves the traffic.
+- CloudWatch alarms as the metric gate: ALB 5xx rate on the green target group, target-response-time p95 above a
+  threshold variable, and unhealthy-host count > 0 — names listed in `rollout_alarm_names`, thresholds as variables
+  with documented defaults to tune.
+- Outputs per the table above. The OIDC deploy role (Common section) additionally gets, scoped to the listener, rules
+  and target groups of this service: `elasticloadbalancing:ModifyListener`, `ModifyRule`, `DescribeListeners`,
+  `DescribeRules`, `DescribeTargetHealth`, `AddTags`, `RemoveTags`, `DescribeTags` (the deploy/promote workflows keep "which slot is the candidate" in a `rollout-candidate` tag on the production listener), `cloudwatch:DescribeAlarms`, and `ecs:UpdateService`/`DescribeServices`
+  for both services — never `*` resources.
+- **Native ECS strategies — verified decision.** Checked against the current AWS developer guide ("Amazon ECS
+  blue/green deployments") when this skill was authored: ECS now offers a native blue/green deployment type with a
+  test listener, lifecycle hooks (Lambda or pause hooks continued with `ContinueServiceDeployment`), bake time and
+  alarm-based rollback, and ECS itself performs the traffic shift. It was **not** chosen as the primary mechanism
+  because the workflow-driven model gives `promote.yml` the same shape on ECS, Cloud Run and Kubernetes and supports
+  an unbounded number of manual steps without a Lambda. It is the documented alternative for `advance: auto` only.
+  Re-check the guide for the exact `deployment_configuration` arguments in the provider schema before offering it;
+  if the AWS provider version pinned here lacks them, say so instead of guessing.
+
+**Google Cloud — Cloud Run** (`modules/service`):
+
+- `google_cloud_run_v2_service` with an explicit `traffic` block pinned to the **stable revision** (type
+  `TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION`, 100 %), with `ignore_changes` on `traffic`, so a new revision created by
+  `tofu apply` receives **0 %** instead of `LATEST` taking everything. A revision **tag** gives the candidate URL
+  (`rollout_candidate_url`), so the green revision is reachable before it takes traffic.
+- Metric gate: a Cloud Monitoring alert policy (5xx ratio, p95 latency from `run.googleapis.com/request_*`) scoped to
+  the service, whose name is exported; `rollout_gate = "cloud-monitoring"`. The workflow also runs the same MQL/
+  PromQL query directly (the alert policy is for humans and for the audit trail).
+- Deploy service account: `roles/run.developer`, or a custom role, bound **on the service** (not the project), plus
+  `roles/iam.serviceAccountUser` on the runtime service account; `run.admin` scoped to this one service only when
+  `run.services.setIamPolicy` is really needed — say which and why in the generated comment. Never project-wide.
+
+**EKS / GKE Autopilot** (Kubernetes manifests in the `service` module):
+
+- **Argo Rollouts controller** — installed with a `helm_release` (pinned chart version, own namespace) or, when the
+  org already runs it, verified with a `data` lookup and a documented prerequisite; ask which (`AskUserQuestion`)
+  because a cluster-wide controller may be a platform-team decision. **Flagger is the documented alternative and is
+  not generated.**
+- The `Deployment` becomes an Argo `Rollout` (`kubernetes_manifest`) whose canary steps **start with `setWeight: 0` then `pause: {}`** (so a new version deploys at 0 % and the first `promote` moves it to step 1 — the workflows rely on it) with `strategy.canary` (stable/canary
+  Services, `steps` taken from the manifest: `setWeight` + a `pause` per step) or `strategy.blueGreen` (active/
+  preview Services, `autoPromotionEnabled: false`, `previewReplicaCount`). For `advance: manual|hybrid` the human
+  step is `pause: {}` (indefinite), resumed by `kubectl argo rollouts promote` from `promote.yml`; for `auto` use
+  timed pauses of `bakeMinutes`. Preview/canary Service DNS is `rollout_candidate_url`; the `Rollout` name is
+  `rollout_name`.
+- `AnalysisTemplate` (+ `ClusterAnalysisTemplate` when shared) querying Prometheus for error rate and p95 latency,
+  referenced from the steps for `auto`/`hybrid`; `rollout_gate = "prometheus"`. Requires the Prometheus address as
+  a variable (managed Prometheus when `stack.metrics`).
+- Cluster RBAC for the deploy identity to `get`/`list`/`patch` `rollouts` and `rollouts/status` in the service
+  namespace only.
 
 ### Dynamic configuration wiring
 
@@ -211,6 +316,15 @@ Write `infra/README.md` covering, concretely rather than generically:
     service quotas cannot);
   - SSO/OAuth provider configuration if `stack.security.enabled`.
 - What each variable means and its blast radius.
+- **Rolling deployments prerequisites (only when rolling is enabled)**: an ALB is required for ECS blue/green,
+  canary and linear (weighted target groups); the service's metrics endpoint must be scraped by Prometheus for the
+  Kubernetes `AnalysisTemplate` (and the Prometheus address supplied); the CloudWatch alarm / Cloud Monitoring
+  thresholds are starting points to tune against real traffic; the Argo Rollouts controller must exist on the
+  cluster (installed by the Helm release or by the platform team); the test listener / candidate URL must be
+  reachable from the CI runners; and **cost** — blue/green and canary temporarily run both versions, roughly
+  doubling the service's compute during a rollout, plus the extra target group/listener/alarms. Also document how to
+  inspect and reset the cloud-side split by hand (listener weights, `gcloud run services update-traffic`,
+  `kubectl argo rollouts status|abort`).
 - How to destroy an environment safely, and what has deletion protection on purpose (production databases should;
   say so).
 
@@ -224,6 +338,12 @@ tofu -chdir=infra/envs/<env> validate
 tofu fmt -recursive infra/
 ```
 
+When rolling is enabled this covers the rollout additions too: both target groups and the weighted listener, the
+alarms, the Cloud Run traffic/tag, and the Helm release / `Rollout` / `AnalysisTemplate` — `kubernetes_manifest`
+resources need cluster access at plan time, so validate their schema and report any that only a real `plan` can
+check as unverified rather than assuming. Confirm that `ignore_changes` is present on every weight/traffic
+attribute (a second `plan` after the first must show no traffic change).
+
 `-backend=false` lets validation run before the backend exists. Fix every error — an argument that doesn't exist
 in the provider schema, a missing required argument, a type mismatch.
 
@@ -236,7 +356,13 @@ destroy in the plan means the configuration is fighting something that already e
 
 Summarize:
 
+- Whether `infra/` was generated from scratch or updated, and per file group the action taken (**created /
+  updated / replaced / kept as is**), with each gap left in a kept group.
 - The cloud, environments, regions, and sizing generated.
+- Whether rolling deployments are **enabled or disabled** (strategy, advance, steps, bake minutes), the rollout
+  resources created per runtime, the `rollout_*` outputs the deploy/promote workflows consume, the design decision
+  (workflow-driven shifting, state in the cloud; ECS native strategies as the `advance: auto` alternative) and the
+  rollout prerequisites from Step 5.
 - The compute runtime chosen, and every managed service the configuration will create versus reference as
   existing.
 - Where the service's **third-party** dependencies land (Atlas, Capella, Aura, Qdrant Cloud, Confluent/Elastic
@@ -258,6 +384,8 @@ Warn explicitly:
   sensitive.
 - **The undeploy workflow (`iru-setup-java-springboot-github-workflows`) can destroy these resources.** Confirm
   deletion protection is enabled on anything holding data before that workflow exists in a state where someone
-  can run it.
+  can run it. If the manifest's `ci.enabled` is `false`, no deploy/undeploy workflow is generated: every
+  `tofu apply`/`tofu destroy` is a manual run from a workstation, so the same deletion-protection advice applies
+  to whoever runs it, and the OIDC identity created for CI is not needed until workflows are added — say so.
 - Provider versions are pinned; upgrading one is a reviewed change, because a provider major version can produce a
   destructive plan for unchanged configuration.

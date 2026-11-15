@@ -1,11 +1,6 @@
 ---
 name: iru-knowledge-setup
-description: Create the `knowledge/` directory at the repository root with its five subdirectories — `inbox`,
-  `meetings`, `people`, `agreements`, and `pending` — each containing a `.gitkeep` file so git tracks the empty
-  directory. Invoke as `/iru-knowledge-setup`. Idempotent — safe to re-run; only creates whichever
-  directories/`.gitkeep` files don't already exist, and never overwrites or deletes existing content. Use once,
-  before `iru-knowledge-process-inbox` or `iru-knowledge-complete` are run for the first time in a repository, to
-  bootstrap the knowledge base's folder structure.
+description: "/iru-knowledge-setup - creates the knowledge/ directory with inbox, meetings, people, agreements and pending subdirectories, each with a .gitkeep. Idempotent: only creates what is missing, never overwrites or deletes. Use once per repository before iru-knowledge-process-inbox or iru-knowledge-complete, to bootstrap the knowledge base folders."
 model: haiku
 ---
 

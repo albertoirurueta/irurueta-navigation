@@ -1,6 +1,6 @@
 ---
 name: iru-dotnet-docfx
-description: Audit given C# class(es)/type(s) for complete XML doc-comment coverage — type-level `<summary>` (and `<typeparam>` for generics), every field/property/constant/event, every constructor/method (including private ones and any nested type or enum member) — generate any missing or incomplete XML doc comments grounded in the actual code and current changes, then attempt a best-effort documentation report via DocFX (https://dotnet.github.io/docfx/). Invoke as `/iru-dotnet-docfx <TypeName1,TypeName2,...>` (or file paths), or `/iru-dotnet-docfx` with no argument to scope to types touched by uncommitted changes plus commits on the current branch not yet on the base branch. Checks whether the `docfx` .NET tool is installed and attempts to install it (`dotnet tool install -g docfx`) if it isn't; if installation fails, documenting the code still proceeds, but no HTML documentation report is generated and the user is warned explicitly. Works against any .NET/C# project — it discovers the project's own doc-comment conventions rather than assuming a fixed style. Use whenever the user wants XML doc-comment completeness checked and filled in for specific types, instead of relying on a full DocFX site build to surface gaps.
+description: "/iru-dotnet-docfx [TypeName1,TypeName2,...] audits C# types for complete XML doc comments, generates missing ones, and attempts a DocFX report (installing the docfx tool if needed); none means types touched by uncommitted and branch-only changes. Handles Windows desktop apps via the root docfx.json; WinUI reported unverified off Windows."
 model: sonnet
 ---
 
@@ -129,7 +129,10 @@ or reorder members — this skill only adds/completes `///` doc comments.
 Run `command -v docfx` (or `docfx --version`). If it succeeds, skip to Step 7.
 
 If it's missing, attempt to install it: `dotnet tool install -g docfx` (requires the .NET SDK, which this being a
-.NET project implies is already present). Re-check `command -v docfx` afterward.
+.NET project implies is already present). Re-check `command -v docfx` afterward. If the repository has a tool
+manifest (`.config/dotnet-tools.json`) listing `docfx`, prefer `dotnet tool restore` and invoke it as
+`dotnet docfx …` instead. When the .NET SDK isn't installed in a default location (a user-local or CI-cached SDK),
+`docfx` also needs `DOTNET_ROOT` pointing at that SDK's root — without it the tool can't find a runtime.
 
 If the install attempt fails (e.g. no network access, no .NET SDK on `PATH`), stop here for the reporting step —
 do **not** attempt any other install method or ask the user to intervene. Documenting the code in Steps 1-5 has
@@ -163,6 +166,17 @@ failed install into the Step 8 report so the user can see why and install it the
   don't fix them unless the user asks.
 - On success, the generated static site lands under `_site/` (DocFX's default `build.dest`, or whatever the
   project's `docfx.json` overrides it to) — note that path in the report so the user can open `_site/index.html`.
+- **Windows desktop app repositories** (a `WinExe` project with `UseWPF`/`UseWindowsForms`/`UseWinUI`): the
+  `iru-setup-windows-app` scaffold puts `docfx.json` at the repository root with `metadata[].src` limited to the
+  UI-free Core project (`src/<App>.Core`) — the public API worth documenting; the CI `docs` job publishes the result
+  under the Antora site's `api/`. Use that file as-is. Types in scope that live in the app project are still audited
+  and documented (Steps 3–5), but they appear in the generated site only if `docfx.json` includes the app project:
+  - WPF / Windows Forms app project — DocFX metadata extraction works on any host when the project builds with
+    `EnableWindowsTargeting=true` (set in the scaffold's `Directory.Build.props`; verified on macOS for WPF).
+  - WinUI app project — metadata extraction needs a build, and a WinUI project builds only on Windows: off Windows,
+    report the DocFX check for it as **unverified (needs Windows)** and never widen `docfx.json` to include it there.
+  Generated XAML partials (`*.g.cs`, `InitializeComponent`) and MVVM Toolkit generated members carry their own
+  comments or `<inheritdoc/>` — never audit them.
 
 ## Step 8 — Report
 
@@ -184,3 +198,19 @@ State plainly whether the documentation report was generated:
 
 Do not run a full CI/site-publish pipeline, fix analyzer issues unrelated to doc comments, or add/modify tests —
 those are a separate quality/implementation skill's job, if this project has one.
+
+## Known quirks
+
+Verified in `$TMPDIR/iru-verify/windows/gates/` on macOS 27 (arm64), .NET SDK 10.0.402, DocFX 2.81.0 installed with
+`dotnet tool install --tool-path <dir> docfx` (a local tool path, not global):
+
+- The `iru-setup-windows-app` layout — a root `docfx.json` with `metadata[].src` = `src/<App>.Core` (`**/*.csproj`),
+  `dest` `docfx/api`, and a build section rendering `docfx/**.{md,yml}` (the generated `docfx/api/*.yml` plus the
+  hand-written `docfx/index.md`/`docfx/toc.yml`) into `build/docfx` (the folder the docs workflow copies under the
+  Antora site's `api/`): `docfx metadata
+  docfx.json` and `docfx build docfx.json` both finished with 0 warnings/0 errors and produced one YAML page per Core
+  type (including a CommunityToolkit.Mvvm view model with generated partial members).
+- The same metadata step pointed at a WPF app project (`net10.0-windows`, `EnableWindowsTargeting` in
+  `Directory.Build.props`) also succeeded on macOS (`App`, `MainWindow` pages).
+- With the SDK in a non-default location, `docfx` needed `DOTNET_ROOT` set to it.
+- **Unverified locally (needs Windows)**: DocFX metadata for a WinUI project (it doesn't build off Windows).

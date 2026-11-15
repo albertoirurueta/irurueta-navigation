@@ -1,6 +1,6 @@
 ---
 name: iru-pr-review
-description: Review an already-open pull request's changes by id, on whichever platform hosts the repository (GitHub, Bitbucket, Azure DevOps, or TFS) and whatever language(s)/framework(s) are in play — both detected via the `iru-explore` skill and used throughout instead of assuming GitHub/`gh` or generic checklist advice. Optionally takes the linked GitHub issue id or Jira key as a second argument (skipping auto-detection); otherwise looks for a reference in the PR title/body (e.g. "Closes #N" or a bare Jira key) and fetches that ticket for context on intent. Runs the `iru-explore` skill (grounded in the linked ticket when there is one) to understand the codebase's current architecture, conventions, and detected tech stack before judging the diff, so convention/architecture-drift findings are checked against the actual best practices for that stack (e.g. hexagonal architecture/DDD layering for a backend service, MVC/MVVM for a UI layer, unidirectional data flow for SwiftUI/Jetpack Compose) rather than a one-size-fits-all standard. When the `code-review` skill is available, delegates the correctness/reuse/simplification/efficiency analysis to it (via its `--comment` flag) rather than duplicating that logic, and layers on its own checks for ticket-intent alignment and codebase-convention drift; if `code-review` isn't available, runs the full review itself. Drafts its own findings and — after explicit confirmation — posts them as inline review comments on the pull request for manual follow-up. Invoke as `/iru-pr-review <pr-id> [ticket-id]`. Use when the user wants an actual PR reviewed and commented on, not a description generated (`iru-pr-description`).
+description: "/iru-pr-review <pr-id> [<issue-id-or-jira-key>] - reviews an already-open pull request on GitHub, Bitbucket, Azure DevOps or TFS. Uses iru-explore to learn the stack and architecture, fetches the linked ticket (given, or found in the PR title/body), delegates correctness findings to the code-review skill with --comment when available (else reviews fully itself), and adds ticket-intent and codebase-convention checks. Posts findings as inline comments only after explicit confirmation. Use to review and comment on a real PR; for a description use iru-pr-description."
 model: opus
 ---
 
@@ -130,7 +130,16 @@ From the exploration, note in particular: the architectural patterns and abstrac
 consistent with, any contributor conventions documented in `CLAUDE.md`/`README`/`AGENTS.md` (naming, error
 handling, validation, documentation requirements, etc.), and the language/tooling in play (so Step 7 can apply
 the right idioms and check for the right lint/static-analysis config — e.g. Checkstyle/PMD/SpotBugs rules for
-Java, an ESLint/Prettier config for JS/TS, and so on — read any such config found rather than assuming defaults).
+Java, ESLint / Prettier / Biome (`eslint.config.*`, `.prettierrc*`, `biome.json`) plus `tsconfig.json` (strictness
+flags) for JS/TS, Detekt / ktlint / Android Lint (`detekt.yml`, `.editorconfig` ktlint rules, `lint.xml`,
+`lintOptions`/`lint {}` in Gradle) for Kotlin/Android, PHPStan / Psalm / PHPCS / Pint / PHP-CS-Fixer
+(`phpstan.neon*`, `psalm.xml`, `phpcs.xml*`, `pint.json`, `.php-cs-fixer.dist.php`) for PHP, Ruff / mypy
+(`[tool.ruff]`/`[tool.mypy]` in `pyproject.toml`, `ruff.toml`/`.ruff.toml`, `mypy.ini`/`setup.cfg`, the
+`[tool.django-stubs]`/pydantic mypy plugins) plus `[tool.pytest.ini_options]` markers for Python, SwiftLint /
+swift-format (`.swiftlint.yml`, `.swift-format`) for Swift, clippy / rustfmt / cargo-deny (`[lints]` in
+`Cargo.toml`, `clippy.toml`, `rustfmt.toml`, `deny.toml`) for Rust, golangci-lint (`.golangci.yml`, v1 vs v2 config) for
+Go, and so on — and for a command-line tool, whether the change keeps its stdout/stderr, `--json` schema and exit-code
+contract intact — read any such config found rather than assuming defaults).
 
 ## Step 6 — Delegate to the `code-review` skill when available
 
@@ -180,16 +189,81 @@ and the codebase's own architecture and conventions (from Step 5). Look for:
    view/ViewModel violating MVC/MVVM separation (state mutation in the view, business logic in the view layer),
    or a Compose/SwiftUI screen breaking unidirectional data flow. Judge this against how the codebase *actually*
    applies that pattern (from Step 5), not an idealized textbook version of it.
+3. **Stack-specific pitfalls** — framework traps a generic correctness pass tends to miss, for whichever stacks
+   Step 5 detected (only the ones actually in play), e.g.:
+   - **Kotlin + Spring Boot**: Spring/JPA classes relying on the `kotlin-spring` (all-open) and `kotlin-jpa`
+     (no-arg) compiler plugins — a final `@Configuration`/`@Transactional` class or an entity without them breaks
+     proxies/lazy loading silently; `data class` JPA entities (`equals`/`hashCode` over mutable, generated-id
+     state); `@Transactional` on `suspend fun` without a reactive transaction manager, or a coroutine launched
+     (`GlobalScope.launch`, a new scope) inside a transaction, losing the transaction context; `block()`/blocking
+     I/O on an event-loop thread; self-invocation bypassing `@Transactional`/`@Cacheable`.
+   - **Quarkus**: build-time CDI rules — beans looked up dynamically without `@Unremovable`, private injection
+     points (reflection, warnings), beans lacking a bean-defining annotation; `@Transactional` on the
+     entity/repository instead of the calling service/resource, or writes outside a transaction; blocking calls
+     in a `Uni`/`Multi` pipeline or a non-`@Blocking` reactive endpoint (event loop); reflection-based code
+     (Jackson on non-registered classes, `Class.forName`) without `@RegisterForReflection` when native builds are
+     used; Kotlin classes missing the all-open/no-arg configuration Quarkus doesn't add automatically.
+   - **PHP**: missing `declare(strict_types=1);` where the codebase uses it; mass assignment (`$guarded = []`,
+     `$request->all()` into `create()`/`fill()` instead of validated/`safe()` data); N+1 queries (missing
+     `with()`/eager loading in loops); unescaped output (`{!! !!}`, `echo $var`) and raw SQL built from input.
+     **WordPress**: missing nonce verification (`check_admin_referer`/`wp_verify_nonce`) and capability checks
+     (`current_user_can`) on state-changing handlers, AJAX/REST endpoints (`permission_callback`), unprepared
+     `$wpdb` queries (no `$wpdb->prepare`), input not sanitized (`sanitize_*`, `wp_unslash`) and output not
+     escaped late (`esc_html`/`esc_attr`/`esc_url`/`wp_kses`), unprefixed globals/functions. **PrestaShop**:
+     hooks registered in `install()` without matching `registerHook`/uninstall cleanup, `Tools::getValue()` input
+     used without validation/casting (`(int)`, `Validate::is*`), SQL through `Db::getInstance()` without `pSQL()`/
+     `bqSQL()`/`(int)` escaping, missing `$this->trans()`/admin token checks.
+   - **NestJS**: DTOs imported with `import type` (erases the class — `ValidationPipe` silently skips
+     validation); global pipes/guards/interceptors/filters registered via `app.useGlobal*()` in `main.ts` instead
+     of `APP_PIPE`/`APP_GUARD`/... providers (not applied in tests, not overridable), or registered from more than
+     one module; `REQUEST`-scoped providers bubbling scope up the injection chain, or per-request state kept on a
+     singleton; providers not exported/imported where used; ESM relative imports with the `.js` extension
+     "fixed" away.
+   - **FastAPI**: blocking I/O (sync DB driver, `requests`, `time.sleep`) inside an `async def` path operation or
+     dependency (use `def` to run it in the threadpool, or an async client); request/response bodies as raw
+     `dict` instead of Pydantic models, or a `response_model`/return type that leaks fields (the table model
+     instead of `XPublic`, password hashes); an `AsyncSession` shared across requests/tasks instead of a
+     per-request `Depends` yield dependency; `@app.on_event` instead of `lifespan`; settings read from
+     `os.environ` ad hoc instead of the `pydantic-settings` dependency; tests hitting real services instead of
+     `app.dependency_overrides`; an Alembic migration missing for a model change.
+   - **Django**: N+1 queries (missing `select_related`/`prefetch_related`, no `assertNumQueries`); a model change
+     without its migration (or a hand-edited applied one); multi-write services without `@transaction.atomic`,
+     or side effects (emails, tasks) not deferred with `transaction.on_commit`; business logic in signals,
+     views or serializers instead of services; raw SQL / `.extra()` / `RawSQL` built from input; DRF viewsets
+     without explicit `permission_classes`/queryset scoping to the requesting user, or serializers with
+     `fields = "__all__"`; settings with a default `SECRET_KEY`/`DEBUG = True` outside local/test; references
+     to `auth.User` instead of `settings.AUTH_USER_MODEL`/`get_user_model()`.
+   - **Next.js**: server/client boundary — `'use client'` placed too high, hooks or browser APIs in Server
+     Components, non-serializable props crossing the boundary, server-only modules (secrets, DB) importable from
+     client code (no `server-only`); Server Actions without authentication/authorization and input validation
+     inside the action itself (they are public POST endpoints); caching semantics that don't match the project's
+     Next major version / `cacheComponents` setting (e.g. assuming `fetch` is cached by default on 15+, sync
+     `params`/`cookies()` on 15+/16, one-argument `revalidateTag` on 16, runtime data read inside `'use cache'`);
+     secrets exposed through `NEXT_PUBLIC_*` env vars.
+
+   - **User interfaces (any stack — web, Android, Apple, React Native, KMP, Windows, terminal UIs)**: a screen or
+     component built as one monolith instead of composed components; subclassing a screen/component to tweak it
+     instead of composing; presentational components that fetch data, navigate or read global state; events
+     leaking raw framework event objects, or two-way binding on collections/domain objects; a data-driven or long
+     list, grid, carousel, pop-up list or tab strip built eagerly instead of on the platform's virtualizing/
+     recycling container (`RecyclerView`/`ListAdapter`+`DiffUtil`, `LazyColumn` with `key`, SwiftUI `List`,
+     `UICollectionView` diffable data source, `FlatList` with `keyExtractor`, a web virtualizer, a WPF virtualizing
+     `ListView`), index keys, or selection state kept in recycled item views; hard-coded user-visible strings or
+     left/right instead of start/end; missing accessible names/alt text, contrast or touch-target problems; a new
+     or changed screen/component without UI tests covering its states, events, left-to-right and right-to-left,
+     light and dark, its `.ui-screenshots/` captures and the accessibility check at the repository's
+     `.ui-quality.yml` level; a UI change that leaves the Antora `ui/` pages and `images/ui/` screenshots stale
+     (suggest `/iru-update-docs`).
 
 If Step 6 didn't run, also look for, using general best practices for the language in use:
 
-3. **Correctness bugs** — logic errors, edge cases the code doesn't handle, incorrect assumptions, concurrency
+4. **Correctness bugs** — logic errors, edge cases the code doesn't handle, incorrect assumptions, concurrency
    issues, resource leaks.
-4. **Security issues** — anything resembling the OWASP top 10 (injection, unsafe deserialization, missing input
+5. **Security issues** — anything resembling the OWASP top 10 (injection, unsafe deserialization, missing input
    validation at boundaries, secrets in code, etc.) relevant to the language/framework in play.
-5. **Test coverage** — new/changed behavior without a corresponding test, or tests that don't actually exercise
+6. **Test coverage** — new/changed behavior without a corresponding test, or tests that don't actually exercise
    the edge cases the change introduces.
-6. **Simplification/reuse/efficiency** — real, non-cosmetic opportunities: duplicated logic that already exists
+7. **Simplification/reuse/efficiency** — real, non-cosmetic opportunities: duplicated logic that already exists
    elsewhere in the codebase, unnecessary complexity, obvious inefficiencies. Skip nitpicks and pure style
    preferences that aren't backed by a documented convention.
 
