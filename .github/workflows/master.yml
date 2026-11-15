@@ -41,17 +41,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
 
-      - name: Install Antora
-        run: |
-          cd docs
-          npm i -D -E antora
-          npm i @antora/lunr-extension
-          npm i @sntke/antora-mermaid-extension
-          npm i @djencks/asciidoctor-mathjax
+      - name: Install docs toolchain
+        working-directory: docs
+        run: npm ci
+
+      - name: Show Antora version
+        working-directory: docs
+        run: npx antora -v
 
       - name: Build Antora docs
-        run: cd docs && npx antora antora-playbook.yml
+        working-directory: docs
+        run: npx antora antora-playbook.yml
+
+      - name: Index the site for search
+        working-directory: docs
+        run: npx pagefind --site build/site
 
       - name: Merge documentation
         run: |

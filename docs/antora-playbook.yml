@@ -16,9 +16,18 @@ ui:
         static_files:
         - .nojekyll
     - path: .nojekyll
+    - path: partials/article.hbs
+      contents: ./ui-overrides/partials/article.hbs
+    - path: partials/footer-scripts.hbs
+      contents: ./ui-overrides/partials/footer-scripts.hbs
+    - path: partials/head-styles.hbs
+      contents: ./ui-overrides/partials/head-styles.hbs
+    - path: partials/header-content.hbs
+      contents: ./ui-overrides/partials/header-content.hbs
+    - path: css/pagefind-site.css
+      contents: ./ui-overrides/css/pagefind-site.css
 antora:
   extensions:
-    - require: "@antora/lunr-extension"
     - require: '@sntke/antora-mermaid-extension'
       mermaid_library_url: https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs
       script_stem: header-scripts
