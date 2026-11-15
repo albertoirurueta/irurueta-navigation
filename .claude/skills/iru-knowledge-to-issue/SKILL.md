@@ -1,24 +1,6 @@
 ---
 name: iru-knowledge-to-issue
-description: Convert one or more pending/not-completed agreements from the `knowledge/` base (built by
-  `iru-knowledge-process-inbox`) into a GitHub issue. Asks the user which agreement(s) to convert, accepting a
-  pending task id (`<timestamp>-<n>`), a `knowledge/pending/pending-*.md` filename, a `knowledge/agreements/
-  agreement-*.md` filename/id (with an item number if it has more than one open item), or a plain natural-language
-  description — searching `knowledge/pending` and `knowledge/agreements` by content when given the latter. Once an
-  agreement is resolved, gathers additional context from its meeting's full transcription and attachments (via
-  `knowledge/meetings/meeting-<timestamp>/`) and from the current codebase (via the `iru-explore` skill), then
-  hands the synthesized purpose to the `iru-create-github-issue` skill to draft and file the issue — passing the
-  meeting transcription and attachments along too, either as an actual attachment (small text embedded, large/
-  binary uploaded as a release asset, per that skill's own logic) or, when the file is already committed and
-  pushed in this repository, as a link to it instead of duplicating its content. Invoke as
-  `/iru-knowledge-to-issue` to be asked which agreement(s) to convert, or `/iru-knowledge-to-issue
-  <id-filename-or-description>` to skip straight to resolving that one. Stops early if `knowledge/` doesn't exist
-  yet (run `iru-knowledge-setup` and `iru-knowledge-process-inbox` first) or if this repository isn't hosted on
-  GitHub. Does not mark the source agreement complete — filing an issue means the work is now tracked, not done;
-  it instead appends the created issue's URL back onto the pending file (and a note on the agreement item) so a
-  re-run doesn't file a duplicate, leaving `iru-knowledge-complete` as the step that later closes it out for real.
-  Use whenever a meeting agreement or action item needs to become actionable GitHub-issue work instead of staying
-  a markdown checkbox nobody triages.
+description: "/iru-knowledge-to-issue [<id-filename-or-description>] - converts pending agreements from the knowledge/ base into a GitHub issue. Accepts a pending task id, a pending or agreement filename (plus item number), or a plain description; no argument asks which to convert. Adds meeting transcription and codebase context (iru-explore), files via iru-create-github-issue, attaches or links the meeting files, and records the issue URL on the pending file so a re-run does not duplicate. Does not mark the agreement complete (iru-knowledge-complete does). Stops if knowledge/ is missing or the host is not GitHub. Use to turn meeting action items into GitHub issues."
 model: sonnet
 ---
 

@@ -1,11 +1,6 @@
 ---
 name: iru-knowledge-complete
-description: Mark one pending agreement/task as completed — given a task id matching a
-  `knowledge/pending/pending-<task-id>.md` file, delete that pending file and check off the matching numbered
-  item in its `knowledge/agreements/agreement-<timestamp>.md` file. Invoke as `/iru-knowledge-complete
-  <task-id>`, or `/iru-knowledge-complete` with no argument to be asked for the task id. Use whenever a task or
-  agreement produced by `iru-knowledge-process-inbox` has actually been completed and its tracking should
-  reflect that, instead of hand-editing the agreement/pending files.
+description: "/iru-knowledge-complete <task-id> (or no argument to be asked for the id). Marks one pending task done: deletes knowledge/pending/pending-<task-id>.md and checks off the matching numbered item in its knowledge/agreements/agreement-<timestamp>.md. Use when a task or agreement produced by iru-knowledge-process-inbox is actually completed, instead of hand-editing those files."
 model: haiku
 ---
 

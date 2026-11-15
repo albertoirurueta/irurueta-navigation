@@ -1,6 +1,6 @@
 ---
 name: iru-setup-changelog
-description: Bootstrap a root `CHANGELOG.md` for a repository that doesn't have one yet, by exploring its actual release history (git tags and, if hosted on GitHub, GitHub Releases) and backfilling one entry per past release in Keep a Changelog format. Invoke as `/iru-setup-changelog`. Skips entirely — does nothing and reports why — if `CHANGELOG.md` already exists at the repository root; this is a one-time bootstrap, not an idempotent fill-gaps tool. Use whenever a repository has release history but no changelog file yet and the user wants one backfilled from that real history instead of started blank.
+description: "Invoked as /iru-setup-changelog, optionally with an args line on-existing: ask|keep|update|replace. Backfills a root CHANGELOG.md in Keep a Changelog format from the repository's git tags and GitHub Releases; if a changelog exists it asks Keep, Update (append missing releases) or Replace."
 model: sonnet
 ---
 
@@ -8,29 +8,73 @@ model: sonnet
 
 Create a root `CHANGELOG.md` for a repository by reconstructing its release history from git tags, GitHub
 Releases, and the actual code changes between them — not by guessing or leaving placeholder entries. This skill
-makes no assumptions about language or build system. It is explicitly **not** idempotent: if `CHANGELOG.md`
-already exists, stop immediately rather than trying to merge or extend it (an existing changelog may already
-follow its own format and cadence — see Step 1).
+makes no assumptions about language or build system. It is primarily a bootstrap, not a fill-gaps tool: an
+existing changelog may already follow its own format and cadence, so when one exists this skill never touches it
+without asking first (Step 1) — and even on **Update** it only appends releases missing from it, never rewriting
+an existing entry.
+
+Agent dispatch: call the catalog agents as `subagent_type: "<agent-name>"` (for example `"iru-gate-runner"`) when installed under `.claude/agents/`, or as `"iru-core:<agent-name>"` when installed as a plugin — use whichever name appears in your available agent types. Every `subagent_type` below is written in the first form.
+
+## Step 0 — Resolve inputs
+
+This skill takes one optional `args` line, `on-existing: <ask|keep|update|replace>` — passed by an orchestrator
+only when its own `args` received it (scripted runs). Default `ask`. Any other `key: value` line is ignored. When
+`on-existing` is `keep`/`update`/`replace`, Step 1 still prints its warning about the existing changelog but applies
+that value without asking. `mode: existing` alone (if an orchestrator happens to pass it) does **not** mean "update
+silently" — Step 1 still asks unless `on-existing` says otherwise.
 
 ## Step 1 — Check whether `CHANGELOG.md` already exists
 
 Look at the repository root for `CHANGELOG.md` (case-insensitive; also treat `CHANGELOG.rst`/`CHANGELOG.txt`/
-`HISTORY.md` as "already exists" — this repository already maintains changelog-equivalent content under a
-different name).
+`HISTORY.md` as "already exists" — a repository may already maintain changelog-equivalent content under a
+different name). A WordPress plugin/theme `readme.txt` with a `== Changelog ==` section does **not** count — it's the
+WordPress.org listing, owned by its own release process; this skill never edits it, but Step 3 reads it as a source.
 
-- **Found**: stop here. Tell the user a changelog already exists at that path and this skill only bootstraps one
-  from scratch — it does not touch or extend an existing one. Do not read further, do not propose edits, do not
-  continue to Step 2.
-- **Not found**: continue to Step 2.
+- **Not found**: tell the user "Creating `CHANGELOG.md` **from scratch** from the repository's release history"
+  and continue to Step 2.
+- **Found**: tell the user "**Updating an existing changelog** — found `<path>`" and warn that a prior changelog
+  exists. Before asking, list the tags (Step 2's `git for-each-ref` command) and check which of them have no
+  version heading in the file (match `## [<version>]`/`## <version>` with or without a leading `v`) — the
+  "missing releases". Then, unless Step 0's `on-existing` already decided (`keep`/`update`/`replace`, applied
+  without asking), ask with `AskUserQuestion` (header e.g. "Changelog"; the recommended option listed first and labeled
+  "(Recommended)"), explaining each consequence:
+  - **Keep as is** — "Leave the changelog untouched — this skill's original behaviour. Nothing you wrote changes,
+    but <N> tagged releases (<list>) stay missing from it." Recommended when there are no missing releases (then
+    say "it already covers every tag").
+  - **Update** — "Append only the <N> missing releases (<list>) in Keep a Changelog style, inserted in version
+    order, plus their compare links; never rewrite, reorder, or reformat an existing entry. Your hand-written
+    entries survive." Recommended when there are missing releases and the file is Markdown. Not offered for a
+    `.rst`/`.txt` file (its format isn't Keep a Changelog Markdown — appending Markdown would corrupt it).
+  - **Replace** — "Rebuild the whole changelog from git tags / GitHub Releases. Result is a consistent
+    Keep a Changelog file, but every hand-written entry (and any wording richer than the reconstruction) is lost —
+    recoverable only from git history." Never the recommended option. For a differently-named file
+    (`HISTORY.md`, `.rst`, `.txt`), **Replace** writes a new root `CHANGELOG.md` and leaves the old file for the user
+    to delete — say so.
+
+  Then act on the answer:
+  - **Keep as is**: stop here — do not continue to Step 2; Step 7 reports only that the existing file was kept (and
+    the missing releases, if any).
+  - **Update**: read the existing file in full, then continue to Step 2 restricted to the missing releases.
+  - **Replace**: continue to Step 2 as for a from-scratch run.
 
 ## Step 2 — Discover the release history
 
 - List git tags oldest-to-newest with their creation dates: `git for-each-ref --sort=creatordate --format
   '%(refname:short) %(creatordate:short)' refs/tags`.
+- Tags are version tags with or without a leading `v` (`v1.2.0`, `1.2.0`) whatever the stack — Maven/Gradle
+  (`pom.xml`, `gradle.properties`), npm (`package.json`), Laravel (`config/app.php` `version`), WordPress (plugin
+  header / `style.css` `Version:`), PrestaShop (module class `$this->version`), Python (`pyproject.toml`
+  `[project].version`) all release by tagging. Use the
+  tag's version (without `v`) as the heading; ignore non-version tags (e.g. `latest`, deploy markers). Never take a
+  heading from an in-tree version: a `-SNAPSHOT`/`-dev`/`-dev.N` value (or Python's PEP 440 `.dev0`, e.g.
+  `0.2.0.dev0`) there is unreleased work, not a release.
 - **No tags at all**: there is no release history to reconstruct. Ask the user (via `AskUserQuestion` if
   available) whether to still create a minimal `CHANGELOG.md` containing just an `## [Unreleased]` section (Step
   6's format, with all commits so far treated as unreleased work), or to stop entirely since there's nothing to
-  backfill. Respect either choice; don't invent version numbers.
+  backfill. Respect either choice; don't invent version numbers. Exception: a WordPress plugin/theme released
+  through WordPress.org SVN can have real releases but no git tags — when its `readme.txt` `== Changelog ==` lists
+  versions, offer to backfill those entries (dated only if the text gives dates; otherwise undated headings, said
+  so in Step 7) instead of the Unreleased-only file.
 - **Tags found**: determine whether the repository is hosted on GitHub (`git remote get-url origin` matches
   `github.com`) and the `gh` CLI is available. If so, fetch richer data per tag:
   `gh release view <tag> --json tagName,name,body,publishedAt` (a tag may have no matching GitHub Release — that's
@@ -41,12 +85,16 @@ different name).
 
 ## Step 3 — For each release, determine its actual source of content
 
-Process oldest-to-newest so later "since previous release" ranges are well-defined. For each tag `T` with
-predecessor `P` (or the repository's first commit, if `T` is the oldest tag):
+Process oldest-to-newest so later "since previous release" ranges are well-defined. Under Step 1's **Update**,
+process only the missing releases — `P` is still the tag immediately before `T` in the full tag list, even when `P`
+already has an entry in the file. For each tag `T` with predecessor `P` (or the repository's first commit, if `T`
+is the oldest tag):
 
 - **A non-empty GitHub Release body exists for `T`**: prefer it as the primary source — it's already
   human-curated. Use it to compose that release's entries (Step 4), lightly reformatted to Keep a Changelog style
   rather than copied verbatim if its structure doesn't already fit.
+- **No Release body, but a `readme.txt` `== Changelog ==` entry for `T`'s version** (WordPress plugin/theme):
+  use it the same way — it was written for users at release time.
 - **No usable Release body** (missing, empty, or GitHub Releases unavailable): derive the change set yourself.
   Read `git log P..T --oneline` and the actual diffs for commits that look meaningful (not just the commit
   subjects — terse messages like "Updated pom.xml" don't tell you whether it's a real dependency bump or a
@@ -124,10 +172,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   compares the newest tag to `HEAD`.
 - If the remote isn't GitHub, or has no remote at all, omit the compare-link reference section entirely rather
   than guessing a URL scheme for an unknown host — note this in the final report.
+- **Under Step 1's Update**: don't rewrite the file. Insert each missing release's section at its correct
+  newest-first position (below `## [Unreleased]`, between the existing versions it falls between), add its
+  compare-link line to the existing reference section if the file has one (following the file's existing link
+  style), and correct only the `[Unreleased]` link's base tag if a newer tag was inserted. Every existing line stays
+  byte-for-byte as it was. Show the user the resulting diff (`git diff -- <path>`) in the report.
 
 ## Step 7 — Report
 
-Summarize: how many releases were reconstructed and their version range, which releases used a GitHub Release
+Start by restating the mode — "created from scratch", or for an existing changelog the option applied
+(**kept as is** / **updated** / **replaced**, and whether it came from the user or from `on-existing`). Under
+**Keep as is**, report only that plus any missing releases. Otherwise summarize: how many releases were
+reconstructed (under **Update**: appended) and their version range, which releases used a GitHub Release
 body as their source vs. derived analysis of commits/diffs, any release noted as tooling/docs-only rather than a
 feature release, and whether compare links were included or omitted (and why). Remind the user to review the
 backfilled entries themselves — this is a best-effort reconstruction of history, not a guarantee of completeness

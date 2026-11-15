@@ -1,17 +1,6 @@
 ---
 name: iru-knowledge-briefing
-description: Summarize the most relevant agreements and pending tasks recorded in the `knowledge/` base (built
-  by `iru-knowledge-process-inbox`) for a given subject. Accepts any mix of scoping context — a person (matched
-  against `knowledge/people/*.md`), a meeting reference ("last meeting", a date, or a topic keyword matched
-  against `knowledge/meetings/meeting-*/meeting.md`), and/or a plain-language subject/topic — and searches
-  `knowledge/people`, `knowledge/meetings`, `knowledge/agreements`, and `knowledge/pending` for material that
-  matches. Invoke as `/iru-knowledge-briefing` to be asked for the subject/context, or `/iru-knowledge-briefing
-  <subject-or-context>` to skip straight to searching. Read-only — produces a conversational report only (which
-  meetings/agreements/pending tasks matched, their status, and who was involved), never edits any file in
-  `knowledge/`. Stops early if `knowledge/` doesn't exist yet (run `iru-knowledge-setup` and
-  `iru-knowledge-process-inbox` first). Use whenever someone needs to catch up on "what's been agreed/is still
-  open about X" or "what did we discuss with/about Y" without hand-reading every meeting file, instead of
-  `iru-knowledge-complete` (which closes out one specific task) or `iru-knowledge-to-issue` (which files one).
+description: "Invoke as `/iru-knowledge-briefing` or `/iru-knowledge-briefing <subject-or-context>` (person, meeting reference, or topic). Read-only report of the matching agreements and pending tasks in `knowledge/`, with status and who was involved. Use to catch up on what was agreed or is still open about a subject. Stops if `knowledge/` is missing."
 model: sonnet
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: iru-update-java-springboot-documentation
-description: Set up and keep current the Antora documentation site for a DDD/hexagonal Spring Boot service — bootstraps the site via `iru-setup-antora` if absent, adds the Kroki extension alongside Mermaid, and creates or refreshes the service's full page set from the codebase as it actually is: service overview, service architecture (with dependency diagrams and the reactive-versus-blocking rationale), one section per use case (flow diagram, dependencies touched, exceptions raised), the database model (entities, fields, types, indexes, mandatory fields, constraints, relationships, plus generated diagrams), REST/gRPC/GraphQL/messaging API pages derived from the contracts in `apis/` (versions, entities and fields with descriptions and constraints, deprecations, endpoints with methods/paths/headers/authorization and every documented error, and a prominent link from each API page to its own generated reference published on GitHub Pages — OpenAPI HTML from `apis/rest.adoc`, protobuf HTML from `apis/grpc.adoc`, AsyncAPI HTML from `apis/messaging.adoc`, and the SpectaQL reference plus optional Voyager schema graph from `apis/graphql.adoc` — resolved through a single `api-docs-url` attribute in `docs/antora.yml`), a configuration property table (default, dynamically-changeable, criticality flags), and a metrics table (type, tags, meaning). Reads `springboot-stack.yml`, the module sources, the `apis/` contracts, and the `@ConfigurationProperties`/Micrometer code rather than inventing content, and marks anything it cannot derive as an explicit TODO instead of filling it with plausible prose. Idempotent — safe to re-run after any change, and intended to be re-run as part of the normal change cycle. Invoke as `/iru-update-java-springboot-documentation` to cover the whole service, or `/iru-update-java-springboot-documentation <page-or-area>` to refresh one page. Use whenever a Spring Boot service's documentation needs creating or bringing back in line with its code, instead of hand-maintaining ten interdependent pages.
+description: "/iru-update-java-springboot-documentation [<page-or-area>] [mode:, on-existing: lines] - creates or refreshes the Antora docs site of a DDD/hexagonal Spring Boot service (Java or Kotlin, per springboot-stack.yml) from the code: overview, architecture, use cases, database model, REST/gRPC/GraphQL/messaging API pages with generated-reference links, configuration and metrics tables, and a User interface section with a Hilla frontend. Bootstraps via iru-setup-antora, adds Kroki, marks underivable facts as TODO, asks Update/Keep as is/Replace on existing pages. Idempotent. Use to create or re-sync a service's docs with its code."
 model: sonnet
 ---
 
@@ -22,11 +22,52 @@ re-checks it.
 
 Parse the argument: absent means every page; a page name or area (`architecture`, `use-cases`,
 `database-model`, `apis/rest`, `apis/grpc`, `apis/graphql`, `apis/messaging`, `configuration`, `metrics`,
-`overview`) means just that one.
+`overview`) means just that one. The argument may also carry `key: value` lines (as `iru-setup-java-springboot`
+sends them): `mode` (`new`/`existing`, informational — it never means "update silently") and `on-existing`
+(`ask`/`keep`/`update`/`replace`, default `ask`). Ignore any other key.
 
-Read `springboot-stack.yml` for the declared stack. Treat it as **intent**, not truth: the code is truth. Where
+**Announce the mode before writing anything.** If none of the Step 2 pages exist yet, say this run is **creating
+the documentation page set from scratch**. Otherwise say it is **updating existing documentation**, list the
+pages found, and — unless `on-existing` is `keep`/`update`/`replace`, in which case apply it to every page and
+just print the warning — ask once with `AskUserQuestion` (one question covering the existing pages):
+
+- **Update (Recommended)** — "Refresh the derived parts (tables, diagrams, endpoint/property/metric lists) and
+  keep hand-written prose, per Step 2's re-run rule. Contradictions between prose and code are listed, not
+  silently overwritten."
+- **Keep as is** — "Don't touch existing pages; only create pages that are missing. Existing pages may stay out
+  of date with the code — the report lists which ones this run would have changed."
+- **Replace** — "Regenerate every existing page from the code. Pages match the code exactly, but every
+  hand-written sentence (the 'why' sections only a human can supply) is lost — recoverable only from git."
+- **Stop** — "End now without changing anything."
+
+Read `springboot-stack.yml` for the declared stack, including its `ci:` block (`enabled`, `pages`) — Step 7
+uses it to decide where the API reference links point — and `project.language` (`java`/`kotlin`, absent ⇒ `java`)
+and `project.buildTool` (`maven`/`gradle`, absent ⇒ `maven`), which decide the language/build-tool wording below.
+Confirm both against the disk (`pom.xml` vs `settings.gradle.kts` + `gradlew`; `src/main/kotlin` vs
+`src/main/java`) — where they disagree the disk wins, and the mismatch goes in the report.
+Treat the manifest as **intent**, not truth: the code is truth. Where
 they disagree (a database in the manifest with no adapter module, an adapter for something the manifest doesn't
 list), say so in the report — that's a real finding about the repository, not a documentation problem.
+
+**Language and build-tool variants.** With `java` + `maven` every step below applies exactly as written. Otherwise
+apply these substitutions wherever a step names the build, the doc-comment tool, or quotes code:
+
+| Concern | Java + Maven | Kotlin + Maven | Kotlin + Gradle |
+|---|---|---|---|
+| Module dependency source | each module's `pom.xml` | each module's `pom.xml` | each project's `build.gradle.kts` (`project(":…")` dependencies) + `gradle/libs.versions.toml` |
+| Boundary enforcement (Step 4) | `banned-dependencies` enforcer rules + ArchUnit test | same | the ArchUnit test only (no enforcer on Gradle) — plus the declared `project(":…")` dependencies themselves |
+| Doc comments read for use cases (Step 5) | Javadoc | KDoc | KDoc |
+| Code reference published | Javadoc in the Maven site | Dokka, one site per module (`<module>/target/dokka`) | Dokka (`build/dokka/html`, root-aggregated or per module) |
+| Source snippets on pages | `[source,java]` | `[source,kotlin]` | `[source,kotlin]` |
+| Build / unit tests / integration tests | `mvn verify` / `mvn test` / `mvn verify` (Failsafe `*IT`) | same | `./gradlew build` / `./gradlew test` / `./gradlew integrationTest` |
+| Run locally | `mvn install -DskipTests`, then `mvn -pl boot spring-boot:run` | same | `./gradlew :boot:bootRun` (Gradle resolves sibling projects itself) |
+| Generated API docs (local build output) | `<module>/target/generated-docs/` | same | `<module>/build/generated-docs/` |
+
+Every code snippet a page quotes (a `@ConfigurationProperties` class, a meter registration, an exception mapping)
+is copied from the real source, so it is in the project's language — never translate Kotlin into Java for a page
+or vice versa. Kotlin-specific facts are worth stating where they apply: a `data class` with `val` properties is
+immutable configuration (`@ConfigurationProperties` binds through the constructor), a nullable type (`String?`)
+is what makes a property optional, and a default argument value is the property's default.
 
 Then gather the facts, using the `Explore` agent for the broad structural sweeps rather than reading every file
 into this context, and reading directly only the specific files it identifies:
@@ -34,9 +75,9 @@ into this context, and reading directly only the specific files it identifies:
 | Page | Source of truth |
 |---|---|
 | Overview | `README.md`, root pom `<description>`, the use cases in `application` |
-| Architecture | the module tree, each module's pom dependencies, `stack.concurrency`, the adapters present |
+| Architecture | the module tree, each module's pom (or `build.gradle.kts`) dependencies, `stack.concurrency`, the adapters present |
 | Use cases | `<base>.application.usecase.*` — the ports each one calls, the exceptions each one declares/throws |
-| Database model | `infrastructure/database/*/entity/*`, the Spring Data repositories, the migration files (Mongock change units, Liquibase changelogs, Flyway scripts) — the migrations are where indexes and constraints actually live |
+| Database model | `infrastructure/database/*/entity/*`, the Spring Data repositories, the migration files (Flamingock change classes, Liquibase changelogs, Flyway scripts) — the migrations are where indexes and constraints actually live |
 | REST API | `apis/rest-server/*.yaml` and the `@RestControllerAdvice` exception mapping |
 | gRPC API | `apis/grpc-server/*.proto` and the gRPC exception handler |
 | GraphQL API | `apis/graphql-server/*.graphqls` and the `DataFetcherExceptionResolver`, plus the `@Controller` classes — the SDL says what is exposed, the controllers say what is actually resolved |
@@ -116,16 +157,26 @@ metrics.adoc
 Omit a page whose subject doesn't exist (no gRPC server → no `apis/grpc.adoc`); note the omission in the report so
 its absence is a recorded decision.
 
+When the manifest's `frontend` is `hilla` (a Vaadin Hilla React frontend under `src/main/frontend/`), the service
+also has a user interface: add the **User interface** section — `ui/index.adoc`, `ui/navigation.adoc` (from the
+file-based routes under `src/main/frontend/views/`), one `ui/screens/<View>.adoc` per routed view and one
+`ui/components/<Component>.adoc` per reusable component — exactly as `reference/ui-docs.md` (next to this file)
+describes, including its screenshot synchronisation (§5) against the `.ui-screenshots/` the frontend's Playwright
+UI tests produce. Run that synchronisation once, after Step 11 and before Step 12's build. With `frontend: none`
+there is no UI section.
+
 Every page carries this immediately after its `= Title` heading, matching the rest of this catalog:
 
 ```
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 ```
 
-On a re-run, **update pages rather than rewriting them**: preserve hand-written prose (especially the "why"
+On a re-run (Step 0's **Update**, the default), **update pages rather than rewriting them**: preserve hand-written prose (especially the "why"
 sections that only a human can supply) and refresh the derived parts — tables, diagrams, endpoint lists, property
 lists. If a hand-written statement now contradicts the code, don't silently overwrite it: update it and list the
-contradiction in the report, since it may mean the code changed without the intent changing.
+contradiction in the report, since it may mean the code changed without the intent changing. With **Keep as is**,
+existing pages are left byte-for-byte untouched and only missing pages (and their `nav.adoc` entries) are added;
+with **Replace**, existing pages are regenerated in full.
 
 ## Step 3 — `index.adoc` — service overview
 
@@ -137,6 +188,16 @@ What the service is for and what it offers. Short — a page someone reads in a 
 - Where to go next: links to the other pages, plus the generated API references on GitHub Pages — the same
   `{api-docs-url}/...` links Steps 7–9 use, gathered here so the overview is a working index of everything the
   service publishes.
+- **Kotlin only** — the code reference: the Dokka KDoc site the build workflow publishes under `doc/api/kdoc/`
+  (`iru-setup-java-springboot-github-workflows`), linked as `{api-docs-url}/kdoc/index.html[KDoc reference^]` when
+  Gradle aggregates Dokka at the root, or one `{api-docs-url}/kdoc/<module-path>/index.html[<module> KDoc^]` line per
+  module otherwise (always per module on Maven, whose Dokka plugin doesn't aggregate). Confirm the layout against the
+  workflow's `Merge documentation` step, the same way Step 7 confirms the API paths. The same `ci.pages`/`ci.enabled`
+  fallbacks as Step 7 apply: the `documentation` artifact, or the local output (`build/dokka/html` after
+  `./gradlew dokkaGeneratePublicationHtml`, or `<module>/target/dokka` after `mvn dokka:dokka`).
+- **Kotlin only** — a short "Build, test and run" list with the commands from Step 0's variant table for the
+  project's build tool (build, unit tests, integration tests, run locally), so a reader doesn't assume Maven
+  conventions in a Gradle build or vice versa. Java services keep the page exactly as it was.
 
 Mark `TODO:` for the business purpose if `README.md` and the pom description don't state it — that's a question
 for the service's owner, not something to infer from class names.
@@ -148,8 +209,12 @@ does, and mark the rationale `TODO:` unless it's recorded somewhere.
 
 - **Hexagonal structure** — the module table, what each module may depend on, and the two mechanisms that enforce
   it (the `banned-dependencies` enforcer rules and the ArchUnit test). Name the test class so a reader can go look.
-- **Concurrency model** — reactive, blocking, or both, taken from the actual starters in the poms. Explain the
-  consequence (blocking with virtual threads enabled, or a Netty event loop that must never be blocked). The
+  On Gradle there is no enforcer: name the ArchUnit test and say the allowed edges are the `project(":…")`
+  dependencies declared in each `build.gradle.kts` (Step 0's variant table).
+- **Concurrency model** — reactive, blocking, or both, taken from the actual starters in the poms (or the Gradle
+  build scripts and version catalog). For Kotlin, also say whether coroutines are in play (`suspend` controller/use
+  case functions, `kotlinx-coroutines-reactor`), since that changes how a reader should read a reactive flow.
+  Explain the consequence (blocking with virtual threads enabled, or a Netty event loop that must never be blocked). The
   *reason* for the choice is a `TODO:` unless recorded.
 - **Per-technology sections** — one each for the databases, cache, Kafka, and clients present. For each: what it
   is used for in this service, which module adapts it, which ports it implements. Include the "why this
@@ -198,7 +263,7 @@ does, and mark the rationale `TODO:` unless it's recorded somewhere.
 
 One section per class in `<base>.application.usecase`. For each, derived from the code:
 
-- **What it does**, from the class/method Javadoc. If there is none, `TODO:` — and note in the report that the use
+- **What it does**, from the class/method Javadoc (KDoc for Kotlin). If there is none, `TODO:` — and note in the report that the use
   case is undocumented in code, which is worth fixing at the source.
 - **Trigger** — which REST endpoint, gRPC method, or Kafka topic reaches it (trace inbound from the
   controllers/services/consumers).
@@ -284,6 +349,18 @@ Resolve that value rather than guessing it:
   file in the published output or a configured custom domain before settling on it.
 - If GitHub Pages isn't set up yet, still write the attribute with the derived URL, and say in the report that the
   links stay dead until Pages is enabled and the build workflow has run once on the main branch.
+- **When the manifest says docs are not deployed to Pages** (`ci.pages: false`, or `ci.enabled: false`), don't
+  write a github.io `api-docs-url` at all — that site will never exist. Instead:
+  - with `ci.enabled: true` and `ci.pages: false`, the build workflow uploads the merged docs as a `documentation`
+    workflow artifact: replace each `{api-docs-url}/...` link with a sentence telling the reader the generated
+    reference is in that artifact under the same relative path (e.g. `api/rest-server/v1/index.html`), and link the
+    repository's Actions page for the workflow;
+  - with `ci.enabled: false`, tell the reader to build it locally (the module's documentation execution writes it
+    under `target/generated-docs/` — `build/generated-docs/` on Gradle) and name the Maven command (on Gradle, the
+    `./gradlew` documentation task the module registers);
+  - in both cases still link the source contract (below), and say in the report which variant was used and that a
+    private repository on a paid plan can switch to Pages later by setting `ci.pages: true` and re-running this
+    skill.
 
 Then link per contract version — `v1` and `v2` each get their own line, since each generates its own page:
 
@@ -489,8 +566,15 @@ most common failure with tables this wide), invalid Mermaid or PlantUML syntax, 
 
 Then verify what the build won't catch:
 
+- **Kotlin only: the KDoc link(s) on the overview resolve the same way** — no literal `{api-docs-url}` in the built
+  HTML, and the path matches where the workflow publishes Dokka (`doc/api/kdoc/…`).
 - **Every Mermaid and Kroki diagram actually rendered** — open the built HTML and check. A Kroki block with a
-  syntax error, or with the extension unregistered, renders as a literal code block without failing the build.
+  syntax error, or with the extension unregistered, renders as a literal code block without failing the build. For
+  Mermaid, also run the check of `reference/mermaid.md` (`npm i --no-save mermaid@11 jsdom@31 puppeteer@25`, then
+  `npm run validate:mermaid` or the repository's `scripts/mermaid/validate-mermaid.mjs modules --render`) and fix every
+  diagram it reports: write class-diagram stereotypes and placeholders in labels per its rules. When the repository has
+  neither, run the copy of an installed `iru-setup-antora`, `iru-update-antora` or `iru-build-docs` from `docs/`; with
+  none installed, rely on the visual check above and recommend `/iru-update-antora` (it copies `scripts/mermaid/`).
 - **Each of `apis/rest.adoc`, `apis/grpc.adoc` and `apis/messaging.adoc` that exists carries its generated-reference
   link, and the link resolved.** Two distinct checks, because neither fails the build:
   - Grep the build log for `skipping reference to missing attribute: api-docs-url`. Antora logs that warning,
@@ -511,8 +595,14 @@ Then verify what the build won't catch:
 Summarize:
 
 - Pages created, pages updated, pages omitted (and why).
+- The language/build-tool variant applied (and whether the disk overrode the manifest), and for Kotlin the KDoc
+  link(s) written and the build commands named on the overview.
 - Whether Kroki had to be installed and the playbook amended.
-- The `api-docs-url` value resolved, how it was resolved (the Pages API, the git remote, or a custom domain), and
+- Whether this run created the page set from scratch or updated it, the option chosen in Step 0 (Update / Keep
+  as is / Replace, asked or from `on-existing`), and per page: created / updated / replaced / kept as is.
+- The `api-docs-url` value resolved, how it was resolved (the Pages API, the git remote, or a custom domain) — or,
+  with `ci.pages: false`/`ci.enabled: false`, that no Pages URL was written and which artifact/local-build wording
+  replaced the links — and
   the generated-reference link written on each API page. Call out explicitly any API page whose reference isn't
   generated at all — a gRPC documentation execution that was never wired, or messaging documentation missing
   because the AsyncAPI step was skipped — and whether GitHub Pages has published yet, since until it has, every one
@@ -524,6 +614,8 @@ Summarize:
   undocumented error response, an endpoint whose spec security doesn't match its filter chain, a property that
   looks dynamic but isn't `@RefreshScope`d, a metric with unbounded tag cardinality, an index no query uses.
 - Whether hand-written prose was preserved or contradicted on a re-run.
+- With `frontend: hilla`: the `ui/` pages created/updated/removed and the screenshot synchronisation result (images
+  added, replaced, unchanged, deleted; states left "screenshot pending").
 - The build result and the path to `docs/build/site/index.html`.
 
 Warn explicitly:

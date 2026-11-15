@@ -1,6 +1,6 @@
 ---
 name: iru-java-springboot-code-one-task
-description: Implement a single task from a Spring Boot `implementation_plan.md`-style task list — the implementation, its unit tests, and its checkbox update. Resolves which hexagonal module the code belongs in (`domain`, `application`, `infrastructure/database|configuration|clients|producers|metrics`, `api/rest-server|grpc-server|consumers`, `boot`) and what that module is allowed to import before writing anything, loading only the relevant guidance from this skill's own `reference/` directory (hexagonal architecture and module boundaries, DDD tactical patterns, SOLID, the distributed patterns — CQRS, transactional outbox, saga, eventual consistency, listen-to-yourself — and this catalog's Java code style: records for immutable types, Lombok where it earns its place, MapStruct only for simple mappers with manual mapping otherwise, `var` type inference, `final` wherever possible, and full Javadoc on everything). Runs **unit tests only** to validate the implementation — never integration tests, never `mvn verify`, never Failsafe, never a Testcontainers or Docker-backed test — then checks off this task's own checkbox in `implementation_plan.md` with a "group validation pending" note and hands back a short summary. Does not capture a quality baseline, add license headers, run coverage/quality checks, or run the full suite — those belong to the calling task-group skill. Invoke as `/iru-java-springboot-code-one-task <task description>`, passing the task's own text including its exact `implementation_plan.md` checkbox line(s). The Spring Boot counterpart to `iru-java-code-one-task`, for services scaffolded by `iru-setup-java-springboot`.
+description: "Invoked as /iru-java-springboot-code-one-task <task description> (the task's text with its implementation_plan.md checkbox lines) via Skill. Implements one Spring Boot hexagonal-module plan task and its tests, compile-checks, ticks the checkbox with a group-validation-pending note; no baseline or full gates, which iru-java-springboot-code-one-task-group runs."
 model: sonnet
 allowed-tools: Read Edit Write Bash(mvn *) Bash(git status *) Bash(git diff *) Bash(git log *) Bash(find *) Bash(grep *) Bash(ls *)
 ---
@@ -32,13 +32,14 @@ routes you to the rest — then read only what it points at for this task. The r
 | Read | When |
 |---|---|
 | `reference/hexagonal-architecture.md` | **Always** — Step 2 depends on it. |
+| `reference/mandatory-rules.md` | **Always** — the non-negotiable rules for production and test code (JUnit not AssertJ, Mockito not fakes, test naming and one test class per public class, type witnesses, record defensive copies, `final` parameters, Javadoc on every member, constants, modern idioms, LF line endings, pinned locales, Lombok constructors/loggers). |
 | `reference/code-style.md` | **Always** — records, Lombok, MapStruct-versus-manual, `final`, `var`, Javadoc. |
 | `reference/ddd-tactical-patterns.md` | The task touches `domain`: an entity, value object, aggregate, domain service, domain event, or domain exception. |
 | `reference/solid.md` | The task introduces or changes an interface, adds a branch on type, or grows an existing class's responsibilities. |
 | `reference/distributed-patterns.md` | The task involves Kafka, a second datastore, or anything the plan calls eventually consistent, a projection, an outbox, a saga, or a compensating action. |
 
-Don't read the optional files speculatively — for a one-line change inside an existing adapter, the two
-always-read files are the whole list. Reading all five on every task is exactly the context waste the split
+Don't read the optional files speculatively — for a one-line change inside an existing adapter, the three
+always-read files are the whole list. Reading all six on every task is exactly the context waste the split
 exists to avoid.
 
 If `reference/` is missing (e.g. the skill directory was copied without it), proceed using this repository's own
@@ -73,7 +74,9 @@ concurrently, or the file may have changed for unrelated reasons.
 
 Also read one or two neighbouring files in the same module. In a multi-module reactor, conventions vary
 legitimately between modules (whether `var` is used, whether mappers are MapStruct or hand-written, how adapters
-translate exceptions), and matching the module you're editing beats matching the repository average.
+translate exceptions), and matching the module you're editing beats matching the repository average — for
+everything except `reference/mandatory-rules.md`, which the code you write follows even where the module's
+existing code doesn't (leaving that existing code alone, and naming any violation in Step 8's report).
 
 ## Step 4 — Implement exactly what the task specifies
 
@@ -84,8 +87,9 @@ conventions where they're more specific.
 Non-negotiable, because the build enforces them:
 
 - **No dependency that points outward.** Re-check Step 2's answer against every import you add.
-- **Full Javadoc** on every type and every public/protected member, with `@param` (including every record
-  component), `@return`, and `@throws` for every exception a caller can handle. The `@throws` list is what Step 6's
+- **`reference/mandatory-rules.md`, in full**, for every line written or rewritten — production and test code.
+- **Full Javadoc** on every type, method, constructor, and field (private ones included), with `@param`
+  (including every record component), `@return`, and `@throws` for every exception a caller can handle. The `@throws` list is what Step 6's
   tests are written against.
 - **No new runtime dependency** unless the task explicitly calls for it. In this reactor, versions live only in
   the root `pom.xml`, so adding one is a cross-module change — if it seems unavoidable, that's a blocker to report
@@ -119,8 +123,12 @@ surface it.
 ## Step 6 — Write and run unit tests only
 
 Write or update unit tests covering the new/changed behaviour, including the edge cases implied by the Javadoc
-`@throws` contracts (null/invalid argument, not-found, illegal state transition). Follow the existing test style
-in the same module.
+`@throws` contracts (null/invalid argument, not-found, illegal state transition). Follow
+`reference/mandatory-rules.md` — JUnit 5 assertions (never AssertJ), Mockito mocks or spies for every collaborator
+(never a hand-written fake or in-memory port implementation), one `<ClassName>Test` per public class (never one
+test class shared across several implementations), test methods named
+`methodBeingTested_whenCondition_expectedResult`, and full Javadoc on the test class and every member — and the
+existing test style in the same module for anything those rules leave open.
 
 What a unit test means here, per module:
 
@@ -206,6 +214,9 @@ Hand control back to the caller with a short summary:
 - **Any deviation from `reference/`** you made on purpose — e.g. a hand-written mapper where MapStruct would have
   done, or matching a module's existing style over this catalog's stated preference — so the caller can see it was
   a decision rather than an oversight.
+- **Pre-existing violations of `reference/mandatory-rules.md`** noticed in the files touched (AssertJ, fakes,
+  shared test classes, platform line endings, unpinned locales, …) and left alone because they were outside the
+  task's scope.
 
 This skill has already checked off its own checkbox with a pending-validation note (Step 7); the caller only needs
 to replace that note with the final validation outcome once the whole bucket passes. This skill never captures a

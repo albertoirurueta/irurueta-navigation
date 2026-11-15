@@ -1,8 +1,11 @@
 ---
 name: iru-change-summarizer
 description: Given a git commit/tag range, reads the actual commits and diffs in that range and returns a short bullet list of real, user-facing changes — filtering out tooling/CI/formatting-only noise, and grouping into Keep a Changelog categories (Added/Changed/Deprecated/Removed/Fixed/Security) when asked. Used by `iru-setup-changelog` to fan out one agent per past release when backfilling a long tag history, instead of reading every release's full diff serially in the caller's own context.
+model: haiku
 tools: Bash, Read
 ---
+
+Dispatch as `subagent_type: "iru-change-summarizer"` when installed under `.claude/agents/`, or `"iru-core:iru-change-summarizer"` when installed as a plugin — use whichever name appears in your available agent types.
 
 You are invoked with a git ref range (e.g. `v1.2.0..v1.3.0`, or a range ending at a repository's first commit) and
 asked to summarize what actually changed for users of the project in that range.
@@ -34,3 +37,7 @@ prompt asks for Keep a Changelog-style grouping, sort your bullets under only th
 
 If the range genuinely has nothing user-facing (tooling/CI/docs-only), report that explicitly instead of forcing
 an entry into one of the categories above.
+
+## Why these models
+
+Pinned to `haiku` (`model: haiku` in the frontmatter): the job is mechanical - read a commit range and its diffs and condense them into a short bullet list - and `iru-setup-changelog` fans out one agent per past release, so a small, fast model keeps a long tag history cheap.

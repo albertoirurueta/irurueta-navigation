@@ -1,6 +1,6 @@
 ---
 name: iru-setup-java-springboot-apis
-description: Set up the contract-first API layer of a Spring Boot service — the single `apis/` directory at the repository root holding every contract (`apis/rest-server/` OpenAPI specs, `apis/grpc-server/` protobuf definitions, `apis/graphql-server/` SDL schemas, `apis/rest-client/<name>/`, `apis/grpc-client/<name>/` and `apis/graphql-client/<name>/` per downstream service, `apis/messaging/` AVRO schemas *and* the AsyncAPI specification that describes the topics carrying them), a starter spec for each one, and the code-generation plugin executions wired into the module that consumes each contract — `openapi-generator-maven-plugin` (Spring server interfaces + DTOs for the REST server, client + DTOs per REST client, and HTML documentation), `protobuf-maven-plugin` (gRPC service base classes and stubs, plus HTML documentation via `protoc-gen-doc`), `graphql-codegen-maven-plugin` (resolver interfaces + model types for the GraphQL server, request/response/projection classes per GraphQL client, plus the SDL copied onto the runtime classpath Spring for GraphQL loads it from, and `spectaql`/`graphql-voyager` run from the Maven build for its static HTML reference and schema graph), `avro-maven-plugin` (Java classes from the AVRO schemas), and `@asyncapi/html-template` run from the Maven build via `frontend-maven-plugin` (HTML documentation from the AsyncAPI specification). Adds a linting/compatibility check per contract kind and keeps generated sources out of version control and out of static analysis. Reads `springboot-stack.yml` for which contracts the service actually needs and writes no version numbers, inheriting them all from the root pom. Invoke as `/iru-setup-java-springboot-apis`, or with `args` (`stack-file:` line) when called from `iru-setup-java-springboot`. Use after the reactor and module sources exist, whenever a Spring Boot service needs its OpenAPI/protobuf/GraphQL/AVRO/AsyncAPI contracts and their generators set up instead of hand-configuring five code generators across several module poms.
+description: "Invoked as `/iru-setup-java-springboot-apis` (args: `stack-file`, `mode`, `on-existing`), normally by `iru-setup-java-springboot`. Sets up the contract-first `apis/` tree (OpenAPI, protobuf, GraphQL SDL, AVRO, AsyncAPI) with starter specs and code generation wired into the consuming modules, for Java or Kotlin."
 model: sonnet
 ---
 
@@ -10,15 +10,18 @@ Wire up the contract-first API layer. Two invariants:
 
 1. **Every contract lives under `apis/` at the repository root** — never inside a module's `src/`. One directory
    is where a reviewer looks to see everything this service exposes and consumes, and it keeps a contract from
-   being coupled to the module that happens to implement it today. `apis/` is not a Maven module.
+   being coupled to the module that happens to implement it today. `apis/` is not a Maven module or Gradle project.
 2. **Generated code is never committed and never hand-edited.** It lands in each module's
-   `target/generated-sources/`, is git-ignored, and is excluded from Checkstyle/PMD/SpotBugs/JaCoCo/Sonar. If
-   something about the generated code is wrong, the fix is in the spec or the generator configuration.
+   `target/generated-sources/` (Maven) or `build/generated/` (Gradle), is git-ignored, and is excluded from
+   static analysis (Checkstyle/PMD/SpotBugs for Java, detekt/ktlint for Kotlin), JaCoCo and Sonar. If something
+   about the generated code is wrong, the fix is in the spec or the generator configuration.
 
 ## Step 0 — Resolve inputs
 
-Parse `args` for `stack-file: <path>`, defaulting to `springboot-stack.yml`. Read it and determine exactly which
-contracts are needed:
+Parse `args` for `key: value` lines: `stack-file: <path>`, defaulting to `springboot-stack.yml`; `mode`
+(`new`/`existing`, informational — it never means "update silently"); and `on-existing`
+(`ask`/`keep`/`update`/`replace`, default `ask`). Read the manifest and determine exactly which contracts are
+needed:
 
 | Manifest field | Contract directory | Generated into | Generator |
 |---|---|---|---|
@@ -34,12 +37,120 @@ contracts are needed:
 
 If none apply, report that and stop — there's nothing to set up.
 
+**Language and build tool.** Read `project.language` (`java` | `kotlin`, absent ⇒ `java`) and `project.buildTool`
+(`maven` | `gradle`, absent ⇒ `maven`; `gradle` is only valid with `kotlin` — stop and report a manifest that pairs
+`gradle` with `java`). The contracts in `apis/` (Steps 1, 2, 3, 3a, 4, 5, 5a, 6, 6a) are identical in all three
+combinations — a contract never depends on the language implementing it. What changes is the generator column
+above:
+
+| Contract | `java` + `maven` (unchanged) | `kotlin` + `maven` | `kotlin` + `gradle` |
+|---|---|---|---|
+| REST server | `spring`, `interfaceOnly` | `kotlin-spring`, `interfaceOnly`, `useSpringBoot4`, `useJackson3` | same options, `org.openapi.generator` `GenerateTask` |
+| REST client, blocking | `java` + `library=restclient` | `kotlin` + `library=jvm-spring-restclient`, `useSpringBoot4`, `useJackson3` | same, `GenerateTask` |
+| REST client, reactive | `java` + `library=webclient` | `kotlin-spring` + `library=spring-declarative-http-interface`, `reactive`, coroutines | same, `GenerateTask` |
+| gRPC | protoc Java + `protoc-gen-grpc-java` | the same **plus** `kotlinEnabled` (Kotlin DSL builders) and `protoc-gen-grpc-kotlin` (coroutine stubs) | `com.google.protobuf` with `kotlin` builtin + `grpc` + `grpckt` plugins |
+| GraphQL server/client | `graphql-codegen-maven-plugin`, Java | same plugin, `generatedLanguage=KOTLIN` | `io.github.kobylynskyi.graphql.codegen` `GraphQLCodegenGradleTask`, `KOTLIN` |
+| AVRO | `avro-maven-plugin` (Java) | unchanged — Java classes, called from Kotlin | `com.bakdata.gradle.avro` (Java output) |
+| REST/gRPC HTML docs | `html2`, `protoc-gen-doc` | unchanged | `html2` `GenerateTask` + `protoc-gen-doc` protoc plugin, `documentation` group |
+| AsyncAPI / GraphQL HTML docs | npm via `frontend-maven-plugin` | unchanged | the same npm toolchains via `Exec` tasks (Step 6c) |
+
+Why each Kotlin choice, and the alternatives rejected — all checked against openapi-generator 7.26.0, grpc-kotlin
+1.5.0, graphql-java-codegen 5.10.0 and Spring Boot 4.1 (see Step 6c's verification note):
+
+- **`kotlin-spring` for servers.** It has a real `useSpringBoot4` option (Jakarta, Spring 7) and `useJackson3`
+  (defaults to `true` with `useSpringBoot4`); its `interfaceOnly` output is a Kotlin interface with
+  non-null/nullable parameters and `data class` DTOs that carry the spec's Bean Validation constraints — what a
+  hand-written Kotlin controller wants to implement. The Java `spring` generator would also compile, but hands the
+  controller platform types instead of the spec's nullability.
+- **`kotlin` + `jvm-spring-restclient` for blocking clients.** Supports `useSpringBoot4` + `useJackson3`
+  (`tools.jackson` imports, Spring 7's `JacksonJsonHttpMessageConverter`); the generated `ItemsApi(restClient)` takes
+  Boot's auto-configured `RestClient`. Requires `serializationLibrary=jackson`.
+- **`kotlin-spring` + `spring-declarative-http-interface` for reactive clients**, *not* `kotlin` +
+  `jvm-spring-webclient`: the WebClient library rejects `useJackson3` ("only supported for the jvm-okhttp4 and
+  jvm-spring-restclient libraries") and emits Jackson 2 `ObjectMapper`/`Jackson2JsonDecoder` code, which is not on a
+  Boot 4 classpath. The declarative library emits an `@HttpExchange` interface with `suspend` methods, serialized
+  by whatever codecs the `WebClient` it is bound to already has; it requires `useFlowForArrayReturnType=false`.
+- **gRPC keeps the grpc-java output and adds Kotlin on top.** grpc-kotlin's `protoc-gen-grpc-kotlin` generates
+  `<Service>GrpcKt.<Service>CoroutineImplBase` (implemented with `suspend fun` / `Flow`) and coroutine stubs, but it
+  *wraps* the Java message classes — protoc's Java output is always needed. `kotlinEnabled` adds the `orderReply { }`
+  DSL builders. The coroutine base class implements `BindableService`, so Spring gRPC registers it like a Java one.
+- **GraphQL `generatedLanguage=KOTLIN`** emits Kotlin resolver interfaces with nullable return types matching the
+  SDL and `data class` models; the client mode emits Kotlin request/projection classes that still extend
+  `graphql-java-codegen`'s Java base types (same runtime dependency as Java). The plugin's last release is 5.10.0
+  (February 2024), so say in the report that it is stable but slow-moving.
+- **AVRO stays Java.** No maintained AVRO→Kotlin generator targets Avro 1.12 SpecificRecord; the generated Java
+  builders are idiomatic enough from Kotlin and the Confluent serializer needs SpecificRecord anyway. On Gradle,
+  `com.github.davidmc24.gradle.plugin.avro` is **archived** (December 2023); use `com.bakdata.gradle.avro`
+  (bakdata's maintained fork — same extension/task model, Avro 1.12.x, Gradle 8.4–8.14 tested). Re-check its
+  maintenance on every run (`gh api repos/bakdata/gradle-avro-plugin --jq '{archived,pushed_at}'`); if it is
+  archived too, generate with Avro's own `SpecificCompiler` from a small `JavaExec` task and report why.
+
+Look up current versions rather than trusting the ones above: openapi-generator from Maven Central
+(`org/openapitools/openapi-generator-maven-plugin`) — the Gradle plugin portal id `org.openapi.generator` carries
+the same version; `com.google.protobuf` and `com.bakdata.gradle.avro` from `plugins.gradle.org/m2`;
+`io.grpc:protoc-gen-grpc-java`, `io.grpc:protoc-gen-grpc-kotlin`, `com.google.protobuf:protoc` aligned to the
+`grpc-java.version`, `grpc-kotlin.version` and `protobuf-java.version` the Spring Boot BOM manages (Boot 4.1.1:
+1.83.1 / 1.5.0 / 4.35.1) so generated code and runtime agree; `io.github.pseudomuto:protoc-gen-doc` from Maven
+Central (it publishes per-OS executables, so the protoc plugin resolves on Linux CI and macOS alike).
+
 Verify the target module directories exist (from `iru-setup-java-springboot-pom`). If a module is missing, report it
 and skip that contract rather than creating a module here.
 
-Read the root `pom.xml` to confirm the generator plugins are already version-managed in `<pluginManagement>` (the
-pom skill puts them there). **Declare no `<version>` in any module pom below** — if a version is missing from
-`pluginManagement`, add it to the root pom rather than inline in the module.
+**Maven:** read the root `pom.xml` to confirm the generator plugins are already version-managed in
+`<pluginManagement>` (the pom skill puts them there). **Declare no `<version>` in any module pom below** — if a
+version is missing from `pluginManagement`, add it to the root pom rather than inline in the module.
+
+**Gradle:** read `gradle/libs.versions.toml`, the root `build.gradle.kts`, and each target module's
+`build.gradle.kts` (module paths from `settings.gradle.kts`, e.g. `:api:rest-server`). Every generator plugin,
+protoc artifact and runtime library this skill needs gets a `[versions]` + `[plugins]`/`[libraries]` entry in the
+catalog (add the missing ones — the same "no inline versions" rule as the root pom), the root `build.gradle.kts`
+declares each codegen plugin `apply false`, and the module applies it with `alias(libs.plugins.…)` and no version.
+Never name a catalog alias so that it is a prefix of another (`protoc` next to `protoc-gen-grpc-java`): Gradle
+turns `libs.protoc` into a group accessor and `libs.protoc.get()` stops compiling — use `protobuf-protoc`,
+`grpc-protoc-gen-java`, `grpc-protoc-gen-kotlin` as below.
+
+Say whether this run is **creating the API layer from scratch** (no `apis/` tree, no generator executions) or
+**updating an existing one** (list what exists: contract files per directory, `apis/messaging/docs/` and
+`apis/graphql-server/docs/` toolchains, generator executions already in module poms or generator tasks/blocks already
+in module `build.gradle.kts` files). For each pre-existing
+artifact this skill owns, warn and — unless `on-existing` says otherwise — ask with `AskUserQuestion` (up to 4 per
+call, one question each; group "all existing contract files" into one question when there are many):
+
+- **Update (Recommended)** — add what's missing (a directory/starter spec for a newly added API or client, a
+  missing generator execution, a missing documentation step) and correct generator configuration this skill owns;
+  **existing contract files are never rewritten** — a contract is the service's real API, not a template. Your
+  customizations survive, but a customized generator execution this skill owns may be rewritten.
+- **Keep as is** — leave it untouched; it may lag behind the manifest (e.g. no contract for a newly added client)
+  — Step 10 lists each gap.
+- **Replace** — regenerate from this skill's templates. For a generator execution or documentation toolchain this
+  only loses its customizations; for a **contract file** it replaces a real API definition with a placeholder, so
+  only offer it for contracts after stating that explicitly, and never recommend it.
+
+**Templates.** The wiring fragments and toolchain files of Steps 2-6c are files under this skill's `templates/` directory, not inline text: `templates/<variant>/<path of the generated file>`, holding the exact bytes of the template (a `.<suffix>` after the file name marks a fragment to merge into that file; `__name__`, `__service__` and `__module__` stand for the client name, the service name and the module directory). Variants: `maven` (Java or Kotlin), `maven-java`, `maven-kotlin`, `gradle-kotlin`, `common` (build-tool independent). Read only the files for the manifest's `language`/`build-tool` and the contracts it needs, each in full, before filling placeholders:
+
+| Generated file | Template | Applies when |
+|---|---|---|
+| `api/rest-server/pom.xml` | `templates/maven-java/api/rest-server/pom.xml.build` | `stack.restServer` on Maven with Java: `<build>` block with the `generate-rest-server-v1` (`spring` generator) and `generate-rest-server-docs` (`html2`) executions (Step 2) |
+| `api/rest-server/pom.xml` | `templates/maven-kotlin/api/rest-server/pom.xml.server-configuration` | `stack.restServer` on Maven with Kotlin: replaces the `<configuration>` of the server execution (`kotlin-spring` generator); the `html2` execution is unchanged (Step 2) |
+| `api/grpc-server/pom.xml` | `templates/maven/api/grpc-server/pom.xml.protobuf-plugin` | `stack.grpcServer` on Maven (Java or Kotlin): protobuf plugin wiring, using the groupId the root pom manages (Step 3) |
+| `api/grpc-server/pom.xml` | `templates/maven-kotlin/api/grpc-server/pom.xml.protobuf-configuration` | `stack.grpcServer` on Maven with Kotlin (`io.github.ascopes` flavour): protobuf plugin `<configuration>` with `kotlinEnabled` and `protoc-gen-grpc-kotlin`; also reused for Kotlin gRPC clients (Steps 3 and 5) |
+| `api/graphql-server/pom.xml` | `templates/maven/api/graphql-server/pom.xml.codegen-plugin` | `stack.graphqlServer` on Maven (Java or Kotlin; Kotlin adds `<generatedLanguage>KOTLIN</generatedLanguage>`): `graphql-codegen-maven-plugin` execution (Step 3a) |
+| `api/graphql-server/pom.xml` | `templates/maven/api/graphql-server/pom.xml.copy-graphql-schema-plugin` | `stack.graphqlServer` on Maven (Java or Kotlin): `maven-resources-plugin` execution copying the SDL onto the runtime classpath, mandatory (Step 3a) |
+| `apis/graphql-server/docs/package.json` | `templates/common/apis/graphql-server/docs/package.json` | `api/graphql-server/` exists (any build tool): GraphQL documentation toolchain, drop `graphql-voyager` if Voyager is not wanted (Step 3b) |
+| `apis/graphql-server/docs/spectaql-v1.yml` | `templates/common/apis/graphql-server/docs/spectaql-v1.yml` | `api/graphql-server/` exists (any build tool): SpectaQL configuration, one file per contract version (Step 3b) |
+| `apis/graphql-server/docs/build-voyager.mjs` | `templates/common/apis/graphql-server/docs/build-voyager.mjs` | `api/graphql-server/` exists and Voyager is wanted (any build tool): offline Voyager build script (Step 3b) |
+| `api/graphql-server/pom.xml` | `templates/maven/api/graphql-server/pom.xml.docs-executions` | `api/graphql-server/` exists on Maven (Java or Kotlin): `frontend-maven-plugin` SpectaQL and Voyager executions; omit the Voyager one if not wanted (Step 3b) |
+| `infrastructure/clients/<name>/pom.xml` | `templates/maven-java/infrastructure/clients/__name__/pom.xml.rest-client-configuration` | Per `stack.restClients` entry on Maven with Java: OpenAPI client generator `<configuration>` (Step 4) |
+| `infrastructure/clients/<name>/pom.xml` | `templates/maven-kotlin/infrastructure/clients/__name__/pom.xml.rest-client-blocking-configuration` | Per `stack.restClients` entry on Maven with Kotlin, blocking (`stack.concurrency` blocking or both): `kotlin` generator with `jvm-spring-restclient` (Step 4) |
+| `infrastructure/clients/<name>/pom.xml` | `templates/maven-kotlin/infrastructure/clients/__name__/pom.xml.rest-client-reactive-configuration` | Per `stack.restClients` entry on Maven with Kotlin, reactive: `kotlin-spring` generator with `spring-declarative-http-interface` (Step 4) |
+| `infrastructure/clients/<name>/pom.xml` | `templates/maven/infrastructure/clients/__name__/pom.xml.graphql-client-configuration` | Per `stack.graphqlClients` entry on Maven (Java or Kotlin; Kotlin adds `<generatedLanguage>KOTLIN</generatedLanguage>`): GraphQL client generator `<configuration>` (Step 5a) |
+| `infrastructure/producers/pom.xml and/or api/consumers/pom.xml` | `templates/maven/infrastructure/producers/pom.xml.avro-plugin` | `stack.messaging.enabled` on Maven (Java or Kotlin): `avro-maven-plugin` in whichever of the two modules exist (Step 6) |
+| `apis/messaging/<service>-async-api-v1.yaml` | `templates/common/apis/messaging/__service__-async-api-v1.yaml` | `stack.messaging.enabled` (any build tool): starter AsyncAPI specification (Step 6a) |
+| `apis/messaging/docs/package.json` | `templates/common/apis/messaging/docs/package.json` | `stack.messaging.enabled` (any build tool): AsyncAPI documentation toolchain, keep `overrides` only if `npm install` needs it (Step 6b) |
+| `infrastructure/producers/pom.xml (else api/consumers/pom.xml)` | `templates/maven/infrastructure/producers/pom.xml.asyncapi-docs-plugin` | `stack.messaging.enabled` on Maven (Java or Kotlin): `frontend-maven-plugin` AsyncAPI validate and generate executions, in one module only (Step 6b) |
+| `gradle/libs.versions.toml` | `templates/gradle-kotlin/gradle/libs.versions.toml.append` | Kotlin with Gradle: catalog entries to add, only what the manifest needs (Step 6c) |
+| `<module>/build.gradle.kts` | `templates/gradle-kotlin/__module__/build.gradle.kts.codegen` | Kotlin with Gradle: codegen plugins, generator tasks, source sets, protobuf and AVRO wiring for whichever modules Step 0's table names (Step 6c) |
+| `<module>/build.gradle.kts` | `templates/gradle-kotlin/__module__/build.gradle.kts.docs-tasks` | Kotlin with Gradle: `documentation`-group API documentation tasks (Step 6c) |
 
 ## Step 1 — Create the `apis/` tree
 
@@ -81,7 +192,8 @@ a reviewer should see both in the same diff.
 
 Create only the subdirectories the manifest calls for. Write `apis/README.md` explaining the layout, which module
 each directory generates into, that generated code is never committed, and how to regenerate
-(`mvn generate-sources`). This file is what stops the next developer from adding a spec in the wrong place.
+(`mvn generate-sources` on Maven; `./gradlew build -x test -x integrationTest` on Gradle, or the module's individual
+generator task, e.g. `./gradlew :api:rest-server:generateRestServerV1`). This file is what stops the next developer from adding a spec in the wrong place.
 
 Version contracts **in the filename and in the path inside the contract**, not by mutating a file in place: an
 OpenAPI spec's paths carry `/v1/...`, a protobuf file declares `package <service>.v1`, an AVRO schema's namespace
@@ -104,61 +216,7 @@ undocumented code and an undocumentable API.
 
 Wire into `api/rest-server/pom.xml`:
 
-```xml
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.openapitools</groupId>
-      <artifactId>openapi-generator-maven-plugin</artifactId>
-      <executions>
-        <execution>
-          <id>generate-rest-server-v1</id>
-          <phase>generate-sources</phase>
-          <goals>
-            <goal>generate</goal>
-          </goals>
-          <configuration>
-            <inputSpec>${maven.multiModuleProjectDirectory}/apis/rest-server/<service>-api-v1.yaml</inputSpec>
-            <generatorName>spring</generatorName>
-            <apiPackage><base>.api.rest.v1.generated.api</apiPackage>
-            <modelPackage><base>.api.rest.v1.generated.model</modelPackage>
-            <configOptions>
-              <!-- interfaceOnly: generate the interfaces only; the controllers are hand-written and
-                   implement them, so regeneration can never overwrite real logic. -->
-              <interfaceOnly>true</interfaceOnly>
-              <useSpringBoot3>true</useSpringBoot3>
-              <useTags>true</useTags>
-              <useJakartaEe>true</useJakartaEe>
-              <useBeanValidation>true</useBeanValidation>
-              <performBeanValidation>true</performBeanValidation>
-              <openApiNullable>false</openApiNullable>
-              <documentationProvider>none</documentationProvider>
-              <!-- reactive: true emits Mono/Flux signatures. Set from stack.concurrency. -->
-              <reactive><true-if-reactive></reactive>
-              <serializableModel>true</serializableModel>
-              <unhandledException>true</unhandledException>
-            </configOptions>
-          </configuration>
-        </execution>
-        <execution>
-          <id>generate-rest-server-docs</id>
-          <phase>generate-resources</phase>
-          <goals>
-            <goal>generate</goal>
-          </goals>
-          <configuration>
-            <inputSpec>${maven.multiModuleProjectDirectory}/apis/rest-server/<service>-api-v1.yaml</inputSpec>
-            <generatorName>html2</generatorName>
-            <output>${project.build.directory}/generated-docs/rest-server/v1</output>
-            <generateApiTests>false</generateApiTests>
-            <generateModelTests>false</generateModelTests>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-  </plugins>
-</build>
-```
+Template: `templates/maven-java/api/rest-server/pom.xml.build` — read it in full before filling placeholders
 
 Notes:
 
@@ -172,6 +230,20 @@ Notes:
   site — the documentation page then links to it rather than duplicating the endpoint list by hand.
 - Add one execution **per version file**. When `v2` arrives, it gets its own execution and its own
   `apiPackage`/`modelPackage` ending in `.v2.`, and both keep generating.
+
+**Kotlin + Maven** — same plugin, same two executions; the server execution switches generator and options (the
+`html2` documentation execution is unchanged). Verified against openapi-generator 7.26.0 on Spring Boot 4.1.1:
+
+Template: `templates/maven-kotlin/api/rest-server/pom.xml.server-configuration` — read it in full before filling placeholders
+
+`kotlin-maven-plugin` picks the generated directory up by itself: the generator registers
+`target/generated-sources/openapi-rest-server-v1/src/main/kotlin` as a compile source root, and the Kotlin compile
+execution compiles every registered root in addition to its own `<sourceDirs>` (verified with the mixed-sources
+`sourceDirs` configuration `iru-setup-java-springboot-pom` writes). The same holds for every generator below, Java
+output included — `kotlinc` resolves against generated `.java` files and `javac` (re-bound after it) compiles them.
+The hand-written controller is `@RestController class OrdersController : OrdersApi` overriding plain `fun`s
+(blocking) or `suspend fun`s returning `ResponseEntity<T>` (reactive; list operations return
+`ResponseEntity<Flow<T>>` unless `useFlowForArrayReturnType=false`).
 
 ## Step 3 — gRPC server contract and generator
 
@@ -189,30 +261,24 @@ Boot 4's Initializr wires `io.github.ascopes:protobuf-maven-plugin`, while older
 `org.xolstice.maven.plugins:protobuf-maven-plugin`; the two have different configuration schemas, so read the root
 pom to see which is in play and configure that one rather than assuming:
 
-```xml
-<plugin>
-  <groupId><protobuf-plugin-group></groupId>
-  <artifactId>protobuf-maven-plugin</artifactId>
-  <configuration>
-    <sourceDirectories>
-      <sourceDirectory>${maven.multiModuleProjectDirectory}/apis/grpc-server</sourceDirectory>
-    </sourceDirectories>
-    <!-- plus the grpc-java protoc plugin, so service base classes are generated and not just messages -->
-  </configuration>
-  <executions>
-    <execution>
-      <goals>
-        <goal>generate</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
-```
+Template: `templates/maven/api/grpc-server/pom.xml.protobuf-plugin` — read it in full before filling placeholders
 
 Consult the plugin's own current documentation for the exact element names (`sourceDirectories` vs
 `protoSourceRoot`, how the `grpc-java` plugin is declared, whether `protocVersion` is needed) instead of guessing —
 a wrong element name here fails the build with an unhelpful "unknown parameter" error. Verify by running
 `mvn generate-sources` in Step 7.
+
+**Kotlin + Maven** — keep everything above and add Kotlin on top (verified with `io.github.ascopes` 5.1.x, the
+flavour Spring Boot 4 manages; on the `xolstice` flavour, migrate to `ascopes` first rather than bolting Kotlin onto
+an unmaintained plugin):
+
+Template: `templates/maven-kotlin/api/grpc-server/pom.xml.protobuf-configuration` — read it in full before filling placeholders
+
+`${protobuf-java.version}`, `${grpc-java.version}` and `${grpc-kotlin.version}` are Spring Boot BOM properties, so
+nothing new is pinned. The module additionally needs `io.grpc:grpc-kotlin-stub`, `com.google.protobuf:protobuf-kotlin`
+and `org.jetbrains.kotlinx:kotlinx-coroutines-core` (all BOM-managed — no `<version>`). The service is implemented
+as `class OrderGrpcService : OrderServiceGrpcKt.OrderServiceCoroutineImplBase()` with `override suspend fun` for
+unary RPCs and `override fun …: Flow<Reply>` for server streaming.
 
 For **HTML documentation**, add a second execution using the `protoc-gen-doc` protoc plugin
 (`io.github.pseudomuto:protoc-gen-doc`) with `--doc_opt=html,index.html`, writing into
@@ -234,40 +300,12 @@ generating and both stay served until `v1` is retired. Say so in `apis/README.md
 
 Wire into `api/graphql-server/pom.xml`:
 
-```xml
-<plugin>
-  <groupId>io.github.kobylynskyi</groupId>
-  <artifactId>graphql-codegen-maven-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>generate-graphql-server-v1</id>
-      <phase>generate-sources</phase>
-      <goals>
-        <goal>generate</goal>
-      </goals>
-      <configuration>
-        <graphqlSchemaPaths>
-          <path>${maven.multiModuleProjectDirectory}/apis/graphql-server/<service>-v1.graphqls</path>
-        </graphqlSchemaPaths>
-        <outputDir>${project.build.directory}/generated-sources/graphql-server</outputDir>
-        <apiPackageName><base>.api.graphql.v1.generated.api</apiPackageName>
-        <modelPackageName><base>.api.graphql.v1.generated.model</modelPackageName>
-        <!-- Interfaces only, never implementations: the hand-written @Controller implements the
-             resolver interface, so regeneration can't overwrite real logic. Same reasoning as
-             interfaceOnly=true for the REST generator. -->
-        <generateApis>true</generateApis>
-        <generateClient>false</generateClient>
-        <!-- The default is javax.validation.constraints.NotNull, which does NOT exist on Spring
-             Boot 3+/Jakarta and fails compilation with "package javax.validation does not exist".
-             This override is required, not cosmetic. -->
-        <modelValidationAnnotation>jakarta.validation.constraints.NotNull</modelValidationAnnotation>
-        <!-- The @Generated annotation embeds a build timestamp, making output non-reproducible. -->
-        <addGeneratedAnnotation>false</addGeneratedAnnotation>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-```
+Template: `templates/maven/api/graphql-server/pom.xml.codegen-plugin` — read it in full before filling placeholders
+
+**Kotlin + Maven** — the same execution plus `<generatedLanguage>KOTLIN</generatedLanguage>`. Output is Kotlin
+resolver interfaces whose return types follow the SDL's nullability (`order(id: String): Order?`) and `data class`
+models with a builder; keep `modelValidationAnnotation` as above (harmless for Kotlin output, and correct if the
+setting is ever flipped back). Verified with plugin 5.10.0.
 
 The generator emits a `QueryResolver`/`MutationResolver` interface plus one `<Field><Operation>Resolver` interface
 per field, and the model classes. Implement the resolver interfaces from a hand-written `@Controller` using
@@ -278,33 +316,7 @@ at startup from `spring.graphql.schema.locations`, whose default is `classpath:g
 `.graphqls`/`.gqls`. The contract lives outside the module, so nothing puts it there by itself, and the failure
 mode is a service that compiles perfectly and then refuses to start because the schema is empty:
 
-```xml
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-resources-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>copy-graphql-schema</id>
-      <phase>generate-resources</phase>
-      <goals>
-        <goal>copy-resources</goal>
-      </goals>
-      <configuration>
-        <!-- classpath:graphql/ — matches spring.graphql.schema.locations' default. -->
-        <outputDirectory>${project.build.outputDirectory}/graphql</outputDirectory>
-        <resources>
-          <resource>
-            <directory>${maven.multiModuleProjectDirectory}/apis/graphql-server</directory>
-            <includes>
-              <include>*.graphqls</include>
-            </includes>
-          </resource>
-        </resources>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-```
+Template: `templates/maven/api/graphql-server/pom.xml.copy-graphql-schema-plugin` — read it in full before filling placeholders
 
 Confirm in Step 7 that the file actually landed in `target/classes/graphql/`. If the service sets a non-default
 `spring.graphql.schema.locations`, copy to wherever that points instead and note the divergence in the report.
@@ -338,19 +350,7 @@ roughly doubles the published bytes for that API.
 
 Write `apis/graphql-server/docs/package.json`:
 
-```json
-{
-  "name": "<service>-graphql-docs",
-  "private": true,
-  "version": "1.0.0",
-  "description": "GraphQL documentation toolchain. Not published; not a Maven module.",
-  "dependencies": {
-    "spectaql": "<latest 3.x>",
-    "graphql": "<latest 16.x>",
-    "graphql-voyager": "<latest 2.x>"
-  }
-}
-```
+Template: `templates/common/apis/graphql-server/docs/package.json` — read it in full before filling placeholders
 
 `npm install` there once and **commit `package-lock.json`**; add `apis/graphql-server/docs/node_modules/` to
 `.gitignore`. Drop `graphql-voyager` from the dependencies if Voyager wasn't wanted — `graphql` stays either way,
@@ -358,78 +358,21 @@ since the Voyager build script needs it and SpectaQL wants a matching version.
 
 **SpectaQL** is configured by a YAML file per contract version, at `apis/graphql-server/docs/spectaql-v1.yml`:
 
-```yaml
-spectaql:
-  targetDir: <replaced on the command line>
-  # One self-contained index.html, so publishing is a single file copy and the page
-  # works from any path on GitHub Pages.
-  oneFile: true
-introspection:
-  # The SDL is the input — no running server and no introspection endpoint needed,
-  # which is what makes this work in CI.
-  schemaFile: ../<service>-v1.graphqls
-info:
-  title: <Service> GraphQL API
-  description: The GraphQL interface exposed by this service.
-  version: "1.0.0"
-  x-url: <the deployed /graphql endpoint>
-```
+Template: `templates/common/apis/graphql-server/docs/spectaql-v1.yml` — read it in full before filling placeholders
 
 **Voyager** has no CLI and takes an introspection result rather than SDL, so it needs a small build script at
 `apis/graphql-server/docs/build-voyager.mjs`. It stays offline by copying Voyager's own standalone bundle next to
 the page rather than loading it from a CDN:
 
-```js
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
-import { buildSchema, introspectionFromSchema } from 'graphql';
+Template: `templates/common/apis/graphql-server/docs/build-voyager.mjs` — read it in full before filling placeholders
 
-const [, , sdlPath, outDir, title] = process.argv;
-// Voyager requires the `data` half of an introspection response — an object with a
-// top-level __schema key, which is exactly what introspectionFromSchema returns.
-const introspection = introspectionFromSchema(buildSchema(readFileSync(sdlPath, 'utf8')));
-
-mkdirSync(outDir, { recursive: true });
-for (const f of ['voyager.standalone.js', 'voyager.css']) {
-  copyFileSync(`node_modules/graphql-voyager/dist/${f}`, `${outDir}/${f}`);
-}
-writeFileSync(`${outDir}/index.html`, `<!doctype html>
-<html><head><meta charset="utf-8"><title>${title}</title>
-<link rel="stylesheet" href="voyager.css" />
-<style>body,html,#voyager{height:100%;margin:0;overflow:hidden}</style>
-</head><body>
-<div id="voyager">Loading…</div>
-<script src="voyager.standalone.js"></script>
-<script>
-  GraphQLVoyager.renderVoyager(document.getElementById('voyager'), {
-    introspection: ${JSON.stringify(introspection)}
-  });
-</script>
-</body></html>
-`);
-```
-
-Wire both into `api/graphql-server/pom.xml` with `frontend-maven-plugin`, exactly as Step 6b does for AsyncAPI —
+On Gradle the toolchain files above are identical and the build wiring is the `generateGraphqlDocs` task of Step 6c
+instead of the executions below. On Maven (Java or Kotlin), wire both into `api/graphql-server/pom.xml` with
+`frontend-maven-plugin`, exactly as Step 6b does for AsyncAPI —
 same `install-node-and-npm` + `npm ci` prelude, same `<skip>` escape hatch (`${graphql.docs.skip}`), same
 `generate-resources` phase as every other documentation generator in the reactor:
 
-```xml
-<execution>
-  <id>graphql-docs-spectaql</id>
-  <phase>generate-resources</phase>
-  <goals><goal>npx</goal></goals>
-  <configuration>
-    <arguments>spectaql spectaql-v1.yml --target-dir ${project.build.directory}/generated-docs/graphql-server/v1</arguments>
-  </configuration>
-</execution>
-<execution>
-  <id>graphql-docs-voyager</id>
-  <phase>generate-resources</phase>
-  <goals><goal>npx</goal></goals>
-  <configuration>
-    <arguments>node build-voyager.mjs ${maven.multiModuleProjectDirectory}/apis/graphql-server/<service>-v1.graphqls ${project.build.directory}/generated-docs/graphql-server/v1/voyager <Service> GraphQL schema</arguments>
-  </configuration>
-</execution>
-```
+Template: `templates/maven/api/graphql-server/pom.xml.docs-executions` — read it in full before filling placeholders
 
 `workingDirectory` is `${maven.multiModuleProjectDirectory}/apis/graphql-server/docs` and `installDirectory` is
 `${project.build.directory}`, as in Step 6b. The layout that results —
@@ -458,25 +401,33 @@ published artifact in CI rather than by hand).
 
 Wire into `infrastructure/clients/<name>/pom.xml`:
 
-```xml
-<configuration>
-  <inputSpec>${maven.multiModuleProjectDirectory}/apis/rest-client/<name>/<name>-api.yaml</inputSpec>
-  <generatorName><generator></generatorName>
-  <apiPackage><base>.infrastructure.clients.<name>.generated.api</apiPackage>
-  <modelPackage><base>.infrastructure.clients.<name>.generated.model</modelPackage>
-  <configOptions>
-    <useJakartaEe>true</useJakartaEe>
-    <openApiNullable>false</openApiNullable>
-    <serializableModel>true</serializableModel>
-  </configOptions>
-</configuration>
-```
+Template: `templates/maven-java/infrastructure/clients/__name__/pom.xml.rest-client-configuration` — read it in full before filling placeholders
 
 `<generator>` follows `stack.concurrency`: `java` with `library=restclient` for blocking (matching the
 `spring-restclient` starter), or `java` with `library=webclient` for reactive. Confirm the library name against
 the generator's current option list rather than assuming — these names have changed across generator versions.
 No HTML documentation execution is needed for clients: the contract belongs to the downstream service and is
 documented there.
+
+**Kotlin + Maven** — blocking (`stack.concurrency` blocking or both, per client):
+
+Template: `templates/maven-kotlin/infrastructure/clients/__name__/pom.xml.rest-client-blocking-configuration` — read it in full before filling placeholders
+
+The adapter builds `ItemsApi(restClient)` from the `RestClient` Boot auto-configures (`spring-boot-starter-restclient`).
+The library also generates a small `infrastructure` package (`ApiClient`, `RequestConfig`, `Serializer`) under the
+generated package — part of the generated output, excluded like the rest.
+
+Reactive — **not** `kotlin` + `jvm-spring-webclient` (Jackson 2 only, see Step 0); use Spring's declarative HTTP
+interface instead:
+
+Template: `templates/maven-kotlin/infrastructure/clients/__name__/pom.xml.rest-client-reactive-configuration` — read it in full before filling placeholders
+
+It emits `interface ItemsApi { @HttpExchange(...) suspend fun getItem(...): ResponseEntity<Item> }`; the adapter
+module's configuration binds it with
+`HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClientBuilder.baseUrl(<url>).build())).build().createClient<ItemsApi>()`
+(`spring-boot-starter-webclient` + `kotlinx-coroutines-reactor`). The same library with `reactive=false` would serve
+blocking clients too, over `RestClientAdapter` — stay with `jvm-spring-restclient` there unless the team prefers one
+client style everywhere, and say which was chosen.
 
 **Give every operation at least one request/response `example` pair.** This spec has a second consumer besides the
 generator: the API mock in the compose stack (`stack.apiMock` — Microcks or WireMock, set up by
@@ -492,7 +443,9 @@ Per entry in `stack.grpcClients`, put the downstream `.proto` at `apis/grpc-clie
 same "this is someone else's contract" comment. Wire the protobuf plugin into
 `infrastructure/clients/<name>/pom.xml` with `java_package` under
 `<base>.infrastructure.clients.<name>.generated`, generating the stubs. Generate only the client stubs, not
-service base classes.
+service base classes. **Kotlin:** add the same `kotlinEnabled` + `protoc-gen-grpc-kotlin` configuration as Step 3 —
+the adapter then calls `OrderServiceGrpcKt.OrderServiceCoroutineStub(channel)` with `suspend` calls instead of a
+blocking or future stub (an unused `CoroutineImplBase` is generated alongside; harmless, since nothing extends it).
 
 This `.proto` is also what the compose stack's mock serves. A protobuf file has no `examples` section, so the
 sample responses live alongside it — Microcks reads them from a companion examples artifact next to the `.proto`
@@ -512,22 +465,7 @@ downstream service rather than hand-edited.
 
 Wire into `infrastructure/clients/<name>/pom.xml`:
 
-```xml
-<configuration>
-  <graphqlSchemaPaths>
-    <path>${maven.multiModuleProjectDirectory}/apis/graphql-client/<name>/<name>-api.graphqls</path>
-  </graphqlSchemaPaths>
-  <outputDir>${project.build.directory}/generated-sources/graphql-client-<name></outputDir>
-  <apiPackageName><base>.infrastructure.clients.<name>.generated.api</apiPackageName>
-  <modelPackageName><base>.infrastructure.clients.<name>.generated.model</modelPackageName>
-  <!-- The mirror image of the server configuration: request/response and projection classes,
-       no resolver interfaces. -->
-  <generateApis>false</generateApis>
-  <generateClient>true</generateClient>
-  <modelValidationAnnotation>jakarta.validation.constraints.NotNull</modelValidationAnnotation>
-  <addGeneratedAnnotation>false</addGeneratedAnnotation>
-</configuration>
-```
+Template: `templates/maven/infrastructure/clients/__name__/pom.xml.graphql-client-configuration` — read it in full before filling placeholders
 
 **Client generation needs a runtime dependency that server generation doesn't.** The generated
 `<Op>Request`/`<Type>ResponseProjection` classes extend base types from
@@ -535,6 +473,11 @@ Wire into `infrastructure/clients/<name>/pom.xml`:
 compile dependency of the client module (version-managed in the root pom like everything else). Without it the
 module generates and then fails to compile with `cannot find symbol: class GraphQLResponseField`, which reads like
 a generator bug rather than a missing dependency.
+
+**Kotlin:** add `<generatedLanguage>KOTLIN</generatedLanguage>`; the generated `<Op>QueryRequest`/
+`<Type>ResponseProjection` are Kotlin classes, used with
+`com.kobylynskyi.graphql.codegen.model.graphql.GraphQLRequest(request, projection).toHttpJsonBody()` — the
+`graphql-java-codegen` dependency is still required (verified).
 
 The adapter itself uses Spring's `HttpGraphQlClient` (reactive) or `HttpSyncGraphQlClient` (blocking), matching
 `stack.concurrency`; the generated request objects serialise the query and the projections declare which fields
@@ -559,30 +502,15 @@ breaks every existing consumer.
 Wire into whichever of `infrastructure/producers` and `api/consumers` exist (both, if the service produces and
 consumes):
 
-```xml
-<plugin>
-  <groupId>org.apache.avro</groupId>
-  <artifactId>avro-maven-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>generate-avro-sources</id>
-      <phase>generate-sources</phase>
-      <goals>
-        <goal>schema</goal>
-      </goals>
-      <configuration>
-        <sourceDirectory>${maven.multiModuleProjectDirectory}/apis/messaging</sourceDirectory>
-        <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
-        <stringType>String</stringType>
-        <enableDecimalLogicalType>true</enableDecimalLogicalType>
-        <fieldVisibility>PRIVATE</fieldVisibility>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-```
+Template: `templates/maven/infrastructure/producers/pom.xml.avro-plugin` — read it in full before filling placeholders
 
-`stringType=String` matters: the default (`CharSequence`) makes generated classes awkward to map with MapStruct.
+`stringType=String` matters: the default (`CharSequence`) makes generated classes awkward to map with MapStruct —
+and, for Kotlin, makes every string field a `CharSequence` the extension-function mappers must convert.
+
+**Kotlin + Maven** — unchanged. The output is Java; `kotlinc` resolves it from the registered
+`generated-sources/avro` root and `javac` compiles it (verified). Kotlin callers use the builder
+(`OrderCreated.newBuilder().setOrderId(…).build()`); nullable union fields (`["null","string"]`) surface as
+platform types, so the producer/consumer adapters should map them to Kotlin `String?` explicitly.
 
 The Confluent AVRO serializer resolves schemas through the schema registry at runtime, so also record in the
 report that the registry's **compatibility mode** (`BACKWARD` is the usual choice) has to be configured in the
@@ -600,49 +528,7 @@ Write one at `apis/messaging/<service>-async-api-v1.yaml`, declaring the **curre
 the time of writing. Confirm what's current rather than copying that number: `npx asyncapi validate <spec>` reports
 `asyncapi-latest-version` as an informational finding when a newer one exists, so the toolchain tells you directly.
 
-```yaml
-asyncapi: 3.1.0
-info:
-  title: <Service> Events API
-  version: 1.0.0
-  description: Events this service publishes and consumes.
-servers:
-  kafka:
-    host: <broker-host>:9092
-    protocol: kafka
-    description: Kafka broker; schemas resolve through the Confluent Schema Registry.
-channels:
-  orderCreated:
-    # `address` is the real topic name — it must match the
-    # `spring.cloud.stream.bindings.<binding>.destination` value, or the documentation
-    # describes a topic that doesn't exist. The channel *key* is just an internal id.
-    address: order.created.v1
-    description: Order lifecycle events.
-    messages:
-      OrderCreated:
-        $ref: '#/components/messages/OrderCreated'
-operations:
-  sendOrderCreated:
-    # In AsyncAPI 3 the action is from THIS service's point of view:
-    # `send` = this service produces it, `receive` = this service consumes it.
-    action: send
-    summary: Publish an order-created event.
-    channel:
-      $ref: '#/channels/orderCreated'
-    messages:
-      - $ref: '#/channels/orderCreated/messages/OrderCreated'
-components:
-  messages:
-    OrderCreated:
-      name: OrderCreated
-      title: Order created
-      contentType: application/avro
-      payload:
-        # Reference the .avsc, never restate it. One source of truth for the payload.
-        schemaFormat: application/vnd.apache.avro;version=1.9.0
-        schema:
-          $ref: './order-created-v1.avsc'
-```
+Template: `templates/common/apis/messaging/__service__-async-api-v1.yaml` — read it in full before filling placeholders
 
 Three things to get right, each of which silently produces wrong documentation rather than an error:
 
@@ -668,22 +554,7 @@ The official AsyncAPI HTML generator runs over the AsyncAPI file on every build,
 site published to GitHub Pages next to the REST and gRPC pages. It is driven by `@asyncapi/cli`, which bundles the
 generator; `@asyncapi/html-template` is the template it renders with.
 
-```json
-{
-  "name": "<service>-asyncapi-docs",
-  "private": true,
-  "version": "1.0.0",
-  "description": "AsyncAPI documentation toolchain. Not published; not a Maven module.",
-  "dependencies": {
-    "@asyncapi/cli": "<latest 6.x>",
-    "@asyncapi/html-template": "<latest 3.x>"
-  },
-  "overrides": {
-    "_comment": "@asyncapi/generator 3.4.0 depends on @asyncapi/generator-hooks 0.1.1, which was never published to npm; without this override `npm install` fails with ETARGET. Drop it once the upstream dependency resolves.",
-    "@asyncapi/generator-hooks": "0.1.0"
-  }
-}
-```
+Template: `templates/common/apis/messaging/docs/package.json` — read it in full before filling placeholders
 
 Check whether the `overrides` block is still needed before adding it — run `npm install` without it first and keep
 it only if npm actually fails with `ETARGET`. A stale override silently pins a transitive dependency below what the
@@ -695,82 +566,16 @@ Write it to `apis/messaging/docs/package.json`, run `npm install` there once, an
 reports `ETARGET` on a package other than `generator-hooks`, pin that one in `overrides` too and record it in the
 report rather than leaving a build that only works on your machine.
 
+On Gradle, `package.json`/lock file/`.asyncapi-analytics` are identical and the build wiring is the
+`generateAsyncApiDocs` task of Step 6c instead of the plugin below.
+
 Then wire the generator into Maven with `frontend-maven-plugin`, so `mvn generate-resources` produces the
 documentation with no globally installed Node — the same guarantee the REST and gRPC documentation already have.
 Put the executions in **one** module only: `infrastructure/producers` if it exists, otherwise `api/consumers`. The
 AsyncAPI document describes the whole service, so generating it in both modules would just publish the same pages
 twice under two paths.
 
-```xml
-<plugin>
-  <groupId>com.github.eirslett</groupId>
-  <artifactId>frontend-maven-plugin</artifactId>
-  <configuration>
-    <!-- package.json lives with the contract it documents, not in the module. -->
-    <workingDirectory>${maven.multiModuleProjectDirectory}/apis/messaging/docs</workingDirectory>
-    <!-- Node itself is a build artifact: keep it under target/, out of the source tree. -->
-    <installDirectory>${project.build.directory}</installDirectory>
-    <skip>${asyncapi.docs.skip}</skip>
-    <environmentVariables>
-      <!-- The CLI otherwise writes ~/.asyncapi-analytics and reports usage to New Relic on
-           every build. Pointing at a committed file with analyticsEnabled=false makes the
-           build silent and offline. (CI=true also suppresses it, but local builds aren't CI.) -->
-      <ASYNCAPI_METRICS_CONFIG_PATH>${maven.multiModuleProjectDirectory}/apis/messaging/docs/.asyncapi-analytics</ASYNCAPI_METRICS_CONFIG_PATH>
-    </environmentVariables>
-  </configuration>
-  <executions>
-    <execution>
-      <id>asyncapi-install-node</id>
-      <phase>generate-resources</phase>
-      <goals>
-        <goal>install-node-and-npm</goal>
-      </goals>
-      <configuration>
-        <nodeVersion>v<node-major>.<x>.<y></nodeVersion>
-      </configuration>
-    </execution>
-    <execution>
-      <id>asyncapi-install-toolchain</id>
-      <phase>generate-resources</phase>
-      <goals>
-        <goal>npm</goal>
-      </goals>
-      <configuration>
-        <!-- `ci`, not `install`: the committed lock file is the contract. -->
-        <arguments>ci --no-audit --no-fund</arguments>
-      </configuration>
-    </execution>
-    <execution>
-      <id>asyncapi-validate</id>
-      <phase>generate-resources</phase>
-      <goals>
-        <goal>npx</goal>
-      </goals>
-      <configuration>
-        <!-- Ahead of generation, so a malformed contract fails with a validation error
-             instead of an obscure generator crash. This resolves and type-checks the
-             referenced .avsc files too, so a missing or invalid AVRO schema fails here
-             (exit 1) rather than producing a page with empty payload tables. A merely
-             out-of-date `asyncapi:` version is reported as information and exits 0, so a
-             new specification release can never break the build on its own. -->
-        <arguments>asyncapi validate ${maven.multiModuleProjectDirectory}/apis/messaging/<service>-async-api-v1.yaml</arguments>
-      </configuration>
-    </execution>
-    <execution>
-      <id>asyncapi-docs-html</id>
-      <phase>generate-resources</phase>
-      <goals>
-        <goal>npx</goal>
-      </goals>
-      <configuration>
-        <!-- singleFile=true emits one self-contained index.html, so publishing is a single
-             file copy and the page works from any path on GitHub Pages. -->
-        <arguments>asyncapi generate fromTemplate ${maven.multiModuleProjectDirectory}/apis/messaging/<service>-async-api-v1.yaml @asyncapi/html-template -o ${project.build.directory}/generated-docs/messaging/v1 --force-write -p singleFile=true</arguments>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-```
+Template: `templates/maven/infrastructure/producers/pom.xml.asyncapi-docs-plugin` — read it in full before filling placeholders
 
 Declare `<asyncapi.docs.skip>false</asyncapi.docs.skip>` as a root-pom property so a developer with no network can
 build with `-Dasyncapi.docs.skip=true`, and say so in the report — a build step that downloads Node and ~1600 npm
@@ -785,26 +590,88 @@ add it there (see `iru-setup-java-springboot-pom`) rather than inline here. The 
 exception to this repository's no-inline-versions rule, because they live in `package.json`, not in a pom; pin them
 to exact currently-published versions and let the committed lock file do the rest.
 
+## Step 6c — Gradle wiring (`kotlin` + `gradle` only)
+
+Skip on Maven. On Gradle every generator from Steps 2–6b becomes a task in the module that consumes the contract,
+with the same packages, the same options (Step 2's Kotlin `configOptions` map one-to-one), and the same per-version
+rule (one task per contract version file). Verified end to end on Gradle 8.14 (`gradle:8-jdk21`), Kotlin 2.3.21,
+Spring Boot 4.1.1: generation, `compileKotlin` of hand-written Kotlin implementing every generated interface,
+`build -x test`, and the `html2`/`protoc-gen-doc` documentation tasks. (The Kotlin + Maven snippets of Steps 2–6
+were verified the same way with Maven 3.9: `mvn clean compile` over Kotlin code implementing every generated
+interface, with `kotlin-maven-plugin`'s mixed-source configuration.) The npm `Exec` tasks were checked for task
+wiring only — their commands are the ones Steps 3b/6b already run.
+
+**Catalog (`gradle/libs.versions.toml`)** — add only what the manifest needs; resolve each version live (Step 0):
+
+Template: `templates/gradle-kotlin/gradle/libs.versions.toml.append` — read it in full before filling placeholders
+
+Root `build.gradle.kts` gains `alias(libs.plugins.<x>) apply false` for each codegen plugin used, so every module
+loads one copy of it.
+
+**Module `build.gradle.kts`** — the fragments below go into whichever module Step 0's table names (`:api:rest-server`
+gets the REST server and its docs task, `:infrastructure:clients:<name>` its client task, and so on); the module's
+existing `plugins {}` (the `iru.*` convention plugins from `iru-setup-java-springboot-pom`) keep their place:
+
+Template: `templates/gradle-kotlin/__module__/build.gradle.kts.codegen` — read it in full before filling placeholders
+
+Add the runtime libraries each module's generated code needs to its `dependencies {}` (Step 3/4/5a lists them; on
+Gradle they are `implementation(libs.…)` aliases with no version, resolved through the
+`platform(libs.spring.boot.dependencies)` the convention plugin already applies, except `avro` and
+`graphql-java-codegen`, which carry catalog versions).
+
+**API documentation tasks** — all in group `documentation`, all writing under `<module>/build/generated-docs/`
+(the Gradle twin of `target/generated-docs/`), which is where `iru-setup-java-springboot-github-workflows` looks
+for them (its survey runs `./gradlew -q :<project>:tasks --group documentation` per codegen module and passes the
+non-npm ones to its docs job — the root-level `./gradlew tasks --group documentation` omits subproject tasks such as
+`generateRestServerV1Docs`, listing only `generateApiDocs`).
+Use exactly these names, so that discovery is predictable:
+
+| Task | Module | Writes | Replaces (Maven) |
+|---|---|---|---|
+| `generateRestServerV<n>Docs` | `:api:rest-server` | `build/generated-docs/rest-server/v<n>/index.html` | `generate-rest-server-docs` (`html2`) |
+| `generateGrpcServerDocs` | `:api:grpc-server` | `build/generated-docs/grpc-server/v1/index.html` | `protoc-gen-doc` execution |
+| `generateAsyncApiDocs` | `:infrastructure:producers` (else `:api:consumers`) | `build/generated-docs/messaging/v<n>/` | Step 6b `frontend-maven-plugin` |
+| `generateGraphqlDocs` | `:api:graphql-server` | `build/generated-docs/graphql-server/v<n>/` (+ `voyager/`) | Step 3b `frontend-maven-plugin` |
+| `generateApiDocs` | each of the above | aggregate: depends on that module's doc tasks | — |
+
+Template: `templates/gradle-kotlin/__module__/build.gradle.kts.docs-tasks` — read it in full before filling placeholders
+
+Two Gradle-only notes for the report: the CI workflow on Gradle runs the npm toolchains directly (not through these
+`Exec` tasks), so the tasks exist for local builds and for discovery — keep their output paths identical to the
+workflow's; and the `doc` protoc plugin's output directory is registered on the source set like every protoc output,
+which is harmless (it holds only `index.html`) but is why `doc` belongs only in the gRPC server module.
+
 ## Step 7 — Verify generation actually works
 
 Delegate to `iru-gate-runner`:
 
 ```bash
+# Maven (Java or Kotlin)
 mvn -q clean generate-sources    # every generator runs
 mvn -q clean compile             # hand-written code compiles against the generated code
+
+# Gradle (Kotlin)
+./gradlew clean build -x test -x integrationTest   # every generator + compileKotlin/compileJava
+./gradlew generateApiDocs -PapiDocsNpmSkip=true      # html2 + protoc-gen-doc (drop the flag when Node is available)
+./gradlew -q :api:rest-server:tasks --group documentation   # per codegen module: the doc tasks the workflow skill discovers
 ```
 
 Then confirm by inspection:
 
-- generated sources exist under each expected module's `target/generated-sources/`;
+- generated sources exist under each expected module's `target/generated-sources/` (Gradle:
+  `build/generated/openapi/`, `build/generated/graphql/`, `build/generated/sources/proto/main/{java,kotlin,grpc,grpckt}`,
+  and the AVRO plugin's output);
+- for Kotlin, at least one hand-written class per generated contract compiles against it (a controller implementing
+  the REST interface, a `CoroutineImplBase` subclass, a resolver implementation) — generation succeeding proves
+  nothing about whether the Kotlin signatures are the ones the modules skill's adapters expect;
 - the packages match what Steps 2–6 configured, so the hand-written mappers and controllers resolve;
-- if GraphQL is enabled, `target/classes/graphql/` actually contains the SDL, and no generated file imports
+- if GraphQL is enabled, `target/classes/graphql/` (Gradle: `build/resources/main/graphql/`) actually contains the SDL, and no generated file imports
   `javax.validation` — both are silent-at-generation, loud-later failures (a service that won't start, and a
   module that won't compile);
 - if GraphQL is enabled, `generated-docs/graphql-server/v1/index.html` exists and shows the SDL descriptions, and
   (when Voyager was wanted) `generated-docs/graphql-server/v1/voyager/index.html` exists with
   `voyager.standalone.js` and `voyager.css` beside it;
-- generated HTML documentation exists under `target/generated-docs/`, including
+- generated HTML documentation exists under `target/generated-docs/` (Gradle: `build/generated-docs/`), including
   `generated-docs/messaging/v1/index.html` if messaging is enabled;
 - that page actually lists the AVRO field names and their `doc` text. The `asyncapi-validate` execution catches the
   usual causes before generation — a `$ref` to a missing `.avsc` and an `.avsc` that isn't valid AVRO both fail it
@@ -813,7 +680,10 @@ Then confirm by inspection:
   wired to a channel or an operation.
 
 A generator that runs but produces nothing usually means a wrong `inputSpec`/`sourceDirectory` path — remember
-these are absolute via `${maven.multiModuleProjectDirectory}`, because the contract lives outside the module.
+these are absolute via `${maven.multiModuleProjectDirectory}` (Gradle: `rootProject.layout.projectDirectory.dir("apis")`),
+because the contract lives outside the module. On Gradle, `Unresolved reference` from `compileKotlin` for a class
+that *was* generated means a missing task dependency — a source directory added by path instead of by task
+provider, or the AVRO `compileKotlin` dependency of Step 6c left out.
 
 Fix whatever fails. This is the step most likely to need real iteration, particularly the protobuf plugin's
 configuration schema and the OpenAPI generator's `library` option names — check the plugin's actual documentation
@@ -821,8 +691,8 @@ rather than trying variations.
 
 ## Step 8 — Keep generated output out of git and out of analysis
 
-- Confirm `.gitignore` covers `target/` (which already covers `generated-sources` and `generated-docs`). If any
-  generator was configured to write outside `target/`, either change it to write inside `target/` — strongly
+- Confirm `.gitignore` covers `target/` (Gradle: `build/`), which already covers the generated sources and
+  `generated-docs`. If any generator was configured to write outside `target/`/`build/`, either change it to write inside `target/` — strongly
   preferred — or add an explicit ignore entry and explain why in the report.
 - Add `apis/graphql-server/docs/node_modules/` to `.gitignore` if the GraphQL documentation toolchain was set up;
   its `package.json`, `package-lock.json`, `spectaql-*.yml` and `build-voyager.mjs` are committed.
@@ -835,6 +705,16 @@ rather than trying variations.
   up; verify they match the package names actually configured here, and correct them if the generated packages
   ended up somewhere the exclusions don't reach. Thousands of findings on generated DTOs is how a team learns to
   ignore the quality report entirely.
+- **Kotlin:** detekt and ktlint replace Checkstyle/PMD/SpotBugs, and both read *registered source roots*, which now
+  include the generated Kotlin. On Maven, confirm the detekt/ktlint plugin configuration in the root pom limits
+  input to `src/main/kotlin`/`src/test/kotlin` (or excludes `**/generated-sources/**`); on Gradle, confirm the
+  `iru.quality` convention plugin excludes generated files — detekt via `source.setFrom("src/main/kotlin",
+  "src/test/kotlin")` (or `exclude("**/generated/**")` on the `Detekt` tasks), ktlint via
+  `filter { exclude { it.file.path.contains("/build/") } }` — and that JaCoCo's class-directory exclusions and
+  `sonar.exclusions` name the generated packages. Run `./gradlew detekt ktlintCheck` (or the Maven equivalents)
+  once and look at the finding count: hundreds of findings in `…generated…` packages mean the exclusion is
+  missing. Correct it in the owning file and say so in the report; Dokka should likewise not document generated
+  packages (`suppressedFiles`/`perPackageOption` with `suppress = true` on `.*\.generated(\..*)?`).
 
 ## Step 9 — Contract linting (recommended)
 
@@ -864,9 +744,16 @@ report what you added:
 
 Summarize:
 
+- Whether the API layer was created from scratch or updated, and per pre-existing artifact the action taken
+  (**created / updated / replaced / kept as is**), with each gap left in a kept artifact.
 - Every contract file created, with its path and what it describes.
-- Every generator execution added, to which module pom, generating into which package, and where its HTML
-  documentation lands.
+- The language and build tool read from the manifest, and for Kotlin which generator was chosen per contract
+  (Step 0's table) and any deviation from it with the reason.
+- Every generator execution (Maven) or task (Gradle) added, to which module, generating into which package, and
+  where its HTML documentation lands — on Gradle, the exact `documentation`-group task names, since the workflows
+  skill discovers them.
+- On Gradle, every `gradle/libs.versions.toml` entry added, with each version and where it was resolved from, and
+  the AVRO plugin's maintenance status at the time of the run.
 - The `reactive`/`library` settings resolved from `stack.concurrency`, and the protobuf plugin flavour detected.
 - For GraphQL: where the SDL is copied to for runtime loading, that `modelValidationAnnotation` was set to the
   jakarta annotation, whether `graphql-java-codegen` was added to each GraphQL client module, the query
@@ -874,7 +761,7 @@ Summarize:
   both.
 - For messaging: the AsyncAPI version declared, which module hosts the documentation executions, the exact npm
   package versions pinned in `apis/messaging/docs/package.json`, whether `npm install` needed any `overrides` at
-  all, and the Node version pinned in `frontend-maven-plugin`.
+  all, and the Node version pinned in `frontend-maven-plugin` (Gradle: that the `Exec` tasks use the Node on `PATH`).
 - The result of Step 7, including whether HTML documentation was actually produced for REST, gRPC, GraphQL and
   messaging, whether the messaging page's payload tables came out populated rather than empty, and whether the
   GraphQL pages showed real descriptions and a drawn schema graph.

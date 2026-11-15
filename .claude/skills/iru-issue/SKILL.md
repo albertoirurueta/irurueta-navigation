@@ -1,6 +1,6 @@
 ---
 name: iru-issue
-description: End-to-end kickoff for a tracked ticket — a GitHub issue or a Jira ticket, auto-detected like `iru-explore` — requires a ticket ID, unlike `iru-explore`/`iru-plan` this skill stops if none is given. Fetches the ticket, classifies it as a feature or a hotfix from its labels/issue-type/content, creates a `feature/<ticket-id>` or `hotfix/<ticket-id>` branch off the current branch, then runs the `iru-explore` and `iru-plan` skills for that ticket. Once a reviewable `implementation_plan.md` exists, asks whether to hand off implementation to the `iru-code` skill (run in an isolated sub-agent) or stop for manual review; once implementation is done, attaches the archived implementation plan back onto the original ticket (as a GitHub issue comment, or a Jira attachment/comment) for future context if one was actually archived, skipping that step otherwise, then pushes the branch, opens a pull request (using whichever tooling matches the repository's host — GitHub, Bitbucket, Azure DevOps, or TFS — as detected by `iru-explore`) back to the branch `/iru-issue` was run from, uses the `iru-pr-description` skill to fill in its description, then runs the `iru-pr-review` skill (passing both the new PR's id and the ticket id) to leave review comments on it. If `iru-code`'s security gate (`iru-check-security`) ever flags a new or newly-unaudited secret during implementation, this skill stops instead — it warns the user with the specifics and never pushes the branch or opens a PR for that run, even if `iru-code` itself went on to resolve the gate and finish. Invoke as `/iru-issue <ticket-id>` where `<ticket-id>` is either a GitHub issue ID (e.g. `42`) or a Jira key (e.g. `PROJ-123`). Use when starting work on a tracked ticket and you want branch creation, exploration, planning, implementation, PR creation, and an initial code review done in one pass.
+description: "Invoke as `/iru-issue <ticket-id>` (GitHub issue ID or Jira key; a ticket ID is required, it stops without one). End-to-end kickoff for a ticket: classifies feature or hotfix, confirms the base branch, creates the branch, runs `iru-explore` and `iru-plan`, optionally hands off to `iru-code`, then opens the PR with `iru-pr-description` and `iru-pr-review`. Use to take a ticket from branch to reviewed PR in one pass."
 model: sonnet
 ---
 
@@ -10,6 +10,8 @@ Take a tracked ticket — a GitHub issue or a Jira ticket — from "just filed" 
 review comments already left" in one pass. This skill orchestrates `iru-explore`, `iru-plan`, `iru-code`, `iru-pr-description`, and
 `iru-pr-review` — it does not duplicate their logic, it sequences them around branch creation, ticket triage, and PR
 creation.
+
+Agent dispatch: call the catalog agents as `subagent_type: "<agent-name>"` (for example `"iru-gate-runner"`) when installed under `.claude/agents/`, or as `"iru-core:<agent-name>"` when installed as a plugin — use whichever name appears in your available agent types. Every `subagent_type` below is written in the first form.
 
 ## Step 1 — Resolve the ticket ID and its type (required)
 
@@ -91,19 +93,98 @@ Decide whether the ticket describes a new feature or a hotfix/bug fix, in this o
 State which category was chosen and why (labels/iru-issue type vs. content) before moving on — this determines the
 branch prefix in Step 4.
 
-## Step 4 — Create the branch
+## Step 4 — Resolve the base branch and create the branch
 
-- Capture the current branch name first (`git branch --show-current`) and remember it as `<base-branch>` — this is
-  the branch `/iru-issue` was invoked from (typically `develop`, `main`, or `master`), and is the destination the pull
-  request in Step 8 will target.
-- Compute the branch name: `feature/<ticket-id>` if Step 3 classified it as a feature, `hotfix/<ticket-id>` if a
-  hotfix.
+The branch this skill forks from — and the branch its pull request targets in Step 8 — depends on whether this
+run is happening on the user's own machine or in a Claude Code cloud/web session, where the current branch is a
+throwaway session branch rather than a branch the user deliberately checked out. Work through 4.1 → 4.3 in order.
+
+### 4.1 — Detect the execution environment
+
+Check, in order:
+
+1. **Current branch name** — `git branch --show-current`. A branch matching `claude/*` (the per-session branch
+   Claude Code cloud/web sessions run on) is a strong **cloud** signal.
+2. **Environment markers** — a cloud/sandboxed run typically shows one or more of: a `CLAUDE_CODE_REMOTE` or
+   `IS_SANDBOX` environment variable set, a `CLAUDE_CODE_ENTRYPOINT` that isn't a local CLI/desktop value, a
+   `/.dockerenv` file present, or a working directory under a generic agent workspace root (e.g. `/home/claude`,
+   `/workspace`) rather than a real user home. Check with e.g. `env | grep -i 'claude\|sandbox'`, `ls /.dockerenv`,
+   `pwd`.
+3. **Neither** — treat the run as **local**.
+
+If the signals conflict or are genuinely ambiguous (e.g. sandbox markers but an ordinary branch name, or a local
+branch that happens to be named `claude/…`), don't guess: ask the user via `AskUserQuestion` whether this is a
+local run or a cloud run.
+
+State which environment was concluded and which signal decided it, so the user can correct a wrong call before
+any branch is created.
+
+### 4.2 — Resolve `<base-branch>`, and confirm it with the user
+
+`<base-branch>` is both the fork point for the new branch and the destination of the pull request opened in
+Step 8 — say so explicitly when asking, so the user understands what they're choosing.
+
+Work out the **default** to propose, per the environment detected in 4.1:
+
+- **Local run** — the default is the current branch (`git branch --show-current`), i.e. the branch `/iru-issue`
+  was invoked from (typically `develop`, `main`, or `master`).
+- **Cloud run** — the default is the repository's **default branch**, never the `claude/*` session branch.
+  Resolve it in this order, stopping at the first that works:
+  1. `git symbolic-ref refs/remotes/origin/HEAD` (strip the `refs/remotes/origin/` prefix),
+  2. the host's own metadata (e.g. `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` for GitHub),
+  3. `git ls-remote --heads origin main master` — prefer `main` if both exist.
+  If none of those resolves it, ask the user which branch the work should be based on rather than guessing.
+
+Then **confirm with the user in both cases**, via `AskUserQuestion`, showing the environment detected, the branch
+being proposed and why, and these options:
+
+- **use the proposed default** (recommended — the current branch for a local run, the repository's default branch
+  for a cloud run),
+- **use the other candidate** — the repository's default branch on a local run; the `claude/*` session branch on a
+  cloud run, for the case where it legitimately already carries work,
+- **use another branch** (free text),
+- **stop**.
+
+Never skip this confirmation, on either environment — the base branch determines where the work forks from and
+where its PR lands, and neither is obvious enough to assume on the user's behalf.
+
+Record the resolved `<base-branch>` and where it came from (current branch, repository default, or an explicit
+user choice): Step 5 writes it into `implementation_plan.md`, Step 8 targets the pull request at it, and Step 9
+reports it.
+
+### 4.3 — Create the branch
+
+- Compute the branch name as `<prefix>/<ticket-id>-<slug>`:
+  - `<prefix>` is `feature` if Step 3 classified the ticket as a feature, `hotfix` if a hotfix.
+  - `<ticket-id>` is the ticket's id exactly as the tracker shows it: the bare GitHub issue number (`42`, no `#`)
+    or the Jira key with its original casing (`PROJ-123`).
+  - `<slug>` is a brief description of the task so the branch is recognizable at a glance — usually the ticket
+    title, summarized when it's long: lowercase ASCII, words joined by single hyphens, every other character
+    (punctuation, quotes, slashes, `#`, emoji, accents) dropped or transliterated, filler words (`a`, `the`,
+    `should`, …) and any text duplicating the ticket id or a `[bug]`/`feat:`-style title prefix removed, and kept
+    to roughly 3–6 words / at most ~40 characters, cut at a word boundary. E.g. issue #42 "Add CSV export to the
+    reports page" → `feature/42-add-csv-export-reports-page`; Jira `PROJ-123` "Login fails after session
+    timeout" → `hotfix/PROJ-123-login-fails-after-session-timeout`.
+  - If the title yields no usable slug (empty, or only symbols/non-Latin text), derive one from the ticket body's
+    first sentence instead; if that also fails, fall back to `<prefix>/<ticket-id>` and say so.
+  - The result must be a valid ref name — check with `git check-ref-format --branch <branch-name>`.
 - Check it doesn't already exist locally or on `origin` (`git branch --list <branch-name>`, `git ls-remote --heads
-  origin <branch-name>`). If it does, tell the user and ask (`AskUserQuestion`) whether to check it out instead of
-  creating it, pick a different name, or stop — don't silently overwrite or reuse it.
-- Otherwise, create it from `<base-branch>`: `git checkout -b <branch-name>`. This is a local, easily reversible
-  action (no push), consistent with how this repository's other skills branch without extra confirmation — so no
-  need to ask before this specific step, only report which branch was created and from what base afterward.
+  origin <branch-name>`). Also look for any other branch already created for this same ticket — same prefix and
+  ticket id with a different or no slug (`git branch --list '<prefix>/<ticket-id>' '<prefix>/<ticket-id>-*'`, and
+  `git ls-remote --heads origin` filtered the same way), e.g. from an earlier run before the title changed. If
+  either finds a match, tell the user and ask (`AskUserQuestion`) whether to check out the existing branch instead
+  of creating one, pick a different name, or stop — don't silently overwrite or reuse it, and don't create a
+  second branch for the same ticket without asking.
+- If `<base-branch>` is **not** the current branch, check the working tree first (`git status`): uncommitted
+  changes would be dragged onto a fork point the user didn't expect, so stop and ask the user to commit or stash
+  them before continuing.
+- Create the branch from `<base-branch>`:
+  - if `<base-branch>` **is** the current branch: `git checkout -b <branch-name>`;
+  - otherwise: `git fetch origin <base-branch>` then `git checkout -b <branch-name> origin/<base-branch>`,
+    falling back to the local ref (`git checkout -b <branch-name> <base-branch>`) when there's no remote or the
+    remote ref doesn't exist.
+- This is a local, easily reversible action (no push) and the base was already confirmed in 4.2, so no further
+  confirmation is needed here — just report which branch was created and from what base afterward.
 
 ## Step 5 — Explore and plan
 
@@ -120,12 +201,35 @@ assuming GitHub.
 skips re-running `iru-explore` if so — since Step 5.1 just did that exploration, `iru-plan` should detect and reuse it
 rather than duplicating the work. That's expected; don't intervene.
 
-If either skill reports it cannot proceed (e.g. `iru-plan` needed a clarification the user declined to resolve), stop
-here and surface that to the user rather than pushing ahead to Step 6 with an incomplete plan.
+If either skill reports it cannot proceed, stop here and surface that to the user rather than pushing ahead to
+Step 6 with an incomplete plan. A question the user declined to answer is not such a case: `iru-plan` persists it
+in the plan as a `[NEEDS CLARIFICATION: <question> — options: <a> | <b>; recommended: <a>]` marker (also listed
+under `Open clarifications:` in the Task summary) and carries on.
+
+Once the plan exists, read it and note any open `[NEEDS CLARIFICATION` markers (each with the task it blocks and
+its recommended option) — they feed the Step 6 question and the Step 9 report. `Open clarifications: none` means
+there are none.
+
+Once `implementation_plan.md` exists, make sure its "Task summary" section carries the base branch resolved in
+Step 4.2, as its own line alongside the `Source: …` line `iru-plan` writes:
+
+```
+Base branch: <base-branch>
+```
+
+Add the line if `iru-plan` didn't write it, or correct it if it doesn't match what Step 4.2 resolved. This is what
+lets a later, separate session recover the choice: in the "review manually" path below, the user runs `/iru-code`
+and `/iru-pr-description` themselves, with no memory of this conversation, and `iru-pr-description` reads this line
+(from `implementation_plan.md`, or from its archived copy under `.archive/`) to target the pull request at the same
+base branch instead of falling back to the repository default.
 
 ## Step 6 — Choose how to proceed with implementation
 
-Once `implementation_plan.md` exists at the repository root, ask the user via `AskUserQuestion`:
+Once `implementation_plan.md` exists at the repository root, ask the user via `AskUserQuestion`. When Step 5 found
+open `[NEEDS CLARIFICATION` markers, say so in the question and list them: an automatic `iru-code` run stops at its
+Step 2 gate until they are resolved, so "Review manually first" is the natural choice unless the user answers them
+now (in which case update the plan in place, replacing each marker with the decision and setting `Open
+clarifications: none`, before handing off).
 
 - **Proceed automatically with the `iru-code` skill** — hands off implementation now; a pull request is opened
   automatically once it finishes cleanly (Step 8) — unless `iru-code`'s security gate ever fires during the run, in
@@ -150,7 +254,7 @@ Handle the choice as follows:
   Agent({
     description: "Implement ticket <ticket-id> via the code skill",
     subagent_type: "iru-isolated-skill-executor",
-    prompt: "Invoke Skill({skill: \"code\"}) to execute implementation_plan.md at the repository root end to end.
+    prompt: "Invoke Skill({skill: \"iru-code\"}) to execute implementation_plan.md at the repository root end to end.
       Report back: which tasks completed, the files touched, the coverage and code-quality outcome, whether the
       plan was archived, and — critically — whether `iru-code`'s Step 7 security gate (backed by `iru-check-security`)
       ever fired during the run, i.e. whether any new or newly-unaudited secret was ever detected, even if it was
@@ -223,7 +327,8 @@ Only reached when Step 6's sub-agent reports successful completion **and** its s
 push or open a PR off the back of a run where `iru-check-security` ever flagged something, per Step 6.
 
 1. **Confirm with the user** before taking any visible/shared-state action: show the branch name, the destination
-   (`<base-branch>` from Step 4), and a summary of what the sub-agent changed (from its report). Pushing and
+   (`<base-branch>` as resolved and confirmed in Step 4.2), and a summary of what the sub-agent changed (from its
+   report). Pushing and
    opening a PR are exactly the kind of actions this repository's other skills (`iru-release`, `iru-pr-description`) always
    confirm before taking — do the same here.
 2. Push the branch: `git push -u origin <branch-name>` — a plain git operation, unaffected by which platform hosts
@@ -253,9 +358,11 @@ push or open a PR off the back of a run where `iru-check-security` ever flagged 
      <branch-name> --title "<ticket-title> (<ticket-id>)" --description "Refs <ticket-id>."` (the Azure CLI with
      the `azure-devops` extension, pointed at the right org/project or on-prem collection URL), or Azure DevOps
      MCP tools if connected.
-4. Invoke `Skill({skill: "iru-pr-description"})`. It will detect the PR just opened (same branch, via its own Step 2),
-   draft a description from the actual diff, and ask whether to replace the placeholder body — confirm yes so the
-   real description lands.
+4. Invoke `Skill({skill: "iru-pr-description", args: "base-branch: <base-branch>"})`, passing the base branch
+   resolved in Step 4.2 so it describes the diff against the same base this PR actually targets rather than
+   re-deriving the repository default. It will detect the PR just opened (same branch, via its own Step 3), draft
+   a description from the actual diff, and ask whether to replace the placeholder body — confirm yes so the real
+   description lands.
 5. After `iru-pr-description` finishes, check the PR body still references the ticket (a "Closes #<ticket-id>." or
    "Refs <ticket-id>." line, per whichever convention Step 8.3 used) with the same host tooling used to create it
    (e.g. `gh pr view <number> --json body` for GitHub) — `iru-pr-description` fully replaces the body with its own
@@ -272,8 +379,12 @@ push or open a PR off the back of a run where `iru-check-security` ever flagged 
 
 ## Step 9 — Report
 
-Summarize for the user: the ticket ID and title, the classification (feature/hotfix) and why, the branch created
-and its base, and the final outcome — one of:
+Summarize for the user: the ticket ID and title, the classification (feature/hotfix) and why, the execution
+environment detected in Step 4.1 (local or cloud) and which signal decided it, the branch created, its base
+branch and where that base came from (current branch, repository default, or the user's explicit choice), and the
+final outcome — preceded, whenever Step 5 found open `[NEEDS CLARIFICATION` markers that are still unresolved, by
+the list of those markers (task blocked, question, recommended option) and the reminder that `/iru-code` will not
+start implementing until they are resolved — one of:
 
 - manual review pending (Step 6), or
 - the security gate fired during implementation (Step 6): the sub-agent's implementation summary, what

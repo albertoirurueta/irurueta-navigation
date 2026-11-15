@@ -1,6 +1,6 @@
 ---
 name: iru-dotnet-generate-all-tests
-description: For a .NET/C# project or solution only, explore the whole codebase to find every class that has no corresponding unit test class, or whose measured line coverage falls below 80%, using the `iru-dotnet-coverage` skill to get the exact percentage per class — then generate new tests (or extend existing ones) until each reaches that bar, following this project's own test framework and style. Invoke as `/iru-dotnet-generate-all-tests`. Stops immediately, without attempting anything, if the repository isn't a .NET/C# project (no `.sln`/`.csproj` found). Use whenever the user wants comprehensive unit test coverage brought up across an entire .NET codebase in one pass, instead of writing tests for one class or task at a time.
+description: "/iru-dotnet-generate-all-tests finds every class in a .NET/C# solution with no unit test class or under 80% line coverage per iru-dotnet-coverage, and generates or extends tests in the project's own framework and style. Stops if there is no .sln/.csproj. Windows apps cover only the Core project; existing UI-test projects get UI tests via iru-dotnet-test ui."
 model: sonnet
 allowed-tools: Read Edit Write Bash(dotnet *) Bash(git status *) Bash(git diff *) Bash(find *) Bash(grep *) Bash(ls *) Skill Agent AskUserQuestion
 ---
@@ -14,6 +14,8 @@ language. It only adds/extends test code; it does not add license headers, doc c
 pass (those are separate skills' jobs), and it only touches production source code if a class is genuinely
 untestable as written (see Step 5) — which it reports rather than silently "fixing" by redesigning the class.
 
+Agent dispatch: call the catalog agents as `subagent_type: "<agent-name>"` (for example `"iru-gate-runner"`) when installed under `.claude/agents/`, or as `"iru-core:<agent-name>"` when installed as a plugin — use whichever name appears in your available agent types. Every `subagent_type` below is written in the first form.
+
 ## Step 1 — Confirm this is a .NET project
 
 ```bash
@@ -22,8 +24,16 @@ find . \( -name "*.sln" -o -name "*.csproj" \) -not -path "*/bin/*" -not -path "
 
 - **None found**: this skill applies only to .NET/C# projects. Tell the user plainly and stop — do not attempt
   any other language's equivalent or partial exploration.
-- **Found**: continue. If there are multiple `.sln` files and no obvious single target, ask the user which
+- **Found**: continue. If there are multiple `.sln`/`.slnx` files and no obvious single target, ask the user which
   solution to scope this run to (same convention as `iru-dotnet-test`/`iru-dotnet-coverage`).
+- **Windows desktop app** (a `*.csproj` with `<OutputType>WinExe</OutputType>` and `UseWPF`/`UseWinUI`/
+  `UseWindowsForms` — plan key `windows`, whose per-task work goes through `iru-windows-code-one-task(-group)`): this
+  skill still applies, but only to the UI-free Core project (`src/<App>.Core`) and its portable test project
+  (`tests/<App>.Core.Tests`). Classes in the app project (windows, pages, forms, code-behind, converters, UI service
+  implementations) are listed as "excluded — UI layer, not measured" in the Step 8 report, never given unit tests
+  that need a UI thread; logic found there is named as a candidate to move into Core. `[TestCategory("UI")]` tests
+  are outside the coverage bar (`iru-dotnet-coverage` excludes them) — the screens and components themselves get UI
+  tests in Step 7b instead.
 
 ## Step 2 — Discover every candidate class and the existing test convention
 
@@ -58,7 +68,7 @@ classes are in scope:
 Agent({
   description: "Measure coverage for every candidate class",
   subagent_type: "iru-gate-runner",
-  prompt: "Invoke Skill({skill: \"dotnet-coverage\", args: \"<TargetClass1,TargetClass2,...>\"}) with no test
+  prompt: "Invoke Skill({skill: \"iru-dotnet-coverage\", args: \"<TargetClass1,TargetClass2,...>\"}) with no test
     selector, so the whole suite runs once and every class is measured in the same pass. Report back, per target
     class: its exact line coverage percentage: and, ONLY for classes below 80%, the specific uncovered line
     numbers too. For classes at or above 80%, report just the percentage — do not include per-line detail for
@@ -128,12 +138,43 @@ legitimate reason: defensive code paths that are difficult or unsafe to trigger 
 ## Step 7 — Run the full suite once to confirm no regressions
 
 Delegate to `iru-gate-runner`: `Agent({description: "Run full test suite", subagent_type: "iru-gate-runner", prompt:
-"Invoke Skill({skill: \"dotnet-test\"}) (fall back to `dotnet test` directly if unavailable). If everything
+"Invoke Skill({skill: \"iru-dotnet-test\"}) (fall back to `dotnet test` directly if unavailable). If everything
 passed, report back only that all tests passed. If anything failed, report back only the failing test names,
 the failure reason, and the stack trace for each."})`. Fix any regression this run's new/extended tests
 introduced (a genuine bug in a generated test, not a pre-existing failure), then re-invoke until it reports all
 tests passed. A pre-existing failure unrelated to any class this run touched is out of scope — note it in Step
 8 rather than fixing it.
+
+## Step 7b — UI tests for existing screens and components
+
+Only when the repository has a UI-test project already: `tests/<App>.UITests` (FlaUI, `[TestCategory("UI")]`) for a
+Windows desktop app, or `[TestCategory("UI")]` Terminal.Gui view tests (normally `tests/<Tool>.Cli.Tests/Tui/`) for a
+command-line tool referencing `Terminal.Gui`. No UI-test project → report "no UI-test project — UI tests not
+generated" (this skill doesn't scaffold one; `iru-setup-windows-app`/`iru-setup-dotnet-cli` do), and move on.
+
+1. **Inventory** every screen (WPF/WinUI `Window`/`Page`, WinForms `Form`; a full-screen Terminal.Gui `Window`) and
+   component (`UserControl`; a reusable Terminal.Gui `View`) in the app/CLI project, with its visual states (from its
+   doc comments, its view model's/state's properties, or its bindings). Mark which already have UI tests, by the
+   capture `Id`s their tests pass to `UiScreenshots.Save`/`SaveText` or by test class name.
+2. **Generate** UI tests for the uncovered ones — one sub-agent per screen/component, a handful at a time, each told
+   to follow the catalog's UI contract and the repository's existing UI tests: the `iru-windows-code-one-task`
+   (desktop) or `iru-dotnet-code-one-task` (terminal) skill's `reference/ui-contract.md` and
+   `reference/ui-implementation.md` when installed, otherwise the existing tests' helpers (`UiQuality`,
+   `UiScreenshots`, `AccessibilityCheck`). Each test renders every applicable visual state with minimal/typical/
+   many-items data (an Arabic or Hebrew fixture for `rtl`), asserts behaviour once (`ltr`, `light`), captures every
+   state × `.ui-quality.yml` direction × theme (terminal: `.txt`, theme `no-color`) through the shared helper into
+   `.ui-screenshots/`, and
+   runs the accessibility check after each capture (Axe.Windows on the desktop, the asserted `tui-*` checks in a
+   terminal UI). Add an automation id (`AutomationProperties.AutomationId`
+   / `Control.Name`) to a view only when a test can't find an element otherwise, and say so. A component that can't
+   be rendered in isolation (no component host and no fixture seam) is tested through its screen and reported.
+3. **Run** them once via `iru-gate-runner` with `Skill({skill: "iru-dotnet-test", args: "ui"})` — desktop UI tests
+   only on Windows (behind `.integration-test.lock`, which that skill takes), otherwise report them **unverified
+   (needs Windows)** after a compile check (`dotnet build tests/<App>.UITests -p:EnableWindowsTargeting=true`);
+   terminal UI tests on any host. Fix failures in the generated tests (not the views, unless a missing automation id
+   or accessible name is the cause — then fix the view minimally and report it).
+
+**Accessibility level `none`/`off`.** If `.ui-quality.yml` says `accessibility: none` (opted out entirely) or `off` (rules apply, checks not run), accessibility checks are not applicable: skip them and report "accessibility: opted out" (`none`) or "accessibility checks off" (`off`) - never "unverified" and never a failure.
 
 ## Step 8 — Report
 
@@ -147,6 +188,9 @@ Summarize:
 - Any class still below 80% after Step 6's two attempts, with the exact lines still uncovered and, where
   apparent, why (e.g. an untestable defensive branch).
 - The full-suite result from Step 7.
+- Step 7b: the screens/components inventoried, which already had UI tests, which got new ones (test file, states
+  covered), the `ui` run result (or "unverified (needs Windows)"), screenshot counts per kind, malformed names, the
+  `.ui-quality.yml` accessibility level and its violations (count + rule ids), and any view changed for testability.
 
 Do not run a code-quality, license-header, or doc-comment pass — those are `iru-dotnet-code-quality`, `iru-check-license`,
 and `iru-dotnet-docfx`'s jobs respectively, not this skill's.

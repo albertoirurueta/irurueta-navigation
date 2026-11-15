@@ -1,25 +1,6 @@
 ---
 name: iru-knowledge-to-jira
-description: Convert one or more pending/not-completed agreements from the `knowledge/` base (built by
-  `iru-knowledge-process-inbox`) into a Jira ticket. Asks the user which agreement(s) to convert, accepting a
-  pending task id (`<timestamp>-<n>`), a `knowledge/pending/pending-*.md` filename, a `knowledge/agreements/
-  agreement-*.md` filename/id (with an item number if it has more than one open item), or a plain natural-language
-  description — searching `knowledge/pending` and `knowledge/agreements` by content when given the latter. Once an
-  agreement is resolved, gathers additional context from its meeting's full transcription and attachments (via
-  `knowledge/meetings/meeting-<timestamp>/`) and from the current codebase (via the `iru-explore` skill), then
-  hands the synthesized purpose to the `iru-create-jira-ticket` skill to draft and file the ticket — passing the
-  meeting transcription and attachments along too, either as an actual attachment (uploaded via Jira MCP tools'
-  native attachment support, or embedded/described per that skill's own fallback if none is connected) or, when
-  the file is already committed and pushed in this repository, as a link to it instead of duplicating its
-  content. Invoke as `/iru-knowledge-to-jira` to be asked which agreement(s) to convert, or `/iru-knowledge-to-jira
-  <id-filename-or-description>` to skip straight to resolving that one. Stops early if `knowledge/` doesn't exist
-  yet (run `iru-knowledge-setup` and `iru-knowledge-process-inbox` first) or if no Jira MCP tool is connected —
-  there is no CLI fallback the way GitHub has `gh`; use `iru-knowledge-to-issue` instead when the work should be
-  tracked on GitHub. Does not mark the source agreement complete — filing a ticket means the work is now tracked,
-  not done; it instead appends the created ticket's key/URL back onto the pending file (and a note on the
-  agreement item) so a re-run doesn't file a duplicate, leaving `iru-knowledge-complete` as the step that later
-  closes it out for real. Use whenever a meeting agreement or action item needs to become actionable Jira-ticket
-  work instead of staying a markdown checkbox nobody triages.
+description: "/iru-knowledge-to-jira [<id-filename-or-description>] - converts pending agreements from the knowledge/ base into a Jira ticket. Accepts a pending task id, a pending or agreement filename (plus item number), or a plain description; no argument asks which to convert. Adds meeting transcription and codebase context (iru-explore), files via iru-create-jira-ticket, attaches or links the meeting files, and records the ticket key on the pending file so a re-run does not duplicate. Does not mark the agreement complete (iru-knowledge-complete does). Stops if knowledge/ is missing or no Jira MCP tool is connected (no CLI fallback; use iru-knowledge-to-issue for GitHub). Use to turn meeting action items into Jira tickets."
 model: sonnet
 ---
 

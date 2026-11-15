@@ -53,7 +53,7 @@ it got. In this architecture, ports are the contract, so this is really a rule a
   implementation delivers it.
 
 This is why a port's Javadoc must state what an implementation guarantees — without it, substitutability can't
-be checked, and a second adapter (a fake in tests, or a second database) will quietly behave differently.
+be checked, and a second adapter (a second database, say) will quietly behave differently.
 
 ## Interface segregation
 

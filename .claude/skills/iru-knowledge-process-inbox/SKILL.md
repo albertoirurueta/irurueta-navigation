@@ -1,18 +1,6 @@
 ---
 name: iru-knowledge-process-inbox
-description: Process every file in `knowledge/inbox` — meeting transcriptions (timestamped or not, diarized or
-  not) plus any attached documents related to those meetings — into the rest of the `knowledge/` structure: a
-  `knowledge/meetings/meeting-<timestamp>/meeting.md` (Summary + Full transcription) per meeting with its
-  attachments copied alongside it, a `knowledge/people/<name>.md` file created or updated per speaker when the
-  transcription is diarized, a `knowledge/agreements/agreement-<timestamp>.md` listing every agreement reached as
-  numbered, unchecked markdown checkboxes, and one `knowledge/pending/pending-<timestamp>-<n>.md` file per
-  agreement item. Once every meeting in the inbox has been filed, runs the `iru-knowledge-compact` skill over the
-  whole knowledge base so the newly created pending tasks are deduplicated against the ones earlier meetings
-  already produced, and any agreement whose linked GitHub issue/Jira ticket is already closed as completed gets
-  checked off — `iru-knowledge-compact` asks for confirmation before it deletes or edits anything. Invoke as
-  `/iru-knowledge-process-inbox`. Requires the `knowledge/` structure from `iru-knowledge-setup` to already
-  exist. Use whenever new meeting transcriptions/documents have landed in `knowledge/inbox` and need to be filed,
-  summarized, and turned into tracked agreements and pending tasks.
+description: "/iru-knowledge-process-inbox - files every meeting transcription (timestamped or not, diarized or not) and attachment in knowledge/inbox into knowledge/: a meeting.md per meeting, people files per speaker, an agreement file of numbered checkboxes and one pending file per item, then runs iru-knowledge-compact to dedupe pending tasks and check off agreements whose linked issue/ticket is closed (it asks before deleting or editing). Requires iru-knowledge-setup first. Use when new meeting transcriptions or documents land in knowledge/inbox."
 model: sonnet
 ---
 
@@ -20,6 +8,8 @@ model: sonnet
 
 File every meeting transcription (and its supporting documents) currently sitting in `knowledge/inbox` into
 `knowledge/meetings`, `knowledge/people`, `knowledge/agreements`, and `knowledge/pending`.
+
+Requires the `knowledge/` structure created by `iru-knowledge-setup` to already exist.
 
 Two properties of a transcription vary independently and neither is guaranteed:
 
