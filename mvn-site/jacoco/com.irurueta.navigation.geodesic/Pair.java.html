@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pair.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">Pair.java</span></div><h1>Pair.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * A pair of double precision numbers.
+ * This is like C++ class {@code std::pair&lt;double, double&gt;}.
+ */
+public class Pair {
+
+    /**
+     * The first member of the pair.
+     */
+    private double first;
+
+    /**
+     * The second member of the pair.
+     */
+    private double second;
+
+    /**
+     * Constructor.
+     *
+     * @param first  the first member of the pair.
+     * @param second the second member of the pair.
+     */
+<span class="fc" id="L40">    public Pair(final double first, final double second) {</span>
+<span class="fc" id="L41">        this.first = first;</span>
+<span class="fc" id="L42">        this.second = second;</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * Gets the first member of the pair.
+     *
+     * @return first member of the pair.
+     */
+    public double getFirst() {
+<span class="fc" id="L51">        return first;</span>
+    }
+
+    /**
+     * Sets the first member of the pair.
+     *
+     * @param first first member of the pair.
+     */
+    public void setFirst(final double first) {
+<span class="fc" id="L60">        this.first = first;</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Gets the second member of the pair.
+     *
+     * @return second member of the pair.
+     */
+    public double getSecond() {
+<span class="fc" id="L69">        return second;</span>
+    }
+
+    /**
+     * Sets the second member of the pair.
+     *
+     * @param second second member of the pair.
+     */
+    public void setSecond(final double second) {
+<span class="fc" id="L78">        this.second = second;</span>
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

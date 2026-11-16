@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MSACRobustLateration3DSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">MSACRobustLateration3DSolver.java</span></div><h1>MSACRobustLateration3DSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
+import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * Robustly solves the lateration problem by finding the best pairs of 3D
+ * positions and distances among the provided ones using MSAC algorithm to
+ * discard outliers.
+ */
+@SuppressWarnings(&quot;Duplicates&quot;)
+public class MSACRobustLateration3DSolver extends RobustLateration3DSolver {
+
+    /**
+     * Constant defining default threshold to determine whether samples are
+     * inliers or not.
+     */
+    public static final double DEFAULT_THRESHOLD = 1e-2;
+
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to determine whether samples are inliers or not when
+     * testing possible estimation solutions.
+     */
+<span class="fc" id="L54">    private double threshold = DEFAULT_THRESHOLD;</span>
+
+    /**
+     * Constructor.
+     */
+    public MSACRobustLateration3DSolver() {
+<span class="fc" id="L60">        super();</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public MSACRobustLateration3DSolver(final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L70">        super(listener);</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
+<span class="fc" id="L83">        super(positions, distances);</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                        final double[] distanceStandardDeviations) {
+<span class="fc" id="L98">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions, distances or
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L117">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                        final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L132">        super(positions, distances, listener);</span>
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres spheres defining positions and distances.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(final Sphere[] spheres) {
+<span class="fc" id="L143">        super(spheres);</span>
+<span class="fc" id="L144">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public MSACRobustLateration3DSolver(final Sphere[] spheres,
+                                        final double[] distanceStandardDeviations) {
+<span class="fc" id="L156">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L157">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres  spheres defining positions and distances.
+     * @param listener listener to be notified of events such as when estimation starts,
+     *                 ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public MSACRobustLateration3DSolver(
+            final Sphere[] spheres, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L170">        super(spheres, listener);</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public MSACRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L186">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L187">    }</span>
+
+    /**
+     * Returns threshold to determine whether samples are inliers or not.
+     *
+     * @return threshold to determine whether samples are inliers or not.
+     */
+    public double getThreshold() {
+<span class="fc" id="L195">        return threshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether samples are inliers or not.
+     *
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setThreshold(final double threshold) throws LockedException {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L209">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L212">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L214">        this.threshold = threshold;</span>
+<span class="fc" id="L215">    }</span>
+
+    /**
+     * Solves the lateration problem.
+     *
+     * @return estimated position.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @Override
+    public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L229">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L232">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L235">        final var innerEstimator = new MSACRobustEstimator&lt;&gt;(new MSACRobustEstimatorListener&lt;Point3D&gt;() {</span>
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L238">                return threshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L243">                return distances.length;</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L248">                return preliminarySubsetSize;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L253">                solvePreliminarySolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L254">            }</span>
+
+            @Override
+            public double computeResidual(final Point3D currentEstimation, final int i) {
+<span class="fc" id="L258">                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L263">                return MSACRobustLateration3DSolver.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
+                // no action needed
+<span class="fc" id="L269">            }</span>
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
+                // no action needed
+<span class="fc" id="L274">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L279">                    listener.onSolveNextIteration(MSACRobustLateration3DSolver.this, iteration);</span>
+                }
+<span class="fc" id="L281">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L286">                    listener.onSolveProgressChange(MSACRobustLateration3DSolver.this, progress);</span>
+                }
+<span class="fc" id="L288">            }</span>
+        });
+
+        try {
+<span class="fc" id="L292">            locked = true;</span>
+
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L295">                listener.onSolveStart(this);</span>
+            }
+
+<span class="fc" id="L298">            inliersData = null;</span>
+<span class="fc" id="L299">            innerEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L300">            innerEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L301">            innerEstimator.setProgressDelta(progressDelta);</span>
+<span class="fc" id="L302">            var result = innerEstimator.estimate();</span>
+<span class="fc" id="L303">            inliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L304">            result = attemptRefine(result);</span>
+
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L307">                listener.onSolveEnd(this);</span>
+            }
+
+<span class="fc" id="L310">            return result;</span>
+
+<span class="nc" id="L312">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L313">            throw new LockedException(e);</span>
+<span class="nc" id="L314">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L315">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L317">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L328">        return RobustEstimatorMethod.MSAC;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
