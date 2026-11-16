@@ -53,25 +53,25 @@
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-numerical</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-geometry</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-units</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-algebra</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
