@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Updated dependencies `irurueta-numerical` and `irurueta-geometry` from 1.6.0 to 1.6.1, and `irurueta-units` and
+  `irurueta-algebra` from 1.4.0 to 1.4.1.
+
 ## [1.8.1] - 2026-07-25
 
 ### Changed
