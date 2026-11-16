@@ -4,6 +4,14 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+== 1.8.2
+
+- ♻️ Updated dependencies `irurueta-numerical` and `irurueta-geometry` from 1.6.0 to 1.6.1, and `irurueta-units`
+  and `irurueta-algebra` from 1.4.0 to 1.4.1.
+- 📚 New lateration diagrams, expanded frames, GNSS, lateration and reference pages, and API reference links on the
+  geodesic pages. Documentation site upgraded to Antora 3.2.2 with Pagefind search.
+- 🐛 Corrected vector and matrix notation in the documentation; bibliography entries now link to official sources.
+
 == 1.8.1
 
 - ♻️ Minimum/target Java version raised from 17 to 21. Consumers must build and run with JDK 21 or later.
