@@ -1,6 +1,6 @@
 ---
 name: iru-java-generate-all-tests
-description: For a Java/Maven project only, explore the whole codebase to find every class that has no corresponding unit test class, or whose measured line coverage falls below 80%, using the `iru-java-coverage` skill to get the exact percentage per class — then generate new tests (or extend existing ones) until each reaches that bar, following this project's own test framework and style. Invoke as `/iru-java-generate-all-tests`. Stops immediately, without attempting anything, if the repository isn't a Java/Maven project (no `pom.xml` found). Use whenever the user wants comprehensive unit test coverage brought up across an entire Java codebase in one pass, instead of writing tests for one class or task at a time.
+description: "/iru-java-generate-all-tests finds every class of a Java/Maven project with no unit test class or under 80% line coverage per iru-java-coverage, and generates or extends tests in the project's own framework and style. Stops immediately if there is no pom.xml."
 model: sonnet
 allowed-tools: Read Edit Write Bash(mvn *) Bash(git status *) Bash(git diff *) Bash(find *) Bash(grep *) Bash(ls *) Skill Agent AskUserQuestion
 ---
@@ -13,6 +13,8 @@ for each until it clears it. This skill is Java/Maven only — it never runs aga
 language. It only adds/extends test code; it does not add license headers, Javadoc, or run a code-quality pass
 (those are separate skills' jobs), and it only touches production source code if a class is genuinely untestable
 as written (see Step 5) — which it reports rather than silently "fixing" by redesigning the class.
+
+Agent dispatch: call the catalog agents as `subagent_type: "<agent-name>"` (for example `"iru-gate-runner"`) when installed under `.claude/agents/`, or as `"iru-core:<agent-name>"` when installed as a plugin — use whichever name appears in your available agent types. Every `subagent_type` below is written in the first form.
 
 ## Step 1 — Confirm this is a Java/Maven project
 
@@ -58,7 +60,7 @@ classes are in scope:
 Agent({
   description: "Measure coverage for every candidate class",
   subagent_type: "iru-gate-runner",
-  prompt: "Invoke Skill({skill: \"java-coverage\", args: \"<TargetClass1,TargetClass2,...>\"}) with no test
+  prompt: "Invoke Skill({skill: \"iru-java-coverage\", args: \"<TargetClass1,TargetClass2,...>\"}) with no test
     selector, so the whole suite runs once and every class is measured in the same pass. Report back, per target
     class: its exact line coverage percentage; and, ONLY for classes below 80%, the specific uncovered line
     numbers too (from the per-class HTML report). For classes at or above 80%, report just the percentage — do
@@ -128,7 +130,7 @@ caught `OutOfMemoryError`). Name these explicitly if that's what remains uncover
 ## Step 7 — Run the full suite once to confirm no regressions
 
 Delegate to `iru-gate-runner`: `Agent({description: "Run full test suite", subagent_type: "iru-gate-runner", prompt:
-"Invoke Skill({skill: \"java-test\"}) (fall back to `mvn test` directly if unavailable). If everything passed,
+"Invoke Skill({skill: \"iru-java-test\"}) (fall back to `mvn test` directly if unavailable). If everything passed,
 report back only that all tests passed. If anything failed, report back only the failing test names, the
 failure reason, and the stack trace for each."})`. Fix any regression this run's new/extended tests introduced
 (a genuine bug in a generated test, not a pre-existing failure), then re-invoke until it reports all tests

@@ -1,6 +1,6 @@
 ---
 name: iru-create-jira-ticket
-description: Draft and file a new Jira ticket that is ready to be picked up by the `/iru-issue`, `/iru-plan`, `/iru-code` flow. Runs the `iru-explore` skill first to ground the ticket in the actual codebase, then asks the user for the purpose of the task to be implemented, then asks for additional context (linked URLs, attached files/documents, related tickets, and an optional epic) and folds whatever is provided into the ticket description — an epic given is also explored for extra context (its description and child tickets) and assigned to the new ticket as its parent/epic link on creation. Any provided file/document is not just read for context but actually attached to the created ticket: once created, each file is uploaded via the connected Jira MCP tools' native attachment support (Jira's `issue/{key}/attachments` endpoint accepts any file type, unlike GitHub's issue API); if no attachment-capable Jira MCP tool is connected, small text-based files are embedded inline in the description instead, and other files are described without being attached. Also delegates to the `iru-jira-custom-context` skill for whatever organization-specific context that extension point has been set up to gather. Also asks for the task's due date (optional) and importance (trivial/minor/important/blocking — defaulting to minor, or to blocking when it reads as a bug/incident affecting production). Determines the target Jira project and issue type (Bug/Story/Task/etc.) from the stated purpose and this Jira instance's actual configuration, drafts a summary and description (Summary, Context, Acceptance criteria, Task details — due date, importance, and an estimated task difficulty from very easy to impossible based on everything gathered — References), and shows the draft for confirmation before filing it via connected Jira MCP tools. Invoke as `/iru-create-jira-ticket` or `/iru-create-jira-ticket <short description>`. Stops early if no Jira MCP tool is connected — there is no CLI fallback the way GitHub has `gh`. Use when the user has an idea, bug report, or request that needs to become a well-formed, actionable Jira ticket before `/iru-issue` or `/iru-plan` can pick it up — not for tickets that already exist (nothing to file) or when the work should be tracked as a GitHub issue instead (use `iru-create-github-issue`).
+description: "Invoke as `/iru-create-jira-ticket` or `/iru-create-jira-ticket <short description>`. Drafts and files a Jira ticket ready for the `/iru-issue`, `/iru-plan`, `/iru-code` flow: explores the codebase, asks purpose, context, epic, files (attached), due date and importance, then files via Jira MCP after confirmation. Needs a Jira MCP tool. Use to turn an idea, bug report or request into an actionable ticket."
 model: sonnet
 ---
 
@@ -12,6 +12,9 @@ clear purpose statement and whatever supporting context the user has — so it's
 
 This is the Jira equivalent of `iru-create-github-issue` — same shape, but sourced through Jira MCP tools instead of
 the `gh` CLI, and with Jira's project/issue-type model instead of GitHub labels.
+
+This skill is for new tickets only — not for tickets that already exist (nothing to file), and not for work that
+should be tracked as a GitHub issue instead (use `iru-create-github-issue`).
 
 ## Step 1 — Confirm Jira MCP tooling is available
 

@@ -1,6 +1,6 @@
 ---
 name: iru-java-javadoc
-description: Audit given Java class(es) for complete Javadoc coverage — class/interface/enum-level doc, every field/constant, every constructor/method (including private ones and any inner/nested class or enum constant), and a `package-info.java` with a brief description for every package touched (creating one if it's missing) — generate any missing or incomplete Javadoc grounded in the actual code and current changes, then run the project's Javadoc build goal to confirm the generated Javadoc is well-formed and builds without warnings/errors. Invoke as `/iru-java-javadoc <ClassName1,ClassName2,...>` (or file paths), or `/iru-java-javadoc` with no argument to scope to classes touched by uncommitted changes plus commits on the current branch not yet on the base branch. Works against any Java/Maven project — it discovers the project's own Javadoc conventions and enforcement level rather than assuming a fixed style. Use whenever the user wants Javadoc completeness checked and filled in for specific classes, instead of relying on a full site/lint build to surface gaps.
+description: "/iru-java-javadoc [ClassName1,ClassName2,... or file paths] audits Java classes for complete Javadoc (types, fields, constructors, methods, nested types, package-info.java), generates the missing Javadoc, and runs the project's Javadoc build. No argument means uncommitted and branch-only changes. Maven projects; follows the project's own conventions."
 model: sonnet
 ---
 

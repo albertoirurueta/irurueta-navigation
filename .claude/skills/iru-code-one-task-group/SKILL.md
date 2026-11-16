@@ -1,8 +1,8 @@
 ---
 name: iru-code-one-task-group
-description: Implement every task and sub-task in a single task group from an `implementation_plan.md`-style plan, dispatching each task by its declared language/framework key to the matching `<key>-code-one-task-group` skill (e.g. `iru-dotnet-code-one-task-group`, `iru-java-code-one-task-group`) — which itself captures one quality baseline for the group, implements the group's tasks (in parallel agents when the group is marked parallelizable), and validates the whole group once — falling back to implementing a task directly, best-effort, when its key has no matching `<key>-code-one-task-group` skill installed. Checks off each task/sub-task's box in `implementation_plan.md` and notifies the user as it happens, not just once the group finishes. Does not track a session task list or capture project-wide baselines — that bookkeeping belongs to the caller (`iru-code`). Invoke as `/iru-code-one-task-group <group text>`, passing the group's full text from the plan: every task/sub-task in the group, each one's language/framework tag if set, the group's `Parallelizable` verdict, and any relevant "Current code state" context. Used by the `iru-code` skill, which invokes this once per plan group, in order.
+description: "Invoked as `/iru-code-one-task-group <group text>` by `iru-code`, once per plan group, with the group's full text. Implements every task by dispatching to the matching `<key>-code-one-task-group` skill (best-effort direct implementation if none), checking off each box in `implementation_plan.md` as it happens. Does no session task tracking or project baselines."
 model: sonnet
-allowed-tools: Read Edit Write Bash(mvn *) Bash(dotnet *) Bash(git status *) Bash(git diff *) Bash(git log *) Bash(find *) Bash(grep *) Bash(ls *) Skill Agent
+allowed-tools: Read Edit Write Bash(mvn *) Bash(./mvnw *) Bash(./gradlew *) Bash(gradle *) Bash(dotnet *) Bash(npm *) Bash(npx *) Bash(composer *) Bash(php *) Bash(vendor/bin/*) Bash(uv run *) Bash(poetry run *) Bash(python *) Bash(python3 *) Bash(git status *) Bash(git diff *) Bash(git log *) Bash(find *) Bash(grep *) Bash(ls *) Skill Agent
 ---
 
 # Implement one task group
@@ -16,6 +16,8 @@ one group at a time so validation happens once per group instead of once per tas
 purpose — the plan already did the hard reasoning (task breakdown, grouping, language resolution); this skill's
 job is to execute it.
 
+Agent dispatch: call the catalog agents as `subagent_type: "<agent-name>"` (for example `"iru-gate-runner"`) when installed under `.claude/agents/`, or as `"iru-core:<agent-name>"` when installed as a plugin — use whichever name appears in your available agent types. Every `subagent_type` below is written in the first form.
+
 ## Step 1 — Resolve each task's language/framework key
 
 For every top-level task in the group (sub-tasks inherit their parent task's key unless the plan tags one of them
@@ -26,9 +28,20 @@ differently):
    that key.
 3. Otherwise, the task's language/framework is unknown or unsupported — it has no key.
 
-Find which `*-code-one-task-group` skills are actually installed in this repository:
-`find .claude/skills -maxdepth 1 -type d -name "*-code-one-task-group"`. The directory name minus its `iru-`
-prefix and its `-code-one-task-group` suffix is the key (e.g. `iru-java-code-one-task-group` → `java`) — the
+Find which `*-code-one-task-group` skills are actually installed. First read them from the skills available in
+this session (the names matching `iru-*-code-one-task-group`) — that works whether the skills were copied into
+`.claude/skills/` or installed as plugins, where that directory does not exist. When `.claude/skills` exists,
+corroborate with `find .claude/skills -maxdepth 1 -type d -name "*-code-one-task-group"`. First drop any `<plugin>:`
+namespace the session listing shows in plugin mode (`iru-java:iru-java-code-one-task-group` → `iru-java-code-one-task-group`);
+the skill (directory) name minus its `iru-` prefix and its `-code-one-task-group` suffix is then the key (e.g. `iru-java-code-one-task-group` → `java`,
+`iru-typescript-code-one-task-group` → `typescript`, `iru-android-code-one-task-group` → `android`,
+`iru-swift-code-one-task-group` → `swift`, `iru-java-springboot-code-one-task-group` → `java-springboot`,
+`iru-kotlin-springboot-code-one-task-group` → `kotlin-springboot`, `iru-quarkus-code-one-task-group` → `quarkus`,
+`iru-php-code-one-task-group` → `php`, `iru-nestjs-code-one-task-group` → `nestjs`,
+`iru-nextjs-code-one-task-group` → `nextjs`, `iru-fastapi-code-one-task-group` → `fastapi`,
+`iru-django-code-one-task-group` → `django`, `iru-kmp-code-one-task-group` → `kmp`,
+`iru-react-native-code-one-task-group` → `react-native`, `iru-windows-code-one-task-group` → `windows`,
+`iru-rust-code-one-task-group` → `rust`, `iru-go-code-one-task-group` → `go`) — the
 `iru-` prefix is only this catalog's marketplace-collision namespace, not part of the language/framework key
 itself.
 
@@ -39,7 +52,7 @@ with no matching skill installed).
 ## Step 2 — Dispatch each keyed bucket to its language-specific group skill
 
 For each bucket with a matching `<key>-code-one-task-group` skill, invoke it once for the whole bucket (not once
-per task) via the `Skill` tool: `Skill({skill: "<key>-code-one-task-group", args: "<every task/sub-task in this
+per task) via the `Skill` tool: `Skill({skill: "iru-<key>-code-one-task-group", args: "<every task/sub-task in this
 bucket, each with its own text and sub-tasks, plus the group's overall Parallelizable verdict and any relevant
 Current code state context>"})`. That skill is responsible for: capturing one pre-change quality baseline for the
 whole bucket, implementing each of its tasks (in parallel agents when the group is marked `Parallelizable: yes`),
@@ -67,7 +80,7 @@ your own judgment), following the same obligations a one-task skill would:
 - Add license headers to touched files if this repository has a convention for them — delegate to the
   `iru-gate-runner` agent rather than running `iru-check-license` directly if that skill is installed:
   `Agent({description: "Add license headers for <file(s)>", subagent_type: "iru-gate-runner", prompt: "Invoke
-  Skill({skill: \"check-license\", args: \"<file1,file2,...>\"}) scoped to the file(s) this task added or
+  Skill({skill: \"iru-check-license\", args: \"<file1,file2,...>\"}) scoped to the file(s) this task added or
   modified. Report back only which files were missing a header vs. fixed vs. already compliant."})`.
 - Keep documentation comments current for the language in play, using whichever doc-comment skill this
   repository has installed for it, the same way, via `iru-gate-runner`.

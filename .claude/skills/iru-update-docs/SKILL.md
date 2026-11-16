@@ -1,6 +1,6 @@
 ---
 name: iru-update-docs
-description: Update a repository's Antora AsciiDoc documentation to reflect changes already made to the codebase (new/changed APIs, types, behavior, or conventions). Invoke as `/iru-update-docs` to cover uncommitted changes plus commits on the current branch not yet on the base branch, or `/iru-update-docs <git-ref-or-range>` to scope it to a specific ref/range (e.g. a commit, `main..HEAD`, a tag). Diagrams use Mermaid (`[mermaid]` blocks) and equations use MathJax (raw `\( \)` / `\[ \]` LaTeX) where they clarify behavior and the docs pipeline already supports them. If a documentation MCP (e.g. Confluence, Notion) is connected, also finds the relevant existing page(s) there and proposes matching updates — showing the exact change for the user to approve before anything is sent; if that connector only exposes read-access tools with no way to create or update a page, warns the user and skips this part instead. Use whenever source changes should be reflected in the docs site instead of leaving pages stale.
+description: "/iru-update-docs [<git-ref-or-range>] - updates the repository's Antora AsciiDoc docs to reflect code changes: uncommitted changes plus unmerged branch commits, or the given ref/range (commit, main..HEAD, tag). Uses Mermaid and MathJax only where the pipeline supports them. For repositories with a UI it maintains the User interface section illustrated with UI-test screenshots (reference/ui-docs.md). Proposes matching updates to a connected documentation MCP (Confluence, Notion) for approval before sending; skips if read-only. Use whenever source changes should be reflected in the docs site."
 model: sonnet
 ---
 
@@ -51,8 +51,13 @@ file(s) in the repository (`find . -name antora.yml -not -path '*/node_modules/*
   a page called `overview.adoc` in one repo might be called `index.adoc` or `intro.adoc` in another.
 - Note the antora playbook file (commonly `antora-playbook.yml` or `site.yml`, usually near the docs module root
   or repository root) and read it once to check which Asciidoctor/Antora extensions are already wired up (e.g. a
-  Mermaid extension, a MathJax/stem extension, `lunr` search) — this determines what's actually safe to use in
+  Mermaid extension, a MathJax/stem extension, search) — this determines what's actually safe to use in
   Step 4, since a diagram/equation macro with no matching extension configured just renders as literal text.
+  Search is **Pagefind** when `docs/package.json` has a `pagefind` dependency or the playbook registers the
+  `ui-overrides` search partials (`partials/header-content.hbs`, `partials/footer-scripts.hbs`); older sites use the
+  `@antora/lunr-extension`. Pagefind needs no page markup, but it indexes only the article body, so keep content in the
+  page, not in nav or header. `reference/toolchain.md` (next to this skill) lists the pinned toolchain; if the site is on an
+  older Antora or still on Lunr, tell the user `/iru-update-antora` upgrades it, and do not upgrade it here.
 
 ## Step 3 — Understand what changed, in code terms
 
@@ -93,15 +98,45 @@ When editing:
   already wired into the playbook. Add one when a decision process, data flow, or before/after transformation is
   genuinely clearer as a diagram than prose — don't add one for something a short sentence already covers
   clearly, and don't introduce the syntax at all if the extension isn't configured (it would render as literal
-  text) unless you also wire up the extension or explicitly flag the gap to the user.
-- **MathJax equations** (raw LaTeX delimited by `\( ... \)` inline or `\[ ... \]` block, rendered client-side):
-  only use these if Step 2 confirmed a MathJax/stem extension is wired in. Add one only if the change actually
+  text) unless you also wire up the extension or explicitly flag the gap to the user. Write every diagram per
+  `reference/mermaid.md` (`&lt;` for tag-like text, no unescaped quotes in labels, small enough for the layout).
+- **MathJax equations** (`stem:[...]` inline or a `[stem]` block with `:stem: latexmath` in the page header, rendered
+  to SVG at build time; never bare `\( \)` or `\[ \]`, which stay literal text with no build error, see
+  `reference/toolchain.md` "Verified behaviors"): only use these if Step 2 confirmed a MathJax/stem extension is wired in. Add one only if the change actually
   introduces math worth stating precisely (e.g. a complexity bound or a formal definition); most changes won't
   need one, so don't force one in.
 - If a change needs an entirely new page, create it in the same directory as the module's other pages, add an
   `xref:` entry to the relevant `nav.adoc` in a sensible position, and link to/from related existing pages.
+- **Nav authoring rules** for every `nav.adoc` edit: each entry is an `xref:` link or a text-only group heading
+  **with children** (never an empty group heading); never link an entry to a `#fragment` (the bundle's script then
+  collapses the nav); a group renamed here that is listed in the playbook's `site.keys.nav_open_groups` is renamed
+  there too; prefer a section `index.adoc` link over a text-only heading for a group whose pages should be reachable
+  from other sections. After changing `nav.adoc`, when `ui-overrides/partials/nav-tree.hbs` exists, build the site and
+  run `node scripts/nav-fix/check-nav-dead-ends.mjs build/site --sample` from the docs module; fix any dead end or broken
+  nav link it reports.
 - Preserve any existing disclaimers/notices (e.g. an AI-generated-content notice) already present on a page
   unless the change specifically concerns them.
+
+## Step 4b — Document the user interface (repositories with a UI only)
+
+Read `reference/ui-docs.md` (next to this file) — it defines when a repository counts as having a UI, the
+`ui/` page and `images/ui/` layout, what each page contains, which screenshots each page uses, and how screenshots
+are synchronised. If the repository has no UI, skip this step. Otherwise:
+
+- **No `ui/` section yet** (first run on a UI repository): build it for the whole UI, not only the diff — inventory
+  every screen and component from the code and its doc comments, and every flow from the app's navigation
+  definition, then write `ui/index.adoc`, `ui/navigation.adoc` and one page per screen/component, and add the
+  **User interface** section to `nav.adoc`.
+- **`ui/` section exists**: from Step 3's findings, regenerate the pages of every screen/component whose source
+  changed, add pages for new ones, remove pages of deleted ones, and refresh `ui/index.adoc` and
+  `ui/navigation.adoc` when the inventory or navigation changed. Leave untouched pages alone.
+- Then run the screenshot synchronisation in `reference/ui-docs.md` §5 exactly once: fresh captures (offer to run
+  the UI test gate when `.ui-screenshots/` is missing or stale), copy only referenced screenshots whose bytes
+  changed, replace a changed component's old images, delete images and pages of removed components and any
+  unreferenced image under `images/ui/`, then delete `.ui-screenshots/`.
+
+If `reference/ui-docs.md` is missing (the skill was copied without it), document screens and components as
+ordinary pages and leave screenshots out, and say so in Step 7's report.
 
 ## Step 5 — Update external documentation via a documentation MCP, if connected
 
@@ -150,18 +185,26 @@ npx antora <playbook-file>
 ```
 
 Report any Antora/Asciidoctor errors (broken `xref:`, malformed tables, bad Mermaid/MathJax syntax) and fix them
-before finishing. If Node isn't available or the build can't be run, say so explicitly and note the pages were
+before finishing. Then, when a page you touched has a `[mermaid]` block, run the Mermaid check of
+`reference/mermaid.md` (`npm i --no-save mermaid@11 jsdom@31 puppeteer@25`, then `npm run validate:mermaid` or the
+repository's `scripts/mermaid/validate-mermaid.mjs modules --render`): the build does not parse Mermaid, so a broken
+diagram ships silently. When the repository has neither the script nor `scripts/mermaid/`, run the copy of an installed
+`iru-setup-antora`, `iru-update-antora` or `iru-build-docs` from `docs/`; with none installed, skip the check, open the
+touched pages of the built site to confirm every diagram drew, and recommend `/iru-update-antora` (it copies
+`scripts/mermaid/` into the repository). Fix every diagram it reports in a page you touched; list failures in pages you
+did not touch without fixing them. When puppeteer cannot run, drop `--render` and say so. If Node isn't available or the build can't be run, say so explicitly and note the pages were
 updated but not locally verified against a real build.
 
 ## Step 7 — Report
 
 Summarize, per page touched: what changed in the source that drove the edit, and what was updated in the docs.
 Explicitly call out pages you considered but left unchanged because the diff didn't affect their content, and
-any doc gaps you noticed but didn't fix because they were outside the scope of the diff being documented. If
+any doc gaps you noticed but didn't fix because they were outside the scope of the diff being documented. For a UI repository, also report Step 4b's screenshot synchronisation: images added, replaced, unchanged and deleted, pages added/removed under `ui/`, and every state left "screenshot pending". If
 Step 5 found a connected documentation MCP, also report what was sent (page, link), what was proposed but
 declined/skipped by the user, and if none was connected, say so briefly.
 
 End the report by reminding the user to check the generated documentation themselves before trusting it — point
 them at the built site's start page under the module's build output directory (from Step 5, if the build ran),
-since rendered Mermaid diagrams, MathJax equations, and cross-page links can look fine in source but render
-wrong, and this skill's own build check does not visually inspect the output.
+since MathJax equations and cross-page links can look fine in source but render wrong, and this skill's own build
+check does not visually inspect the output. State the Mermaid check result (passed, failures left in untouched pages,
+or skipped and why).

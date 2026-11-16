@@ -1,6 +1,6 @@
 ---
 name: iru-generate-skill-docs
-description: Analyze every Claude Code skill (`.claude/skills/*/SKILL.md`) and agent (custom definitions under `.claude/agents/*.md`, plus built-in agent types referenced from skills via the `Agent` tool) defined in this repository, and generate/update the Antora documentation describing them — a reference table and dependency graph in `index.adoc`, purpose-grouped sections for the catalog's recurring end-to-end workflows, and one detail page per skill/agent under `docs/modules/ROOT/pages/skills/` and `.../agents/` covering its purpose, inputs, outputs, execution flow, and dependencies. Invoke as `/iru-generate-skill-docs`. Idempotent — safe to re-run whenever skills/agents are added, removed, or changed; it regenerates content from the current `SKILL.md`/agent definitions rather than hand-maintaining pages that drift from them. Use whenever this catalog's own documentation needs to reflect its actual current set of skills and agents, instead of manually writing or updating each page by hand.
+description: "Invoke as `/iru-generate-skill-docs`. Regenerates this catalog's Antora docs from the skills and agents on disk: reference table and dependency graph in `index.adoc`, purpose-grouped workflow sections, one page per skill and agent. Idempotent. Use after adding, removing or changing a skill or agent."
 model: sonnet
 ---
 
@@ -22,14 +22,18 @@ Find `antora.yml` (`find . -name antora.yml -not -path '*/node_modules/*'`).
   decline, stop here — there's nothing for this skill to write into.
 - **Found**: read it for the component name and the `nav:` file(s) it declares, then read that `nav.adoc` to
   get the current page list. Note the antora playbook (commonly `antora-playbook.yml`) and confirm it wires
-  up a Mermaid extension — every diagram this skill produces is a `[mermaid]` block, and it's silently
-  useless if the extension isn't configured. If it isn't, tell the user and either stop or fall back to
+  up a Mermaid extension — every diagram this skill produces is a `[mermaid]` block, written and validated per
+  `reference/mermaid.md`, and it's silently useless if the extension isn't configured. If it isn't, tell the user and either stop or fall back to
   plain bulleted/tabular descriptions instead of diagrams, per their choice.
 
 ## Step 2 — Discover every skill and agent actually defined
 
-- **Skills**: `find .claude/skills -maxdepth 2 -name SKILL.md`. Each is one skill; its directory name is its
-  canonical name (should match the `name:` frontmatter field — flag any mismatch).
+- **Skills**: `find .claude/skills -maxdepth 2 -name SKILL.md` (this scan documents this repository's own
+  tree, so it stays a filesystem scan). Each is one skill; its directory name is its
+  canonical name (should match the `name:` frontmatter field — flag any mismatch). When
+  `.claude-plugin/marketplace.json` exists, each skill's page also states which plugin ships it (the plugin whose
+  `skills` list contains that skill, read from `tools/plugins.json` — the membership map the marketplace is
+  generated from; when that file does not exist yet, omit the plugin line).
 - **Custom agents**: `find .claude/agents -maxdepth 1 -name '*.md'` (the directory may not exist yet — that's
   not an error, just means there are none). Each is one custom agent definition.
 - **Built-in agent types actually used**: grep every `SKILL.md` found above for `Agent(` / `Agent tool` /
@@ -138,7 +142,14 @@ order:
 
 1. Whatever introductory/conceptual material already exists (what this repository is, why it exists) —
    preserve it; only add a short "core concepts" note about agents if Step 2 found any custom or built-in
-   agent usage and the page doesn't already explain the skill/agent distinction.
+   agent usage and the page doesn't already explain the skill/agent distinction. Right after the opening
+   paragraph (before the first `==` section), keep (or add) `include::partial$download-catalog.adoc[]` when
+   `docs/modules/ROOT/partials/download-catalog.adoc` exists; if it is missing but the repository has
+   `tools/build-packages.py`, create it following the packaging convention (a `download-catalog-zip.svg` image
+   with `xref=attachment$ai-catalog-skills-agents.zip` plus a short unzip-into-`.claude/` note); otherwise skip
+   silently. Keep every other include of that partial inside the preserved material too — in particular the
+   one at the end of the core-concepts adoption text (copying the files vs. installing plugins), with its
+   lead-in sentence — and add it there when missing. Never drop an existing include.
 2. **A reference table**: one row per skill and per documented agent, with columns for name, purpose group
    (linking to that group's section via an anchor, e.g. `xref:index.adoc#group-<slug>[]`), a one-line
    purpose, and a link to its detail page (`xref:skills/<name>.adoc[]` or `xref:agents/<name>.adoc[]`).
@@ -147,15 +158,41 @@ order:
 3. **Purpose groups**: one subsection per group from Step 5, each with its own anchor (`[[group-<slug>]]`
    immediately above the `===` heading) matching what the table links to, a short description, and the
    skills it contains.
-4. **A dependency graph**: a single `[mermaid]` `flowchart` (subgraphs per purpose group keep a catalog of
-   more than a handful of skills readable) showing every "invokes" edge as a solid arrow and every "spawns
-   an agent" edge as a dotted arrow, per Step 4. Name any external dependency in the diagram (e.g. as a
-   dashed/external-looking node) without linking it anywhere.
+4. **A dependency graph** section, as several small `[mermaid]` `flowchart`s rather than one: a single
+   flowchart of the whole catalog with a subgraph per purpose group parses but crashes Mermaid's layout once
+   the catalog is large (`reference/mermaid.md`, "Size"). Write, in order:
+   - a short legend (solid arrow: invokes directly via the `Skill` tool; dotted arrow: invokes inside a
+     sub-agent; dotted arrow labeled "spawns"/"uses": the agent type itself, via the `Agent` tool), and a
+     note naming any external dependency;
+   - an **overview** flowchart with one node per purpose group (the group title as label) and one edge per
+     pair of groups where a skill of the first calls a skill of the second: solid when at least one such call
+     is direct, dotted when all go through a sub-agent. No self-edges, no agent or external nodes;
+   - one `=== <Group title> dependencies` subsection per purpose group from Step 5, each with a flowchart of
+     that group's skills (no subgraph), every edge whose caller is in the group per Step 4 (solid "invokes",
+     dotted sub-agent invocations, dotted "spawns"/"uses" edges to agent-type nodes drawn as circles
+     `(("…\nagent"))`), and the called skills of other groups as nodes with a dashed border
+     (`:::other` plus `classDef other stroke-dasharray: 4 3`). Name any external dependency as a
+     subroutine-shaped node (`[["…"]]`) without linking it anywhere. A group whose skills call nothing gets a
+     one-line sentence instead of a diagram.
+   If one group's own flowchart still exceeds the size rule of thumb in `reference/mermaid.md`, split its
+   callers into two diagrams.
 5. **Common workflows**: one subsection per workflow from Step 6, each with a short `[mermaid]` flowchart of
    its skill sequence and prose noting any decision points and which skills also work standalone.
 
 Match the AsciiDoc conventions already used on this page (table `[cols=...]` syntax, `xref:` link style,
 any existing AI-generated-content disclaimer note — keep it on every page you touch or create).
+
+Give the page (or refresh it, if already present) SEO document attributes right after the `= AI Catalog`
+title line, with **no blank line between the title and the attributes** — a blank line ends the AsciiDoc
+document header, and Antora's default UI only reads `:description:`/`:keywords:` into the page's
+`<meta name="description">`/`<meta name="keywords">` tags when they're real header attributes, not body
+text:
+- `:description:` — a single plain-text line (no markup, no xrefs), 120-155 characters, summarizing what
+  this catalog actually is right now (grounded in Step 1's opening paragraph and the current skill/agent
+  count from Step 2).
+- `:keywords:` — 6-10 lowercase comma-separated terms grounded in the actual current catalog: "claude code
+  skills", "claude code agents", the purpose-group names from Step 5, and the languages/platforms this
+  catalog's skills actually cover (e.g. java, dotnet, github, jira — only ones truly present).
 
 ## Step 8 — Write one detail page per skill and per documented agent
 
@@ -164,8 +201,17 @@ for every skill, and `docs/modules/ROOT/pages/agents/<name>.adoc` for every cust
 `docs/modules/ROOT/pages/agents/overview.adoc` covering all built-in agent types together, if there is no
 `.claude/agents/` directory to give each one its own natural page. Give every page this shape:
 
-1. `= <Title>` heading, then the repository's existing AI-generated-content disclaimer note if one is used
-   elsewhere in this docs module.
+1. `= <Title>` heading, immediately followed — **no blank line in between**, since a blank line ends the
+   AsciiDoc document header and Antora's default UI only picks up `:description:`/`:keywords:` as page
+   metadata (`<meta name="description">`/`<meta name="keywords">`) when they're real header attributes — by:
+   - `:description:` — a single plain-text line (no markup, no backticks, no xrefs), 120-155 characters,
+     a concrete summary of what this specific skill/agent does, grounded in Step 3's expanded purpose.
+     Distinct per page; never reused boilerplate.
+   - `:keywords:` — 6-10 lowercase comma-separated terms grounded in this page's actual content: the
+     skill/agent's own name, "claude code skill" or "claude code agent", the specific technology/domain it
+     actually mentions, and 2-3 action-oriented phrases describing what it does.
+   Then the repository's existing AI-generated-content disclaimer note if one is used elsewhere in this
+   docs module.
 2. A short intro paragraph (the expanded purpose from Step 3).
 3. `== Purpose` — the fuller explanation of what problem this skill/agent solves and how it fits the catalog.
 4. `== Purpose group` — an `xref:index.adoc#group-<slug>[]` link to its Step 5 group (skills only).
@@ -203,6 +249,16 @@ if any agent pages exist, an "Agents" heading (matching whatever nesting style `
 elsewhere in this module). Preserve the order and content of existing entries; remove entries only for pages
 Step 8 determined no longer exist.
 
+## Step 9b — Angle brackets and quotes in Mermaid labels
+
+Applies to every `[mermaid]` block written in Steps 7 and 8. Follow the writing rules in `reference/mermaid.md`:
+placeholder names such as `<timestamp>`, `<task-id>` or `<key>` inside a node or edge label are written
+double-escaped (`&amp;lt;timestamp&amp;gt;`), because a single-escaped or raw one is dropped from the label without
+any error (`meeting-<timestamp>/meeting.md` renders as `meeting-/meeting.md`); never Mermaid's `#60;`/`#62;`/`#quot;`
+codes, which throw in the stadium and subroutine shapes this catalog's diagrams use; no double quote inside a quoted
+label (reword, or use single quotes). Link syntax (`-->`, `-.->`, `==>`, `<-->`) stays literal, and `\n` inside a
+label is a line break.
+
 ## Step 10 — Verify the site builds
 
 From the docs module directory:
@@ -215,10 +271,18 @@ Fix any broken `xref:` (a typo'd skill/agent name, a page created under the wron
 invalid Mermaid syntax before finishing — don't report success against a build that actually failed or
 warned about content this skill just wrote.
 
+A clean Antora build proves nothing about the diagrams: the extension emits the block as a `<div class="mermaid">`
+and the browser renders it, so a diagram that throws a syntax error, crashes the layout or quietly drops a
+swallowed label still builds without a single warning. Run the Mermaid check of `reference/mermaid.md` from the
+docs module directory — `npm i --no-save mermaid@11 jsdom@31 puppeteer@25`, then `npm run validate:mermaid` (or the
+repository's `scripts/mermaid/validate-mermaid.mjs modules --render`) — and fix every diagram it reports before
+finishing. When puppeteer cannot run, drop `--render`, say so in the report, and open the built index page to confirm
+every diagram drew. Then confirm each diagram still says what it should.
+
 ## Step 11 — Report
 
 Summarize: how many skills and agents were found and documented, the purpose groups and workflows
 identified (name them), any external dependency named but not linked, any page added/updated/removed versus
-the previous run (if this is a re-run), and the build result from Step 10. Remind the user to review the
+the previous run (if this is a re-run), whether the download-button include was kept, created or skipped, and the build and Mermaid check results from Step 10. Remind the user to review the
 generated pages themselves, particularly the dependency graph and any workflow this skill inferred rather
 than found spelled out explicitly in an orchestrator skill's own steps.
