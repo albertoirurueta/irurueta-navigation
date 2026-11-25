@@ -4,6 +4,11 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
+== 1.8.3
+
+- ♻️ Updated dependencies `irurueta-numerical` from 1.6.1 to 1.7.1 and `irurueta-geometry` from 1.6.1 to
+  1.6.2.
+
 == 1.8.2
 
 - ♻️ Updated dependencies `irurueta-numerical` and `irurueta-geometry` from 1.6.0 to 1.6.1, and `irurueta-units`

@@ -1,5 +1,5 @@
 name: irurueta-navigation
-version: 1.8.2
+version: 1.8.3
 title: Irurueta Navigation
 nav:
   - modules/ROOT/nav.adoc

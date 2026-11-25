@@ -37,7 +37,10 @@ jobs:
 
           NEXT_MINOR=$((MINOR + 1))
           NEXT_SNAPSHOT="${MAJOR}.${NEXT_MINOR}.0-SNAPSHOT"
-          SYNC_BRANCH="sync_${MAJOR}.${NEXT_MINOR}.0"
+          # Name the branch after the release, not the next snapshot: two releases of the same
+          # minor line (e.g. 1.8.1 and 1.8.2) both bump develop to the same snapshot, and a
+          # snapshot-named branch left over from the first would make the guard skip the second.
+          SYNC_BRANCH="sync_${RELEASE_VERSION}"
 
           echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
           echo "next_snapshot=$NEXT_SNAPSHOT" >> "$GITHUB_OUTPUT"
