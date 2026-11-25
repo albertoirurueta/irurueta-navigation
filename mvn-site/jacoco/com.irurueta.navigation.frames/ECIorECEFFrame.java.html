@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECIorECEFFrame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">ECIorECEFFrame.java</span></div><h1>ECIorECEFFrame.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Rotation3D;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Base class for ECI or ECEF frames containing common logic and data for such frames.
+ */
+public abstract class ECIorECEFFrame&lt;T extends ECIorECEFFrame&lt;?&gt;&gt; implements Frame, Serializable {
+
+    /**
+     * Number of coordinates representing position.
+     */
+    public static final int NUM_POSITION_COORDINATES = 3;
+
+    /**
+     * Number of coordinates representing velocity.
+     */
+    public static final int NUM_VELOCITY_COORDINATES = 3;
+
+    /**
+     * Cartesian x coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
+     * the corresponding frame axes.
+     */
+    double x;
+
+    /**
+     * Cartesian y coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
+     * the corresponding frame axes.
+     */
+    double y;
+
+    /**
+     * Cartesian z coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
+     * the corresponding frame axes.
+     */
+    double z;
+
+    /**
+     * X coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
+     * resolved along the corresponding frame axes.
+     */
+    double vx;
+
+    /**
+     * Y coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
+     * resolved along the corresponding frame axes.
+     */
+    double vy;
+
+    /**
+     * Z coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECI or ECEF frame,
+     * resolved along the corresponding frame axes.
+     */
+    double vz;
+
+    /**
+     * Body to ECI frame coordinate transformation matrix.
+     */
+    CoordinateTransformation c;
+
+    /**
+     * Actual type class
+     */
+    transient Class&lt;T&gt; clazz;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L98">    ECIorECEFFrame(final Class&lt;T&gt; c) {</span>
+<span class="fc" id="L99">        clazz = c;</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param c Body to ECI or ECEF coordinate transformation.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+<span class="fc" id="L108">    ECIorECEFFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {</span>
+<span class="fc" id="L109">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L110">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @return cartesian x coordinate of body position.
+     */
+    public double getX() {
+<span class="fc" id="L118">        return x;</span>
+    }
+
+    /**
+     * Sets cartesian x coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param x cartesian x coordinate of body position.
+     */
+    public void setX(final double x) {
+<span class="fc" id="L127">        this.x = x;</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @return cartesian y coordinate of body position.
+     */
+    public double getY() {
+<span class="fc" id="L136">        return y;</span>
+    }
+
+    /**
+     * Sets cartesian y coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param y cartesian y coordinate of body position.
+     */
+    public void setY(final double y) {
+<span class="fc" id="L145">        this.y = y;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @return cartesian z coordinate of body position.
+     */
+    public double getZ() {
+<span class="fc" id="L154">        return z;</span>
+    }
+
+    /**
+     * Sets cartesian z coordinate of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param z cartesian z coordinate of body position.
+     */
+    public void setZ(final double z) {
+<span class="fc" id="L163">        this.z = z;</span>
+<span class="fc" id="L164">    }</span>
+
+    /**
+     * Sets cartesian coordinates of body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param x cartesian x coordinate of body position, resolved along ECI or ECEF-frame axes.
+     * @param y cartesian y coordinate of body position, resolved along ECI or ECEF-frame axes.
+     * @param z cartesian z coordinate of body position, resolved along ECI or ECEF-frame axes.
+     */
+    public void setCoordinates(final double x, final double y, final double z) {
+<span class="fc" id="L174">        this.x = x;</span>
+<span class="fc" id="L175">        this.y = y;</span>
+<span class="fc" id="L176">        this.z = z;</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Gets body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @return body position.
+     */
+    public Point3D getPosition() {
+<span class="fc" id="L185">        return new InhomogeneousPoint3D(x, y, z);</span>
+    }
+
+    /**
+     * Gets body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where position data is copied to.
+     */
+    public void getPosition(final Point3D result) {
+<span class="fc" id="L194">        result.setInhomogeneousCoordinates(x, y, z);</span>
+<span class="fc" id="L195">    }</span>
+
+    /**
+     * Sets body position expressed in meters (m) and resolved along ECI or ECEF-frame axes.
+     *
+     * @param point body position to be set.
+     */
+    public void setPosition(final Point3D point) {
+<span class="fc" id="L203">        x = point.getInhomX();</span>
+<span class="fc" id="L204">        y = point.getInhomY();</span>
+<span class="fc" id="L205">        z = point.getInhomZ();</span>
+<span class="fc" id="L206">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where cartesian x coordinate of body position will be stored.
+     */
+    public void getPositionX(final Distance result) {
+<span class="fc" id="L214">        result.setValue(x);</span>
+<span class="fc" id="L215">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Gets cartesian x coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @return x coordinate of body position resolved along ECI or ECEF-frame axes.
+     */
+    public Distance getPositionX() {
+<span class="fc" id="L224">        return new Distance(x, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian x coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     */
+    public void setPositionX(final Distance positionX) {
+<span class="fc" id="L233">        x = DistanceConverter.convert(positionX.getValue().doubleValue(), positionX.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L234">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where cartesian y coordinate of body position will be stored.
+     */
+    public void getPositionY(final Distance result) {
+<span class="fc" id="L242">        result.setValue(y);</span>
+<span class="fc" id="L243">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L244">    }</span>
+
+    /**
+     * Gets cartesian y coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @return y coordinate of body position resolved along ECI or ECEF-frame axes.
+     */
+    public Distance getPositionY() {
+<span class="fc" id="L252">        return new Distance(y, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian y coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param positionY cartesian y coordinate of body position to be set.
+     */
+    public void setPositionY(final Distance positionY) {
+<span class="fc" id="L261">        y = DistanceConverter.convert(positionY.getValue().doubleValue(), positionY.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L262">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where cartesian z coordinate of body position will be stored.
+     */
+    public void getPositionZ(final Distance result) {
+<span class="fc" id="L270">        result.setValue(z);</span>
+<span class="fc" id="L271">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Gets cartesian z coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @return z coordinate of body position resolved along ECI or ECEF-frame axes.
+     */
+    public Distance getPositionZ() {
+<span class="fc" id="L280">        return new Distance(z, DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Sets cartesian z coordinate of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param positionZ cartesian z coordinate of body position to be set.
+     */
+    public void setPositionZ(final Distance positionZ) {
+<span class="fc" id="L289">        z = DistanceConverter.convert(positionZ.getValue().doubleValue(), positionZ.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L290">    }</span>
+
+    /**
+     * Sets cartesian coordinates of body position resolved along ECI or ECEF-frame axes.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECI or ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECI or ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECI or ECEF-frame axes.
+     */
+    public void setPositionCoordinates(final Distance positionX, final Distance positionY, final Distance positionZ) {
+<span class="fc" id="L300">        setPositionX(positionX);</span>
+<span class="fc" id="L301">        setPositionY(positionY);</span>
+<span class="fc" id="L302">        setPositionZ(positionZ);</span>
+<span class="fc" id="L303">    }</span>
+
+    /**
+     * Gets norm of position expressed in meters (m), which represents the distance to
+     * Earth's center of mass.
+     *
+     * @return position norm expressed in meters (m).
+     */
+    public double getPositionNorm() {
+<span class="fc" id="L312">        return Math.sqrt(x * x + y * y + z * z);</span>
+    }
+
+    /**
+     * Gets norm of position, which represents the distance to Earth's center of mass.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getPositionNormAsDistance(final Distance result) {
+<span class="fc" id="L321">        result.setValue(getPositionNorm());</span>
+<span class="fc" id="L322">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * Gets norm of position, which represents the distance to Earth's center of mass.
+     *
+     * @return position norm.
+     */
+    public Distance getPositionNormAsDistance() {
+<span class="fc" id="L331">        return new Distance(getPositionNorm(), DistanceUnit.METER);</span>
+    }
+
+    /**
+     * Gets x coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @return x coordinate of velocity.
+     */
+    public double getVx() {
+<span class="fc" id="L341">        return vx;</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @param vx x coordinate of velocity.
+     */
+    public void setVx(final double vx) {
+<span class="fc" id="L351">        this.vx = vx;</span>
+<span class="fc" id="L352">    }</span>
+
+    /**
+     * Gets y coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @return y coordinate of velocity.
+     */
+    public double getVy() {
+<span class="fc" id="L361">        return vy;</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @param vy y coordinate of velocity.
+     */
+    public void setVy(final double vy) {
+<span class="fc" id="L371">        this.vy = vy;</span>
+<span class="fc" id="L372">    }</span>
+
+    /**
+     * Gets z coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @return z coordinate of velocity.
+     */
+    public double getVz() {
+<span class="fc" id="L381">        return vz;</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @param vz z coordinate of velocity.
+     */
+    public void setVz(final double vz) {
+<span class="fc" id="L391">        this.vz = vz;</span>
+<span class="fc" id="L392">    }</span>
+
+    /**
+     * Sets velocity coordinates of body frame expressed in meters per second (m/s) resolved along ECI or
+     * ECEF-frame axes.
+     *
+     * @param vx x coordinate of velocity.
+     * @param vy y coordinate of velocity.
+     * @param vz z coordinate of velocity.
+     */
+    public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
+<span class="fc" id="L403">        this.vx = vx;</span>
+<span class="fc" id="L404">        this.vy = vy;</span>
+<span class="fc" id="L405">        this.vz = vz;</span>
+<span class="fc" id="L406">    }</span>
+
+    /**
+     * Gets norm of velocity expressed in meters per second (m/s), which represents
+     * the speed of the body.
+     *
+     * @return norm of velocity expressed in meters per second (m/s).
+     */
+    public double getVelocityNorm() {
+<span class="fc" id="L415">        return Math.sqrt(vx * vx + vy * vy + vz * vz);</span>
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @param result velocity norm.
+     */
+    public void getVelocityNormAsSpeed(final Speed result) {
+<span class="fc" id="L424">        result.setValue(getVelocityNorm());</span>
+<span class="fc" id="L425">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L426">    }</span>
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @return velocity norm.
+     */
+    public Speed getVelocityNormAsSpeed() {
+<span class="fc" id="L434">        return new Speed(getVelocityNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Gets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param result instance where x coordinate of velocity will be stored.
+     */
+    public void getSpeedX(final Speed result) {
+<span class="fc" id="L443">        result.setValue(vx);</span>
+<span class="fc" id="L444">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L445">    }</span>
+
+    /**
+     * Gets x coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @return x coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     */
+    public Speed getSpeedX() {
+<span class="fc" id="L453">        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets x coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param speedX x coordinate of velocity of body frame resolved along ECI or ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedX(final Speed speedX) {
+<span class="fc" id="L463">        vx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L464">    }</span>
+
+    /**
+     * Gets y coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where y coordinate of velocity will be stored.
+     */
+    public void getSpeedY(final Speed result) {
+<span class="fc" id="L472">        result.setValue(vy);</span>
+<span class="fc" id="L473">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L474">    }</span>
+
+    /**
+     * Gets y coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @return y coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     */
+    public Speed getSpeedY() {
+<span class="fc" id="L482">        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets y coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param speedY y coordinate of velocity of body frame resolved along ECI or ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedY(final Speed speedY) {
+<span class="fc" id="L492">        vy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L493">    }</span>
+
+    /**
+     * Gets z coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param result instance where z coordinate of velocity will be stored.
+     */
+    public void getSpeedZ(final Speed result) {
+<span class="fc" id="L501">        result.setValue(vz);</span>
+<span class="fc" id="L502">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L503">    }</span>
+
+    /**
+     * Gets z coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @return z coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     */
+    public Speed getSpeedZ() {
+<span class="fc" id="L511">        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);</span>
+    }
+
+    /**
+     * Sets z coordinate of velocity of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param speedZ z coordinate of velocity of body frame resolved along ECI or ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedZ(final Speed speedZ) {
+<span class="fc" id="L521">        vz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L522">    }</span>
+
+    /**
+     * Sets velocity coordinates of body frame resolved along ECI or ECEF-frame axes.
+     *
+     * @param speedX x coordinate of velocity to be set.
+     * @param speedY y coordinate of velocity to be set.
+     * @param speedZ z coordinate of velocity to be set.
+     */
+    public void setSpeedCoordinates(final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L532">        setSpeedX(speedX);</span>
+<span class="fc" id="L533">        setSpeedY(speedY);</span>
+<span class="fc" id="L534">        setSpeedZ(speedZ);</span>
+<span class="fc" id="L535">    }</span>
+
+    /**
+     * Gets coordinate transformation matrix.
+     * This is equivalent to calling getCoordinateTransformation(), but more efficient
+     *
+     * @return coordinate transformation matrix.
+     */
+    @Override
+    public Matrix getCoordinateTransformationMatrix() {
+        Matrix result;
+        try {
+<span class="fc" id="L547">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L548">            getCoordinateTransformationMatrix(result);</span>
+<span class="nc" id="L549">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L551">            result = null;</span>
+<span class="fc" id="L552">        }</span>
+<span class="fc" id="L553">        return result;</span>
+    }
+
+    /**
+     * Gets coordinate transformation matrix.
+     * This is equivalent to calling getCoordinateTransformation().getMatrix(), but more efficient
+     *
+     * @param result instance where coordinate transformation matrix will be copied to.
+     */
+    @Override
+    public void getCoordinateTransformationMatrix(final Matrix result) {
+<span class="fc" id="L564">        c.matrix.copyTo(result);</span>
+<span class="fc" id="L565">    }</span>
+
+    /**
+     * Sets coordinate transformation matrix keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param matrix    a 3x3 coordinate transformation matrix to be set.
+     * @param threshold threshold to validate rotation matrix.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     * @throws IllegalArgumentException       if provided threshold is negative.
+     */
+    @Override
+    public void setCoordinateTransformationMatrix(final Matrix matrix, final double threshold)
+            throws InvalidRotationMatrixException {
+<span class="fc" id="L581">        c.setMatrix(matrix,threshold);</span>
+<span class="fc" id="L582">    }</span>
+
+    /**
+     * Sts coordinate transformation matrix keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param matrix a 3x3 coordinate transformation matrix to be set.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     */
+    @Override
+    public void setCoordinateTransformationMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
+<span class="fc" id="L595">        c.setMatrix(matrix);</span>
+<span class="fc" id="L596">    }</span>
+
+    /**
+     * Gets coordinate transformation as a new 3D rotation instance.
+     * This is equivalent to calling getCoordinateTransformation().asRotation(), but more efficient.
+     *
+     * @return new coordinate transformation as a 3D rotation.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    @Override
+    public Rotation3D getCoordinateTransformationRotation() throws InvalidRotationMatrixException {
+<span class="fc" id="L607">        return c.asRotation();</span>
+    }
+
+    /**
+     * Gets coordinate transformation as a 3D rotation.
+     * This is equivalent to calling getCoordinateTransformation().asRotation(), but more efficient.
+     *
+     * @param result instance where coordinate transformation 3D rotation will be copied to.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    @Override
+    public void getCoordinateTransformationRotation(final Rotation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L619">        c.asRotation(result);</span>
+<span class="fc" id="L620">    }</span>
+
+    /**
+     * Sets coordinate transformation from 3D rotation and keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting rotation into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param rotation set rotation into current coordinate rotation.
+     */
+    @Override
+    public void setCoordinateTransformationRotation(final Rotation3D rotation) {
+<span class="fc" id="L632">        c.fromRotation(rotation);</span>
+<span class="fc" id="L633">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final T output) {
+<span class="fc" id="L641">        output.x = x;</span>
+<span class="fc" id="L642">        output.y = y;</span>
+<span class="fc" id="L643">        output.z = z;</span>
+
+<span class="fc" id="L645">        output.vx = vx;</span>
+<span class="fc" id="L646">        output.vy = vy;</span>
+<span class="fc" id="L647">        output.vz = vz;</span>
+
+<span class="fc" id="L649">        c.copyTo(output.c);</span>
+<span class="fc" id="L650">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final T input) {
+<span class="fc" id="L658">        x = input.x;</span>
+<span class="fc" id="L659">        y = input.y;</span>
+<span class="fc" id="L660">        z = input.z;</span>
+
+<span class="fc" id="L662">        vx = input.vx;</span>
+<span class="fc" id="L663">        vy = input.vy;</span>
+<span class="fc" id="L664">        vz = input.vz;</span>
+
+<span class="fc" id="L666">        c.copyFrom(input.c);</span>
+<span class="fc" id="L667">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L677">        return Objects.hash(x, y, z, vx, vy, vz, c);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param obj instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L688" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L689">            return false;</span>
+        }
+<span class="fc bfc" id="L691" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L692">            return true;</span>
+        }
+<span class="pc bpc" id="L694" title="1 of 2 branches missed.">        if (!clazz.isInstance(obj)) {</span>
+<span class="nc" id="L695">            return false;</span>
+        }
+
+        //noinspection unchecked
+<span class="fc" id="L699">        final T other = (T) obj;</span>
+<span class="fc" id="L700">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to provided
+     * threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between position, velocity and coordinate transformation matrix.
+     * @return true if both instances are considered to be equal (up to provided threshold), false otherwise.
+     */
+    public boolean equals(final T other, final double threshold) {
+<span class="fc bfc" id="L712" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L713">            return false;</span>
+        }
+
+<span class="fc bfc" id="L716" title="All 2 branches covered.">        return Math.abs(x - other.x) &lt;= threshold</span>
+<span class="pc bpc" id="L717" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(y - other.y) &lt;= threshold</span>
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(z - other.z) &lt;= threshold</span>
+<span class="pc bpc" id="L719" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vx - other.vx) &lt;= threshold</span>
+<span class="pc bpc" id="L720" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vy - other.vy) &lt;= threshold</span>
+<span class="pc bpc" id="L721" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(vz - other.vz) &lt;= threshold</span>
+<span class="pc bpc" id="L722" title="1 of 2 branches missed.">                &amp;&amp; c.equals(other.c, threshold);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

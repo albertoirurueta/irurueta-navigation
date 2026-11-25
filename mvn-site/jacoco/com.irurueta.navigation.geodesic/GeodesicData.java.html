@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GeodesicData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">GeodesicData.java</span></div><h1>GeodesicData.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * The results of geodesic calculations.
+ * This is used to return the results for a geodesic between point 1 (&lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;)
+ * and point 2 (&lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;).
+ * Fields that have not been set will be filled with Double.NaN.
+ * The returned GeodesicData objects always include the parameters provided to
+ * {@link Geodesic#direct(double, double, double, double)} and
+ * {@link Geodesic#inverse(double, double, double, double)} and it always includes the field
+ * &lt;i&gt;a12&lt;/i&gt;.
+ */
+public class GeodesicData {
+
+    /**
+     * Latitude of point 1 (degrees).
+     */
+    private double lat1;
+
+    /**
+     * Longitude of point 1 (degrees).
+     */
+    private double lon1;
+
+    /**
+     * Azimuth at point 1 (degrees).
+     */
+    private double azi1;
+
+    /**
+     * Latitude of point 2 (degrees).
+     */
+    private double lat2;
+
+    /**
+     * Longitude of point 2 (degrees).
+     */
+    private double lon2;
+
+    /**
+     * Azimuth at point 2 (degrees).
+     */
+    private double azi2;
+
+    /**
+     * Distance between point 1 and point 2 (meters).
+     */
+    private double s12;
+
+    /**
+     * Arc length on the auxiliary sphere between point 1 and point 2 (degrees).
+     */
+    private double a12;
+
+    /**
+     * Reduced length of geodesic (meters).
+     */
+    private double m12;
+
+    /**
+     * Geodesic scale of point 2 relative to point 1 (dimensionless).
+     */
+    private double scaleM12;
+
+    /**
+     * Geodesic scale of point 1 relative to point 2 (dimensionless).
+     */
+    private double scaleM21;
+
+    /**
+     * Area under the geodesic (meters&lt;sup&gt;2&lt;/sup&gt;).
+     */
+    private double areaS12;
+
+    /**
+     * Constructor.
+     * Initialize all the fields to Double.NaN.
+     */
+<span class="fc" id="L94">    public GeodesicData() {</span>
+<span class="fc" id="L95">        lat1 = lon1 = azi1 = lat2 = lon2 = azi2 = s12 = a12 = m12 = scaleM12 = scaleM21 = areaS12 = Double.NaN;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Gets latitude of point 1 (degrees).
+     *
+     * @return latitude of point 1.
+     */
+    public double getLat1() {
+<span class="fc" id="L104">        return lat1;</span>
+    }
+
+    /**
+     * Sets latitude of point 1 (degrees).
+     *
+     * @param lat1 latitude of point 1.
+     */
+    public void setLat1(final double lat1) {
+<span class="fc" id="L113">        this.lat1 = lat1;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Gets longitude of point 1 (degrees).
+     *
+     * @return longitude of point 1.
+     */
+    public double getLon1() {
+<span class="fc" id="L122">        return lon1;</span>
+    }
+
+    /**
+     * Sets longitude of point 1 (degrees).
+     *
+     * @param lon1 longitude of point 1.
+     */
+    public void setLon1(final double lon1) {
+<span class="fc" id="L131">        this.lon1 = lon1;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Gets azimuth at point 1 (degrees).
+     *
+     * @return azimuth at point 1.
+     */
+    public double getAzi1() {
+<span class="fc" id="L140">        return azi1;</span>
+    }
+
+    /**
+     * Sets azimuth at point 1 (degrees).
+     *
+     * @param azi1 azimuth at point 1.
+     */
+    public void setAzi1(final double azi1) {
+<span class="fc" id="L149">        this.azi1 = azi1;</span>
+<span class="fc" id="L150">    }</span>
+
+    /**
+     * Gets latitude of point 2 (degrees).
+     *
+     * @return latitude of point 2.
+     */
+    public double getLat2() {
+<span class="fc" id="L158">        return lat2;</span>
+    }
+
+    /**
+     * Sets latitude of point 2 (degrees).
+     *
+     * @param lat2 latitude of point 2.
+     */
+    public void setLat2(final double lat2) {
+<span class="fc" id="L167">        this.lat2 = lat2;</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Gets longitude of point 2 (degrees).
+     *
+     * @return longitude of point 2.
+     */
+    public double getLon2() {
+<span class="fc" id="L176">        return lon2;</span>
+    }
+
+    /**
+     * Sets longitude of point 2 (degrees).
+     *
+     * @param lon2 longitude of point 2.
+     */
+    public void setLon2(final double lon2) {
+<span class="fc" id="L185">        this.lon2 = lon2;</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Gets azimuth at point 2 (degrees).
+     *
+     * @return azimuth at point 2.
+     */
+    public double getAzi2() {
+<span class="fc" id="L194">        return azi2;</span>
+    }
+
+    /**
+     * Sets azimuth at point 2 (degrees).
+     *
+     * @param azi2 azimuth at point 2.
+     */
+    public void setAzi2(final double azi2) {
+<span class="fc" id="L203">        this.azi2 = azi2;</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Gets distance between point 1 and point 2 (meters).
+     *
+     * @return distance between point 1 and point 2.
+     */
+    public double getS12() {
+<span class="fc" id="L212">        return s12;</span>
+    }
+
+    /**
+     * Sets distance between point 1 and point 2 (meters).
+     *
+     * @param s12 distance between point 1 and point 2.
+     */
+    public void setS12(final double s12) {
+<span class="fc" id="L221">        this.s12 = s12;</span>
+<span class="fc" id="L222">    }</span>
+
+    /**
+     * Gets arc length on the auxiliary sphere between point 1 and point 2 (degrees).
+     *
+     * @return arc length on the auxiliary sphere between point 1 and point 2.
+     */
+    public double getA12() {
+<span class="fc" id="L230">        return a12;</span>
+    }
+
+    /**
+     * Sets arc length on the auxiliary sphere between point 1 and point 2 (degrees).
+     *
+     * @param a12 arc length on the auxiliary sphere between point 1 and point 2.
+     */
+    public void setA12(final double a12) {
+<span class="fc" id="L239">        this.a12 = a12;</span>
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Gets reduced length of geodesic (meters).
+     *
+     * @return reduced length of geodesic.
+     */
+    public double getM12() {
+<span class="fc" id="L248">        return m12;</span>
+    }
+
+    /**
+     * Sets reduced length of geodesic (meters).
+     *
+     * @param m12 reduced length of geodesic.
+     */
+    public void setM12(final double m12) {
+<span class="fc" id="L257">        this.m12 = m12;</span>
+<span class="fc" id="L258">    }</span>
+
+    /**
+     * Gets geodesic scale of point 2 relative to point 1 (dimensionless).
+     *
+     * @return geodesic scale of point 2 relative to point 1.
+     */
+    public double getScaleM12() {
+<span class="fc" id="L266">        return scaleM12;</span>
+    }
+
+    /**
+     * Sets geodesic scale of point 2 relative to point 1 (dimensionless).
+     *
+     * @param scaleM12 geodesic scale of point 2 relative to point 1.
+     */
+    public void setScaleM12(final double scaleM12) {
+<span class="fc" id="L275">        this.scaleM12 = scaleM12;</span>
+<span class="fc" id="L276">    }</span>
+
+    /**
+     * Gets geodesic scale of point 1 relative to point 2 (dimensionless).
+     *
+     * @return geodesic scale of point 1 relative to point 2.
+     */
+    public double getScaleM21() {
+<span class="fc" id="L284">        return scaleM21;</span>
+    }
+
+    /**
+     * Sets geodesic scale of point 1 relative to point 2 (dimensionless).
+     *
+     * @param scaleM21 geodesic scale of point 1 relative to point 2.
+     */
+    public void setScaleM21(final double scaleM21) {
+<span class="fc" id="L293">        this.scaleM21 = scaleM21;</span>
+<span class="fc" id="L294">    }</span>
+
+    /**
+     * Gets area under the geodesic (meter&lt;sup&gt;2&lt;/sup&gt;).
+     *
+     * @return area under the geodesic.
+     */
+    public double getAreaS12() {
+<span class="fc" id="L302">        return areaS12;</span>
+    }
+
+    /**
+     * Sets area under the geodesic (meter&lt;sup&gt;2&lt;/sup&gt;).
+     *
+     * @param areaS12 area under the geodesic.
+     */
+    public void setAreaS12(final double areaS12) {
+<span class="fc" id="L311">        this.areaS12 = areaS12;</span>
+<span class="fc" id="L312">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
