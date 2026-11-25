@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.8.3] - 2026-11-25
+
+### Changed
+
+- Updated dependencies `irurueta-numerical` from 1.6.1 to 1.7.1 and `irurueta-geometry` from 1.6.1 to 1.6.2.
+
 ## [1.8.2] - 2026-11-16
 
 ### Changed
@@ -148,7 +154,8 @@ Initial public release. The library shipped with:
 - **Supporting utilities**: geodesic calculations (Karney's algorithms), accuracy classes (`Accuracy`,
   `Accuracy2D`, `Accuracy3D`), and location utilities.
 
-[Unreleased]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.8.2...HEAD
+[Unreleased]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.8.3...HEAD
+[1.8.3]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.8.2...1.8.3
 [1.8.2]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.8.1...1.8.2
 [1.8.1]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.7.1...1.8.1
 [1.7.1]: https://github.com/albertoirurueta/irurueta-navigation/compare/1.6.0...1.7.1
